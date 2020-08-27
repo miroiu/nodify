@@ -4,6 +4,26 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>miroiu</Authors>
+    <Company />
+    <PackageId>Nodify</PackageId>
+    <Product>Nodify</Product>
+    <Description>The core controls for a node based editor (designed for MVVM)</Description>
+    <Copyright>Miroiu Emanuel</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/miroiu/nodify</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
+    <PackageTags>wpf mvvm node-editor controls</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
