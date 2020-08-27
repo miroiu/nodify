@@ -1,0 +1,95 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+    <DataTemplate x:Key="DefaultInputConnectorTemplate">
+        <local:NodeInput Margin="3 3 1 3" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultOutputConnectorTemplate">
+        <local:NodeOutput Margin="2 4 4 4" />
+    </DataTemplate>
+
+    <Style TargetType="{x:Type local:Node}">
+        <Setter Property="Background"
+                Value="#2D2D30" />
+        <Setter Property="HeaderBrush"
+                Value="#1E1E1E" />
+        <Setter Property="Padding"
+                Value="1" />
+        <Setter Property="MinHeight"
+                Value="15" />
+        <Setter Property="MinWidth"
+                Value="15" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="local:DragBehavior.IsDraggable"
+                Value="True" />
+        <Setter Property="InputConnectorTemplate"
+                Value="{StaticResource DefaultInputConnectorTemplate}" />
+        <Setter Property="OutputConnectorTemplate"
+                Value="{StaticResource DefaultOutputConnectorTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Node}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="3">
+                        <StackPanel Orientation="Vertical">
+
+                            <!--Header-->
+                            <Border Background="{TemplateBinding HeaderBrush}">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="6 0 6 0">
+                                    <ContentPresenter ContentSource="Icon"
+                                                      Width="16"
+                                                      Margin="0 3 6 5"
+                                                      Visibility="{TemplateBinding Icon, Converter={StaticResource NullToVisibilityConverter}}"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center" />
+
+                                    <ContentPresenter ContentSource="Header"
+                                                      Margin="0 3 0 5"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--Body-->
+                            <DockPanel>
+
+                                <!--Data IN-->
+                                <ItemsControl ItemsSource="{TemplateBinding Input}"
+                                              ItemTemplate="{TemplateBinding InputConnectorTemplate}" />
+
+                                <!--Content-->
+                                <ContentPresenter Margin="16 0" />
+
+                                <!--Data OUT-->
+                                <ItemsControl ItemsSource="{TemplateBinding Output}"
+                                              ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
+                                              DockPanel.Dock="Right" />
+
+                            </DockPanel>
+
+                            <!--Footer-->
+                            <Border Visibility="{TemplateBinding Footer, Converter={StaticResource NullToVisibilityConverter}}"
+                                    Background="{TemplateBinding FooterBrush}">
+                                <ContentPresenter ContentSource="Footer" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

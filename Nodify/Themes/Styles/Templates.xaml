@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <ControlTemplate x:Key="ConnectorThumbTemplate"
+                     TargetType="Control">
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsConnected, RelativeSource={RelativeSource AncestorType=local:Connector}}"
+                         Value="True">
+                <Setter TargetName="Connector"
+                        Property="Ellipse.Fill"
+                        Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsConnected, RelativeSource={RelativeSource AncestorType=local:Connector}}"
+                         Value="False">
+                <Setter TargetName="Connector"
+                        Property="Ellipse.Fill"
+                        Value="Transparent" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+        <Ellipse x:Name="Connector"
+                 Width="14"
+                 Height="14"
+                 Stroke="{TemplateBinding BorderBrush}"
+                 StrokeThickness="2" />
+    </ControlTemplate>
+
+    <LinearGradientBrush x:Key="FadeOpacityMask"
+                         StartPoint="0,0"
+                         EndPoint="1,0">
+        <GradientStop Color="#22FFFFFF"
+                      Offset="0" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.3" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.7" />
+        <GradientStop Color="#22FFFFFF"
+                      Offset="1" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>
