@@ -7,12 +7,10 @@ on:
 
 jobs:
   create-release:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2      
-    - name: Save release version
+    - name: Save tag version
       uses: olegtarasov/get-tag@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
