@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="Nodify.Playground.NodifyEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nodify.Playground"
+             xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <local:NodifyEditorViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:RandomBrushConverter x:Key="RandomBrushConverter" />
+        <local:DebugConverter x:Key="DebugConverter" />
+
+        <Style TargetType="{x:Type nodify:Connection}"
+               x:Key="DefaultConnectionStyle">
+            <Setter Property="Source"
+                    Value="{Binding Input.Anchor, Converter={StaticResource DebugConverter}}" />
+            <Setter Property="Target"
+                    Value="{Binding Output.Anchor}" />
+            <Setter Property="Stroke"
+                    Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+        </Style>
+    </UserControl.Resources>
+
+    <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
+                         Connections="{Binding Connections}"
+                         SelectedItems="{Binding SelectedNodes}"
+                         DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
+        <nodify:NodifyEditor.InputBindings>
+            <KeyBinding Key="Delete"
+                        Command="{Binding DeleteSelectionCommand}" />
+            <KeyBinding Key="C"
+                        Modifiers="Shift"
+                        Command="{Binding CommentSelectionCommand}" />
+        </nodify:NodifyEditor.InputBindings>
+
+        <nodify:NodifyEditor.ConnectionTemplate>
+            <DataTemplate>
+                <nodify:Connection Style="{StaticResource DefaultConnectionStyle}" />
+            </DataTemplate>
+        </nodify:NodifyEditor.ConnectionTemplate>
+
+        <nodify:NodifyEditor.Resources>
+            <Style TargetType="{x:Type nodify:Connector}">
+                <Setter Property="Anchor"
+                        Value="{Binding Anchor, Mode=OneWayToSource}" />
+                <Setter Property="IsConnected"
+                        Value="{Binding IsConnected}" />
+                <Setter Property="BorderBrush"
+                        Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />
+            </Style>
+
+            <Style TargetType="{x:Type nodify:NodeInput}"
+                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                <Setter Property="Header"
+                        Value="{Binding Title}" />
+            </Style>
+
+            <Style TargetType="{x:Type nodify:NodeOutput}"
+                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                <Setter Property="Header"
+                        Value="{Binding Title}" />
+            </Style>
+
+            <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
+                <nodify:KnotNode Content="{Binding Connector}" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
+                <nodify:GroupingNode Width="{Binding Width}"
+                                     Height="{Binding Height}"
+                                     Header="{Binding Title}"
+                                     HeaderBrush="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.8}"
+                                     Background="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.3}" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
+                <nodify:Node Input="{Binding Input}"
+                             Output="{Binding Output}"
+                             Header="{Binding Title}" />
+            </DataTemplate>
+        </nodify:NodifyEditor.Resources>
+
+        <nodify:NodifyEditor.ItemContainerStyle>
+            <Style TargetType="{x:Type nodify:ItemContainer}">
+                <Setter Property="Location"
+                        Value="{Binding Location}" />
+            </Style>
+        </nodify:NodifyEditor.ItemContainerStyle>
+    </nodify:NodifyEditor>
+</UserControl>

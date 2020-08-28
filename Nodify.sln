@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify", "Nodify\Nodify.csproj", "{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify", "Nodify\Nodify.csproj", "{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Playground", "Examples\Nodify.Playground\Nodify.Playground.csproj", "{423D54CA-9F42-4116-8755-13641F94151D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{423D54CA-9F42-4116-8755-13641F94151D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{423D54CA-9F42-4116-8755-13641F94151D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{423D54CA-9F42-4116-8755-13641F94151D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{423D54CA-9F42-4116-8755-13641F94151D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{423D54CA-9F42-4116-8755-13641F94151D} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B9E59DB6-FB93-48F3-A8E0-1E549009E043}

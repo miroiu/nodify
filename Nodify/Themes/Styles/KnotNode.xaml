@@ -6,6 +6,10 @@
         <ResourceDictionary Source="Templates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <DataTemplate x:Key="DefaultConnectorTemplate">
+        <local:Connector Cursor="Arrow" />
+    </DataTemplate>
+
     <Style TargetType="{x:Type local:KnotNode}">
         <Setter Property="Background"
                 Value="Transparent" />
@@ -17,6 +21,8 @@
                 Value="SizeAll" />
         <Setter Property="local:DragBehavior.IsDraggable"
                 Value="True" />
+        <Setter Property="ContentTemplate"
+                Value="{StaticResource DefaultConnectorTemplate}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:KnotNode}">
@@ -25,8 +31,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="3">
-                        <local:Connector Style="{TemplateBinding ConnectorStyle}"
-                                         Cursor="Arrow" />
+                        <ContentPresenter />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

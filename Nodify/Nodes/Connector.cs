@@ -117,6 +117,14 @@ namespace Nodify
 
             Loaded += OnConnectorLoaded;
             Unloaded += OnConnectorUnloaded;
+
+            // The loaded event will not get called if the initial visibility is collapsed
+            if (Container != null && Editor != null)
+            {
+                Container.PreviewLocationChanged += UpdateConnectorOptimized;
+                Container.LocationChanged += OnLocationChanged;
+                Editor.ViewportUpdated += OnViewportUpdated;
+            }
         }
 
         #region Update connector
