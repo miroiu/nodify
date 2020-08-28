@@ -1,4 +1,4 @@
-name: .NET Core
+name: Create release branch
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   create-release:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2      
