@@ -1,13 +1,11 @@
 name: Publish package
 
 on:
-  create:
-    branches:
-      - release-v*
+  create
 
 jobs:
-  build:
-
+  publish:
+    if: ${{ contains(github.ref, 'refs/heads/release-v*.*.*') }}
     runs-on: windows-latest
 
     steps:
