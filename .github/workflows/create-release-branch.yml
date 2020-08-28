@@ -2,8 +2,8 @@ name: Create release branch
 
 on:
   push:
-    branches:
-      - refs/tags/v*
+    tags:
+      - 'v*.*.*'
 
 jobs:
   create-release:
