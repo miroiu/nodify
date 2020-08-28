@@ -26,6 +26,8 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Create release branch
       uses: peterjgrainger/action-create-branch@v2.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: release-$GIT_TAG_NAME
+        branch: release-${{ env.GIT_TAG_NAME }}
     
