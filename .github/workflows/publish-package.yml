@@ -1,0 +1,30 @@
+name: Publish package
+
+on:
+  create:
+    branches:
+      - release-v*
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Publish package
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        PACKAGE_NAME: nodify
+      
