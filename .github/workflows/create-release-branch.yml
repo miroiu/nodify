@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2      
     - name: Save release version
-      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/tags/}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
