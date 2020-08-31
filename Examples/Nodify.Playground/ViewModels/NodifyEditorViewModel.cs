@@ -71,17 +71,11 @@ namespace Nodify.Playground
 
         public PendingConnectionViewModel PendingConnection { get; }
         public GraphSchema Schema { get; }
+        public Viewport Viewport { get; } = new Viewport();
 
         public ICommand DeleteSelectionCommand { get; }
         public ICommand DisconnectConnectorCommand { get; }
         public ICommand CommentSelectionCommand { get; }
-
-        private Point _viewportOffset;
-        public Point ViewportOffset
-        {
-            get => _viewportOffset;
-            set => SetProperty(ref _viewportOffset, value);
-        }
 
         private void DeleteSelection()
         {

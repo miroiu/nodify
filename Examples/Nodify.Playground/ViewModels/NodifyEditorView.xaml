@@ -34,7 +34,8 @@
                          Connections="{Binding Connections}"
                          PendingConnection="{Binding PendingConnection}"
                          SelectedItems="{Binding SelectedNodes}"
-                         Offset="{Binding ViewportOffset}"
+                         Offset="{Binding Viewport.Offset}"
+                         Scale="{Binding Viewport.Scale}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"

@@ -11,6 +11,7 @@
 
     <Window.Resources>
         <local:DebugConverter x:Key="DebugConverter" />
+        <local:ToStringConverter x:Key="ToStringConverter" />
     </Window.Resources>
 
     <Window.DataContext>
@@ -126,8 +127,16 @@
                             HorizontalAlignment="Right">
                     <TextBlock>
                         <TextBlock.Inlines>
+                            <Run Text="Location: " />
                             <Run Foreground="Gold"
-                                 Text="{Binding GraphViewModel.ViewportOffset, Mode=OneWay}" />
+                                 Text="{Binding GraphViewModel.Viewport.Offset, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="Scale: " />
+                            <Run Foreground="DodgerBlue"
+                                 Text="{Binding GraphViewModel.Viewport.Scale, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>
