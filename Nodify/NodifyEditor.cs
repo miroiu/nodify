@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Nodify
 {
@@ -24,8 +25,9 @@ namespace Nodify
         public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumChanged, CoerceMaximum));
         public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
         public static readonly DependencyProperty FocusLocationAnimationDurationProperty = DependencyProperty.Register(nameof(FocusLocationAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
-        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2));
-        public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(20d));
+        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
+        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
+        public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(30d));
         protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
         protected internal static readonly DependencyPropertyKey ViewportPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Viewport), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnViewportChanged, OnCoerceViewport));
@@ -85,6 +87,12 @@ namespace Nodify
         {
             get => (double)GetValue(FocusLocationAnimationDurationProperty);
             set => SetValue(FocusLocationAnimationDurationProperty, value);
+        }
+
+        public bool DisableAutoPanning
+        {
+            get => (bool)GetValue(DisableAutoPanningProperty);
+            set => SetValue(DisableAutoPanningProperty, value);
         }
 
         public double AutoPanSpeed
@@ -197,6 +205,9 @@ namespace Nodify
             ScaleTransform.ScaleX = newValue;
             ScaleTransform.ScaleY = newValue;
         }
+
+        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
         #endregion
 
@@ -322,20 +333,21 @@ namespace Nodify
         #endregion
 
         public static bool EnableSnappingCorrection { get; set; } = true;
+        public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 0.1;
         public bool IsBulkUpdatingItems { get; set; }
 
         protected internal Panel? ItemsHost { get; private set; }
         protected EditorSelection Selection { get; private set; }
+        private DispatcherTimer? _autoPanningTimer;
 
         public NodifyEditor()
         {
             AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
+            AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
 
             AddHandler(DragBehavior.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
             AddHandler(DragBehavior.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
             AddHandler(DragBehavior.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
-
-            AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
 
             Selection = new EditorSelection(this);
 
@@ -344,6 +356,8 @@ namespace Nodify
             transform.Children.Add(TranslateTransform);
 
             SetValue(AppliedTransformPropertyKey, transform);
+
+            OnDisableAutoPanningChanged(DisableAutoPanning);
         }
 
         static NodifyEditor()
@@ -368,6 +382,62 @@ namespace Nodify
 
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ItemContainer;
+
+        #region Auto panning
+
+        private void HandleAutoPanning(object? sender, EventArgs e)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
+            {
+                var mousePosition = Mouse.GetPosition(this);
+                double edgeDistance = AutoPanEdgeDistance;
+                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTimerIntervalMilliseconds);
+                double x = Offset.X;
+                double y = Offset.Y;
+
+                if (mousePosition.X < edgeDistance)
+                {
+                    x -= autoPanSpeed;
+                }
+                else if (mousePosition.X > ActualWidth - edgeDistance)
+                {
+                    x += autoPanSpeed;
+                }
+
+                if (mousePosition.Y < edgeDistance)
+                {
+                    y -= autoPanSpeed;
+                }
+                else if (mousePosition.Y > ActualHeight - edgeDistance)
+                {
+                    y += autoPanSpeed;
+                }
+
+                Offset = new Point(x, y);
+            }
+        }
+
+        protected virtual void OnDisableAutoPanningChanged(bool shouldDisable)
+        {
+            if (!shouldDisable)
+            {
+                if (_autoPanningTimer == null)
+                {
+                    _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTimerIntervalMilliseconds), DispatcherPriority.Background, new EventHandler(HandleAutoPanning), Dispatcher);
+                }
+                else
+                {
+                    _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTimerIntervalMilliseconds);
+                    _autoPanningTimer.Start();
+                }
+            }
+            else if (shouldDisable && _autoPanningTimer != null)
+            {
+                _autoPanningTimer.Stop();
+            }
+        }
+
+        #endregion
 
         #region Connector handling
 
@@ -425,11 +495,6 @@ namespace Nodify
                         ReleaseMouseCapture();
                     }
                 }
-
-                //if (e.LeftButton == MouseButtonState.Pressed)
-                //{
-                //    AutoPanIfNecessary();
-                //}
 
                 PreviousMousePosition = CurrentMousePosition;
             }
@@ -805,36 +870,6 @@ namespace Nodify
             {
                 Offset = (Point)((Vector)(Offset + position) * scale - position);
             }
-        }
-
-        protected void AutoPanIfNecessary()
-        {
-            double edgeDistance = AutoPanEdgeDistance;
-            double autoPanSpeedModifier = AutoPanSpeed;
-            double autoPanSpeedX = Math.Min(Math.Abs(CurrentMousePosition.X - PreviousMousePosition.X + 0.1) * autoPanSpeedModifier, autoPanSpeedModifier * 2);
-            double autoPanSpeedY = Math.Min(Math.Abs(CurrentMousePosition.Y - PreviousMousePosition.Y + 0.1) * autoPanSpeedModifier, autoPanSpeedModifier * 2);
-            double x = Offset.X;
-            double y = Offset.Y;
-
-            if (CurrentMousePosition.X < edgeDistance)
-            {
-                x -= autoPanSpeedX;
-            }
-            else if (CurrentMousePosition.X > ActualWidth - edgeDistance)
-            {
-                x += autoPanSpeedX;
-            }
-
-            if (CurrentMousePosition.Y < edgeDistance)
-            {
-                y -= autoPanSpeedY;
-            }
-            else if (CurrentMousePosition.Y > ActualHeight - edgeDistance)
-            {
-                y += autoPanSpeedY;
-            }
-
-            Offset = new Point(x, y);
         }
 
         protected virtual Point PointToViewportCenter(Point point)
