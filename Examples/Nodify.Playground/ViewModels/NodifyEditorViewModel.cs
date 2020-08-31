@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Playground
@@ -11,6 +10,7 @@ namespace Nodify.Playground
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0);
             CommentSelectionCommand = new DelegateCommand(() => Schema.AddCommentAroundNodes(SelectedNodes, "New comment"), () => SelectedNodes.Count > 0);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(c => c.Disconnect());
+            CreateConnectionCommand = new DelegateCommand(() => Schema.TryAddConnection(PendingConnection.Source!, PendingConnection.PreviewTarget), () => PendingConnection.Source != null && PendingConnection.PreviewTarget != null);
 
             PendingConnection = new PendingConnectionViewModel
             {
@@ -75,6 +75,7 @@ namespace Nodify.Playground
 
         public ICommand DeleteSelectionCommand { get; }
         public ICommand DisconnectConnectorCommand { get; }
+        public ICommand CreateConnectionCommand { get; }
         public ICommand CommentSelectionCommand { get; }
 
         private void DeleteSelection()

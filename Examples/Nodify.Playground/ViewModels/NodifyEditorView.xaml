@@ -18,7 +18,8 @@
         <local:DebugConverter x:Key="DebugConverter" />
 
         <!--TODO: This should work as the other styles without having to specify a template-->
-        <Style TargetType="{x:Type nodify:Connection}">
+        <Style TargetType="{x:Type nodify:Connection}"
+               x:Key="DefaultConnectionStyle">
             <Setter Property="Source"
                     Value="{Binding Input.Anchor, Converter={StaticResource DebugConverter}}" />
             <Setter Property="Target"
@@ -36,6 +37,7 @@
                          SelectedItems="{Binding SelectedNodes}"
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
+                         ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"
@@ -61,6 +63,8 @@
                         Value="{Binding PreviewText}" />
                 <Setter Property="EnablePreview"
                         Value="True" />
+                <Setter Property="AllowOnlyConnectors"
+                        Value="False" />
             </Style>
 
             <Style TargetType="{x:Type nodify:Connector}">

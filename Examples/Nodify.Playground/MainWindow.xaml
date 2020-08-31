@@ -78,9 +78,9 @@
                                   Cursor="Hand" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding ClearNodesCommand}"
+                <Button Command="{Binding ResetCommand}"
                         BorderBrush="Red"
-                        Content="CLEAR" />
+                        Content="RESET" />
             </StackPanel>
         </Border>
 

@@ -16,7 +16,7 @@ namespace Nodify.Playground
             MinInputCount = MinOutputCount = 0;
             MaxInputCount = MaxOutputCount = 7;
 
-            PinNameGenerator = (s, i) => i % 2 == 0 ? $"Pin {i}" : null;
+            ConnectorNameGenerator = (s, i) => $"C {i}";
             NodeNameGenerator = (s, i) => $"Node {i}";
             NodeLocationGenerator = (s, i) =>
             {
@@ -50,7 +50,7 @@ namespace Nodify.Playground
         public int MinOutputCount;
         public int MaxOutputCount;
 
-        public Func<NodesGeneratorSettings, int, string?> PinNameGenerator;
+        public Func<NodesGeneratorSettings, int, string?> ConnectorNameGenerator;
         public Func<NodesGeneratorSettings, int, string?> NodeNameGenerator;
         public Func<NodesGeneratorSettings, int, Point> NodeLocationGenerator;
 
@@ -166,13 +166,11 @@ namespace Nodify.Playground
         {
             var list = new List<ConnectorViewModel>(count);
 
-            for (int i = 1; i <= count; i++)
+            for (int i = 0; i < count; i++)
             {
-                var next = _rand.Next(count);
-
                 var connector = new ConnectorViewModel
                 {
-                    Title = settings.PinNameGenerator(settings, next)
+                    Title = settings.ConnectorNameGenerator(settings, i)
                 };
 
                 list.Add(connector);

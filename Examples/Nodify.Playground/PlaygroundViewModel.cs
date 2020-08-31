@@ -11,13 +11,20 @@ namespace Nodify.Playground
             GenerateRandomNodesCommand = new DelegateCommand(GenerateRandomNodes);
             PerformanceTestCommand = new DelegateCommand(PerformanceTest);
             ToggleConnectionsCommand = new DelegateCommand(ToggleConnections);
-            ClearNodesCommand = new DelegateCommand(() => GraphViewModel.Nodes.Clear());
+            ResetCommand = new DelegateCommand(ResetGraph);
+        }
+
+        private void ResetGraph()
+        {
+            GraphViewModel.Nodes.Clear();
+            GraphViewModel.Viewport.Offset = new System.Windows.Point(0, 0);
+            GraphViewModel.Viewport.Scale = 1.0d;
         }
 
         public ICommand GenerateRandomNodesCommand { get; }
         public ICommand PerformanceTestCommand { get; }
         public ICommand ToggleConnectionsCommand { get; }
-        public ICommand ClearNodesCommand { get; }
+        public ICommand ResetCommand { get; }
 
         private bool _shouldConnectNodes;
         public bool ShouldConnectNodes

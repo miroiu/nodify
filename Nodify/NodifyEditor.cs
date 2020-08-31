@@ -49,7 +49,7 @@ namespace Nodify
         private static object OnCoerceOffset(DependencyObject d, object value)
         {
             var editor = (NodifyEditor)d;
-            if(editor.DisablePanning)
+            if (editor.DisablePanning)
             {
                 return editor.Offset;
             }
@@ -160,11 +160,11 @@ namespace Nodify
         {
             NodifyEditor editor = (NodifyEditor)d;
 
-            if(editor.DisableZooming)
+            if (editor.DisableZooming)
             {
                 return editor.Scale;
             }
-            
+
             double num = (double)value;
             double minimum = editor.MinScale;
             if (num < minimum)
@@ -275,9 +275,16 @@ namespace Nodify
 
         #region Command Dependency Properties
 
+        public static readonly DependencyProperty ConnectionCompletedCommandProperty = DependencyProperty.Register(nameof(ConnectionCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
+
+        public ICommand ConnectionCompletedCommand
+        {
+            get => (ICommand)GetValue(ConnectionCompletedCommandProperty);
+            set => SetValue(ConnectionCompletedCommandProperty, value);
+        }
 
         public ICommand DisconnectConnectorCommand
         {
@@ -328,6 +335,8 @@ namespace Nodify
             AddHandler(DragBehavior.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
             AddHandler(DragBehavior.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
 
+            AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
+
             Selection = new EditorSelection(this);
 
             var transform = new TransformGroup();
@@ -364,10 +373,17 @@ namespace Nodify
 
         private void OnConnectorDisconnected(object sender, ConnectorEventArgs e)
         {
-            if (DisconnectConnectorCommand != null)
+            if (DisconnectConnectorCommand != null && DisconnectConnectorCommand.CanExecute(null))
             {
                 DisconnectConnectorCommand.Execute(e.Connector);
-                e.Handled = true;
+            }
+        }
+
+        private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
+        {
+            if (ConnectionCompletedCommand != null && ConnectionCompletedCommand.CanExecute(null))
+            {
+                ConnectionCompletedCommand.Execute((e.SourceConnector, e.TargetConnector));
             }
         }
 
@@ -743,7 +759,11 @@ namespace Nodify
             IsBulkUpdatingItems = false;
 
             ItemsHost?.InvalidateArrange();
-            ItemsDragCompletedCommand?.Execute(null);
+
+            if (ItemsDragCompletedCommand != null && ItemsDragCompletedCommand.CanExecute(null))
+            {
+                ItemsDragCompletedCommand.Execute(null);
+            }
         }
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
@@ -761,7 +781,10 @@ namespace Nodify
                 DragInstigator.IsSelected = true;
             }
 
-            ItemsDragStartedCommand?.Execute(null);
+            if (ItemsDragStartedCommand != null && ItemsDragStartedCommand.CanExecute(null))
+            {
+                ItemsDragStartedCommand.Execute(null);
+            }
         }
 
         #endregion
