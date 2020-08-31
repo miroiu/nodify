@@ -27,8 +27,8 @@ namespace Nodify.Playground
                 var yDistanceBetweenNodes = _rand.Next(200, 350);
                 var randSignX = _rand.Next(0, 100) > 50 ? 1 : -1;
                 var randSignY = _rand.Next(0, 100) > 50 ? 1 : -1;
-                var gridOffsetX = (i - count / 2) * xDistanceBetweenNodes;
-                var gridOffsetY = (i - count / 2) * yDistanceBetweenNodes;
+                var gridOffsetX = i * xDistanceBetweenNodes;
+                var gridOffsetY = i * yDistanceBetweenNodes;
 
                 var x = gridOffsetX * Math.Sin(xDistanceBetweenNodes * randSignX/ (i+1));
                 var y = gridOffsetY * Math.Sin(yDistanceBetweenNodes * randSignY/ (i+1));
