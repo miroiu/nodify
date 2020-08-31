@@ -37,6 +37,7 @@
                          SelectedItems="{Binding SelectedNodes}"
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
+                         GridCellSize="{Binding Viewport.GridSpacing, Mode=TwoWay}"
                          ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>

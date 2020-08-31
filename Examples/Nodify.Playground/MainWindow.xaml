@@ -127,6 +127,13 @@
                             HorizontalAlignment="Right">
                     <TextBlock>
                         <TextBlock.Inlines>
+                            <Run Text="Grid spacing: " />
+                            <Run Foreground="Red"
+                                 Text="{Binding GraphViewModel.Viewport.GridSpacing, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock.Inlines>
                             <Run Text="Location: " />
                             <Run Foreground="Gold"
                                  Text="{Binding GraphViewModel.Viewport.Offset, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
