@@ -38,6 +38,7 @@
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
                          GridCellSize="{Binding Viewport.GridSpacing, Mode=TwoWay}"
+                         EnableRealtimeSelection="{Binding Viewport.RealtimeSelection}"
                          ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>

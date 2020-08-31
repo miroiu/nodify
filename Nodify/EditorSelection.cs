@@ -16,9 +16,7 @@ namespace Nodify
         private List<ItemContainer> _nodesInArea = default!;
 
         public EditorSelection(NodifyEditor host)
-        {
-            _host = host;
-        }
+            => _host = host;
 
         public enum SelectionType
         {
@@ -58,7 +56,7 @@ namespace Nodify
             var left = endLocation.X < _startLocation.X ? endLocation.X : _startLocation.X;
             var top = endLocation.Y < _startLocation.Y ? endLocation.Y : _startLocation.Y;
             var width = Math.Abs(endLocation.X - _startLocation.X);
-            var height =  Math.Abs(endLocation.Y - _startLocation.Y);
+            var height = Math.Abs(endLocation.Y - _startLocation.Y);
 
             _host.SelectingRectangle = new Rect(left, top, width, height);
 
@@ -70,15 +68,18 @@ namespace Nodify
 
         public void End()
         {
-            _host.IsSelecting = false;
-            var rect = _host.SelectingRectangle;
-            if(rect.Width > 0 && rect.Height > 0)
+            if (_host.IsSelecting)
             {
-                ApplySelection(rect);
-            }
+                _host.IsSelecting = false;
+                var rect = _host.SelectingRectangle;
+                if (rect.Width > 0 && rect.Height > 0)
+                {
+                    ApplySelection(rect);
+                }
 
-            _selectedNodes.Clear();
-            _nodesInArea.Clear();
+                _selectedNodes.Clear();
+                _nodesInArea.Clear();
+            }
         }
 
         private void ApplySelection(Rect area)
@@ -93,7 +94,11 @@ namespace Nodify
                 case SelectionType.Remove:
                     _host.GetItemsInAreaNoAlloc(_nodesInArea, area);
 
-                    _host.SetSelectedItems(_selectedNodes, true);
+                    if (_realtime)
+                    {
+                        _host.SetSelectedItems(_selectedNodes, true);
+                    }
+
                     _host.SetSelectedItems(_nodesInArea, false);
                     break;
 
@@ -103,9 +108,9 @@ namespace Nodify
                     if (_realtime)
                     {
                         _host.UnselectAll();
+                        _host.SetSelectedItems(_selectedNodes, true);
                     }
 
-                    _host.SetSelectedItems(_selectedNodes, true);
                     _host.SetSelectedItems(_nodesInArea, true);
                     break;
 

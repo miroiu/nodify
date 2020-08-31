@@ -24,5 +24,12 @@ namespace Nodify.Playground
             get => _gridSpacing;
             set => SetProperty(ref _gridSpacing, value);
         }
+
+        private bool _realtimeSelection = true;
+        public bool RealtimeSelection
+        {
+            get => _realtimeSelection;
+            set => SetProperty(ref _realtimeSelection, value);
+        }
     }
 }

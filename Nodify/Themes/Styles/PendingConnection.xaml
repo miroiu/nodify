@@ -14,9 +14,11 @@
         <Setter Property="EnablePreview"
                 Value="False" />
         <Setter Property="StrokeThickness"
-                Value="2" />
+                Value="3" />
         <Setter Property="Visibility"
                 Value="Hidden" />
+        <Setter Property="StrokeDashArray"
+                Value="4 4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PendingConnection}">

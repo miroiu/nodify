@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 
 namespace Nodify.Playground
 {
@@ -26,7 +27,7 @@ namespace Nodify.Playground
         public ICommand ToggleConnectionsCommand { get; }
         public ICommand ResetCommand { get; }
 
-        private bool _shouldConnectNodes;
+        private bool _shouldConnectNodes = true;
         public bool ShouldConnectNodes
         {
             get => _shouldConnectNodes;
@@ -61,7 +62,14 @@ namespace Nodify.Playground
 
         private void PerformanceTest()
         {
-            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(1000));
+            int count = 1000;
+            int distance = 400;
+            int size = count / (int)Math.Sqrt(count);
+
+            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(count)
+            {
+                NodeLocationGenerator = (s, i) => new System.Windows.Point(i % size * distance, i / size * distance)
+            });
             GraphViewModel.Nodes.Clear();
             GraphViewModel.Nodes.AddRange(nodes);
 

@@ -485,8 +485,7 @@ namespace Nodify
                         Offset -= CurrentMousePosition - PreviousMousePosition;
                         e.Handled = true;
                     }
-                    // Selecting
-                    else if (e.LeftButton == MouseButtonState.Pressed)
+                    else if (IsSelecting)
                     {
                         Selection.Update(MousePositionTransformed);
                     }
@@ -566,12 +565,14 @@ namespace Nodify
             }
 
             var selectedItems = base.SelectedItems;
-            selectedItems.Clear();
 
+            BeginUpdateSelectedItems();
+            selectedItems.Clear();
             for (int i = 0; i < newValue.Count; i++)
             {
                 selectedItems.Add(newValue[i]);
             }
+            EndUpdateSelectedItems();
         }
 
         private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -621,7 +622,11 @@ namespace Nodify
                     var added = e.AddedItems;
                     for (int i = 0; i < added.Count; i++)
                     {
-                        selected.Add(added[i]);
+                        // Ensure no duplicates are added
+                        if (!selected.Contains(added[i]))
+                        {
+                            selected.Add(added[i]);
+                        }
                     }
 
                     var removed = e.RemovedItems;
