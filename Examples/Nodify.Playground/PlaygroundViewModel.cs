@@ -28,7 +28,7 @@ namespace Nodify.Playground
 
         private void GenerateRandomNodes()
         {
-            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(20));
+            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(100));
             GraphViewModel.Nodes.Clear();
             GraphViewModel.Nodes.AddRange(nodes);
 

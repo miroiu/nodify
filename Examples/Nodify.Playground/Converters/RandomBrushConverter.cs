@@ -11,11 +11,6 @@ namespace Nodify.Playground
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ConnectorViewModel con && con.Type == ConnectorType.Flow)
-            {
-                return new SolidColorBrush(Colors.White);
-            }
-
             if (double.TryParse(parameter?.ToString(), out double alpha))
             {
                 return new SolidColorBrush(Color.FromRgb((byte)_rand.Next(256), (byte)_rand.Next(256), (byte)_rand.Next(256)))

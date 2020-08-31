@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -6,12 +7,39 @@ namespace Nodify.Playground
 {
     public struct NodesGeneratorSettings
     {
+        private static readonly Random _rand = new Random();
+
         public NodesGeneratorSettings(int count)
         {
             GridSnap = 15;
             MinNodesCount = MaxNodesCount = count;
             MinInputCount = MinOutputCount = 0;
             MaxInputCount = MaxOutputCount = 7;
+
+            PinNameGenerator = (s, i) => i % 2 == 0 ? $"Pin {i}" : null;
+            NodeNameGenerator = (s, i) => $"Node {i}";
+            NodeLocationGenerator = (s, i) =>
+            {
+                double EaseOut(double percent, double increment, double start, double end, double total)
+                    => -end * (increment /= total) * (increment - 2) + start;
+
+                var xDistanceBetweenNodes = _rand.Next(150, 350);
+                var yDistanceBetweenNodes = _rand.Next(200, 350);
+                var randSignX = _rand.Next(0, 100) > 50 ? 1 : -1;
+                var randSignY = _rand.Next(0, 100) > 50 ? 1 : -1;
+                var gridOffsetX = (i - count / 2) * xDistanceBetweenNodes;
+                var gridOffsetY = (i - count / 2) * yDistanceBetweenNodes;
+
+                var x = gridOffsetX * Math.Sin(xDistanceBetweenNodes * randSignX/ (i+1));
+                var y = gridOffsetY * Math.Sin(yDistanceBetweenNodes * randSignY/ (i+1));
+                var easeX = x * EaseOut(i / count, i, 1, 0.01, count);
+                var easeY = y * EaseOut(i / count, i, 1, 0.01, count);
+
+                x = s.Snap((int)easeX);
+                y = s.Snap((int)easeY);
+
+                return new Point(x, y);
+            };
         }
 
         public int GridSnap;
@@ -22,13 +50,17 @@ namespace Nodify.Playground
         public int MinOutputCount;
         public int MaxOutputCount;
 
+        public Func<NodesGeneratorSettings, int, string?> PinNameGenerator;
+        public Func<NodesGeneratorSettings, int, string?> NodeNameGenerator;
+        public Func<NodesGeneratorSettings, int, Point> NodeLocationGenerator;
+
         public int Snap(int x)
             => x / GridSnap * GridSnap;
     }
 
     public static class RandomNodesGenerator
     {
-        private static readonly System.Random _rand = new System.Random();
+        private static readonly Random _rand = new Random();
 
         public static IList<T> GenerateNodes<T>(NodesGeneratorSettings settings)
             where T : FlowNodeViewModel, new()
@@ -38,22 +70,16 @@ namespace Nodify.Playground
 
             for (int i = 0; i < count; i++)
             {
-                var x = ((count / 2 - i + 1) * 100 + _rand.Next() % (15 * count)) % _rand.Next(100, 100 + count * 10);
-                var y = ((count / 2 - i + 1) * 100 + _rand.Next() % (15 * count)) % _rand.Next(100, 100 + count * 10);
-
-                x = settings.Snap(x);
-                y = settings.Snap(y);
-
                 var node = new T
                 {
-                    Title = $"Title {i}",
+                    Title = settings.NodeNameGenerator(settings, i),
                     IsCompact = i % 2 == 0,
-                    Location = new Point(x, y)
+                    Location = settings.NodeLocationGenerator(settings, i)
                 };
 
                 nodes.Add(node);
-                node.Input.AddRange(GenerateConnectors(_rand.Next(settings.MinInputCount, settings.MaxInputCount)));
-                node.Output.AddRange(GenerateConnectors(_rand.Next(settings.MinOutputCount, settings.MaxOutputCount)));
+                node.Input.AddRange(GenerateConnectors(settings, _rand.Next(settings.MinInputCount, settings.MaxInputCount)));
+                node.Output.AddRange(GenerateConnectors(settings, _rand.Next(settings.MinOutputCount, settings.MaxOutputCount)));
             }
 
             return nodes;
@@ -90,56 +116,66 @@ namespace Nodify.Playground
 
         public static IList<ConnectionViewModel> ConnectPins(GraphSchema schema, IList<ConnectorViewModel> source, IList<ConnectorViewModel> target)
         {
-            List<ConnectionViewModel> con = new List<ConnectionViewModel>();
+            Dictionary<ConnectorViewModel, List<ConnectorViewModel>> connections = new Dictionary<ConnectorViewModel, List<ConnectorViewModel>>();
+            List<ConnectionViewModel> result = new List<ConnectionViewModel>();
 
             for (int di = 0; di < target.Count; di++)
             {
                 var outP = target[di];
 
+                if (!connections.TryGetValue(outP, out var outConns))
+                {
+                    var newList = new List<ConnectorViewModel>();
+                    connections.Add(outP, newList);
+                    outConns = newList;
+                }
+
                 var conNum = _rand.Next(0, source.Count);
                 for (int ci = 0; ci < conNum; ci++)
                 {
-                    var inP = source[_rand.Next(1, conNum)];
+                    var inP = source[_rand.Next(0, conNum)];
 
-                    if (schema.CanAddConnection(inP, outP))
+                    if (!connections.TryGetValue(inP, out var inConns))
+                    {
+                        var newList = new List<ConnectorViewModel>();
+                        connections.Add(inP, newList);
+                        inConns = newList;
+                    }
+
+                    if (schema.CanAddConnection(inP, outP) && !connections[inP].Contains(outP) && !connections[outP].Contains(inP))
                     {
                         var isInput = inP.Flow == ConnectorFlow.Input;
 
-                        con.Add(new ConnectionViewModel
+                        var connection = new ConnectionViewModel
                         {
-                            Output = isInput ? inP : outP,
-                            Input = isInput ? outP : inP
-                        });
+                            Input = isInput ? inP : outP,
+                            Output = isInput ? outP : inP
+                        };
+                        result.Add(connection);
+
+                        inConns.Add(outP);
+                        outConns.Add(inP);
                     }
                 }
             }
 
-            return con;
+            return result;
         }
 
-        public static IList<ConnectorViewModel> GenerateConnectors(int count, ConnectorType? type = null)
+        public static IList<ConnectorViewModel> GenerateConnectors(NodesGeneratorSettings settings, int count)
         {
             var list = new List<ConnectorViewModel>(count);
 
             for (int i = 1; i <= count; i++)
             {
                 var next = _rand.Next(count);
-                var newType = type ?? (next % 3 == 0 ? ConnectorType.Flow : ConnectorType.Data);
 
                 var connector = new ConnectorViewModel
                 {
-                    Title = next % 2 == 0 ? $"Pin {i}" : null,
-                    Type = newType
+                    Title = settings.PinNameGenerator(settings, next)
                 };
 
-                if (newType == ConnectorType.Flow)
-                {
-                    list.Insert(0, connector);
-                }
-                else
-                {
-                    list.Add(connector);
-                }
+                list.Add(connector);
             }
 
             return list;

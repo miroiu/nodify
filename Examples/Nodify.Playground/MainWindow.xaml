@@ -89,30 +89,49 @@
                 <SolidColorBrush Color="#1A1A1A"
                                  Opacity=".8" />
             </Border.Background>
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.Resources>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Margin"
                                 Value="0,0,10,0" />
+                        <Setter Property="Foreground"
+                                Value="White" />
                     </Style>
-                </StackPanel.Resources>
-                <TextBlock Foreground="White">
-                    <TextBlock.Inlines>
-                        <Run Text="Selected: " />
-                        <Run Foreground="YellowGreen"
-                             Text="{Binding GraphViewModel.SelectedNodes.Count, Mode=OneWay}" />
-                        <Run Text="/" />
-                        <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
-                    </TextBlock.Inlines>
-                </TextBlock>
-                <TextBlock Foreground="White">
-                    <TextBlock.Inlines>
-                        <Run Text="Connections: " />
-                        <Run Foreground="YellowGreen"
-                             Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
-                    </TextBlock.Inlines>
-                </TextBlock>
-            </StackPanel>
+                </Grid.Resources>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="Selected: " />
+                            <Run Foreground="YellowGreen"
+                                 Text="{Binding GraphViewModel.SelectedNodes.Count, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="Connections: " />
+                            <Run Foreground="YellowGreen"
+                                 Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Foreground="Gold"
+                                 Text="{Binding GraphViewModel.ViewportOffset, Mode=OneWay}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
         </Border>
 
     </Grid>

@@ -4,14 +4,20 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <DataTemplate x:Key="DefaultConnectionTemplate">
+    <DataTemplate x:Key="ConnectionTemplate">
         <local:Connection />
     </DataTemplate>
 
-    <Style x:Key="ConnectionsItemsControl"
+    <DataTemplate x:Key="PendingConnectionTemplate">
+        <local:PendingConnection IsTabStop="False" />
+    </DataTemplate>
+
+    <Style x:Key="ConnectionsHostStyle"
            TargetType="ItemsControl">
         <Setter Property="ItemTemplate"
                 Value="{StaticResource DefaultConnectionTemplate}" />
+        <Setter Property="IsTabStop"
+                Value="False" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -49,7 +55,9 @@
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource SelectionRectangleStyle}" />
         <Setter Property="ConnectionTemplate"
-                Value="{StaticResource DefaultConnectionTemplate}" />
+                Value="{StaticResource ConnectionTemplate}" />
+        <Setter Property="PendingConnectionTemplate"
+                Value="{StaticResource PendingConnectionTemplate}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NodifyEditor}">
@@ -58,10 +66,9 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
                             <ItemsControl x:Name="PART_ConnectionsHost"
-                                          Style="{StaticResource ConnectionsItemsControl}"
+                                          Style="{StaticResource ConnectionsHostStyle}"
                                           ItemsSource="{TemplateBinding Connections}"
-                                          ItemTemplate="{TemplateBinding ConnectionTemplate}"
-                                          IsTabStop="False" />
+                                          ItemTemplate="{TemplateBinding ConnectionTemplate}" />
 
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True" />
@@ -74,7 +81,7 @@
                                        Height="{Binding SelectingRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
                                        Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                            <local:PendingConnection IsTabStop="False" />
+                            <ContentPresenter ContentSource="PendingConnection" />
                         </Canvas>
                     </Border>
                 </ControlTemplate>

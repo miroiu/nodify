@@ -100,6 +100,11 @@ namespace Nodify
 
             Editor = this.GetParentOfType<NodifyEditor>();
             Container = this.GetParentOfType<ItemContainer>();
+
+            if (Container != null)
+            {
+                Panel.SetZIndex(Container, -1);
+            }
         }
 
         private void OnResize(object sender, DragDeltaEventArgs e)

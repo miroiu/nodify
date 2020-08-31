@@ -30,6 +30,9 @@ namespace Nodify
         public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
         protected internal static readonly DependencyPropertyKey ViewportPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Viewport), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnViewportChanged, OnCoerceViewport));
         public static readonly DependencyProperty ViewportProperty = ViewportPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
 
         private static void OnViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnViewportUpdated();
@@ -114,6 +117,24 @@ namespace Nodify
             set => SetValue(MaxScaleProperty, value);
         }
 
+        public DataTemplate ConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(ConnectionTemplateProperty);
+            set => SetValue(ConnectionTemplateProperty, value);
+        }
+
+        public DataTemplate PendingConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
+            set => SetValue(PendingConnectionTemplateProperty, value);
+        }
+
+        public Style SelectionRectangleStyle
+        {
+            get => (Style)GetValue(SelectionRectangleStyleProperty);
+            set => SetValue(SelectionRectangleStyleProperty, value);
+        }
+
         private static void OnMinimumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
@@ -181,9 +202,8 @@ namespace Nodify
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
-        public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
+        public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(int), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Int1));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
@@ -200,28 +220,22 @@ namespace Nodify
             set => SetValue(GridCellSizeProperty, value);
         }
 
-        public DataTemplate ConnectionTemplate
-        {
-            get => (DataTemplate)GetValue(ConnectionTemplateProperty);
-            set => SetValue(ConnectionTemplateProperty, value);
-        }
-
         public IEnumerable Connections
         {
             get => (IEnumerable)GetValue(ConnectionsProperty);
             set => SetValue(ConnectionsProperty, value);
         }
 
+        public object PendingConnection
+        {
+            get => GetValue(PendingConnectionProperty);
+            set => SetValue(PendingConnectionProperty, value);
+        }
+
         public new IList? SelectedItems
         {
             get => (IList?)GetValue(SelectedItemsProperty);
             set => SetValue(SelectedItemsProperty, value);
-        }
-
-        public Style SelectionRectangleStyle
-        {
-            get => (Style)GetValue(SelectionRectangleStyleProperty);
-            set => SetValue(SelectionRectangleStyleProperty, value);
         }
 
         public Rect SelectingRectangle

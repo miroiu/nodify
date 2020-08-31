@@ -15,13 +15,14 @@ namespace Nodify.Playground
                 return source != con
                     && source.Node != con.Node
                     && source.Node.Graph == con.Node.Graph
-                    && source.Type == con.Type
                     && source.AllowsNewConnections()
                     && con.AllowsNewConnections()
+                    && source.Flow != con.Flow
+                    && !source.IsConnectedTo(con);
                     // TODO:
-                    && (source.Flow != con.Flow || source.Node is KnotNodeViewModel || con.Node is KnotNodeViewModel);
+                    //&& (source.Flow != con.Flow || source.Node is KnotNodeViewModel || con.Node is KnotNodeViewModel);
             }
-            else if (target is FlowNodeViewModel node)
+            else if (source.AllowsNewConnections() && target is FlowNodeViewModel node)
             {
                 var allConnectors = source.Flow == ConnectorFlow.Input ? node.Output : node.Input;
                 return allConnectors.Any(c => c.AllowsNewConnections());
@@ -79,15 +80,14 @@ namespace Nodify.Playground
 
         public void SplitConnection(ConnectionViewModel connection, Point location)
         {
-            var connector = connection.Input.Type == ConnectorType.Flow ? connection.Output : connection.Input;
+            var connector = connection.Output;
 
             var knot = new KnotNodeViewModel
             {
                 Location = location,
                 Connector = new ConnectorViewModel
                 {
-                    Type = connector.Type,
-                    //MaxConnections = connector == connection.Input ? connection.Output.MaxConnections : connection.Input.MaxConnections
+                    MaxConnections = connector == connection.Output ? connection.Input.MaxConnections : connection.Output.MaxConnections
                 }
             };
             connection.Graph.Nodes.Add(knot);

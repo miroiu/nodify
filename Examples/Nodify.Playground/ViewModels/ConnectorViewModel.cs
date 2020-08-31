@@ -1,13 +1,8 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 
 namespace Nodify.Playground
 {
-    public enum ConnectorType
-    {
-        Data,
-        Flow
-    }
-
     public enum ConnectorFlow
     {
         Input,
@@ -50,16 +45,9 @@ namespace Nodify.Playground
             }
         }
 
-        private ConnectorType _type;
-        public ConnectorType Type
-        {
-            get => _type;
-            set => SetProperty(ref _type, value);
-        }
-
         public ConnectorFlow Flow { get; private set; }
 
-        public int MaxConnections => Type == ConnectorType.Flow ? Flow == ConnectorFlow.Output ? 1 : int.MaxValue : Flow == ConnectorFlow.Input ? 1 : int.MaxValue;
+        public int MaxConnections { get; set; } = int.MaxValue;
 
         public NodifyObservableCollection<ConnectionViewModel> Connections { get; } = new NodifyObservableCollection<ConnectionViewModel>();
 
@@ -89,11 +77,10 @@ namespace Nodify.Playground
             {
                 Flow = flow.Input.Contains(this) ? ConnectorFlow.Input : ConnectorFlow.Output;
             }
-            else if (Node is KnotNodeViewModel knot)
-            {
-                Flow = knot.Connector.Type == ConnectorType.Flow ? ConnectorFlow.Input : ConnectorFlow.Output;
-            }
         }
+
+        public bool IsConnectedTo(ConnectorViewModel con)
+            => Connections.Any(c => c.Input == con || c.Output == con);
 
         public virtual bool AllowsNewConnections()
             => Connections.Count < MaxConnections;

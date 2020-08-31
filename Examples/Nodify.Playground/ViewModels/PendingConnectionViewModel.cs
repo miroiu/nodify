@@ -16,14 +16,6 @@
             set => SetProperty(ref _source, value);
         }
 
-        // Could be a connector, a node or the editor
-        private object? _target;
-        public object? Target
-        {
-            get => _target;
-            set => SetProperty(ref _target, value);
-        }
-
         private object? _previewTarget;
         public object? PreviewTarget
         {
@@ -49,6 +41,7 @@
             bool canConnect = PreviewTarget != null && Graph.Schema.CanAddConnection(Source!, PreviewTarget);
             PreviewText = PreviewTarget switch
             {
+                ConnectorViewModel con when con == Source => $"Can't connect to self",
                 ConnectorViewModel con => $"{(canConnect ? "Connect" : "Can't connect")} to {con.Title ?? "pin"}",
                 FlowNodeViewModel flow => $"{(canConnect ? "Connect" : "Can't connect")} to {flow.Title ?? "node"}",
                 _ => $"Place node"

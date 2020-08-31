@@ -17,8 +17,8 @@
         <local:RandomBrushConverter x:Key="RandomBrushConverter" />
         <local:DebugConverter x:Key="DebugConverter" />
 
-        <Style TargetType="{x:Type nodify:Connection}"
-               x:Key="DefaultConnectionStyle">
+        <!--TODO: This should work as the other styles without having to specify a template-->
+        <Style TargetType="{x:Type nodify:Connection}">
             <Setter Property="Source"
                     Value="{Binding Input.Anchor, Converter={StaticResource DebugConverter}}" />
             <Setter Property="Target"
@@ -32,7 +32,9 @@
 
     <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
                          Connections="{Binding Connections}"
+                         PendingConnection="{Binding PendingConnection}"
                          SelectedItems="{Binding SelectedNodes}"
+                         Offset="{Binding ViewportOffset}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"
@@ -49,6 +51,17 @@
         </nodify:NodifyEditor.ConnectionTemplate>
 
         <nodify:NodifyEditor.Resources>
+            <Style TargetType="{x:Type nodify:PendingConnection}">
+                <Setter Property="Source"
+                        Value="{Binding Source, Mode=OneWayToSource}" />
+                <Setter Property="PreviewTarget"
+                        Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
+                <Setter Property="Content"
+                        Value="{Binding PreviewText}" />
+                <Setter Property="EnablePreview"
+                        Value="True" />
+            </Style>
+
             <Style TargetType="{x:Type nodify:Connector}">
                 <Setter Property="Anchor"
                         Value="{Binding Anchor, Mode=OneWayToSource}" />

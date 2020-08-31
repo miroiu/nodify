@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Playground
@@ -74,6 +75,13 @@ namespace Nodify.Playground
         public ICommand DeleteSelectionCommand { get; }
         public ICommand DisconnectConnectorCommand { get; }
         public ICommand CommentSelectionCommand { get; }
+
+        private Point _viewportOffset;
+        public Point ViewportOffset
+        {
+            get => _viewportOffset;
+            set => SetProperty(ref _viewportOffset, value);
+        }
 
         private void DeleteSelection()
         {
