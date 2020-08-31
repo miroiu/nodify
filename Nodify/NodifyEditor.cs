@@ -547,20 +547,23 @@ namespace Nodify
         {
             base.OnSelectionChanged(e);
 
-            var selected = SelectedItems;
-
-            if (selected != null)
+            if (!IsSelecting)
             {
-                var added = e.AddedItems;
-                for (int i = 0; i < added.Count; i++)
-                {
-                    selected.Add(added[i]);
-                }
+                var selected = SelectedItems;
 
-                var removed = e.RemovedItems;
-                for (int i = 0; i < removed.Count; i++)
+                if (selected != null)
                 {
-                    selected.Remove(removed[i]);
+                    var added = e.AddedItems;
+                    for (int i = 0; i < added.Count; i++)
+                    {
+                        selected.Add(added[i]);
+                    }
+
+                    var removed = e.RemovedItems;
+                    for (int i = 0; i < removed.Count; i++)
+                    {
+                        selected.Remove(removed[i]);
+                    }
                 }
             }
         }

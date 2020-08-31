@@ -70,13 +70,13 @@ namespace Nodify
 
         public void End()
         {
+            _host.IsSelecting = false;
             var rect = _host.SelectingRectangle;
             if(rect.Width > 0 && rect.Height > 0)
             {
                 ApplySelection(rect);
             }
 
-            _host.IsSelecting = false;
             _selectedNodes.Clear();
             _nodesInArea.Clear();
         }
