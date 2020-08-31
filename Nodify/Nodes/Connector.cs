@@ -46,7 +46,7 @@ namespace Nodify
         #region Dependency Properties
 
         public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(Point), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.Point));
-        public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False, OnIsConnectedChanged));
         public static readonly DependencyProperty IsPendingConnectionOverProperty = DependencyProperty.Register(nameof(IsPendingConnectionOver), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty StartPendingConnectionCommandProperty = DependencyProperty.Register(nameof(StartPendingConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
@@ -125,6 +125,12 @@ namespace Nodify
                 Container.LocationChanged += OnLocationChanged;
                 Editor.ViewportUpdated += OnViewportUpdated;
             }
+        }
+        
+        private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var con = (Connector)d;
+            con.UpdateConnectorSafe();
         }
 
         #region Update connector
@@ -305,11 +311,6 @@ namespace Nodify
             if (Editor != null)
             {
                 elem = GetTargetUnderMouse(Editor);
-            }
-
-            if (elem is Connector con)
-            {
-                con?.UpdateConnectorSafe();
             }
 
             var target = elem?.DataContext;
