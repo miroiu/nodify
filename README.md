@@ -1,9 +1,10 @@
+
 # Nodify
 [![NuGet](https://img.shields.io/nuget/dt/Nodify?label=nuget&style=for-the-badge)](https://www.nuget.org/packages/Nodify)
 [![Build](https://img.shields.io/github/workflow/status/miroiu/nodify/Build?style=for-the-badge)](https://github.com/miroiu/nodify/actions)
 
 ## The core controls for a node based editor (designed for MVVM)
-![Example1](https://i.imgur.com/0hycTVf.png)
+![Example](https://i.imgur.com/xSPN1s2.png)
 
 ### Minimal XAML:
 ```xml
@@ -50,7 +51,7 @@
 <details>
   <summary>No data binding</summary>
   
-  ***Note: Not much you can do with this at the moment***
+***Note: Not much you can do with this at the moment***
 ```xml
 <nodify:NodifyEditor>
     <nodify:Node Header="My node"
@@ -65,3 +66,16 @@
 </nodify:NodifyEditor>
 ```
 </details>
+
+## Features
+ 
+ - Built for **MVVM**
+ - Single assembly targeting **.NET Core 3.1**
+ - **No** external libraries **dependency**
+ - **High performance** controls **interactions**
+ - A playground [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground)
+ - Customizable through **styles** and **templates**
+ - Lots of **configurable** dependency properties
+ - **Pan**, **zoom**, **select** area, **auto pan** when close to edge
+ - **Select** and **move** items
+ - Controls library (Node, GroupingNode, Connection etc.)
