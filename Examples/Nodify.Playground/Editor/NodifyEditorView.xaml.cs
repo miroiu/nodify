@@ -21,12 +21,9 @@ namespace Nodify.Playground
                 {
                     connection.Remove();
                 }
-                else
+                else if (e.ClickCount > 1)
                 {
-                    if (e.ClickCount > 1)
-                    {
-                        connection.Split(e.GetPosition(ctrl) - new Vector(30, 15));
-                    }
+                    connection.Split(e.GetPosition(ctrl) - new Vector(30, 15));
                 }
             }
         }

@@ -21,7 +21,7 @@
         <Style TargetType="{x:Type nodify:Connection}"
                x:Key="DefaultConnectionStyle">
             <Setter Property="Source"
-                    Value="{Binding Input.Anchor, Converter={StaticResource DebugConverter}}" />
+                    Value="{Binding Input.Anchor}" />
             <Setter Property="Target"
                     Value="{Binding Output.Anchor}" />
             <Setter Property="Stroke"
@@ -37,7 +37,7 @@
                          SelectedItems="{Binding SelectedNodes}"
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
-                         GridCellSize="{Binding Viewport.GridSpacing, Mode=TwoWay}"
+                         GridCellSize="{Binding Viewport.GridSpacing}"
                          EnableRealtimeSelection="{Binding Viewport.RealtimeSelection}"
                          ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
@@ -45,7 +45,6 @@
             <KeyBinding Key="Delete"
                         Command="{Binding DeleteSelectionCommand}" />
             <KeyBinding Key="C"
-                        Modifiers="Shift"
                         Command="{Binding CommentSelectionCommand}" />
         </nodify:NodifyEditor.InputBindings>
 

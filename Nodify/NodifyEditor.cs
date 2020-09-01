@@ -333,7 +333,7 @@ namespace Nodify
         #endregion
 
         public static bool EnableSnappingCorrection { get; set; } = true;
-        public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 0.1;
+        public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 1;
         public bool IsBulkUpdatingItems { get; protected set; }
 
         protected internal Panel? ItemsHost { get; private set; }
@@ -400,20 +400,20 @@ namespace Nodify
                 double x = Offset.X;
                 double y = Offset.Y;
 
-                if (mousePosition.X < edgeDistance)
+                if (mousePosition.X <= edgeDistance)
                 {
                     x -= autoPanSpeed;
                 }
-                else if (mousePosition.X > ActualWidth - edgeDistance)
+                else if (mousePosition.X >= ActualWidth - edgeDistance)
                 {
                     x += autoPanSpeed;
                 }
 
-                if (mousePosition.Y < edgeDistance)
+                if (mousePosition.Y <= edgeDistance)
                 {
                     y -= autoPanSpeed;
                 }
-                else if (mousePosition.Y > ActualHeight - edgeDistance)
+                else if (mousePosition.Y >= ActualHeight - edgeDistance)
                 {
                     y += autoPanSpeed;
                 }
@@ -456,9 +456,10 @@ namespace Nodify
 
         private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
-            if (ConnectionCompletedCommand != null && ConnectionCompletedCommand.CanExecute(null))
+            var result = (e.SourceConnector, e.TargetConnector);
+            if (ConnectionCompletedCommand != null && ConnectionCompletedCommand.CanExecute(result))
             {
-                ConnectionCompletedCommand.Execute((e.SourceConnector, e.TargetConnector));
+                ConnectionCompletedCommand.Execute(result);
             }
         }
 
