@@ -126,7 +126,7 @@ namespace Nodify
                 Editor.ViewportUpdated += OnViewportUpdated;
             }
         }
-        
+
         private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var con = (Connector)d;
@@ -164,7 +164,7 @@ namespace Nodify
 
         private void OnViewportUpdated(object sender, RoutedEventArgs args)
         {
-            if (Container != null && _lastUpdatedContainerPosition != Container.Location)
+            if (Container != null && !Container.IsPreviewingLocation && _lastUpdatedContainerPosition != Container.Location)
             {
                 UpdateConnectorOptimized(Container.Location);
             }
