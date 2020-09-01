@@ -334,10 +334,15 @@ namespace Nodify
 
         public static bool EnableSnappingCorrection { get; set; } = true;
         public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 0.1;
-        public bool IsBulkUpdatingItems { get; set; }
+        public bool IsBulkUpdatingItems { get; protected set; }
 
         protected internal Panel? ItemsHost { get; private set; }
         protected EditorSelection Selection { get; private set; }
+        protected bool IsMouseInsideEditor { get; private set; }
+
+        protected Point PreviousMousePosition;
+        protected Point CurrentMousePosition;
+
         private DispatcherTimer? _autoPanningTimer;
 
         public NodifyEditor()
@@ -387,7 +392,7 @@ namespace Nodify
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            if (Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
+            if (IsMouseInsideEditor && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
             {
                 var mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
@@ -461,9 +466,15 @@ namespace Nodify
 
         #region Mouse Events Handlers
 
-        protected Point PreviousMousePosition;
-        protected Point CurrentMousePosition;
-        protected Point ClickOrigin;
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            IsMouseInsideEditor = true;
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            IsMouseInsideEditor = false;
+        }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
@@ -503,9 +514,7 @@ namespace Nodify
         {
             if (Mouse.Captured == null)
             {
-                ClickOrigin = MousePositionTransformed;
-
-                Selection.Start(ClickOrigin, EnableRealtimeSelection);
+                Selection.Start(MousePositionTransformed, EnableRealtimeSelection);
 
                 Focus();
                 CaptureMouse();
