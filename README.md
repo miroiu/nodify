@@ -1,7 +1,7 @@
 
 # Nodify
-[![NuGet](https://img.shields.io/nuget/dt/Nodify?label=nuget&style=for-the-badge)](https://www.nuget.org/packages/Nodify)
-[![Build](https://img.shields.io/github/workflow/status/miroiu/nodify/Build?style=for-the-badge)](https://github.com/miroiu/nodify/actions)
+[![NuGet](https://img.shields.io/nuget/dt/Nodify?label=nuget&style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/Nodify)
+[![Build](https://img.shields.io/github/workflow/status/miroiu/nodify/Build?style=for-the-badge&logo=.net)](https://github.com/miroiu/nodify/actions)
 
 ## The core controls for a node based editor (designed for MVVM)
 ![Example](https://i.imgur.com/xSPN1s2.png)
@@ -79,3 +79,6 @@
  - **Pan**, **zoom**, **select** area, **auto pan** when close to edge
  - **Select** and **move** items
  - Controls library (Node, GroupingNode, Connection etc.)
+ 
+## Documentation
+https://github.com/miroiu/nodify/wiki
