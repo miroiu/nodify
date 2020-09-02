@@ -7,17 +7,26 @@ using System.Windows.Media;
 
 namespace Nodify
 {
+    public enum GroupingMovementMode
+    {
+        Group,
+        Self
+    }
+
     [TemplatePart(Name = ElementResizeThumb, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = ElementHeader, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = ElementContent, Type = typeof(FrameworkElement))]
     public class GroupingNode : HeaderedContentControl
     {
+        private static readonly object GroupMovement = GroupingMovementMode.Group;
+
         private const string ElementResizeThumb = "PART_ResizeThumb";
         private const string ElementHeader = "PART_Header";
         private const string ElementContent = "PART_Content";
 
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register(nameof(HeaderBrush), typeof(Brush), typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty DefaultMovementModeProperty = DependencyProperty.Register(nameof(DefaultMovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovement));
 
         public Brush HeaderBrush
         {
@@ -30,6 +39,14 @@ namespace Nodify
             get => (bool)GetValue(CanResizeProperty);
             set => SetValue(CanResizeProperty, value);
         }
+
+        public GroupingMovementMode DefaultMovementMode
+        {
+            get => (GroupingMovementMode)GetValue(DefaultMovementModeProperty);
+            set => SetValue(DefaultMovementModeProperty, value);
+        }
+
+        public static ModifierKeys SwitchMovementModeModifierKey { get; set; } = ModifierKeys.Shift;
 
         static GroupingNode()
         {
@@ -77,7 +94,12 @@ namespace Nodify
         {
             if (Container != null && Editor != null)
             {
-                if (Keyboard.Modifiers == ModifierKeys.Shift)
+                if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
+                {
+                    DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
+                }
+
+                if (DefaultMovementMode == GroupingMovementMode.Self)
                 {
                     Editor.UnselectAll();
                 }
@@ -85,6 +107,11 @@ namespace Nodify
                 {
                     Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
                     Container.IsSelected = true;
+                }
+
+                if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
+                {
+                    DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
             }
         }
