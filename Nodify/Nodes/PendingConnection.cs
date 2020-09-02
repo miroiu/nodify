@@ -107,13 +107,6 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PendingConnection), new FrameworkPropertyMetadata(typeof(PendingConnection)));
         }
 
-        public PendingConnection()
-        {
-            EventManager.RegisterClassHandler(typeof(Connector), Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
-            EventManager.RegisterClassHandler(typeof(Connector), Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
-            EventManager.RegisterClassHandler(typeof(Connector), Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
-        }
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -122,22 +115,19 @@ namespace Nodify
 
             if (Editor != null)
             {
+                Editor.AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
+                Editor.AddHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
+                Editor.AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
                 SetAllowOnlyConnectorsAttached(Editor, AllowOnlyConnectors);
             }
         }
 
         protected virtual void OnPendingConnectionStarted(object sender, PendingConnectionEventArgs e)
         {
-            // Do not show the connection if the event is raised in another editor
-            bool isOriginalSource = ((UIElement)sender).GetParentOfType<NodifyEditor>() == Editor;
-
-            if (isOriginalSource)
-            {
-                Source = e.SourceConnector;
-                IsVisible = true;
-                SourceAnchor = e.Anchor;
-                TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
-            }
+            Source = e.SourceConnector;
+            IsVisible = true;
+            SourceAnchor = e.Anchor;
+            TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
         }
 
         protected virtual void OnPendingConnectionDrag(object sender, PendingConnectionEventArgs e)
@@ -184,7 +174,7 @@ namespace Nodify
 
         protected virtual void OnPendingConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
-            if (IsVisible && ((UIElement)sender).GetParentOfType<NodifyEditor>() == Editor)
+            if (IsVisible)
             {
                 IsVisible = false;
                 Target = e.TargetConnector;
