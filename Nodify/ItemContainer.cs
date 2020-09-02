@@ -188,10 +188,16 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
-        public bool IsInsideContainer(Point clickPosition)
+        public virtual bool IsInsideContainer(Point position)
         {
             Size size = DesiredSizeForSelection ?? RenderSize;
-            return clickPosition.X <= size.Width && clickPosition.Y <= size.Height;
+            return position.X <= size.Width && position.Y <= size.Height;
+        }
+
+        public virtual bool Intersects(Rect outer, bool isContained)
+        {
+            var bounds = new Rect(Location, DesiredSizeForSelection ?? RenderSize);
+            return isContained ? outer.Contains(bounds) : outer.IntersectsWith(bounds);
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

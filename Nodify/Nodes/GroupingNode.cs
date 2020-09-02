@@ -79,12 +79,11 @@ namespace Nodify
             {
                 if (Keyboard.Modifiers == ModifierKeys.Shift)
                 {
-                    //Editor.UnselectArea(new Rect(Container.Location, RenderSize));
                     Editor.UnselectAll();
                 }
                 else if (Keyboard.Modifiers != ModifierKeys.Control)
                 {
-                    Editor.SelectArea(new Rect(Container.Location, RenderSize), Container.IsSelected);
+                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
                     Container.IsSelected = true;
                 }
             }

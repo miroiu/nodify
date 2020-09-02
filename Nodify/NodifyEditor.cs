@@ -652,7 +652,7 @@ namespace Nodify
 
         #region Selection
 
-        public void AppendSelection(Rect area)
+        public void AppendSelection(Rect area, bool fit = false)
         {
             var items = Items;
             var selected = base.SelectedItems;
@@ -662,7 +662,7 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (area.IntersectsWith(new Rect(container.Location, container.DesiredSizeForSelection ?? container.RenderSize)))
+                if (container.Intersects(area, fit))
                 {
                     selected.Add(items[i]);
                 }
@@ -670,7 +670,7 @@ namespace Nodify
             EndUpdateSelectedItems();
         }
 
-        public void InvertSelection(Rect area)
+        public void InvertSelection(Rect area, bool fit = false)
         {
             var items = Items;
             var selected = base.SelectedItems;
@@ -680,10 +680,10 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (area.IntersectsWith(new Rect(container.Location, container.DesiredSizeForSelection ?? container.RenderSize)))
+                if (container.Intersects(area, fit))
                 {
                     var item = items[i];
-                    if (selected.Contains(item))
+                    if (container.IsSelected)
                     {
                         selected.Remove(item);
                     }
@@ -696,19 +696,19 @@ namespace Nodify
             EndUpdateSelectedItems();
         }
 
-        public void SelectArea(Rect area, bool append = false)
+        public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
             if (!append)
             {
                 UnselectAll();
             }
 
-            AppendSelection(area);
+            AppendSelection(area, fit);
         }
 
-        public void UnselectArea(Rect area)
+        public void UnselectArea(Rect area, bool fit = false)
         {
-            var items = GetItemsInArea(area);
+            var items = GetItemsInArea(area, fit);
             SetSelectedItems(items, false);
         }
 
@@ -732,7 +732,7 @@ namespace Nodify
             EndUpdateSelectedItems();
         }
 
-        public List<ItemContainer> GetItemsInArea(Rect area)
+        public List<ItemContainer> GetItemsInArea(Rect area, bool fit = false)
         {
             var items = Items;
             List<ItemContainer> inArea = new List<ItemContainer>(items.Count / 2);
@@ -741,7 +741,7 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (area.IntersectsWith(new Rect(container.Location, container.DesiredSizeForSelection ?? container.RenderSize)))
+                if (container.Intersects(area, fit))
                 {
                     inArea.Add(container);
                 }
@@ -750,7 +750,7 @@ namespace Nodify
             return inArea;
         }
 
-        protected internal void GetItemsInAreaNoAlloc(List<ItemContainer> outItems, Rect area)
+        protected internal void GetItemsInAreaNoAlloc(List<ItemContainer> outItems, Rect area, bool fit = false)
         {
             var items = Items;
             outItems.Clear();
@@ -759,7 +759,7 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (area.IntersectsWith(new Rect(container.Location, container.DesiredSizeForSelection ?? container.RenderSize)))
+                if (container.Intersects(area, fit))
                 {
                     outItems.Add(container);
                 }
