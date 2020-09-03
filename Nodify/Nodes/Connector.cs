@@ -1,11 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Nodify
 {
-    [TemplatePart(Name = ElementConnector, Type = typeof(Thumb))]
+    [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
     public class Connector : Control
     {
         private const string ElementConnector = "PART_Connector";
@@ -100,7 +99,7 @@ namespace Nodify
         protected ItemContainer? Container { get; private set; }
         protected NodifyEditor? Editor { get; private set; }
 
-        public static double OtimizeMinDistance = 1000d;
+        public static double OptimizeMinDistance = 1000d;
         public static double OptimizeMinSelection = 100;
         public static bool EnableOptimizations = true;
         private Point _lastUpdatedContainerPosition;
@@ -191,7 +190,7 @@ namespace Nodify
         protected void UpdateConnectorBasedOnLocation(NodifyEditor editor, Point location)
         {
             var viewport = editor.Viewport;
-            var offset = OtimizeMinDistance / editor.Scale;
+            var offset = OptimizeMinDistance / editor.Scale;
 
             var area = Rect.Inflate(viewport, offset, offset);
 
