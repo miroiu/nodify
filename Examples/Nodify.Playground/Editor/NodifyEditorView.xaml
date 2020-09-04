@@ -21,9 +21,9 @@
         <Style TargetType="{x:Type nodify:Connection}"
                x:Key="DefaultConnectionStyle">
             <Setter Property="Source"
-                    Value="{Binding Input.Anchor}" />
-            <Setter Property="Target"
                     Value="{Binding Output.Anchor}" />
+            <Setter Property="Target"
+                    Value="{Binding Input.Anchor}" />
             <Setter Property="Stroke"
                     Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />
             <Setter Property="Cursor"

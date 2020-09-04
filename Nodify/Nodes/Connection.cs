@@ -38,7 +38,7 @@ namespace Nodify
             Point p3 = new Point(start.X + (width / 2d), start.Y + (height / 2d));
             Point p4 = new Point(start.X + (3d * width / 4d), end.Y);
 
-            return new PathGeometry
+            var result = new PathGeometry
             {
                 Figures = new PathFigureCollection
                 {
@@ -54,6 +54,9 @@ namespace Nodify
                     }
                 }
             };
+
+            result.Freeze();
+            return result;
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

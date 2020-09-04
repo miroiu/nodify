@@ -138,7 +138,10 @@ namespace Nodify
 
                 if (Editor != null && EnablePreview)
                 {
-                    FrameworkElement? connector = GetPreviewTarget(Editor);
+                    FrameworkElement? target = Editor?.ItemsHost;
+                    target ??= Editor;
+
+                    FrameworkElement? connector = GetPreviewTarget(target!);
 
                     if (_previousConnector != null)
                     {
