@@ -1,77 +1,50 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Nodify
 {
-    public class Connection : Shape
+    public class Connection : BaseConnection
     {
-        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(Point), typeof(Connection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(nameof(Target), typeof(Point), typeof(Connection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
-
-        public Point Source
-        {
-            get => (Point)GetValue(SourceProperty);
-            set => SetValue(SourceProperty, value);
-        }
-
-        public Point Target
-        {
-            get => (Point)GetValue(TargetProperty);
-            set => SetValue(TargetProperty, value);
-        }
-
         static Connection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
-        protected override Geometry DefiningGeometry => Bezier(Source, Target);
-
-        public static PathGeometry Bezier(Point start, Point end)
+        protected override Geometry DefiningGeometry
         {
-            double width = end.X - start.X;
-            double height = end.Y - start.Y;
-
-            Point p2 = new Point(start.X + (width / 4d), start.Y);
-            Point p3 = new Point(start.X + (width / 2d), start.Y + (height / 2d));
-            Point p4 = new Point(start.X + (3d * width / 4d), end.Y);
-
-            var result = new PathGeometry
+            get
             {
-                Figures = new PathFigureCollection
+                var (sourceOffset, targetOffset) = GetOffset();
+
+                var source = Source + sourceOffset;
+                var target = Target + targetOffset;
+
+                double width = target.X - source.X;
+                double height = target.Y - source.Y;
+
+                Point p2 = new Point(source.X + (width / 4d), source.Y);
+                Point p3 = new Point(source.X + (width / 2d), source.Y + (height / 2d));
+                Point p4 = new Point(source.X + (3d * width / 4d), target.Y);
+
+                var result = new PathGeometry
                 {
-                    new PathFigure
+                    Figures = new PathFigureCollection
                     {
-                        StartPoint = start,
-                        IsClosed = false,
-                        Segments =
+                        new PathFigure
                         {
-                            new BezierSegment(start, p2, p3, true),
-                            new BezierSegment(p3, p4, end, true)
+                            StartPoint = source,
+                            IsClosed = false,
+                            Segments =
+                            {
+                                new BezierSegment(source, p2, p3, true),
+                                new BezierSegment(p3, p4, target, true)
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            result.Freeze();
-            return result;
-        }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            if (Mouse.Captured == null)
-            {
-                CaptureMouse();
-            }
-        }
-
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-        {
-            if (Mouse.Captured == this)
-            {
-                ReleaseMouseCapture();
+                result.Freeze();
+                return result;
             }
         }
     }

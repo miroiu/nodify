@@ -16,19 +16,6 @@
     <UserControl.Resources>
         <local:RandomBrushConverter x:Key="RandomBrushConverter" />
         <local:DebugConverter x:Key="DebugConverter" />
-
-        <!--TODO: This should work as the other styles without having to specify a template-->
-        <Style TargetType="{x:Type nodify:Connection}"
-               x:Key="DefaultConnectionStyle">
-            <Setter Property="Source"
-                    Value="{Binding Output.Anchor}" />
-            <Setter Property="Target"
-                    Value="{Binding Input.Anchor}" />
-            <Setter Property="Stroke"
-                    Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />
-            <Setter Property="Cursor"
-                    Value="Hand" />
-        </Style>
     </UserControl.Resources>
 
     <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
@@ -50,7 +37,10 @@
 
         <nodify:NodifyEditor.ConnectionTemplate>
             <DataTemplate>
-                <nodify:Connection Style="{StaticResource DefaultConnectionStyle}" />
+                <nodify:Connection Source="{Binding Output.Anchor}"
+                                   Target="{Binding Input.Anchor}"
+                                   Stroke="{Binding ., Converter={StaticResource RandomBrushConverter}}"
+                                   Cursor="Hand" />
             </DataTemplate>
         </nodify:NodifyEditor.ConnectionTemplate>
 

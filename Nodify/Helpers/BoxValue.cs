@@ -5,6 +5,7 @@ namespace Nodify
     public static class BoxValue
     {
         public static readonly object Point = default(Point);
+        public static readonly object Size = default(Size);
         public static readonly object Rect = default(Rect);
         public static readonly object False = false;
         public static readonly object True = true;

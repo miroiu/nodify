@@ -10,12 +10,12 @@ namespace Nodify.Playground
         {
             InitializeComponent();
 
-            EventManager.RegisterClassHandler(typeof(Connection), MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnConnectionInteraction));
+            EventManager.RegisterClassHandler(typeof(BaseConnection), MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnConnectionInteraction));
         }
 
         private void OnConnectionInteraction(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Connection ctrl && ctrl.DataContext is ConnectionViewModel connection)
+            if (sender is BaseConnection ctrl && ctrl.DataContext is ConnectionViewModel connection)
             {
                 if (Keyboard.Modifiers == ModifierKeys.Alt)
                 {
