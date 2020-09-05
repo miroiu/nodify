@@ -109,7 +109,7 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
-            Thumb = Template.FindName(ElementConnector, this) as FrameworkElement;
+            Thumb = Template.FindName(ElementConnector, this) as FrameworkElement ?? this;
 
             Container = this.GetParentOfType<ItemContainer>();
             Editor = this.GetParentOfType<NodifyEditor>();
