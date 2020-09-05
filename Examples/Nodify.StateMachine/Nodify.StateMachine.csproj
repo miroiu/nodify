@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Examples\Nodify.Shared\Nodify.Shared.csproj" />
-    <ProjectReference Include="..\Nodify\Nodify.csproj" />
+    <ProjectReference Include="..\..\Nodify\Nodify.csproj" />
+    <ProjectReference Include="..\Nodify.Shared\Nodify.Shared.csproj" />
   </ItemGroup>
 
 </Project>

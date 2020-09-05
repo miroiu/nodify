@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{E4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Playground", "Examples\Nodify.Playground\Nodify.Playground.csproj", "{423D54CA-9F42-4116-8755-13641F94151D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.StateMachine", "Nodify.StateMachine\Nodify.StateMachine.csproj", "{48569CA8-81C1-4B47-963B-0FC9358C5F01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.StateMachine", "Examples\Nodify.StateMachine\Nodify.StateMachine.csproj", "{48569CA8-81C1-4B47-963B-0FC9358C5F01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Shared", "Examples\Nodify.Shared\Nodify.Shared.csproj", "{499C8539-9973-4102-B976-57DB3F3C7DF3}"
 EndProject
