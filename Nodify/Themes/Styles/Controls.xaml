@@ -5,6 +5,7 @@
         <ResourceDictionary Source="Node.xaml" />
         <ResourceDictionary Source="KnotNode.xaml" />
         <ResourceDictionary Source="GroupingNode.xaml" />
+        <ResourceDictionary Source="StateNode.xaml" />
         <ResourceDictionary Source="Connector.xaml" />
         <ResourceDictionary Source="NodeInput.xaml" />
         <ResourceDictionary Source="NodeOutput.xaml" />

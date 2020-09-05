@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Nodify.Playground
+namespace Nodify
 {
     public class DelegateCommand : ICommand
     {

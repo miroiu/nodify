@@ -73,7 +73,6 @@ namespace Nodify.Playground
                 var node = new T
                 {
                     Title = settings.NodeNameGenerator(settings, i),
-                    IsCompact = i % 2 == 0,
                     Location = settings.NodeLocationGenerator(settings, i)
                 };
 

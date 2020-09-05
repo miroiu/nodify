@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Nodify.Playground
+namespace Nodify
 {
     public class ObservableObject : INotifyPropertyChanged
     {

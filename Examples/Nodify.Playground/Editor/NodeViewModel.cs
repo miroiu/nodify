@@ -11,13 +11,6 @@ namespace Nodify.Playground
             internal set => SetProperty(ref _graph, value);
         }
 
-        private bool _isCompact;
-        public bool IsCompact
-        {
-            get => _isCompact;
-            set => SetProperty(ref _isCompact, value);
-        }
-
         private Point _location;
         public Point Location
         {

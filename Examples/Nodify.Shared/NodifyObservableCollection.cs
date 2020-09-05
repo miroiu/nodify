@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace Nodify.Playground
+namespace Nodify
 {
     public interface INodifyObservableCollection<T>
     {
