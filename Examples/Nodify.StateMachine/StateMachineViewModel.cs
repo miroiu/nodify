@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Nodify.StateMachine
 {
@@ -8,57 +7,59 @@ namespace Nodify.StateMachine
     {
         public StateMachineViewModel()
         {
-            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedStates.Count > 0);
-            DisconnectStateCommand = new DelegateCommand<StateViewModel>(x => DisconnectState(x), x => x.Transitions.Count > 0);
+            PendingTransition = new TransitionViewModel();
+
+            Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
+            .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
+            .WhenCleared(c => c.ForEach(i =>
+            {
+                i.Source.Transitions.Clear();
+                i.Target.Transitions.Clear();
+            }));
+
+            States.WhenAdded(x => x.Graph = this)
+                 .WhenRemoved(x => DisconnectState(x))
+                 .WhenCleared(x =>
+                 {
+                     Transitions.Clear();
+                     OnCreateDefaultNodes();
+                 });
+
+            OnCreateDefaultNodes();
+
+            SelectAllCommand = new DelegateCommand(() => SelectedStates.AddRange(States), () => States.Count > 0);
+            RenameStateCommand = new RequeryCommand(() => SelectedStates[0].IsRenaming = true, () => SelectedStates.Count == 1 && SelectedStates[0].IsEditable);
+            DisconnectStateCommand = new RequeryCommand<StateViewModel>(x => DisconnectState(x), x => x.Transitions.Count > 0);
+            DisconnectSelectionCommand = new RequeryCommand(() => SelectedStates.ForEach(x => DisconnectState(x)), () => SelectedStates.Count > 0 && Transitions.Count > 0);
+            DeleteSelectionCommand = new RequeryCommand(() => SelectedStates.ToList().ForEach(x => x.IsEditable.Then(() => States.Remove(x))), () => SelectedStates.Count > 1 || (SelectedStates.Count == 1 && SelectedStates[0].IsEditable));
+
+            AddStateCommand = new DelegateCommand<Point>(p => States.Add(new StateViewModel
+            {
+                Name = "New State",
+                IsRenaming = true,
+                Location = p
+            }));
+
             CreateTransitionCommand = new DelegateCommand<(object Source, object? Target)>(s => Transitions.Add(new TransitionViewModel
             {
                 Source = (StateViewModel)s.Source,
                 Target = (StateViewModel)s.Target!
-            }), s => s.Target is StateViewModel target && target != s.Source && !Transitions.Any(t => t.Target == target && t.Source == s.Source));
+            }), s => s.Target is StateViewModel target && target != s.Source && !target.Transitions.Contains(s.Source));
 
-            PendingTransition = new TransitionViewModel();
+            DeleteTransitionCommand = new DelegateCommand<TransitionViewModel>(t => Transitions.Remove(t));
+        }
 
-            Transitions.WhenAdded(c =>
+        protected virtual void OnCreateDefaultNodes()
+        {
+            States.Insert(0, new StateViewModel
             {
-                c.Source.Transitions.Add(c.Target);
-                c.Target.Transitions.Add(c.Source);
-            })
-            .WhenRemoved(c =>
-            {
-                c.Source.Transitions.Remove(c.Target);
-                c.Target.Transitions.Remove(c.Source);
-            });
-
-            States.WhenAdded(x => x.Graph = this)
-                 .WhenRemoved(x => DisconnectState(x))
-                 .WhenCleared(x => Transitions.Clear());
-
-            States.Add(new StateViewModel
-            {
-                Name = "ALT + Click on transition",
-                Location = new Point(100, 100)
-            });
-
-            States.Add(new StateViewModel
-            {
-                Name = "Drag border to connect",
-                Location = new Point(350, 100)
-            });
-
-            States.Add(new StateViewModel
-            {
-                Name = "Double click me to edit",
-                Location = new Point(250, 250)
-            });
-
-            Transitions.Add(new TransitionViewModel
-            {
-                Source = States[0],
-                Target = States[1]
+                Name = "Enter",
+                Location = new Point(100, 100),
+                IsEditable = false
             });
         }
 
-        private void DisconnectState(StateViewModel state)
+        public void DisconnectState(StateViewModel state)
         {
             var transitions = Transitions.Where(t => t.Source == state || t.Target == state).ToList();
             transitions.ForEach(t => Transitions.Remove(t));
@@ -87,18 +88,13 @@ namespace Nodify.StateMachine
 
         public TransitionViewModel PendingTransition { get; }
 
-        public ICommand DeleteSelectionCommand { get; }
-        public ICommand DisconnectStateCommand { get; }
-        public ICommand CreateTransitionCommand { get; }
-
-        private void DeleteSelection()
-        {
-            var selected = SelectedStates.ToList();
-
-            for (int i = 0; i < selected.Count; i++)
-            {
-                States.Remove(selected[i]);
-            }
-        }
+        public INodifyCommand DeleteTransitionCommand { get; }
+        public INodifyCommand DeleteSelectionCommand { get; }
+        public INodifyCommand DisconnectStateCommand { get; }
+        public INodifyCommand DisconnectSelectionCommand { get; }
+        public INodifyCommand RenameStateCommand { get; }
+        public INodifyCommand AddStateCommand { get; }
+        public INodifyCommand CreateTransitionCommand { get; }
+        public INodifyCommand SelectAllCommand { get; }
     }
 }

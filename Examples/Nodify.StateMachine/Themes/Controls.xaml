@@ -1,0 +1,109 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify.StateMachine">
+
+    <Style TargetType="{x:Type ContextMenu}"
+           BasedOn="{StaticResource {x:Type ContextMenu}}">
+        <Setter Property="Background"
+                Value="#1B1B1C" />
+        <Setter Property="BorderBrush"
+                Value="#2D2D30" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border SnapsToDevicePixels="true"
+                            Margin="0,0,5,5"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="5"
+                                              Opacity="0.5" />
+                        </Border.Effect>
+                        <ItemsPresenter SnapsToDevicePixels="true" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Expander}"
+           BasedOn="{StaticResource {x:Type Expander}}">
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Padding"
+                Value="4 1 0 3" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            SnapsToDevicePixels="true">
+                        <DockPanel>
+                            <CheckBox ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                      Content="{TemplateBinding Header}"
+                                      FontStyle="{TemplateBinding FontStyle}"
+                                      FontStretch="{TemplateBinding FontStretch}"
+                                      FontWeight="{TemplateBinding FontWeight}"
+                                      FontFamily="{TemplateBinding FontFamily}"
+                                      FontSize="{TemplateBinding FontSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Padding="{TemplateBinding Padding}"
+                                      IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      HorizontalAlignment="Left"
+                                      DockPanel.Dock="Left">
+                                <CheckBox.LayoutTransform>
+                                    <RotateTransform Angle="90" />
+                                </CheckBox.LayoutTransform>
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                        <Border Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Left"
+                                                              SnapsToDevicePixels="True"
+                                                              VerticalAlignment="Center" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+                            <ContentPresenter x:Name="PART_Content"
+                                              DockPanel.Dock="Bottom"
+                                              Focusable="false"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Visibility="Collapsed" />
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded"
+                                 Value="true">
+                            <Setter Property="Visibility"
+                                    TargetName="PART_Content"
+                                    Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="false">
+                            <Setter Property="Foreground"
+                                    Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

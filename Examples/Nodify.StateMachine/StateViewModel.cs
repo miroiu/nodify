@@ -33,6 +33,14 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _name, value);
         }
 
+        private bool _isRenaming;
+        public bool IsRenaming
+        {
+            get => _isRenaming;
+            set => SetProperty(ref _isRenaming, value);
+        }
+
+        public bool IsEditable { get; set; } = true;
         public StateMachineViewModel Graph { get; internal set; } = default!;
         public NodifyObservableCollection<StateViewModel> Transitions { get; } = new NodifyObservableCollection<StateViewModel>();
     }
