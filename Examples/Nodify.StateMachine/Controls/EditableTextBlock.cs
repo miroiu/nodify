@@ -10,7 +10,7 @@ namespace Nodify.StateMachine
         private const string ElementTextBox = "PART_TextBox";
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(EditableTextBlock), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        public static readonly DependencyProperty IsEditingProperty = DependencyProperty.Register(nameof(IsEditing), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False, OnIsEditingChanged, CoerceIsEditing));
+        public static readonly DependencyProperty IsEditingProperty = DependencyProperty.Register(nameof(IsEditing), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsEditingChanged, CoerceIsEditing));
         public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register(nameof(IsEditable), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty AcceptsReturnProperty = DependencyProperty.Register(nameof(AcceptsReturn), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register(nameof(TextWrapping), typeof(TextWrapping), typeof(EditableTextBlock), new FrameworkPropertyMetadata(TextWrapping.Wrap));
@@ -128,7 +128,7 @@ namespace Nodify.StateMachine
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (IsEditing && e.Key == Key.Escape)
+            if (IsEditing && e.Key == Key.Escape || !AcceptsReturn && e.Key == Key.Enter)
             {
                 IsEditing = false;
             }
