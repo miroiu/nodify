@@ -84,8 +84,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
-                <nodify:GroupingNode Width="{Binding Width}"
-                                     Height="{Binding Height}"
+                <nodify:GroupingNode ActualSize="{Binding Size}"
                                      Header="{Binding Title}"
                                      HeaderBrush="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.8}"
                                      Background="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.3}" />

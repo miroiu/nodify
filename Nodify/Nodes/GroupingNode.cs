@@ -26,7 +26,16 @@ namespace Nodify
 
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register(nameof(HeaderBrush), typeof(Brush), typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
         public static readonly DependencyProperty DefaultMovementModeProperty = DependencyProperty.Register(nameof(DefaultMovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovement));
+
+        private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var node = (GroupingNode)d;
+            var newSize = (Size)e.NewValue;
+            node.Width = newSize.Width;
+            node.Height = newSize.Height;
+        }
 
         public Brush HeaderBrush
         {
@@ -38,6 +47,12 @@ namespace Nodify
         {
             get => (bool)GetValue(CanResizeProperty);
             set => SetValue(CanResizeProperty, value);
+        }
+
+        public Size ActualSize
+        {
+            get => (Size)GetValue(ActualSizeProperty);
+            set => SetValue(ActualSizeProperty, value);
         }
 
         public GroupingMovementMode DefaultMovementMode
@@ -56,6 +71,7 @@ namespace Nodify
         public GroupingNode()
         {
             AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnResize));
+            AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnResizeCompleted));
 
             Loaded += OnNodeLoaded;
             Unloaded += OnNodeUnloaded;
@@ -154,6 +170,9 @@ namespace Nodify
                 e.Handled = true;
             }
         }
+
+        private void OnResizeCompleted(object sender, DragCompletedEventArgs e)
+            => ActualSize = new Size(ActualWidth, ActualHeight);
 
         private void OnHeaderSizeChanged(object sender, SizeChangedEventArgs e)
             => CalculateDesiredHeaderSize();

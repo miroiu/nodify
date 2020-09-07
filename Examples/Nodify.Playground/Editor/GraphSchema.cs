@@ -104,8 +104,7 @@ namespace Nodify.Playground
             var comment = new CommentNodeViewModel
             {
                 Location = rect.Location,
-                Width = rect.Width,
-                Height = rect.Height,
+                Size = rect.Size,
                 Title = "New comment"
             };
 
