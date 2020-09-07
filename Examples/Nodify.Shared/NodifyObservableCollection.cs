@@ -113,19 +113,20 @@ namespace Nodify
 
         protected override void ClearItems()
         {
+            var items = new List<T>(this);
+            base.ClearItems();
+
             if (_cleared.Count > 0)
             {
-                NotifyOnItemsCleared(new List<T>(this));
+                NotifyOnItemsCleared(items);
             }
             else
             {
-                for (int i = 0; i < Count; i++)
+                for (int i = 0; i < items.Count; i++)
                 {
-                    NotifyOnItemRemoved(base[i]);
+                    NotifyOnItemRemoved(items[i]);
                 }
             }
-
-            base.ClearItems();
 
             OnPropertyChanged(CountPropertyChanged);
             OnPropertyChanged(IndexerPropertyChanged);
@@ -135,7 +136,7 @@ namespace Nodify
         protected override void InsertItem(int index, T item)
         {
             base.InsertItem(index, item);
-            
+
             OnPropertyChanged(CountPropertyChanged);
             OnPropertyChanged(IndexerPropertyChanged);
             OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);

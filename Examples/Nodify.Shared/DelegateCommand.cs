@@ -3,7 +3,12 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public class DelegateCommand : ICommand
+    public interface INodifyCommand : ICommand
+    {
+        void RaiseCanExecuteChanged();
+    }
+
+    public class DelegateCommand : INodifyCommand
     {
         private readonly Action _action;
         private readonly Func<bool>? _condition;
@@ -26,7 +31,7 @@ namespace Nodify
             => CanExecuteChanged?.Invoke(this, new EventArgs());
     }
 
-    public class DelegateCommand<T> : ICommand
+    public class DelegateCommand<T> : INodifyCommand
     {
         private readonly Action<T> _action;
         private readonly Func<T, bool>? _condition;
