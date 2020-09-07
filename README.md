@@ -83,7 +83,11 @@
  
 ## Documentation
 https://github.com/miroiu/nodify/wiki
+
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
+
 ![Playground](https://i.imgur.com/MnbSLx8.png)
+
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
+
 ![StateMachine](https://i.imgur.com/z6EPgKy.png)
