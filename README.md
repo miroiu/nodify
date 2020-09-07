@@ -78,7 +78,12 @@
  - Lots of **configurable** dependency properties
  - **Pan**, **zoom**, **select** area, **auto pan** when close to edge
  - **Select** and **move** items
- - Controls library (Node, GroupingNode, Connection etc.)
+ - Ready for Undo/Redo
+ - Expanding Controls library (Node, GroupingNode, Connection etc.)
  
 ## Documentation
 https://github.com/miroiu/nodify/wiki
+https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
+![Playground](https://i.imgur.com/MnbSLx8.png)
+https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
+![StateMachine](https://i.imgur.com/z6EPgKy.png)
