@@ -64,6 +64,7 @@ namespace Nodify
             var editor = (NodifyEditor)d;
             editor.OffsetOverride((Point)e.NewValue);
             editor.CoerceValue(ViewportProperty);
+            editor.IsPanning = true;
         }
 
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -189,8 +190,6 @@ namespace Nodify
             return value;
         }
 
-        public Point MousePositionTransformed => (Point)(((Vector)Offset + (Vector)Mouse.GetPosition(this)) / Scale);
-
         protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
         protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
 
@@ -224,6 +223,8 @@ namespace Nodify
         public static readonly DependencyProperty SelectingRectangleProperty = SelectingRectanglePropertyKey.DependencyProperty;
         protected internal static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty IsPanningProperty = DependencyProperty.Register(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty MouseLocationProperty = DependencyProperty.Register(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
 
         public int GridCellSize
         {
@@ -277,6 +278,18 @@ namespace Nodify
         {
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
+        }
+
+        public bool IsPanning
+        {
+            get => (bool)GetValue(IsPanningProperty);
+            set => SetValue(IsPanningProperty, value);
+        }
+
+        public Point MouseLocation
+        {
+            get => (Point)GetValue(MouseLocationProperty);
+            set => SetValue(MouseLocationProperty, value);
         }
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -489,6 +502,8 @@ namespace Nodify
 
             if (CurrentMousePosition != PreviousMousePosition)
             {
+                MouseLocation = new Point((Offset.X + CurrentMousePosition.X) / Scale, (Offset.Y + CurrentMousePosition.Y) / Scale);
+
                 if (Mouse.Captured == this)
                 {
                     // Panning
@@ -499,7 +514,7 @@ namespace Nodify
                     }
                     else if (IsSelecting)
                     {
-                        Selection.Update(MousePositionTransformed);
+                        Selection.Update(MouseLocation);
                     }
                     else if (Mouse.Captured == this)
                     {
@@ -515,7 +530,7 @@ namespace Nodify
         {
             if (Mouse.Captured == null)
             {
-                Selection.Start(MousePositionTransformed, EnableRealtimeSelection);
+                Selection.Start(MouseLocation, EnableRealtimeSelection);
 
                 Focus();
                 CaptureMouse();
@@ -548,6 +563,12 @@ namespace Nodify
             {
                 Focus();
                 ReleaseMouseCapture();
+
+                if (IsPanning)
+                {
+                    IsPanning = false;
+                    e.Handled = true;
+                }
             }
         }
 
