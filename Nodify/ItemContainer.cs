@@ -204,6 +204,7 @@ namespace Nodify
         {
             if (IsInsideContainer(e.GetPosition(this)))
             {
+                Focus();
                 e.Handled = true;
             }
         }
@@ -225,7 +226,27 @@ namespace Nodify
                     ParentHost?.UnselectAll();
                     IsSelected = true;
                 }
+                
+                Focus();
+                e.Handled = true;
+            }
+        }
 
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            if (ParentHost != null && !IsSelected && IsInsideContainer(e.GetPosition(this)))
+            {
+                ParentHost.UnselectAll();
+                IsSelected = true;
+                Focus();
+            }
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            if (IsInsideContainer(e.GetPosition(this)))
+            {
+                Focus();
                 e.Handled = true;
             }
         }

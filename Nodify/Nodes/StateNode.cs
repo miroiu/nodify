@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -51,30 +50,30 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(StateNode), new FrameworkPropertyMetadata(typeof(StateNode)));
         }
 
+        protected UIElement? ContentControl { get; private set; }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            UIElement? content = Template.FindName(ElementContent, this) as UIElement;
-
-            if (content != null)
-            {
-                content.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnContentMouseDown));
-                content.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnContentMouseUp));
-            }
+            ContentControl = Template.FindName(ElementContent, this) as UIElement;
         }
 
-        private void OnContentMouseUp(object sender, MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            if (Editor != null && Container != null)
+            if (!ContentControl?.IsAncestorOf(e.OriginalSource as DependencyObject) ?? true)
             {
-                Editor.UnselectAll();
-                Container.IsSelected = true;
+                base.OnMouseLeftButtonDown(e);
             }
         }
 
-        private void OnContentMouseDown(object sender, MouseButtonEventArgs e)
-            => e.Handled = true;
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            if (!ContentControl?.IsAncestorOf(e.OriginalSource as DependencyObject) ?? true)
+            {
+                base.OnMouseLeftButtonUp(e);
+            }
+        }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
