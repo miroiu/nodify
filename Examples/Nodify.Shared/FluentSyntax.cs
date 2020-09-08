@@ -18,6 +18,16 @@ namespace Nodify
             return condition;
         }
 
+        public static bool Else(this bool condition, Action action)
+        {
+            if (!condition)
+            {
+                action();
+            }
+
+            return condition;
+        }
+
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> collection, Action<T> action)
         {
             if (collection is IList<T> list)

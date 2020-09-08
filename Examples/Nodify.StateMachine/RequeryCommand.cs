@@ -47,7 +47,14 @@ namespace Nodify.StateMachine
         }
 
         public bool CanExecute(object parameter)
-            => _condition?.Invoke((T)parameter) ?? true;
+        {
+            if (parameter is T value)
+            {
+                return _condition?.Invoke(value) ?? true;
+            }
+
+            return _condition?.Invoke(default!) ?? true;
+        }
 
         public void Execute(object parameter)
             => _action((T)parameter);

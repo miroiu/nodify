@@ -2,6 +2,87 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify.StateMachine">
 
+    <Style TargetType="{x:Type Separator}">
+        <Setter Property="Focusable"
+                Value="False" />
+        <Setter Property="VerticalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="Height"
+                Value="1" />
+        <Setter Property="Width"
+                Value="2" />
+        <Setter Property="Background"
+                Value="#222222" />
+        <Setter Property="BorderBrush"
+                Value="#46464A" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Height="{TemplateBinding Height}"
+                            Width="{TemplateBinding Width}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Button}"
+           BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Padding"
+                Value="1 2" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="#3E3E40" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="PART_Border"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Focusable="False"
+                                          Margin="{TemplateBinding Padding}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="PART_Border"
+                                    Property="Background"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="PART_Border"
+                                    Property="Background"
+                                    Value="Transparent" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type ContextMenu}"
            BasedOn="{StaticResource {x:Type ContextMenu}}">
         <Setter Property="Background"

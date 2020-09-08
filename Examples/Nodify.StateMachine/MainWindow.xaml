@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.StateMachine"
         xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
+        ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="State Machine Editor"
         Height="450"
         Width="800">
     <Window.DataContext>
@@ -17,24 +18,18 @@
         <local:BindingProxy x:Key="EditorProxy"
                             DataContext="{Binding}" />
         <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <local:BooleanToVisibilityConverter x:Key="NegateBooleanToVisibilityConverter"
                                             Negate="True" />
     </Window.Resources>
 
-    <Grid Background="#2D2D30">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
+    <Grid>
         <nodify:NodifyEditor ItemsSource="{Binding States}"
                              SelectedItems="{Binding SelectedStates}"
                              Connections="{Binding Transitions}"
                              PendingConnection="{Binding PendingTransition}"
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
-                             ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
-                             Grid.Column="2">
+                             ConnectionCompletedCommand="{Binding CreateTransitionCommand}">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:PendingConnection}"
                        BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
@@ -71,12 +66,29 @@
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                     <nodify:DirectionalConnection Source="{Binding Source.Anchor}"
                                                   Target="{Binding Target.Anchor}"
-                                                  Stroke="White"
-                                                  Fill="White"
                                                   SourceOffset="{Binding Source.Size}"
                                                   TargetOffset="{Binding Target.Size}"
                                                   OffsetMode="Edge"
                                                   Tag="{Binding}">
+                        <nodify:DirectionalConnection.Style>
+                            <Style TargetType="{x:Type nodify:DirectionalConnection}">
+                                <Setter Property="StrokeThickness"
+                                        Value="3" />
+                                <Setter Property="Stroke"
+                                        Value="White" />
+                                <Setter Property="Fill"
+                                        Value="White" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Target.IsActive}"
+                                                 Value="True">
+                                        <Setter Property="Stroke"
+                                                Value="#8DD28A" />
+                                        <Setter Property="StrokeThickness"
+                                                Value="6" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </nodify:DirectionalConnection.Style>
                         <nodify:DirectionalConnection.ContextMenu>
                             <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
                                 <MenuItem Header="_Delete"
@@ -110,6 +122,11 @@
                                                  Value="False">
                                         <Setter Property="BorderBrush"
                                                 Value="#E6AF86" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsActive}"
+                                                 Value="True">
+                                        <Setter Property="BorderBrush"
+                                                Value="#8DD28A" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -175,11 +192,65 @@
             </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 
-        <Expander Header="Transitions">
+        <Expander Header="Transitions"
+                  HorizontalAlignment="Left"
+                  Background="#2D2D30">
             <Border BorderBrush="#333336"
                     BorderThickness="1"
                     HorizontalAlignment="Stretch">
             </Border>
         </Expander>
+
+        <Border CornerRadius="2"
+                Background="#2D2D30"
+                BorderThickness="0 0 0 1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="10 0">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding PauseCommand}"
+                        Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}"
+                               BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content"
+                                    Value="{StaticResource PauseIcon}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPaused}"
+                                             Value="True">
+                                    <Setter Property="Content"
+                                            Value="{StaticResource UnpauseIcon}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Command="{Binding RunCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentPresenter DataContext="{Binding}"
+                                          Margin="0 0 4 0">
+                            <ContentPresenter.Style>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Content"
+                                            Value="{StaticResource RunIcon}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRunning}"
+                                                     Value="True">
+                                            <Setter Property="Content"
+                                                    Value="{StaticResource StopIcon}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentPresenter.Style>
+                        </ContentPresenter>
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </Button>
+                <Separator Height="Auto"
+                           BorderThickness="0 0 1 0" />
+                <Button Content="{StaticResource ZoomInIcon}" />
+                <Button Content="{StaticResource ZoomOutIcon}" />
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

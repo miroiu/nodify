@@ -1,9 +1,17 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Nodify.StateMachine
 {
     public class StateViewModel : ObservableObject
     {
+        public Guid Id { get; }
+
+        public StateViewModel(Guid id)
+            => Id = id;
+
+        public StateViewModel() : this(Guid.NewGuid()) { }
+
         // TODO: Can remove when auto layout is added
         private Point _location;
         public Point Location
@@ -38,6 +46,13 @@ namespace Nodify.StateMachine
         {
             get => _isRenaming;
             set => SetProperty(ref _isRenaming, value);
+        }
+
+        private bool _isActive;
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value);
         }
 
         public bool IsEditable { get; set; } = true;
