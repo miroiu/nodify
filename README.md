@@ -90,4 +90,4 @@ https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
 
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
 
-![StateMachine](https://i.imgur.com/z6EPgKy.png)
+![StateMachine](https://i.imgur.com/v4zmBur.gif)
