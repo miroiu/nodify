@@ -18,9 +18,6 @@
         <local:BindingProxy x:Key="EditorProxy"
                             DataContext="{Binding}" />
         <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
-        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <local:BooleanToVisibilityConverter x:Key="NegateBooleanToVisibilityConverter"
-                                            Negate="True" />
     </Window.Resources>
 
     <Grid>
@@ -112,7 +109,8 @@
                             <DataTemplate DataType="{x:Type local:StateViewModel}">
                                 <local:EditableTextBlock Text="{Binding Name}"
                                                          IsEditing="{Binding IsRenaming}"
-                                                         IsEditable="{Binding IsEditable}" />
+                                                         IsEditable="{Binding IsEditable}"
+                                                         MaxLength="30" />
                             </DataTemplate>
                         </nodify:StateNode.ContentTemplate>
                         <nodify:StateNode.Style>
@@ -162,7 +160,7 @@
 
             <nodify:NodifyEditor.ContextMenu>
                 <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}"
-                             Visibility="{Binding IsPanning, Converter={StaticResource NegateBooleanToVisibilityConverter}}">
+                             Visibility="{Binding IsPanning, Converter={local:BooleanToVisibilityConverter Negate=True}}">
                     <MenuItem Header="_Add State"
                               Icon="{StaticResource AddStateIcon}"
                               InputGestureText="Shift+A"
