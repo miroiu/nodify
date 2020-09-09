@@ -5,56 +5,63 @@ using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
+    public enum MachineState
+    {
+        Stopped,
+        Running,
+        Paused,
+    }
+
     public class StateMachine
     {
         private readonly Dictionary<Guid, State> _states;
 
+        public State Root { get; }
+        public IReadOnlyList<State> States { get; }
+        public MachineState? RunningState { get; private set; }
+
+        // param = aborted
+        public event Action<MachineState>? RunningStateChanged;
+        public event Action<Guid>? NextStateChanging;
+
         public StateMachine(Guid root, IEnumerable<State> states)
         {
-            Root = root;
             States = new List<State>(states);
 
             _states = States.ToDictionary(x => x.Id, x => x);
 
-            if (!_states.ContainsKey(Root))
+            if (!_states.ContainsKey(root))
             {
                 throw new ArgumentException(nameof(root));
             }
+
+            Root = _states[root];
         }
-
-        public bool IsRunning { get; private set; }
-        public bool IsPaused { get; private set; }
-        public Guid Root { get; }
-        public IReadOnlyList<State> States { get; }
-
-        public event Action<Guid>? OnTransition;
-
-        // param = aborted
-        public event Action<bool>? OnCompleted;
-        public event Action<bool>? OnPausedChanged;
 
         public async Task Start()
         {
-            IsRunning = true;
-            State? current = GetNext(_states[Root]);
-
-            while (IsRunning && current != null)
+            if (ChangeState(MachineState.Running))
             {
-                if (IsPaused)
-                {
-                    await Task.Delay(10);
-                }
-                else
-                {
-                    OnTransition?.Invoke(current.Id);
+                // Skip root state
+                State? current = GetNext(Root);
 
-                    await current.Activate();
-                    current = GetNext(current);
+                while (RunningState != MachineState.Stopped && current != null)
+                {
+                    if (RunningState == MachineState.Paused)
+                    {
+                        await Task.Delay(10);
+                    }
+                    else
+                    {
+                        NextStateChanging?.Invoke(current.Id);
+
+                        await current.Activate();
+                        current = GetNext(current);
+                    }
                 }
+
+                ChangeState(MachineState.Stopped);
             }
-
-            IsRunning = false;
-            OnCompleted?.Invoke(false);
         }
 
         private State? GetNext(State current)
@@ -73,21 +80,24 @@ namespace Nodify.StateMachine
         }
 
         public void Stop()
-        {
-            IsRunning = false;
-            OnCompleted?.Invoke(true);
-        }
+            => ChangeState(MachineState.Stopped);
 
         public void Pause()
-        {
-            IsPaused = true;
-            OnPausedChanged?.Invoke(true);
-        }
+            => ChangeState(MachineState.Paused);
 
         public void Unpause()
+            => ChangeState(MachineState.Running);
+
+        private bool ChangeState(MachineState newState)
         {
-            IsPaused = false;
-            OnPausedChanged?.Invoke(false);
+            if (newState == MachineState.Running || (RunningState != null && RunningState != newState))
+            {
+                RunningState = newState;
+                RunningStateChanged?.Invoke(newState);
+                return true;
+            }
+
+            return false;
         }
     }
 }

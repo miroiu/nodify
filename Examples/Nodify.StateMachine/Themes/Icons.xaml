@@ -8,9 +8,13 @@
         <Rectangle.Fill>
             <DrawingBrush>
                 <DrawingBrush.Drawing>
-                    <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
-                        <GeometryDrawing Brush="#FF0081E4"
-                                         Geometry="F1 M16,16z M0,0z M12.143,7.643L5,13 5,3 12.143,7.643z" />
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M4,2L4,14 12,8z" />
+                        </DrawingGroup.Children>
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
@@ -123,8 +127,6 @@
                         <DrawingGroup.Children>
                             <GeometryDrawing Brush="#00FFFFFF"
                                              Geometry="F1M16,16L0,16 0,0 16,0z" />
-                            <GeometryDrawing Brush="#8DD28A"
-                                             Geometry="F1M2.9997,-0.000199999999999534L2.9997,15.9998 13.6677,7.9998z" />
                             <GeometryDrawing Brush="#8DD28A"
                                              Geometry="F1M4,2L4,14 12,8z" />
                         </DrawingGroup.Children>

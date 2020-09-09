@@ -208,16 +208,20 @@
                 VerticalAlignment="Top"
                 Margin="10 0">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding PauseCommand}"
-                        Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Command="{Binding PauseCommand}">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}"
                                BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Content"
                                     Value="{StaticResource PauseIcon}" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPaused}"
-                                             Value="True">
+                                <DataTrigger Binding="{Binding Runner.State}"
+                                             Value="Stopped">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Runner.State}"
+                                             Value="Paused">
                                     <Setter Property="Content"
                                             Value="{StaticResource UnpauseIcon}" />
                                 </DataTrigger>
@@ -232,12 +236,12 @@
                             <ContentPresenter.Style>
                                 <Style TargetType="{x:Type ContentPresenter}">
                                     <Setter Property="Content"
-                                            Value="{StaticResource RunIcon}" />
+                                            Value="{StaticResource StopIcon}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsRunning}"
-                                                     Value="True">
+                                        <DataTrigger Binding="{Binding Runner.State}"
+                                                     Value="Stopped">
                                             <Setter Property="Content"
-                                                    Value="{StaticResource StopIcon}" />
+                                                    Value="{StaticResource RunIcon}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

@@ -9,6 +9,7 @@ namespace Nodify.StateMachine
         public StateMachineViewModel()
         {
             PendingTransition = new TransitionViewModel();
+            Runner = new StateMachineRunner(this);
 
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
             .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
@@ -49,14 +50,8 @@ namespace Nodify.StateMachine
 
             DeleteTransitionCommand = new RequeryCommand<TransitionViewModel>(t => Transitions.Remove(t), t => !IsRunning);
 
-            RunCommand = new RequeryCommand(() => IsRunning.Then(Stop).Else(Start), () => Transitions.Count > 0);
-            PauseCommand = new RequeryCommand(() => IsPaused.Then(_stateMachine!.Unpause).Else(_stateMachine.Pause), () => IsRunning && _stateMachine != null);
-        }
-
-        public void DisconnectState(StateViewModel state)
-        {
-            var transitions = Transitions.Where(t => t.Source == state || t.Target == state).ToList();
-            transitions.ForEach(t => Transitions.Remove(t));
+            RunCommand = new RequeryCommand(() => IsRunning.Then(Runner.Stop).Else(Runner.Start), () => Transitions.Count > 0);
+            PauseCommand = new RequeryCommand(Runner.TogglePause, () => IsRunning);
         }
 
         private NodifyObservableCollection<StateViewModel> _states = new NodifyObservableCollection<StateViewModel>();
@@ -87,21 +82,11 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _name, value);
         }
 
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
-        }
-
-        private bool _isPaused;
-        public bool IsPaused
-        {
-            get => _isPaused;
-            set => SetProperty(ref _isPaused, value);
-        }
+        public bool IsRunning => Runner.State != MachineState.Stopped;
+        public bool IsPaused => Runner.State == MachineState.Paused;
 
         public TransitionViewModel PendingTransition { get; }
+        public StateMachineRunner Runner { get; }
 
         public INodifyCommand DeleteTransitionCommand { get; }
         public INodifyCommand DeleteSelectionCommand { get; }
@@ -114,8 +99,11 @@ namespace Nodify.StateMachine
         public INodifyCommand RunCommand { get; }
         public INodifyCommand PauseCommand { get; }
 
-        private StateMachine? _stateMachine;
-        private StateViewModel? _activeState;
+        public void DisconnectState(StateViewModel state)
+        {
+            var transitions = Transitions.Where(t => t.Source == state || t.Target == state).ToList();
+            transitions.ForEach(t => Transitions.Remove(t));
+        }
 
         protected virtual void OnCreateDefaultNodes()
         {
@@ -125,48 +113,6 @@ namespace Nodify.StateMachine
                 Location = new Point(100, 100),
                 IsEditable = false
             });
-        }
-
-        public async void Start()
-        {
-            _stateMachine = StateMachineHelper.From(this);
-            _stateMachine.OnCompleted += OnCompleted;
-            _stateMachine.OnTransition += ActivateState;
-            _stateMachine.OnPausedChanged += b => IsPaused = b;
-
-            IsRunning = true;
-            await _stateMachine.Start();
-        }
-
-        private void OnCompleted(bool aborted)
-        {
-            IsRunning = false;
-            IsPaused = false;
-            if (_activeState != null)
-            {
-                _activeState.IsActive = false;
-            }
-        }
-
-        private void ActivateState(Guid id)
-        {
-            if (_activeState != null)
-            {
-                _activeState.IsActive = false;
-            }
-
-            _activeState = States.FirstOrDefault(st => st.Id == id);
-
-            if (_activeState != null)
-            {
-                _activeState.IsActive = true;
-            }
-        }
-
-        public void Stop()
-        {
-            _stateMachine?.Stop();
-            IsRunning = false;
         }
     }
 }
