@@ -30,7 +30,59 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type Button}"
+    <Style x:Key="IconCheckBox"
+           TargetType="{x:Type CheckBox}"
+           BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="Padding"
+                Value="1 2" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="#3E3E40" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Border x:Name="PART_Border"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                        <ContentPresenter HorizontalAlignment="Left"
+                                          SnapsToDevicePixels="True"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="PART_Border"
+                                    Property="Background"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="PART_Border"
+                                    Property="Background"
+                                    Value="Transparent" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IconButton"
+           TargetType="{x:Type Button}"
            BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Padding"
                 Value="1 2" />

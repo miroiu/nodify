@@ -25,6 +25,7 @@
                                    Foreground="{TemplateBinding Foreground}"
                                    TextWrapping="{TemplateBinding TextWrapping}"
                                    Padding="{TemplateBinding Padding}"
+                                   TextTrimming="{TemplateBinding TextTrimming}"
                                    x:Name="PART_Text" />
 
                         <TextBox Text="{Binding Text, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
@@ -36,12 +37,15 @@
                                  BorderBrush="{TemplateBinding BorderBrush}"
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  AcceptsReturn="{TemplateBinding AcceptsReturn}"
-                                 AcceptsTab="True"
-                                 VerticalContentAlignment="Center"
                                  FontSize="{TemplateBinding FontSize}"
-                                 Visibility="Collapsed"
-                                 Margin="-1"
                                  Padding="{TemplateBinding Padding}"
+                                 MaxLength="{TemplateBinding MaxLength}"
+                                 MinLines="{TemplateBinding MinLines}"
+                                 MaxLines="{TemplateBinding MinLines}"
+                                 AcceptsTab="True"
+                                 Visibility="Collapsed"
+                                 VerticalContentAlignment="Center"
+                                 Margin="-1"
                                  x:Name="PART_TextBox" />
                     </Grid>
                     <ControlTemplate.Triggers>

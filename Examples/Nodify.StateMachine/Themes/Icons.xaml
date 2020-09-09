@@ -2,6 +2,23 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify.StateMachine">
 
+    <Rectangle x:Key="EditIcon"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M14.5254,3.7666L13.9994,4.2926 11.7064,1.9996 12.2324,1.4736C12.8654,0.841600000000001 13.8924,0.8426 14.5254,1.4746 15.1574,2.1056 15.1574,3.1346 14.5254,3.7666 M2.0174,12.0546C2.9814,12.2576,3.7414,13.0186,3.9454,13.9826L1.3744,14.6246z M2.5344,11.1726L10.9994,2.7066 13.2924,4.9996 4.8264,13.4656C4.4854,12.3716,3.6284,11.5146,2.5344,11.1726 M15.2324,0.7666C14.2114,-0.2554,12.5484,-0.2554,11.5254,0.7666L1.2354,11.0566 0.000399999999999068,15.9996 4.9424,14.7636 15.2324,4.4736C16.2544,3.4516,16.2544,1.7886,15.2324,0.7666" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="UnpauseIcon"
                Width="16"
                Height="16">

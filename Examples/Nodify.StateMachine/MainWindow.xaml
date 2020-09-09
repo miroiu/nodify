@@ -197,7 +197,37 @@
                   Background="#2D2D30">
             <Border BorderBrush="#333336"
                     BorderThickness="1"
+                    Width="250"
+                    Padding="10"
                     HorizontalAlignment="Stretch">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <local:EditableTextBlock Text="{Binding Name}"
+                                                 IsEditing="{Binding IsChecked, ElementName=EditName}"
+                                                 FontWeight="Bold"
+                                                 FontSize="16"
+                                                 MaxLength="20" />
+                        <CheckBox x:Name="EditName"
+                                  Content="{StaticResource EditIcon}"
+                                  Style="{StaticResource IconCheckBox}"
+                                  Grid.Column="1"/>
+                    </Grid>
+                    <Separator Height="2"
+                               Background="#333337"
+                               Width="Auto"
+                               Margin="0 2 0 10" />
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="Visited states: " />
+                            <Run Text="{Binding Runner.NodesVisited, Mode=OneWay}"
+                                 Foreground="Green" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </StackPanel>
             </Border>
         </Expander>
 
@@ -211,7 +241,7 @@
                 <Button Command="{Binding PauseCommand}">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}"
-                               BasedOn="{StaticResource {x:Type Button}}">
+                               BasedOn="{StaticResource IconButton}">
                             <Setter Property="Content"
                                     Value="{StaticResource PauseIcon}" />
                             <Style.Triggers>
@@ -229,7 +259,8 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Command="{Binding RunCommand}">
+                <Button Command="{Binding RunCommand}"
+                        Style="{StaticResource IconButton}">
                     <StackPanel Orientation="Horizontal">
                         <ContentPresenter DataContext="{Binding}"
                                           Margin="0 0 4 0">
@@ -252,8 +283,10 @@
                 </Button>
                 <Separator Height="Auto"
                            BorderThickness="0 0 1 0" />
-                <Button Content="{StaticResource ZoomInIcon}" />
-                <Button Content="{StaticResource ZoomOutIcon}" />
+                <Button Content="{StaticResource ZoomInIcon}"
+                        Style="{StaticResource IconButton}" />
+                <Button Content="{StaticResource ZoomOutIcon}"
+                        Style="{StaticResource IconButton}" />
             </StackPanel>
         </Border>
     </Grid>
