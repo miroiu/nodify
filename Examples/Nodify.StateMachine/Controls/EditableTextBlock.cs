@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Nodify.StateMachine
@@ -9,11 +10,15 @@ namespace Nodify.StateMachine
     {
         private const string ElementTextBox = "PART_TextBox";
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(EditableTextBlock), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty IsEditingProperty = DependencyProperty.Register(nameof(IsEditing), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsEditingChanged, CoerceIsEditing));
         public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register(nameof(IsEditable), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.True));
-        public static readonly DependencyProperty AcceptsReturnProperty = DependencyProperty.Register(nameof(AcceptsReturn), typeof(bool), typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register(nameof(TextWrapping), typeof(TextWrapping), typeof(EditableTextBlock), new FrameworkPropertyMetadata(TextWrapping.Wrap));
+        public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(EditableTextBlock), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly DependencyProperty AcceptsReturnProperty = TextBoxBase.AcceptsReturnProperty.AddOwner(typeof(EditableTextBlock), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty TextWrappingProperty = TextBlock.TextWrappingProperty.AddOwner(typeof(EditableTextBlock), new FrameworkPropertyMetadata(TextWrapping.Wrap));
+        public static readonly DependencyProperty TextTrimmingProperty = TextBlock.TextTrimmingProperty.AddOwner(typeof(EditableTextBlock), new FrameworkPropertyMetadata(TextTrimming.CharacterEllipsis));
+        public static readonly DependencyProperty MinLinesProperty = TextBox.MinLinesProperty.AddOwner(typeof(EditableTextBlock));
+        public static readonly DependencyProperty MaxLinesProperty = TextBox.MaxLinesProperty.AddOwner(typeof(EditableTextBlock));
+        public static readonly DependencyProperty MaxLengthProperty = TextBox.MaxLengthProperty.AddOwner(typeof(EditableTextBlock));
 
         private static void OnIsEditingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
@@ -51,10 +56,34 @@ namespace Nodify.StateMachine
             set => SetValue(AcceptsReturnProperty, value);
         }
 
+        public int MaxLength
+        {
+            get => (int)GetValue(MaxLengthProperty);
+            set => SetValue(MaxLengthProperty, value);
+        }
+
+        public int MinLines
+        {
+            get => (int)GetValue(MinLinesProperty);
+            set => SetValue(MaxLinesProperty, value);
+        }
+
+        public int MaxLines
+        {
+            get => (int)GetValue(MaxLinesProperty);
+            set => SetValue(MaxLinesProperty, value);
+        }
+
         public TextWrapping TextWrapping
         {
             get => (TextWrapping)GetValue(TextWrappingProperty);
             set => SetValue(TextWrappingProperty, value);
+        }
+
+        public TextTrimming TextTrimming
+        {
+            get => (TextTrimming)GetValue(TextTrimmingProperty);
+            set => SetValue(TextTrimmingProperty, value);
         }
 
         protected TextBox? TextBox { get; private set; }
@@ -131,6 +160,11 @@ namespace Nodify.StateMachine
             if (IsEditing && e.Key == Key.Escape || !AcceptsReturn && e.Key == Key.Enter)
             {
                 IsEditing = false;
+            }
+
+            if(e.Key == Key.Enter && IsFocused && !IsEditing)
+            {
+                IsEditing = true;
             }
         }
     }
