@@ -6,17 +6,17 @@ namespace Nodify.StateMachine
 {
     public class ActionState : State
     {
-        private readonly Action _action;
+        private readonly Action<Blackboard> _action;
 
-        public ActionState(Guid id, IEnumerable<Transition> transitions, Action action) : base(id, transitions)
+        public ActionState(Guid id, IEnumerable<Transition> transitions, Action<Blackboard> action) : base(id, transitions)
         {
             _action = action;
         }
 
-        public override async Task Activate()
+        public override Task Activate(Blackboard blackboard)
         {
-            await Task.Delay(1000);
-            _action?.Invoke();
+            _action?.Invoke(blackboard);
+            return Task.CompletedTask;
         }
     }
 }

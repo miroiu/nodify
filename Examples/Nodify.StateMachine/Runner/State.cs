@@ -16,6 +16,6 @@ namespace Nodify.StateMachine
 
         public IReadOnlyList<Transition> Transitions { get; }
 
-        public abstract Task Activate();
+        public abstract Task Activate(Blackboard blackboard);
     }
 }

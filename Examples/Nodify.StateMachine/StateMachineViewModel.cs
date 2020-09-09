@@ -82,8 +82,8 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _name, value);
         }
 
-        public bool IsRunning => Runner.State != MachineStatus.Stopped;
-        public bool IsPaused => Runner.State == MachineStatus.Paused;
+        public bool IsRunning => Runner.State != MachineState.Stopped;
+        public bool IsPaused => Runner.State == MachineState.Paused;
 
         public TransitionViewModel PendingTransition { get; }
         public StateMachineRunner Runner { get; }

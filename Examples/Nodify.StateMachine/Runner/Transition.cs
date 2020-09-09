@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
@@ -13,6 +14,7 @@ namespace Nodify.StateMachine
         public Guid From { get; }
         public Guid To { get; }
 
-        public virtual bool CanActivate() => true;
+        public virtual Task<bool> CanActivate(Blackboard blackboard)
+            => Task.FromResult(true);
     }
 }

@@ -12,11 +12,18 @@ namespace Nodify.StateMachine
 
         protected StateMachineViewModel StateMachineViewModel { get; }
 
-        private MachineStatus _state;
-        public MachineStatus State
+        private MachineState _state;
+        public MachineState State
         {
             get => _state;
             protected set => SetProperty(ref _state, value);
+        }
+
+        private int _nodesVisited;
+        public int NodesVisited
+        {
+            get => _nodesVisited;
+            protected set => SetProperty(ref _nodesVisited, value);
         }
 
         public StateMachineRunner(StateMachineViewModel stateMachineViewModel)
@@ -26,10 +33,12 @@ namespace Nodify.StateMachine
 
         public async void Start()
         {
-            _stateMachine = new StateMachine(StateMachineViewModel.States[0].Id, CreateStates(StateMachineViewModel.States));
+            NodesVisited = 0;
 
+            _stateMachine = new StateMachine(StateMachineViewModel.States[0].Id, CreateStates(StateMachineViewModel.States), new DebugBlackboardDecorator(new Blackboard()));
+
+            _stateMachine.StateTransition += HandleStateTransition;
             _stateMachine.StateChanged += HandleStateChange;
-            _stateMachine.StatusChanged += HandleStatusChange;
 
             await _stateMachine.Start();
         }
@@ -38,20 +47,22 @@ namespace Nodify.StateMachine
             => _stateMachine?.Stop();
 
         private IEnumerable<State> CreateStates(IEnumerable<StateViewModel> states)
-            => states.Select(s => new ActionState(s.Id, CreateTransitions(s), () =>
+            => states.Select(s => new DebugStateDecorator(new ActionState(s.Id, CreateTransitions(s), b =>
             {
                 // TODO: Action to execute for a certain state
-            }));
+            })));
 
         private IEnumerable<Transition> CreateTransitions(StateViewModel state)
-            => state.Transitions.Select(t => new ConditionTransition(state.Id, t.Id, () =>
+            => state.Transitions.Select(t => new DebugTransitionDecorator(new ConditionTransition(state.Id, t.Id, b =>
             {
                 // TODO: Condition for transition to continue
                 return true;
-            }));
+            })));
 
-        private void HandleStateChange(Guid from, Guid to)
+        private void HandleStateTransition(Guid from, Guid to)
         {
+            NodesVisited++;
+
             SetActiveStateAndTransition(false);
 
             _activeTransition = StateMachineViewModel.Transitions.FirstOrDefault(t => t.Source.Id == from);
@@ -73,9 +84,9 @@ namespace Nodify.StateMachine
             }
         }
 
-        private void HandleStatusChange(MachineStatus newState)
+        private void HandleStateChange(MachineState newState)
         {
-            if (newState == MachineStatus.Stopped)
+            if (newState == MachineState.Stopped)
             {
                 SetActiveStateAndTransition(false);
             }
@@ -85,11 +96,11 @@ namespace Nodify.StateMachine
 
         public void TogglePause()
         {
-            if (State == MachineStatus.Paused)
+            if (State == MachineState.Paused)
             {
                 _stateMachine?.Unpause();
             }
-            else if (State != MachineStatus.Stopped)
+            else if (State != MachineState.Stopped)
             {
                 _stateMachine?.Pause();
             }

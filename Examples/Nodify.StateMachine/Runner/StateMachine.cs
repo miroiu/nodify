@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
-    public enum MachineStatus
+    public enum MachineState
     {
         Stopped,
         Running,
@@ -13,25 +13,23 @@ namespace Nodify.StateMachine
     }
 
     public delegate void StateTransitionEventHandler(Guid from, Guid to);
-    public delegate void StatusChangedEventHandler(MachineStatus newStatus);
+    public delegate void StateChangedEventHandler(MachineState newStatus);
 
     public class StateMachine
     {
         private readonly Dictionary<Guid, State> _states;
 
         public State Root { get; }
-        public IReadOnlyList<State> States { get; }
-        public MachineStatus? RunningState { get; private set; }
+        public MachineState? State { get; private set; }
+        public Blackboard Blackboard { get; } = new Blackboard();
 
         // param = aborted
-        public event StatusChangedEventHandler? StatusChanged;
-        public event StateTransitionEventHandler? StateChanged;
+        public event StateChangedEventHandler? StateChanged;
+        public event StateTransitionEventHandler? StateTransition;
 
-        public StateMachine(Guid root, IEnumerable<State> states)
+        public StateMachine(Guid root, IEnumerable<State> states, Blackboard? blackboard = default)
         {
-            States = new List<State>(states);
-
-            _states = States.ToDictionary(x => x.Id, x => x);
+            _states = states.ToDictionary(x => x.Id, x => x);
 
             if (!_states.ContainsKey(root))
             {
@@ -39,43 +37,48 @@ namespace Nodify.StateMachine
             }
 
             Root = _states[root];
+
+            if (blackboard != null)
+            {
+                Blackboard = blackboard;
+            }
         }
 
         public async Task Start()
         {
-            if (ChangeState(MachineStatus.Running))
+            if (ChangeState(MachineState.Running))
             {
                 // Skip root state
                 State? previous = Root;
-                State? current = GetNext(Root);
+                State? current = await GetNext(Root);
 
-                while (RunningState != MachineStatus.Stopped && current != null)
+                while (State != MachineState.Stopped && current != null)
                 {
-                    if (RunningState == MachineStatus.Paused)
+                    if (State == MachineState.Paused)
                     {
                         await Task.Delay(10);
                     }
                     else
                     {
-                        StateChanged?.Invoke(previous.Id, current.Id);
+                        StateTransition?.Invoke(previous.Id, current.Id);
                         previous = current;
 
-                        await current.Activate();
-                        current = GetNext(current);
+                        await current.Activate(Blackboard);
+                        current = await GetNext(current);
                     }
                 }
 
-                ChangeState(MachineStatus.Stopped);
+                ChangeState(MachineState.Stopped);
             }
         }
 
-        private State? GetNext(State current)
+        private async Task<State?> GetNext(State current)
         {
             var transitions = current.Transitions;
             for (int i = 0; i < transitions.Count; i++)
             {
                 var transition = transitions[i];
-                if (transition.CanActivate())
+                if (await transition.CanActivate(Blackboard))
                 {
                     return _states[transition.To];
                 }
@@ -85,20 +88,20 @@ namespace Nodify.StateMachine
         }
 
         public void Stop()
-            => ChangeState(MachineStatus.Stopped);
+            => ChangeState(MachineState.Stopped);
 
         public void Pause()
-            => ChangeState(MachineStatus.Paused);
+            => ChangeState(MachineState.Paused);
 
         public void Unpause()
-            => ChangeState(MachineStatus.Running);
+            => ChangeState(MachineState.Running);
 
-        private bool ChangeState(MachineStatus newState)
+        private bool ChangeState(MachineState newState)
         {
-            if (newState == MachineStatus.Running || (RunningState != null && RunningState != newState))
+            if (newState == MachineState.Running || (State != null && State != newState))
             {
-                RunningState = newState;
-                StatusChanged?.Invoke(newState);
+                State = newState;
+                StateChanged?.Invoke(newState);
                 return true;
             }
 

@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
     public class ConditionTransition : Transition
     {
-        private readonly Func<bool>? _condition;
+        private readonly Func<Blackboard, bool>? _condition;
 
-        public ConditionTransition(Guid from, Guid to, Func<bool>? condition = default) : base(from, to)
+        public ConditionTransition(Guid from, Guid to, Func<Blackboard, bool>? condition = default) : base(from, to)
         {
             _condition = condition;
         }
 
-        public override bool CanActivate()
-            => _condition?.Invoke() ?? true;
+        public override Task<bool> CanActivate(Blackboard blackboard)
+            => Task.FromResult(_condition?.Invoke(blackboard) ?? true);
     }
 }
