@@ -8,11 +8,12 @@ namespace Nodify.StateMachine
     {
         private StateMachine? _stateMachine;
         private StateViewModel? _activeState;
+        private TransitionViewModel? _activeTransition;
 
         protected StateMachineViewModel StateMachineViewModel { get; }
 
-        private MachineState _state;
-        public MachineState State
+        private MachineStatus _state;
+        public MachineStatus State
         {
             get => _state;
             protected set => SetProperty(ref _state, value);
@@ -27,8 +28,8 @@ namespace Nodify.StateMachine
         {
             _stateMachine = new StateMachine(StateMachineViewModel.States[0].Id, CreateStates(StateMachineViewModel.States));
 
-            _stateMachine.NextStateChanging += HandleNextState;
-            _stateMachine.RunningStateChanged += HandleStateChange;
+            _stateMachine.StateChanged += HandleStateChange;
+            _stateMachine.StatusChanged += HandleStatusChange;
 
             await _stateMachine.Start();
         }
@@ -49,26 +50,34 @@ namespace Nodify.StateMachine
                 return true;
             }));
 
-        private void HandleNextState(Guid id)
+        private void HandleStateChange(Guid from, Guid to)
+        {
+            SetActiveStateAndTransition(false);
+
+            _activeTransition = StateMachineViewModel.Transitions.FirstOrDefault(t => t.Source.Id == from);
+            _activeState = StateMachineViewModel.States.FirstOrDefault(st => st.Id == to);
+
+            SetActiveStateAndTransition(true);
+        }
+
+        private void SetActiveStateAndTransition(bool value)
         {
             if (_activeState != null)
             {
-                _activeState.IsActive = false;
+                _activeState.IsActive = value;
             }
 
-            _activeState = StateMachineViewModel.States.FirstOrDefault(st => st.Id == id);
-
-            if (_activeState != null)
+            if (_activeTransition != null)
             {
-                _activeState.IsActive = true;
+                _activeTransition.IsActive = value;
             }
         }
 
-        private void HandleStateChange(MachineState newState)
+        private void HandleStatusChange(MachineStatus newState)
         {
-            if (newState == MachineState.Stopped && _activeState != null)
+            if (newState == MachineStatus.Stopped)
             {
-                _activeState.IsActive = false;
+                SetActiveStateAndTransition(false);
             }
 
             State = newState;
@@ -76,11 +85,11 @@ namespace Nodify.StateMachine
 
         public void TogglePause()
         {
-            if (State == MachineState.Paused)
+            if (State == MachineStatus.Paused)
             {
                 _stateMachine?.Unpause();
             }
-            else if (State != MachineState.Stopped)
+            else if (State != MachineStatus.Stopped)
             {
                 _stateMachine?.Pause();
             }

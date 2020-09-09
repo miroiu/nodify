@@ -15,5 +15,12 @@
             get => _target;
             set => SetProperty(ref _target, value);
         }
+
+        private bool _isActive;
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value);
+        }
     }
 }

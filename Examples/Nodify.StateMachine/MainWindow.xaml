@@ -79,7 +79,7 @@
                                 <Setter Property="Fill"
                                         Value="White" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Target.IsActive}"
+                                    <DataTrigger Binding="{Binding IsActive}"
                                                  Value="True">
                                         <Setter Property="Stroke"
                                                 Value="#8DD28A" />

@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
-    public enum MachineState
+    public enum MachineStatus
     {
         Stopped,
         Running,
         Paused,
     }
+
+    public delegate void StateTransitionEventHandler(Guid from, Guid to);
+    public delegate void StatusChangedEventHandler(MachineStatus newStatus);
 
     public class StateMachine
     {
@@ -18,11 +21,11 @@ namespace Nodify.StateMachine
 
         public State Root { get; }
         public IReadOnlyList<State> States { get; }
-        public MachineState? RunningState { get; private set; }
+        public MachineStatus? RunningState { get; private set; }
 
         // param = aborted
-        public event Action<MachineState>? RunningStateChanged;
-        public event Action<Guid>? NextStateChanging;
+        public event StatusChangedEventHandler? StatusChanged;
+        public event StateTransitionEventHandler? StateChanged;
 
         public StateMachine(Guid root, IEnumerable<State> states)
         {
@@ -40,27 +43,29 @@ namespace Nodify.StateMachine
 
         public async Task Start()
         {
-            if (ChangeState(MachineState.Running))
+            if (ChangeState(MachineStatus.Running))
             {
                 // Skip root state
+                State? previous = Root;
                 State? current = GetNext(Root);
 
-                while (RunningState != MachineState.Stopped && current != null)
+                while (RunningState != MachineStatus.Stopped && current != null)
                 {
-                    if (RunningState == MachineState.Paused)
+                    if (RunningState == MachineStatus.Paused)
                     {
                         await Task.Delay(10);
                     }
                     else
                     {
-                        NextStateChanging?.Invoke(current.Id);
+                        StateChanged?.Invoke(previous.Id, current.Id);
+                        previous = current;
 
                         await current.Activate();
                         current = GetNext(current);
                     }
                 }
 
-                ChangeState(MachineState.Stopped);
+                ChangeState(MachineStatus.Stopped);
             }
         }
 
@@ -80,20 +85,20 @@ namespace Nodify.StateMachine
         }
 
         public void Stop()
-            => ChangeState(MachineState.Stopped);
+            => ChangeState(MachineStatus.Stopped);
 
         public void Pause()
-            => ChangeState(MachineState.Paused);
+            => ChangeState(MachineStatus.Paused);
 
         public void Unpause()
-            => ChangeState(MachineState.Running);
+            => ChangeState(MachineStatus.Running);
 
-        private bool ChangeState(MachineState newState)
+        private bool ChangeState(MachineStatus newState)
         {
-            if (newState == MachineState.Running || (RunningState != null && RunningState != newState))
+            if (newState == MachineStatus.Running || (RunningState != null && RunningState != newState))
             {
                 RunningState = newState;
-                RunningStateChanged?.Invoke(newState);
+                StatusChanged?.Invoke(newState);
                 return true;
             }
 
