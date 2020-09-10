@@ -22,6 +22,7 @@
 
     <Grid>
         <nodify:NodifyEditor ItemsSource="{Binding States}"
+                             SelectedItem="{Binding SelectedState}"
                              SelectedItems="{Binding SelectedStates}"
                              Connections="{Binding Transitions}"
                              PendingConnection="{Binding PendingTransition}"
@@ -201,75 +202,128 @@
                     Width="250"
                     Padding="10"
                     HorizontalAlignment="Stretch">
-                <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!--TRANSITIONS-->
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <local:EditableTextBlock Text="{Binding Name}"
-                                                 IsEditing="{Binding IsChecked, ElementName=EditName}"
-                                                 FontWeight="Bold"
-                                                 FontSize="16"
-                                                 MaxLength="20" />
-                        <CheckBox x:Name="EditName"
-                                  Content="{StaticResource EditIcon}"
-                                  Style="{StaticResource IconCheckBox}"
-                                  Grid.Column="1" />
-                    </Grid>
-                    <Separator Height="2"
-                               Background="#333337"
-                               Width="Auto"
-                               Margin="0 2 0 10" />
-                    <ItemsControl ItemsSource="{Binding Transitions}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                                <Expander BorderThickness="0 0 0 1"
-                                          BorderBrush="#333337">
-                                    <Expander.Style>
-                                        <Style TargetType="{x:Type Expander}"
-                                               BasedOn="{StaticResource {x:Type Expander}}">
-                                            <Setter Property="Tag"
-                                                    Value="{StaticResource ExpandRight}" />
-                                            <Style.Triggers>
-                                                <Trigger Property="IsExpanded"
-                                                         Value="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <local:EditableTextBlock Text="{Binding Name}"
+                                                     IsEditing="{Binding IsChecked, ElementName=EditName}"
+                                                     FontWeight="Bold"
+                                                     FontSize="16"
+                                                     MaxLength="20" />
+                            <CheckBox x:Name="EditName"
+                                      Content="{StaticResource EditIcon}"
+                                      Style="{StaticResource IconCheckBox}"
+                                      Grid.Column="1" />
+                        </Grid>
+                        <Separator Height="2"
+                                   Background="#333337"
+                                   Width="Auto"
+                                   Margin="0 2 0 10"
+                                   Grid.Row="1" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      Grid.Row="2">
+                            <ItemsControl ItemsSource="{Binding Transitions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                                        <Expander BorderThickness="0 0 0 1"
+                                                  BorderBrush="#333337">
+                                            <Expander.Style>
+                                                <Style TargetType="{x:Type Expander}"
+                                                       BasedOn="{StaticResource {x:Type Expander}}">
                                                     <Setter Property="Tag"
-                                                            Value="{StaticResource ExpandDown}" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Expander.Style>
-                                    <Expander.Header>
-                                        <TextBlock>
-                                            <TextBlock.Style>
-                                                <Style TargetType="{x:Type TextBlock}">
-                                                    <Setter Property="Foreground"
-                                                            Value="White" />
+                                                            Value="{StaticResource ExpandRight}" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsActive}"
-                                                                     Value="True">
-                                                            <Setter Property="Foreground"
-                                                                    Value="#8DD28A" />
-                                                        </DataTrigger>
+                                                        <Trigger Property="IsExpanded"
+                                                                 Value="True">
+                                                            <Setter Property="Tag"
+                                                                    Value="{StaticResource ExpandDown}" />
+                                                        </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
-                                            <Run Text="{Binding Source.Name, Mode=OneWay}" />
-                                            <Run Text="🠚" />
-                                            <Run Text="{Binding Target.Name, Mode=OneWay}" />
-                                        </TextBlock>
-                                    </Expander.Header>
-                                    <Border BorderBrush="#333336"
-                                            BorderThickness="1"
-                                            HorizontalAlignment="Stretch">
+                                            </Expander.Style>
+                                            <Expander.Header>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Foreground"
+                                                                    Value="White" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}"
+                                                                             Value="True">
+                                                                    <Setter Property="Foreground"
+                                                                            Value="#8DD28A" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                    <Run Text="{Binding Source.Name, Mode=OneWay}" />
+                                                    <Run Text="🠚" />
+                                                    <Run Text="{Binding Target.Name, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </Expander.Header>
+                                            <Border BorderBrush="#333336"
+                                                    BorderThickness="1"
+                                                    HorizontalAlignment="Stretch">
 
-                                    </Border>
-                                </Expander>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                                            </Border>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <!--NODES-->
+                    <StackPanel Visibility="{Binding SelectedStates.Count, Converter={local:BooleanToVisibilityConverter}}"
+                                Grid.Row="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <local:EditableTextBlock Text="{Binding SelectedState.Name}"
+                                                     IsEditing="{Binding IsChecked, ElementName=EditStateName}"
+                                                     IsEditable="{Binding SelectedState.IsEditable}"
+                                                     FontWeight="Bold"
+                                                     FontSize="16"
+                                                     MaxLength="20" />
+                            <CheckBox x:Name="EditStateName"
+                                      Visibility="{Binding SelectedState.IsEditable, Converter={local:BooleanToVisibilityConverter}}"
+                                      Content="{StaticResource EditIcon}"
+                                      Style="{StaticResource IconCheckBox}"
+                                      Grid.Column="1" />
+                        </Grid>
+                        <Separator Height="2"
+                                   Background="#333337"
+                                   Width="Auto"
+                                   Margin="0 2 0 10"
+                                   Grid.Row="1" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Text="Action" />
+                            <!--<ComboBox ItemsSource="{Binding }" />-->
+                        </Grid>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Expander>
 

@@ -9,7 +9,7 @@ namespace Nodify.StateMachine
         public StateMachineViewModel()
         {
             PendingTransition = new TransitionViewModel();
-            Runner = new StateMachineRunner(this);
+            Runner = new StateMachineRunnerViewModel(this);
 
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
             .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
@@ -75,6 +75,13 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _connections, value);
         }
 
+        private StateViewModel? _selectedState;
+        public StateViewModel? SelectedState
+        {
+            get => _selectedState;
+            set => SetProperty(ref _selectedState, value);
+        }
+
         private string? _name = "State Machine";
         public string? Name
         {
@@ -86,7 +93,7 @@ namespace Nodify.StateMachine
         public bool IsPaused => Runner.State == MachineState.Paused;
 
         public TransitionViewModel PendingTransition { get; }
-        public StateMachineRunner Runner { get; }
+        public StateMachineRunnerViewModel Runner { get; }
 
         public INodifyCommand DeleteTransitionCommand { get; }
         public INodifyCommand DeleteSelectionCommand { get; }

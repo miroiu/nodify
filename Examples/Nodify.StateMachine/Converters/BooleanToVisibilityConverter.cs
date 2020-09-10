@@ -11,11 +11,16 @@ namespace Nodify.StateMachine
         public Visibility FalseVisibility { get; set; } = Visibility.Collapsed;
         public bool Negate { get; set; }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool b)
+            string? stringValue = value?.ToString();
+            if (bool.TryParse(stringValue, out var b))
             {
                 return (Negate ? !b : b) ? Visibility.Visible : FalseVisibility;
+            }
+            else if(double.TryParse(stringValue, out var d))
+            {
+                return (Negate ? !(d > 0) : (d > 0)) ? Visibility.Visible : FalseVisibility;
             }
 
             return value;

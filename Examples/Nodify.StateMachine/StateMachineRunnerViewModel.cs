@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Nodify.StateMachine
 {
-    public class StateMachineRunner : ObservableObject
+    public class StateMachineRunnerViewModel : ObservableObject
     {
         private StateMachine? _stateMachine;
         private StateViewModel? _activeState;
@@ -26,7 +26,7 @@ namespace Nodify.StateMachine
             protected set => SetProperty(ref _nodesVisited, value);
         }
 
-        public StateMachineRunner(StateMachineViewModel stateMachineViewModel)
+        public StateMachineRunnerViewModel(StateMachineViewModel stateMachineViewModel)
         {
             StateMachineViewModel = stateMachineViewModel;
         }
@@ -47,17 +47,22 @@ namespace Nodify.StateMachine
             => _stateMachine?.Stop();
 
         private IEnumerable<State> CreateStates(IEnumerable<StateViewModel> states)
-            => states.Select(s => new DebugStateDecorator(new ActionState(s.Id, CreateTransitions(s), b =>
-            {
-                // TODO: Action to execute for a certain state
-            })));
+            => states.Select(s => new DebugStateDecorator(new State(s.Id, CreateTransitions(s))));
 
         private IEnumerable<Transition> CreateTransitions(StateViewModel state)
-            => state.Transitions.Select(t => new DebugTransitionDecorator(new ConditionTransition(state.Id, t.Id, b =>
+            => state.Transitions.Select(t => new DebugTransitionDecorator(CreateTransition(state, t)));
+
+        private Transition CreateTransition(StateViewModel from, StateViewModel to)
+        {
+            var transition = StateMachineViewModel.Transitions.FirstOrDefault(t => t.Source.Id == from.Id && t.Target.Id == to.Id);
+
+            if (transition != null)
             {
-                // TODO: Condition for transition to continue
-                return true;
-            })));
+                return new Transition(from.Id, to.Id);
+            }
+
+            return new Transition(from.Id, to.Id);
+        }
 
         private void HandleStateTransition(Guid from, Guid to)
         {

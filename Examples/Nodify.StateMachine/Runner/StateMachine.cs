@@ -78,9 +78,9 @@ namespace Nodify.StateMachine
             for (int i = 0; i < transitions.Count; i++)
             {
                 var transition = transitions[i];
-                if (await transition.CanActivate(Blackboard))
+                if (_states.TryGetValue(transition.To, out var result) && await transition.CanActivate(Blackboard))
                 {
-                    return _states[transition.To];
+                    return result;
                 }
             }
 
