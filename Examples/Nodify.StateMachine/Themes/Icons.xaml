@@ -2,7 +2,52 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify.StateMachine">
 
+    <Rectangle x:Key="ExpandRight"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M6.3906,13.6943L3.9156,11.2193 7.1356,8.0003 3.9156,4.7803 6.3906,2.3053 12.0836,8.0003z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M6.3901,12.2803L5.3291,11.2193 8.5491,8.0003 5.3291,4.7803 6.3901,3.7193 10.6701,8.0003z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="ExpandDown"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M0,0L16,0 16,16 0,16z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M2.3057,6.3906L4.7807,3.9156 7.9997,7.1356 11.2197,3.9156 13.6947,6.3906 7.9997,12.0836z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M3.7197,6.3901L4.7807,5.3291 7.9997,8.5491 11.2197,5.3291 12.2807,6.3901 7.9997,10.6701z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="EditIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -20,6 +65,7 @@
     </Rectangle>
 
     <Rectangle x:Key="UnpauseIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -39,6 +85,7 @@
     </Rectangle>
 
     <Rectangle x:Key="PauseIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -60,6 +107,7 @@
     </Rectangle>
 
     <Rectangle x:Key="ZoomOutIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -87,6 +135,7 @@
     </Rectangle>
 
     <Rectangle x:Key="ZoomInIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -114,6 +163,7 @@
     </Rectangle>
 
     <Rectangle x:Key="StopIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>
@@ -135,6 +185,7 @@
     </Rectangle>
 
     <Rectangle x:Key="RunIcon"
+               x:Shared="False"
                Width="16"
                Height="16">
         <Rectangle.Fill>

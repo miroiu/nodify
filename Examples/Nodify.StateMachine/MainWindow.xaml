@@ -190,9 +190,12 @@
             </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 
+        <!--TRANSITIONS-->
         <Expander Header="Transitions"
                   HorizontalAlignment="Left"
-                  Background="#2D2D30">
+                  Background="#2D2D30"
+                  Padding="4 1 0 3"
+                  ExpandDirection="Right">
             <Border BorderBrush="#333336"
                     BorderThickness="1"
                     Width="250"
@@ -212,23 +215,65 @@
                         <CheckBox x:Name="EditName"
                                   Content="{StaticResource EditIcon}"
                                   Style="{StaticResource IconCheckBox}"
-                                  Grid.Column="1"/>
+                                  Grid.Column="1" />
                     </Grid>
                     <Separator Height="2"
                                Background="#333337"
                                Width="Auto"
                                Margin="0 2 0 10" />
-                    <TextBlock>
-                        <TextBlock.Inlines>
-                            <Run Text="Visited states: " />
-                            <Run Text="{Binding Runner.NodesVisited, Mode=OneWay}"
-                                 Foreground="Green" />
-                        </TextBlock.Inlines>
-                    </TextBlock>
+                    <ItemsControl ItemsSource="{Binding Transitions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                                <Expander BorderThickness="0 0 0 1"
+                                          BorderBrush="#333337">
+                                    <Expander.Style>
+                                        <Style TargetType="{x:Type Expander}"
+                                               BasedOn="{StaticResource {x:Type Expander}}">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandRight}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsExpanded"
+                                                         Value="True">
+                                                    <Setter Property="Tag"
+                                                            Value="{StaticResource ExpandDown}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Expander.Style>
+                                    <Expander.Header>
+                                        <TextBlock>
+                                            <TextBlock.Style>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="Foreground"
+                                                            Value="White" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsActive}"
+                                                                     Value="True">
+                                                            <Setter Property="Foreground"
+                                                                    Value="#8DD28A" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                            <Run Text="{Binding Source.Name, Mode=OneWay}" />
+                                            <Run Text="🠚" />
+                                            <Run Text="{Binding Target.Name, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </Expander.Header>
+                                    <Border BorderBrush="#333336"
+                                            BorderThickness="1"
+                                            HorizontalAlignment="Stretch">
+
+                                    </Border>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </Border>
         </Expander>
 
+        <!--TOOLBAR-->
         <Border CornerRadius="2"
                 Background="#2D2D30"
                 BorderThickness="0 0 0 1"
