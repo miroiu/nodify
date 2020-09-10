@@ -10,6 +10,7 @@ namespace Nodify.StateMachine
         {
             PendingTransition = new TransitionViewModel();
             Runner = new StateMachineRunnerViewModel(this);
+            Blackboard = new BlackboardViewModel();
 
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
             .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
@@ -94,6 +95,7 @@ namespace Nodify.StateMachine
 
         public TransitionViewModel PendingTransition { get; }
         public StateMachineRunnerViewModel Runner { get; }
+        public BlackboardViewModel Blackboard { get; }
 
         public INodifyCommand DeleteTransitionCommand { get; }
         public INodifyCommand DeleteSelectionCommand { get; }
@@ -119,6 +121,18 @@ namespace Nodify.StateMachine
                 Name = "Enter",
                 Location = new Point(100, 100),
                 IsEditable = false
+            });
+
+            States.Add(new StateViewModel
+            {
+                Name = "New State",
+                Location = new Point(300, 100)
+            });
+
+            Transitions.Add(new TransitionViewModel
+            {
+                Source = States[0],
+                Target = States[1]
             });
         }
     }

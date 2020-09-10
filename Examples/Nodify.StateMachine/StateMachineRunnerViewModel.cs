@@ -44,7 +44,10 @@ namespace Nodify.StateMachine
         }
 
         public void Stop()
-            => _stateMachine?.Stop();
+        {
+            _stateMachine?.Stop();
+            _stateMachine = null;
+        }
 
         private IEnumerable<State> CreateStates(IEnumerable<StateViewModel> states)
             => states.Select(s => new DebugStateDecorator(new State(s.Id, CreateTransitions(s))));

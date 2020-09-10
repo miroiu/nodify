@@ -205,7 +205,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--TRANSITIONS-->
@@ -215,26 +215,6 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <local:EditableTextBlock Text="{Binding Name}"
-                                                     IsEditing="{Binding IsChecked, ElementName=EditName}"
-                                                     FontWeight="Bold"
-                                                     FontSize="16"
-                                                     MaxLength="20" />
-                            <CheckBox x:Name="EditName"
-                                      Content="{StaticResource EditIcon}"
-                                      Style="{StaticResource IconCheckBox}"
-                                      Grid.Column="1" />
-                        </Grid>
-                        <Separator Height="2"
-                                   Background="#333337"
-                                   Width="Auto"
-                                   Margin="0 2 0 10"
-                                   Grid.Row="1" />
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                                       Grid.Row="2">
                             <ItemsControl ItemsSource="{Binding Transitions}">
@@ -318,10 +298,143 @@
                                 <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            
+
                             <TextBlock Text="Action" />
                             <!--<ComboBox ItemsSource="{Binding }" />-->
                         </Grid>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding SelectedStates.Count, Converter={local:BooleanToVisibilityConverter Negate=True}}"
+                                Grid.Row="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <local:EditableTextBlock Text="{Binding Name}"
+                                                     IsEditing="{Binding IsChecked, ElementName=EditName}"
+                                                     FontWeight="Bold"
+                                                     FontSize="16"
+                                                     MaxLength="20" />
+                            <StackPanel Orientation="Horizontal"
+                                        Grid.Column="1">
+                                <CheckBox x:Name="EditName"
+                                          Content="{StaticResource EditIcon}"
+                                          ToolTip="Edit Name"
+                                          Style="{StaticResource IconCheckBox}" />
+                                <Button Content="{StaticResource AddKeyIcon}"
+                                        Command="{Binding Blackboard.AddKeyCommand}"
+                                        ToolTip="Add New Key"
+                                        Style="{StaticResource IconButton}" />
+                            </StackPanel>
+                        </Grid>
+                        <Separator Height="2"
+                                   Background="#333337"
+                                   Width="Auto"
+                                   Margin="0 2 0 10"
+                                   Grid.Row="1" />
+                        <ScrollViewer Height="100">
+                            <ItemsControl ItemsSource="{Binding Blackboard.Keys}">
+                                <ItemsControl.Resources>
+                                    <DataTemplate x:Key="BooleanTemplate"
+                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <CheckBox IsChecked="{Binding Value}"
+                                                  HorizontalAlignment="Left" />
+                                    </DataTemplate>
+                                    <DataTemplate x:Key="IntegerTemplate"
+                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <TextBox Text="{Binding Value}" />
+                                    </DataTemplate>
+                                    <DataTemplate x:Key="DecimalTemplate"
+                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <TextBox Text="{Binding Value}" />
+                                    </DataTemplate>
+                                    <DataTemplate x:Key="StringTemplate"
+                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <TextBox Text="{Binding Value}" />
+                                    </DataTemplate>
+                                    <DataTemplate x:Key="ObjectTemplate"
+                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <TextBox Text="{Binding Value}"
+                                                 IsEnabled="False" />
+                                    </DataTemplate>
+                                </ItemsControl.Resources>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
+                                        <Grid IsSharedSizeScope="True">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <local:EditableTextBlock Text="{Binding Name}"
+                                                                     IsEditing="True" />
+
+                                            <ComboBox ItemsSource="{Binding Type, Converter={local:EnumValuesConverter}}"
+                                                      DisplayMemberPath="Name"
+                                                      SelectedValuePath="Value"
+                                                      SelectedValue="{Binding Type}"
+                                                      Margin="5 0"
+                                                      Grid.Column="1" />
+
+                                            <ContentPresenter Content="{Binding}"
+                                                              x:Name="ValueEditor"
+                                                              Grid.Column="2" />
+
+                                            <Separator Height="2"
+                                                       Background="#333337"
+                                                       Width="Auto"
+                                                       Margin="0 2 0 10"
+                                                       Grid.Row="1"
+                                                       Grid.ColumnSpan="2" />
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Boolean">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource BooleanTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Integer">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource IntegerTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Float">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource DecimalTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Double">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource DecimalTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="String">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource StringTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Object">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource ObjectTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -341,6 +454,8 @@
                                BasedOn="{StaticResource IconButton}">
                             <Setter Property="Content"
                                     Value="{StaticResource PauseIcon}" />
+                            <Setter Property="ToolTip"
+                                    Value="Pause" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Runner.State}"
                                              Value="Stopped">
@@ -351,6 +466,8 @@
                                              Value="Paused">
                                     <Setter Property="Content"
                                             Value="{StaticResource UnpauseIcon}" />
+                                    <Setter Property="ToolTip"
+                                            Value="Continue" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -365,11 +482,15 @@
                                 <Style TargetType="{x:Type ContentPresenter}">
                                     <Setter Property="Content"
                                             Value="{StaticResource StopIcon}" />
+                                    <Setter Property="ToolTip"
+                                            Value="Stop" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Runner.State}"
                                                      Value="Stopped">
                                             <Setter Property="Content"
                                                     Value="{StaticResource RunIcon}" />
+                                            <Setter Property="ToolTip"
+                                                    Value="Run" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -381,8 +502,10 @@
                 <Separator Height="Auto"
                            BorderThickness="0 0 1 0" />
                 <Button Content="{StaticResource ZoomInIcon}"
+                        ToolTip="Zoom In"
                         Style="{StaticResource IconButton}" />
                 <Button Content="{StaticResource ZoomOutIcon}"
+                        ToolTip="Zoom Out"
                         Style="{StaticResource IconButton}" />
             </StackPanel>
         </Border>
