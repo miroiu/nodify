@@ -4,7 +4,7 @@ namespace Nodify
 {
     public static class StringExtensions
     {
-        public static string GetUnique(this ICollection<string?> values, in string baseValue)
+        public static string GetUnique(this ICollection<string> values, in string baseValue)
         {
             int counter = 1;
             string result = baseValue;

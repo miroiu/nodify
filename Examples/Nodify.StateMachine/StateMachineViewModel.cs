@@ -47,7 +47,7 @@ namespace Nodify.StateMachine
             {
                 Source = (StateViewModel)s.Source,
                 Target = (StateViewModel)s.Target!
-            }), s => !IsRunning && s.Target is StateViewModel target && target != s.Source && !target.Transitions.Contains(s.Source));
+            }), s => !IsRunning && s.Source is StateViewModel source && s.Target is StateViewModel target && target != s.Source && !source.Transitions.Contains(s.Target));
 
             DeleteTransitionCommand = new RequeryCommand<TransitionViewModel>(t => Transitions.Remove(t), t => !IsRunning);
 

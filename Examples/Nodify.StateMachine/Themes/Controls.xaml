@@ -2,6 +2,71 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify.StateMachine">
 
+    <Style TargetType="{x:Type CheckBox}"
+           BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="SnapsToDevicePixels"
+                Value="False" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Background"
+                Value="#333337" />
+        <Setter Property="BorderBrush"
+                Value="#3F3F3F" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <BulletDecorator Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border"
+                                    Width="16"
+                                    Height="16"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    ClipToBounds="True">
+                                <Path x:Name="PART_CheckMark"
+                                      Stroke="{TemplateBinding Foreground}"
+                                      Width="7"
+                                      Height="7"
+                                      Stretch="Fill"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      SnapsToDevicePixels="False"
+                                      StrokeThickness="2"
+                                      StrokeEndLineCap="Round"
+                                      StrokeStartLineCap="Round"
+                                      Data="M 30,100 L 80,140 L 160,60">
+                                </Path>
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="4,0,0,0"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked"
+                                 Value="False">
+                            <Setter TargetName="PART_CheckMark"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="BorderBrush"
+                                    Value="Gray" />
+                            <Setter TargetName="PART_CheckMark"
+                                    Property="Stroke"
+                                    Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type TextBox}"
            BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="Background"
@@ -30,13 +95,13 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <Border x:Name="PART_Border"
                                 Grid.ColumnSpan="2"
                                 Background="#333337"
                                 BorderBrush="#3F3F3F"
                                 BorderThickness="1" />
-                        
+
                         <Path Grid.Column="1"
                               Fill="{TemplateBinding Foreground}"
                               HorizontalAlignment="Center"

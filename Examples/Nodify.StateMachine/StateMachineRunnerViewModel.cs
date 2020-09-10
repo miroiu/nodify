@@ -35,7 +35,7 @@ namespace Nodify.StateMachine
         {
             NodesVisited = 0;
 
-            _stateMachine = new StateMachine(StateMachineViewModel.States[0].Id, CreateStates(StateMachineViewModel.States), new DebugBlackboardDecorator(new Blackboard()));
+            _stateMachine = new StateMachine(StateMachineViewModel.States[0].Id, CreateStates(StateMachineViewModel.States), CreateBlackboard(StateMachineViewModel.Blackboard));
 
             _stateMachine.StateTransition += HandleStateTransition;
             _stateMachine.StateChanged += HandleStateChange;
@@ -65,6 +65,21 @@ namespace Nodify.StateMachine
             }
 
             return new Transition(from.Id, to.Id);
+        }
+
+        private Blackboard CreateBlackboard(BlackboardViewModel blackboard)
+        {
+            Blackboard result = new Blackboard();
+            for (int i = 0; i < blackboard.Keys.Count; i++)
+            {
+                var key = blackboard.Keys[i];
+                if (!string.IsNullOrWhiteSpace(key.Name))
+                {
+                    result.Set(key.Name, key.Value);
+                }
+            }
+
+            return new DebugBlackboardDecorator(result);
         }
 
         private void HandleStateTransition(Guid from, Guid to)
