@@ -6,7 +6,8 @@
         Integer,
         Double,
         String,
-        Object
+        Object,
+        Key
     }
 
     public class BlackboardKeyViewModel : ObservableObject
@@ -49,6 +50,7 @@
             {
                 BlackboardKeyType.Boolean => BoxValue.False,
                 BlackboardKeyType.String => string.Empty,
+                BlackboardKeyType.Key => string.Empty,
                 BlackboardKeyType.Integer => BoxValue.Int0,
                 BlackboardKeyType.Double => BoxValue.Double0,
                 BlackboardKeyType.Object => null,

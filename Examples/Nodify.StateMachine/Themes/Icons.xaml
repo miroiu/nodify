@@ -26,7 +26,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="ExpandRight"
+    <Rectangle x:Key="ExpandRightIcon"
                x:Shared="False"
                Width="16"
                Height="16">
@@ -48,7 +48,7 @@
         </Rectangle.Fill>
     </Rectangle>
 
-    <Rectangle x:Key="ExpandDown"
+    <Rectangle x:Key="ExpandDownIcon"
                x:Shared="False"
                Width="16"
                Height="16">

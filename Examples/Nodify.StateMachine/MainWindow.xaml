@@ -160,8 +160,7 @@
             </nodify:NodifyEditor.ItemContainerStyle>
 
             <nodify:NodifyEditor.ContextMenu>
-                <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}"
-                             Visibility="{Binding IsPanning, Converter={local:BooleanToVisibilityConverter Negate=True}}">
+                <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
                     <MenuItem Header="_Add State"
                               Icon="{StaticResource AddStateIcon}"
                               InputGestureText="Shift+A"
@@ -197,6 +196,37 @@
                   Background="#2D2D30"
                   Padding="4 1 0 3"
                   ExpandDirection="Right">
+            <Expander.Resources>
+                <DataTemplate x:Key="BooleanTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <CheckBox IsChecked="{Binding Value}"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+                </DataTemplate>
+                <DataTemplate x:Key="IntegerTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <TextBox Text="{Binding Value}" />
+                </DataTemplate>
+                <DataTemplate x:Key="DecimalTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <TextBox Text="{Binding Value}" />
+                </DataTemplate>
+                <DataTemplate x:Key="StringTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <TextBox Text="{Binding Value}" />
+                </DataTemplate>
+                <DataTemplate x:Key="ObjectTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <TextBox Text="{Binding Value}"
+                             IsEnabled="False" />
+                </DataTemplate>
+                <DataTemplate x:Key="KeyTemplate"
+                              DataType="{x:Type local:BlackboardKeyViewModel}">
+                    <ComboBox ItemsSource="{Binding DataContext.Blackboard.Keys, Source={StaticResource EditorProxy}}"
+                              SelectedItem="{Binding Value, Mode=OneWayToSource}"
+                              DisplayMemberPath="Name" />
+                </DataTemplate>
+            </Expander.Resources>
             <Border BorderBrush="#333336"
                     BorderThickness="1"
                     Width="250"
@@ -220,12 +250,12 @@
                                                 <Style TargetType="{x:Type Expander}"
                                                        BasedOn="{StaticResource {x:Type Expander}}">
                                                     <Setter Property="Tag"
-                                                            Value="{StaticResource ExpandRight}" />
+                                                            Value="{StaticResource ExpandRightIcon}" />
                                                     <Style.Triggers>
                                                         <Trigger Property="IsExpanded"
                                                                  Value="True">
                                                             <Setter Property="Tag"
-                                                                    Value="{StaticResource ExpandDown}" />
+                                                                    Value="{StaticResource ExpandDownIcon}" />
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -301,13 +331,215 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
 
                             <TextBlock Text="Action" />
                             <ComboBox ItemsSource="{Binding Blackboard.Actions}"
-                                      DisplayMemberPath="Name"
-                                      SelectedValuePath="Name"
+                                      SelectedItem="{Binding SelectedState.Action}"
                                       SelectedIndex="0"
+                                      DisplayMemberPath="Name"
                                       Grid.Column="1" />
+
+                            <!--INPUT-->
+                            <Expander Margin="0 5 0 0"
+                                      Grid.Row="1"
+                                      Grid.ColumnSpan="2"
+                                      Visibility="{Binding SelectedState.Action.Input.Count, Converter={local:BooleanToVisibilityConverter}}">
+
+                                <Expander.Style>
+                                    <Style TargetType="{x:Type Expander}"
+                                           BasedOn="{StaticResource {x:Type Expander}}">
+                                        <Setter Property="Tag"
+                                                Value="{StaticResource ExpandRightIcon}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsExpanded"
+                                                     Value="True">
+                                                <Setter Property="Tag"
+                                                        Value="{StaticResource ExpandDownIcon}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Expander.Style>
+                                <Expander.Header>
+                                    <TextBlock Text="Input"
+                                               FontWeight="Bold"
+                                               FontSize="14" />
+                                </Expander.Header>
+                                <StackPanel>
+                                    <Separator Height="2"
+                                               Background="#333337"
+                                               Width="Auto" />
+
+                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid IsSharedSizeScope="True">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Text="{Binding Name}" />
+
+                                                    <TextBox Text="{Binding Type}"
+                                                             IsEnabled="False"
+                                                             Margin="5 0"
+                                                             Grid.Column="1" />
+
+                                                    <ContentPresenter Content="{Binding}"
+                                                                      x:Name="ValueEditor"
+                                                                      Grid.Column="2" />
+                                                </Grid>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Boolean">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource BooleanTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Integer">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource IntegerTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Double">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource DecimalTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="String">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource StringTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Object">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource ObjectTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Key">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource KeyTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Expander>
+
+                            <!--OUTPUT-->
+                            <Expander Margin="0 5 0 0"
+                                      Grid.Row="2"
+                                      Grid.ColumnSpan="2"
+                                      Visibility="{Binding SelectedState.Action.Output.Count, Converter={local:BooleanToVisibilityConverter}}">
+                                <Expander.Style>
+                                    <Style TargetType="{x:Type Expander}"
+                                           BasedOn="{StaticResource {x:Type Expander}}">
+                                        <Setter Property="Tag"
+                                                Value="{StaticResource ExpandRightIcon}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsExpanded"
+                                                     Value="True">
+                                                <Setter Property="Tag"
+                                                        Value="{StaticResource ExpandDownIcon}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Expander.Style>
+                                <Expander.Header>
+                                    <TextBlock Text="Output"
+                                               FontWeight="Bold"
+                                               FontSize="14" />
+                                </Expander.Header>
+                                <StackPanel>
+                                    <Separator Height="2"
+                                               Background="#333337"
+                                               Width="Auto" />
+
+                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid IsSharedSizeScope="True">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Text="{Binding Name}" />
+
+                                                    <TextBox Text="{Binding Type}"
+                                                             IsEnabled="False"
+                                                             Margin="5 0"
+                                                             Grid.Column="1" />
+
+                                                    <ContentPresenter Content="{Binding}"
+                                                                      x:Name="ValueEditor"
+                                                                      Grid.Column="2" />
+                                                </Grid>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Boolean">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource BooleanTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Integer">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource IntegerTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Double">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource DecimalTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="String">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource StringTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Object">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource ObjectTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}"
+                                                                 Value="Key">
+                                                        <Setter Property="ContentTemplate"
+                                                                Value="{StaticResource KeyTemplate}"
+                                                                TargetName="ValueEditor" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Expander>
                         </Grid>
                     </Grid>
 
@@ -349,34 +581,10 @@
                                    Width="Auto"
                                    Margin="0 2 0 10"
                                    Grid.Row="1" />
+
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                                       Grid.Row="2">
                             <ItemsControl ItemsSource="{Binding Blackboard.Keys}">
-                                <ItemsControl.Resources>
-                                    <DataTemplate x:Key="BooleanTemplate"
-                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <CheckBox IsChecked="{Binding Value}"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Center" />
-                                    </DataTemplate>
-                                    <DataTemplate x:Key="IntegerTemplate"
-                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <TextBox Text="{Binding Value}" />
-                                    </DataTemplate>
-                                    <DataTemplate x:Key="DecimalTemplate"
-                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <TextBox Text="{Binding Value}" />
-                                    </DataTemplate>
-                                    <DataTemplate x:Key="StringTemplate"
-                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <TextBox Text="{Binding Value}" />
-                                    </DataTemplate>
-                                    <DataTemplate x:Key="ObjectTemplate"
-                                                  DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <TextBox Text="{Binding Value}"
-                                                 IsEnabled="False" />
-                                    </DataTemplate>
-                                </ItemsControl.Resources>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
                                         <Grid IsSharedSizeScope="True">
@@ -390,8 +598,7 @@
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
 
-                                            <local:EditableTextBlock Text="{Binding Name}"
-                                                                     IsEditing="True" />
+                                            <local:EditableTextBlock Text="{Binding Name}" />
 
                                             <ComboBox ItemsSource="{Binding Type, Converter={local:EnumValuesConverter}}"
                                                       DisplayMemberPath="Name"
@@ -440,6 +647,12 @@
                                                          Value="Object">
                                                 <Setter Property="ContentTemplate"
                                                         Value="{StaticResource ObjectTemplate}"
+                                                        TargetName="ValueEditor" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}"
+                                                         Value="Key">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource KeyTemplate}"
                                                         TargetName="ValueEditor" />
                                             </DataTrigger>
                                         </DataTemplate.Triggers>

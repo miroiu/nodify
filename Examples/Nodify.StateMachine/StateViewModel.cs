@@ -55,6 +55,13 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _isActive, value);
         }
 
+        private ActionViewModel? _action;
+        public ActionViewModel? Action
+        {
+            get => _action;
+            set => SetProperty(ref _action, value);
+        }
+
         public bool IsEditable { get; set; } = true;
         public StateMachineViewModel Graph { get; internal set; } = default!;
         public NodifyObservableCollection<StateViewModel> Transitions { get; } = new NodifyObservableCollection<StateViewModel>();

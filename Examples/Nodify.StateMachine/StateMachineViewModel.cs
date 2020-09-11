@@ -40,7 +40,8 @@ namespace Nodify.StateMachine
             {
                 Name = "New State",
                 IsRenaming = true,
-                Location = p
+                Location = p,
+                Action = Blackboard.Actions.Count > 0 ? Blackboard.Actions[0] : null
             }), p => !IsRunning);
 
             CreateTransitionCommand = new DelegateCommand<(object Source, object? Target)>(s => Transitions.Add(new TransitionViewModel
@@ -126,13 +127,29 @@ namespace Nodify.StateMachine
             States.Add(new StateViewModel
             {
                 Name = "New State",
-                Location = new Point(300, 100)
+                Location = new Point(300, 100),
+                Action = Blackboard.Actions[0]
             });
 
             Transitions.Add(new TransitionViewModel
             {
                 Source = States[0],
                 Target = States[1]
+            });
+
+            //SelectedStates.Add(States[1]);
+
+            Blackboard.Keys.Add(new BlackboardKeyViewModel
+            {
+                Name = "New Boolean",
+                Type = BlackboardKeyType.Boolean
+            });
+
+            Blackboard.Keys.Add(new BlackboardKeyViewModel
+            {
+                Name = "Other Boolean",
+                Type = BlackboardKeyType.Boolean,
+                Value = true
             });
         }
     }

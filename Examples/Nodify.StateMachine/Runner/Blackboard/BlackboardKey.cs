@@ -7,24 +7,20 @@ namespace Nodify.StateMachine
     {
         private static readonly Dictionary<string, BlackboardKey> _keys = new Dictionary<string, BlackboardKey>();
 
-        public BlackboardKey(string name, string typeName)
+        public BlackboardKey(string name, BlackboardKeyType type)
         {
             Name = name ?? throw new ArgumentException(nameof(name));
-            Type = typeName;
+            Type = type;
 
             _keys[name] = this;
         }
 
-        public BlackboardKey(string name, Type type) : this(name, type.Name)
-        {
-        }
-
-        public BlackboardKey(string name) : this(name, typeof(object).Name)
+        public BlackboardKey(string name) : this(name, BlackboardKeyType.Object)
         {
         }
 
         public readonly string Name;
-        public readonly string Type;
+        public readonly BlackboardKeyType Type;
 
         public static implicit operator BlackboardKey(string name)
         {
@@ -52,6 +48,6 @@ namespace Nodify.StateMachine
             => left.Equals(right);
 
         public static bool operator !=(BlackboardKey left, BlackboardKey right)
-            =>  !(left == right);
+            => !(left == right);
     }
 }

@@ -50,10 +50,24 @@ namespace Nodify.StateMachine
         }
 
         private IEnumerable<State> CreateStates(IEnumerable<StateViewModel> states)
-            => states.Select(s => new DebugStateDecorator(new State(s.Id, CreateTransitions(s))));
+            => states.Select(s => new DebugStateDecorator(new State(s.Id, CreateTransitions(s), CreateAction(s.Action))));
 
         private IEnumerable<Transition> CreateTransitions(StateViewModel state)
             => state.Transitions.Select(t => new DebugTransitionDecorator(CreateTransition(state, t)));
+
+        private IBlackboardAction? CreateAction(ActionViewModel? action)
+        {
+            var type = action?.Type;
+            if (type != null && typeof(IBlackboardAction).IsAssignableFrom(type))
+            {
+                return (IBlackboardAction?)Activator.CreateInstance(type, new object[] { CreateKeys(action!.Input), CreateKeys(action.Output) });
+            }
+
+            return default;
+        }
+
+        private IEnumerable<BlackboardKey> CreateKeys(NodifyObservableCollection<BlackboardKeyViewModel> keys)
+            => keys.Select(k => CreateBlackboardKey(k));
 
         private Transition CreateTransition(StateViewModel from, StateViewModel to)
         {
@@ -75,11 +89,21 @@ namespace Nodify.StateMachine
                 var key = blackboard.Keys[i];
                 if (!string.IsNullOrWhiteSpace(key.Name))
                 {
-                    result.Set(key.Name, key.Value);
+                    result.Set(CreateBlackboardKey(key), key.Value);
                 }
             }
 
             return new DebugBlackboardDecorator(result);
+        }
+
+        private BlackboardKey CreateBlackboardKey(BlackboardKeyViewModel key)
+        {
+            if (key.Type == BlackboardKeyType.Key && key.Value is BlackboardKeyViewModel bkv)
+            {
+                return CreateBlackboardKey(bkv);
+            }
+
+            return new BlackboardKey(key.Name, key.Type);
         }
 
         private void HandleStateTransition(Guid from, Guid to)

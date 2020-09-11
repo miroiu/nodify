@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
+    [BlackboardAction("Copy Blackboard Key")]
+    [BlackboardKey("Source", BlackboardKeyType.Key, BlackboardKeyUsage.Input)]
+    [BlackboardKey("Target", BlackboardKeyType.Key, BlackboardKeyUsage.Input)]
     public class CopyBlackboardKeyAction : BlackboardAction
     {
         public CopyBlackboardKeyAction(IEnumerable<BlackboardKey> input, IEnumerable<BlackboardKey> output) : base(input, output)
@@ -15,8 +18,14 @@ namespace Nodify.StateMachine
 
         public override Task Execute(Blackboard blackboard)
         {
-            var source = blackboard.GetObject(Input[0]);
-            blackboard.Set(Input[1], source);
+            var source = Input[0];
+            var target = Input[1];
+
+            if (source != target)
+            {
+                var value = blackboard.GetObject(source);
+                blackboard.Set(target, value);
+            }
 
             return Task.CompletedTask;
         }

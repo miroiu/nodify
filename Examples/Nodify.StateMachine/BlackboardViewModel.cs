@@ -11,7 +11,21 @@ namespace Nodify.StateMachine
         {
             new ActionViewModel
             {
-                Name = nameof(CopyBlackboardKeyAction)
+                Name = "Copy Blackboard Key",
+                Type = typeof(CopyBlackboardKeyAction),
+                Input = new NodifyObservableCollection<BlackboardKeyViewModel>
+                {
+                    new BlackboardKeyViewModel
+                    {
+                        Name = "Source",
+                        Type = BlackboardKeyType.Key
+                    },
+                    new BlackboardKeyViewModel
+                    {
+                        Name = "Target",
+                        Type = BlackboardKeyType.Key
+                    }
+                }
             }
         };
 
