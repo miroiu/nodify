@@ -28,6 +28,10 @@
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
         <Setter Property="local:DragBehavior.IsDraggable"
                 Value="True" />
         <Setter Property="InputConnectorTemplate"
@@ -42,10 +46,16 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="3">
-                        <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
                             <!--Header-->
-                            <Border Background="{TemplateBinding HeaderBrush}">
+                            <Border Background="{TemplateBinding HeaderBrush}"
+                                    Grid.ColumnSpan="3">
                                 <StackPanel Orientation="Horizontal"
                                             Margin="6 0 6 0">
                                     <ContentPresenter ContentSource="Icon"
@@ -57,35 +67,44 @@
 
                                     <ContentPresenter ContentSource="Header"
                                                       Margin="0 3 0 5"
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                       Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </StackPanel>
                             </Border>
 
                             <!--Body-->
-                            <DockPanel>
+                            <Grid Grid.Column="1"
+                                  Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
                                 <!--Data IN-->
                                 <ItemsControl ItemsSource="{TemplateBinding Input}"
                                               ItemTemplate="{TemplateBinding InputConnectorTemplate}" />
 
                                 <!--Content-->
-                                <ContentPresenter Margin="16 0" />
+                                <ContentPresenter Margin="16 0"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Grid.Column="1" />
 
                                 <!--Data OUT-->
                                 <ItemsControl ItemsSource="{TemplateBinding Output}"
                                               ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
-                                              DockPanel.Dock="Right" />
-
-                            </DockPanel>
+                                              HorizontalContentAlignment="Right"
+                                              Grid.Column="2" />
+                            </Grid>
 
                             <!--Footer-->
                             <Border Visibility="{TemplateBinding Footer, Converter={StaticResource NullToVisibilityConverter}}"
-                                    Background="{TemplateBinding FooterBrush}">
+                                    Background="{TemplateBinding FooterBrush}"
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3">
                                 <ContentPresenter ContentSource="Footer" />
                             </Border>
-                        </StackPanel>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
