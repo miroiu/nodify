@@ -28,10 +28,7 @@
                                     Margin="{TemplateBinding Padding}"
                                     HorizontalAlignment="Right">
 
-                            <TextBlock Text="{TemplateBinding Header}"
-                                       FontSize="12"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       VerticalAlignment="Center" />
+                            <ContentPresenter ContentSource="Header" />
 
                             <Control x:Name="PART_Connector"
                                      Margin="5 0 0 0"

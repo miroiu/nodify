@@ -5,13 +5,22 @@ namespace Nodify
 {
     public class NodeOutput : Connector
     {
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(object), typeof(NodeOutput));
-        public static readonly DependencyProperty ConnectorTemplateProperty = DependencyProperty.Register(nameof(ConnectorTemplate), typeof(ControlTemplate), typeof(NodeOutput));
+        #region Dependency Properties
+        
+        public static readonly DependencyProperty HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner(typeof(NodeOutput));
+        public static readonly DependencyProperty HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner(typeof(NodeOutput));
+        public static readonly DependencyProperty ConnectorTemplateProperty = NodeInput.ConnectorTemplateProperty.AddOwner(typeof(NodeOutput));
 
         public object Header
         {
             get => GetValue(HeaderProperty);
             set => SetValue(HeaderProperty, value);
+        }
+        
+        public DataTemplate HeaderTemplate
+        {
+            get => (DataTemplate)GetValue(HeaderTemplateProperty);
+            set => SetValue(HeaderTemplateProperty, value);
         }
 
         public ControlTemplate ConnectorTemplate
@@ -19,6 +28,8 @@ namespace Nodify
             get => (ControlTemplate)GetValue(ConnectorTemplateProperty);
             set => SetValue(ConnectorTemplateProperty, value);
         }
+
+        #endregion
 
         static NodeOutput()
         {

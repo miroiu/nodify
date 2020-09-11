@@ -33,10 +33,7 @@
                                      BorderBrush="{TemplateBinding BorderBrush}"
                                      Template="{TemplateBinding ConnectorTemplate}" />
 
-                            <TextBlock Text="{TemplateBinding Header}"
-                                       FontSize="12"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       VerticalAlignment="Center" />
+                            <ContentPresenter ContentSource="Header" />
                         </StackPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
