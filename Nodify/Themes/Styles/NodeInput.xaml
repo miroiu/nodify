@@ -9,7 +9,9 @@
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
         <Setter Property="Padding"
-                Value="1" />
+                Value="4 2" />
+        <Setter Property="Margin"
+                Value="0 1 16 1" />
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="ConnectorTemplate"

@@ -6,11 +6,11 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <DataTemplate x:Key="DefaultInputConnectorTemplate">
-        <local:NodeInput Margin="3 3 1 3" />
+        <local:NodeInput />
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultOutputConnectorTemplate">
-        <local:NodeOutput Margin="2 4 4 4" />
+        <local:NodeOutput />
     </DataTemplate>
 
     <Style TargetType="{x:Type local:Node}">
@@ -85,8 +85,7 @@
                                               ItemTemplate="{TemplateBinding InputConnectorTemplate}" />
 
                                 <!--Content-->
-                                <ContentPresenter Margin="16 0"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   Grid.Column="1" />
 
