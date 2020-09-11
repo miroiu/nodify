@@ -120,14 +120,14 @@ namespace Nodify.StateMachine
             States.Insert(0, new StateViewModel
             {
                 Name = "Enter",
-                Location = new Point(100, 100),
+                Location = new Point(350, 100),
                 IsEditable = false
             });
 
             States.Add(new StateViewModel
             {
-                Name = "New State",
-                Location = new Point(300, 100),
+                Name = "Copy Key",
+                Location = new Point(500, 100),
                 Action = Blackboard.Actions[0]
             });
 
@@ -137,7 +137,7 @@ namespace Nodify.StateMachine
                 Target = States[1]
             });
 
-            //SelectedStates.Add(States[1]);
+            SelectedStates.Add(States[1]);
 
             Blackboard.Keys.Add(new BlackboardKeyViewModel
             {

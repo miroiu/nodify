@@ -195,7 +195,8 @@
                   HorizontalAlignment="Left"
                   Background="#2D2D30"
                   Padding="4 1 0 3"
-                  ExpandDirection="Right">
+                  ExpandDirection="Right"
+                  IsExpanded="True">
             <Expander.Resources>
                 <DataTemplate x:Key="BooleanTemplate"
                               DataType="{x:Type local:BlackboardKeyViewModel}">
@@ -348,6 +349,8 @@
                             <Expander Margin="0 5 0 0"
                                       Grid.Row="1"
                                       Grid.ColumnSpan="2"
+                                      BorderThickness="0 0 0 1"
+                                      BorderBrush="#333337"
                                       Visibility="{Binding SelectedState.Action.Input.Count, Converter={local:BooleanToVisibilityConverter}}">
 
                                 <Expander.Style>
@@ -366,14 +369,9 @@
                                 </Expander.Style>
                                 <Expander.Header>
                                     <TextBlock Text="Input"
-                                               FontWeight="Bold"
-                                               FontSize="14" />
+                                               FontWeight="Bold" />
                                 </Expander.Header>
                                 <StackPanel>
-                                    <Separator Height="2"
-                                               Background="#333337"
-                                               Width="Auto" />
-
                                     <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -447,6 +445,8 @@
                             <Expander Margin="0 5 0 0"
                                       Grid.Row="2"
                                       Grid.ColumnSpan="2"
+                                      BorderThickness="0 0 0 1"
+                                      BorderBrush="#333337"
                                       Visibility="{Binding SelectedState.Action.Output.Count, Converter={local:BooleanToVisibilityConverter}}">
                                 <Expander.Style>
                                     <Style TargetType="{x:Type Expander}"
@@ -464,8 +464,7 @@
                                 </Expander.Style>
                                 <Expander.Header>
                                     <TextBlock Text="Output"
-                                               FontWeight="Bold"
-                                               FontSize="14" />
+                                               FontWeight="Bold" />
                                 </Expander.Header>
                                 <StackPanel>
                                     <Separator Height="2"
