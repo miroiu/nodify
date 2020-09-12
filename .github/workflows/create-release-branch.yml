@@ -3,7 +3,7 @@ name: Create release branch
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*'
 
 jobs:
   create-release:
