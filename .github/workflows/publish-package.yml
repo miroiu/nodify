@@ -24,6 +24,7 @@ jobs:
     - name: Publish package
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
+        PACKAGE_NAME: Nodify
+        PROJECT_FILE_PATH: Nodify/Nodify.csproj
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
-        PACKAGE_NAME: nodify
       
