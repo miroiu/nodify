@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public sealed class EditorSelection
+    public sealed class SelectionHelper
     {
         private readonly NodifyEditor _host;
         private Point _startLocation;
@@ -15,7 +15,7 @@ namespace Nodify
         private List<ItemContainer> _selectedNodes = default!;
         private List<ItemContainer> _nodesInArea = default!;
 
-        public EditorSelection(NodifyEditor host)
+        public SelectionHelper(NodifyEditor host)
             => _host = host;
 
         public enum SelectionType

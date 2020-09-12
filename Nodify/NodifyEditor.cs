@@ -345,16 +345,60 @@ namespace Nodify
 
         #endregion
 
+        /// <summary>
+        /// Value is number of pixels squared.
+        /// Useful for <see cref="ContextMenu"/>s to appear if mouse only moved a bit or not at all.
+        /// </summary>
+        public static double HandleRightClickAfterPanningThreshold { get; set; } = 144d;
+
+        /// <summary>
+        /// Correct <see cref="ItemContainer"/>'s position after moving if starting position is not snapped to grid.
+        /// </summary>
         public static bool EnableSnappingCorrection { get; set; } = true;
+
+        /// <summary>
+        /// How often should we calculate the new <see cref="Offset"/> when dragging or selecting.
+        /// </summary>
+        /// 
         public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 1;
+
+        /// <summary>
+        /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
+        /// </summary>
         public bool IsBulkUpdatingItems { get; protected set; }
 
+        /// <summary>
+        /// The panel that holds all the <see cref="ItemContainer"/>s.
+        /// </summary>
         protected internal Panel? ItemsHost { get; private set; }
-        protected EditorSelection Selection { get; private set; }
+
+        /// <summary>
+        /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectingRectangle"/> and <see cref="IsSelecting"/> properties.
+        /// </summary>
+        protected SelectionHelper Selection { get; private set; }
+
+        /// <summary>
+        /// Tells if the mouse pointer is inside the <see cref="NodifyEditor"/>.
+        /// </summary>
         protected bool IsMouseInsideEditor { get; private set; }
 
+        /// <summary>
+        /// Tells where the mouse cursor was the previous time it moved relative to the <see cref="NodifyEditor"/>.
+        /// Check <see cref="MouseLocation"/> for a transformed position.
+        /// </summary>
         protected Point PreviousMousePosition;
+
+        /// <summary>
+        /// Tells where the mouse cursor is right now relative to the <see cref="NodifyEditor"/>.
+        /// Check <see cref="MouseLocation"/> for a transformed position.
+        /// </summary>
         protected Point CurrentMousePosition;
+
+        /// <summary>
+        /// Tells where the mouse cursor was when the user started interacting with the <see cref="NodifyEditor"/>.
+        /// Check <see cref="MouseLocation"/> for a transformed position.
+        /// </summary>
+        protected Point InitialMousePosition;
 
         private DispatcherTimer? _autoPanningTimer;
 
@@ -367,7 +411,7 @@ namespace Nodify
             AddHandler(DragBehavior.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
             AddHandler(DragBehavior.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
 
-            Selection = new EditorSelection(this);
+            Selection = new SelectionHelper(this);
 
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
@@ -534,6 +578,8 @@ namespace Nodify
 
                 Focus();
                 CaptureMouse();
+
+                InitialMousePosition = e.GetPosition(this);
             }
         }
 
@@ -554,6 +600,8 @@ namespace Nodify
             {
                 Focus();
                 CaptureMouse();
+
+                InitialMousePosition = e.GetPosition(this);
             }
         }
 
@@ -567,7 +615,12 @@ namespace Nodify
                 if (IsPanning)
                 {
                     IsPanning = false;
-                    e.Handled = true;
+
+                    // Handle right click if IsPanning and moved the mouse more than threshold so context menus don't open
+                    if ((CurrentMousePosition - InitialMousePosition).LengthSquared > HandleRightClickAfterPanningThreshold)
+                    {
+                        e.Handled = true;
+                    }
                 }
             }
         }
