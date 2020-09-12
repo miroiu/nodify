@@ -50,9 +50,26 @@ namespace Nodify.Playground
 
         public static void AddRange<T>(this ICollection<T> col, IEnumerable<T> items)
         {
-            foreach (var item in items)
+            if (items is IList<T> itemsCol)
             {
-                col.Add(item);
+                for (int i = 0; i < itemsCol.Count; i++)
+                {
+                    col.Add(itemsCol[i]);
+                }
+            }
+            else if (items is T[] itemsArr)
+            {
+                for (int i = 0; i < itemsArr.Length; i++)
+                {
+                    col.Add(itemsArr[i]);
+                }
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    col.Add(item);
+                }
             }
         }
     }

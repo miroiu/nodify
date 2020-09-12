@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Nodify.Playground
@@ -34,25 +36,35 @@ namespace Nodify.Playground
             set => SetProperty(ref _shouldConnectNodes, value);
         }
 
-        private void GenerateRandomNodes()
+        private bool _async = true;
+        public bool Async
+        {
+            get => _async;
+            set => SetProperty(ref _async, value);
+        }
+
+        private int _connectionsBatchSize = 50;
+        private int _nodesBatchSize = 10;
+
+        private async void GenerateRandomNodes()
         {
             var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(100));
             GraphViewModel.Nodes.Clear();
-            GraphViewModel.Nodes.AddRange(nodes);
+            await CopyToAsync(nodes, GraphViewModel.Nodes, _nodesBatchSize);
 
             if (ShouldConnectNodes)
             {
                 var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                GraphViewModel.Connections.AddRange(connections);
+                await CopyToAsync(connections, GraphViewModel.Connections, _connectionsBatchSize);
             }
         }
 
-        private void ToggleConnections()
+        private async void ToggleConnections()
         {
             if (ShouldConnectNodes)
             {
                 var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                GraphViewModel.Connections.AddRange(connections);
+                await CopyToAsync(connections, GraphViewModel.Connections, _connectionsBatchSize);
             }
             else
             {
@@ -60,7 +72,7 @@ namespace Nodify.Playground
             }
         }
 
-        private void PerformanceTest()
+        private async void PerformanceTest()
         {
             int count = 1000;
             int distance = 400;
@@ -71,12 +83,35 @@ namespace Nodify.Playground
                 NodeLocationGenerator = (s, i) => new System.Windows.Point(i % size * distance, i / size * distance)
             });
             GraphViewModel.Nodes.Clear();
-            GraphViewModel.Nodes.AddRange(nodes);
+            await CopyToAsync(nodes, GraphViewModel.Nodes, _nodesBatchSize);
 
             if (ShouldConnectNodes)
             {
                 var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                GraphViewModel.Connections.AddRange(connections);
+                await CopyToAsync(connections, GraphViewModel.Connections, _connectionsBatchSize);
+            }
+        }
+
+        private async Task CopyToAsync(IList source, IList target, int batches = 5)
+        {
+            if (Async)
+            {
+                for (int i = 0; i <= source.Count - batches;)
+                {
+                    for (int j = 0; j < batches; j++, i++)
+                    {
+                        target.Add(source[i]);
+                    }
+
+                    await Task.Delay(1);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < source.Count; i++)
+                {
+                    target.Add(source[i]);
+                }
             }
         }
     }

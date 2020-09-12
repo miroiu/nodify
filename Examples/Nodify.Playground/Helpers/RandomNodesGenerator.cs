@@ -62,7 +62,7 @@ namespace Nodify.Playground
     {
         private static readonly Random _rand = new Random();
 
-        public static IList<T> GenerateNodes<T>(NodesGeneratorSettings settings)
+        public static List<T> GenerateNodes<T>(NodesGeneratorSettings settings)
             where T : FlowNodeViewModel, new()
         {
             var nodes = new List<T>();
@@ -84,7 +84,7 @@ namespace Nodify.Playground
             return nodes;
         }
 
-        public static IList<ConnectionViewModel> GenerateConnections<TSchema>(IList<NodeViewModel> nodes)
+        public static List<ConnectionViewModel> GenerateConnections<TSchema>(IList<NodeViewModel> nodes)
             where TSchema : GraphSchema, new()
         {
             HashSet<NodeViewModel> visited = new HashSet<NodeViewModel>(nodes.Count);
@@ -113,7 +113,7 @@ namespace Nodify.Playground
             return connections;
         }
 
-        public static IList<ConnectionViewModel> ConnectPins(GraphSchema schema, IList<ConnectorViewModel> source, IList<ConnectorViewModel> target)
+        public static List<ConnectionViewModel> ConnectPins(GraphSchema schema, IList<ConnectorViewModel> source, IList<ConnectorViewModel> target)
         {
             Dictionary<ConnectorViewModel, List<ConnectorViewModel>> connections = new Dictionary<ConnectorViewModel, List<ConnectorViewModel>>();
             List<ConnectionViewModel> result = new List<ConnectionViewModel>();
@@ -161,7 +161,7 @@ namespace Nodify.Playground
             return result;
         }
 
-        public static IList<ConnectorViewModel> GenerateConnectors(NodesGeneratorSettings settings, int count)
+        public static List<ConnectorViewModel> GenerateConnectors(NodesGeneratorSettings settings, int count)
         {
             var list = new List<ConnectorViewModel>(count);
 

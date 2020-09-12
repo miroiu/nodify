@@ -474,7 +474,7 @@ namespace Nodify
 
                 if (IsSelecting)
                 {
-                    Selection.Update(GetMousePositionTransformed(Mouse.GetPosition(this)));
+                    Selection.Update(GetMousePositionTransformed(mousePosition));
                 }
             }
         }
