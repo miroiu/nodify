@@ -1,11 +1,12 @@
 name: Publish package
 
 on:
-  create
+  push:
+    tags:
+      - 'v*.*'
 
 jobs:
   publish:
-    if: ${{ contains(github.ref, 'refs/heads/release-v*.*.*') }}
     runs-on: windows-latest
 
     steps:
