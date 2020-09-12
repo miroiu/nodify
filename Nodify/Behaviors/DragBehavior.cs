@@ -8,7 +8,7 @@ namespace Nodify
     public static class DragBehavior
     {
         #region Routed Events
-        
+
         public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent("DragStarted", RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(DragBehavior));
         public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent("DragCompleted", RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(DragBehavior));
         public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent("DragDelta", RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(DragBehavior));
@@ -42,10 +42,20 @@ namespace Nodify
 
         private static void OnIsDraggableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            var value = (bool)e.NewValue;
+
             if (d is UIElement elem)
             {
-                elem.MouseLeftButtonUp += OnCompletedDraggingOperation;
-                elem.MouseMove += OnDragging;
+                if (value)
+                {
+                    elem.MouseLeftButtonUp += OnCompletedDraggingOperation;
+                    elem.MouseMove += OnDragging;
+                }
+                else
+                {
+                    elem.MouseLeftButtonUp -= OnCompletedDraggingOperation;
+                    elem.MouseMove -= OnDragging;
+                }
             }
         }
 
