@@ -104,6 +104,7 @@ namespace Nodify
         public static bool EnableOptimizations = true;
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
+        private bool _isHooked;
 
         public override void OnApplyTemplate()
         {
@@ -116,15 +117,37 @@ namespace Nodify
 
             Loaded += OnConnectorLoaded;
             Unloaded += OnConnectorUnloaded;
+        }
 
-            // The loaded event will not get called if the initial visibility is collapsed
+        #region Update connector
+
+        private void TrySetAnchorUpdateEvents(bool value)
+        {
             if (Container != null && Editor != null)
             {
-                Container.PreviewLocationChanged += UpdateConnectorOptimized;
-                Container.LocationChanged += OnLocationChanged;
-                Editor.ViewportUpdated += OnViewportUpdated;
+                // If events are not already hooked and we are asked to subscribe
+                if (value && !_isHooked)
+                {
+                    Container.PreviewLocationChanged += UpdateConnectorOptimized;
+                    Container.LocationChanged += OnLocationChanged;
+                    Editor.ViewportUpdated += OnViewportUpdated;
+                    _isHooked = true;
+                }
+                // If events are already hooked and we are asked to unsubscribe
+                else if (_isHooked && !value)
+                {
+                    Container.PreviewLocationChanged -= UpdateConnectorOptimized;
+                    Container.LocationChanged -= OnLocationChanged;
+                    Editor.ViewportUpdated -= OnViewportUpdated;
+                }
             }
         }
+
+        private void OnConnectorLoaded(object sender, RoutedEventArgs? e)
+            => TrySetAnchorUpdateEvents(true);
+
+        private void OnConnectorUnloaded(object sender, RoutedEventArgs e)
+            => TrySetAnchorUpdateEvents(false);
 
         private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -132,34 +155,21 @@ namespace Nodify
             con.UpdateConnectorSafe();
         }
 
-        #region Update connector
-
-        private void OnConnectorLoaded(object sender, RoutedEventArgs e)
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            if (Container != null && Editor != null)
+            // Subscribe to events if not already subscribed 
+            // Useful for advanced connectors that start collapsed because the loaded event is not called
+            var newSize = sizeInfo.NewSize;
+            if (newSize.Width > 0 || newSize.Height > 0)
             {
-                UpdateConnector(Container.Location);
+                TrySetAnchorUpdateEvents(true);
 
-                Container.PreviewLocationChanged += UpdateConnectorOptimized;
-                Container.LocationChanged += OnLocationChanged;
-                Editor.ViewportUpdated += OnViewportUpdated;
-            }
-        }
-
-        private void OnConnectorUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (Container != null && Editor != null)
-            {
-                Container.PreviewLocationChanged -= UpdateConnectorOptimized;
-                Container.LocationChanged -= OnLocationChanged;
-                Editor.ViewportUpdated -= OnViewportUpdated;
+                UpdateConnectorOptimized(Container!.Location);
             }
         }
 
         private void OnLocationChanged(object sender, RoutedEventArgs e)
-        {
-            UpdateConnectorOptimized(Container!.Location);
-        }
+            => UpdateConnectorOptimized(Container!.Location);
 
         private void OnViewportUpdated(object sender, RoutedEventArgs args)
         {
