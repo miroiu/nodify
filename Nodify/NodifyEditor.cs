@@ -378,11 +378,6 @@ namespace Nodify
         protected SelectionHelper Selection { get; private set; }
 
         /// <summary>
-        /// Tells if the mouse pointer is inside the <see cref="NodifyEditor"/>.
-        /// </summary>
-        protected bool IsMouseInsideEditor { get; private set; }
-
-        /// <summary>
         /// Tells where the mouse cursor was the previous time it moved relative to the <see cref="NodifyEditor"/>.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
@@ -449,7 +444,7 @@ namespace Nodify
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            if (IsMouseInsideEditor && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
             {
                 var mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
@@ -523,16 +518,6 @@ namespace Nodify
         #endregion
 
         #region Mouse Events Handlers
-
-        protected override void OnMouseEnter(MouseEventArgs e)
-        {
-            IsMouseInsideEditor = true;
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            IsMouseInsideEditor = false;
-        }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
