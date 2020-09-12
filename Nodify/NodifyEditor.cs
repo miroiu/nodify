@@ -471,6 +471,11 @@ namespace Nodify
                 }
 
                 Offset = new Point(x, y);
+
+                if (IsSelecting)
+                {
+                    Selection.Update(GetMousePositionTransformed(Mouse.GetPosition(this)));
+                }
             }
         }
 
@@ -531,7 +536,7 @@ namespace Nodify
 
             if (CurrentMousePosition != PreviousMousePosition)
             {
-                MouseLocation = new Point((Offset.X + CurrentMousePosition.X) / Scale, (Offset.Y + CurrentMousePosition.Y) / Scale);
+                MouseLocation = GetMousePositionTransformed(CurrentMousePosition);
 
                 if (Mouse.Captured == this)
                 {
@@ -932,6 +937,9 @@ namespace Nodify
         #endregion
 
         #region Helpers
+
+        private Point GetMousePositionTransformed(Point location)
+            => new Point((Offset.X + location.X) / Scale, (Offset.Y + location.Y) / Scale);
 
         public void ScaleAtPosition(double scale, Point pos)
         {
