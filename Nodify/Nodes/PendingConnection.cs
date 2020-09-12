@@ -18,24 +18,7 @@ namespace Nodify
         public static readonly DependencyProperty StrokeThicknessProperty = Shape.StrokeThicknessProperty.AddOwner(typeof(PendingConnection));
         public static readonly DependencyProperty StrokeDashArrayProperty = Shape.StrokeDashArrayProperty.AddOwner(typeof(PendingConnection));
         public static readonly DependencyProperty AllowOnlyConnectorsProperty = DependencyProperty.Register(nameof(AllowOnlyConnectors), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True, OnAllowOnlyConnectorsChanged));
-
-        private static readonly DependencyProperty AllowOnlyConnectorsAttachedProperty = DependencyProperty.Register("AllowOnlyConnectorsAttached", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True));
-
-        internal static bool GetAllowOnlyConnectorsAttached(UIElement elem)
-            => (bool)elem.GetValue(AllowOnlyConnectorsAttachedProperty);
-
-        internal static void SetAllowOnlyConnectorsAttached(UIElement elem, bool value)
-            => elem.SetValue(AllowOnlyConnectorsAttachedProperty, value);
-
-        private static void OnAllowOnlyConnectorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = ((PendingConnection)d).Editor;
-
-            if (editor != null)
-            {
-                SetAllowOnlyConnectorsAttached(editor, (bool)e.NewValue);
-            }
-        }
+        public static readonly DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
 
         public Point SourceAnchor
         {
@@ -65,6 +48,12 @@ namespace Nodify
         {
             get => (bool)GetValue(EnablePreviewProperty);
             set => SetValue(EnablePreviewProperty, value);
+        }
+
+        public bool EnableSnapping
+        {
+            get => (bool)GetValue(EnableSnappingProperty);
+            set => SetValue(EnableSnappingProperty, value);
         }
 
         public object? PreviewTarget
@@ -99,8 +88,37 @@ namespace Nodify
 
         #endregion
 
+        #region Attached Properties
+
+        private static readonly DependencyProperty _allowOnlyConnectorsAttachedProperty = DependencyProperty.RegisterAttached("AllowOnlyConnectorsAttached", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty IsOverElementProperty = DependencyProperty.RegisterAttached("IsOverElement", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
+
+        internal static bool GetAllowOnlyConnectorsAttached(UIElement elem)
+            => (bool)elem.GetValue(_allowOnlyConnectorsAttachedProperty);
+
+        internal static void SetAllowOnlyConnectorsAttached(UIElement elem, bool value)
+            => elem.SetValue(_allowOnlyConnectorsAttachedProperty, value);
+
+        public static bool GetIsOverElement(UIElement elem)
+            => (bool)elem.GetValue(IsOverElementProperty);
+
+        public static void SetIsOverElement(UIElement elem, bool value)
+            => elem.SetValue(IsOverElementProperty, value);
+
+        private static void OnAllowOnlyConnectorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = ((PendingConnection)d).Editor;
+
+            if (editor != null)
+            {
+                SetAllowOnlyConnectorsAttached(editor, (bool)e.NewValue);
+            }
+        }
+
+        #endregion
+
         protected NodifyEditor? Editor { get; private set; }
-        private Connector? _previousConnector;
+        private FrameworkElement? _previousConnector;
 
         static PendingConnection()
         {
@@ -122,6 +140,8 @@ namespace Nodify
             }
         }
 
+        #region Event Handlers
+
         protected virtual void OnPendingConnectionStarted(object sender, PendingConnectionEventArgs e)
         {
             Source = e.SourceConnector;
@@ -136,43 +156,37 @@ namespace Nodify
             {
                 TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
 
-                if (Editor != null && EnablePreview)
+                if (Editor != null && (EnablePreview || EnableSnapping))
                 {
-                    FrameworkElement? target = Editor?.ItemsHost;
-                    target ??= Editor;
+                    FrameworkElement? connector = Editor.ItemsHost != null ? GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors) : GetPotentialConnector(Editor, AllowOnlyConnectors);
 
-                    FrameworkElement? connector = GetPreviewTarget(target!);
-
-                    if (_previousConnector != null)
+                    if (EnableSnapping && connector is Connector target)
                     {
-                        _previousConnector.IsPendingConnectionOver = false;
+                        target.UpdateAnchor();
+                        TargetAnchor = target.Anchor;
                     }
 
-                    if (connector != e.OriginalSource && connector is Connector con)
+                    if (connector != _previousConnector)
                     {
-                        con.IsPendingConnectionOver = true;
-                        _previousConnector = con;
-                    }
+                        if (_previousConnector != null)
+                        {
+                            SetIsOverElement(_previousConnector, false);
+                        }
 
-                    var context = connector?.DataContext;
-                    if (PreviewTarget != context)
-                    {
-                        PreviewTarget = context;
+                        if (connector != null)
+                        {
+                            SetIsOverElement(connector, true);
+
+                            if (EnablePreview)
+                            {
+                                PreviewTarget = connector.DataContext;
+                            }
+                        }
+
+                        _previousConnector = connector;
                     }
                 }
             }
-        }
-
-        private FrameworkElement? GetPreviewTarget(FrameworkElement container)
-        {
-            FrameworkElement? connector = container.GetElementUnderMouse<Connector>();
-
-            if (connector == null && !AllowOnlyConnectors)
-            {
-                connector = container.GetElementUnderMouse<Node>() ?? container.GetElementUnderMouse<FrameworkElement>();
-            }
-
-            return connector;
         }
 
         protected virtual void OnPendingConnectionCompleted(object sender, PendingConnectionEventArgs e)
@@ -184,10 +198,30 @@ namespace Nodify
 
                 if (_previousConnector != null)
                 {
-                    _previousConnector.IsPendingConnectionOver = false;
+                    SetIsOverElement(_previousConnector, false);
                     _previousConnector = null;
                 }
             }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Searches for a potential connector prioritizing <see cref="Connector"/>s
+        /// </summary>
+        /// <param name="container">The container to scan</param>
+        /// <param name="allowOnlyConnectors">Will also look for <see cref="ItemContainer"/>s if false then for <see cref="FrameworkElement"/>s</param>
+        /// <returns>The connector if found</returns>
+        internal static FrameworkElement? GetPotentialConnector(FrameworkElement container, bool allowOnlyConnectors)
+        {
+            FrameworkElement? connector = container.GetElementUnderMouse<Connector>();
+
+            if (connector == null && !allowOnlyConnectors)
+            {
+                connector = container.GetElementUnderMouse<ItemContainer>() ?? container.GetElementUnderMouse<FrameworkElement>();
+            }
+
+            return connector;
         }
     }
 }

@@ -54,8 +54,14 @@
                         Value="{Binding PreviewText}" />
                 <Setter Property="EnablePreview"
                         Value="True" />
+                <Setter Property="EnableSnapping"
+                        Value="True" />
                 <Setter Property="AllowOnlyConnectors"
                         Value="False" />
+                <Setter Property="Background"
+                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}"/>
+                <Setter Property="BorderBrush"
+                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}"/>
             </Style>
 
             <Style TargetType="{x:Type nodify:Connector}">
@@ -101,6 +107,8 @@
             <Style TargetType="{x:Type nodify:ItemContainer}">
                 <Setter Property="Location"
                         Value="{Binding Location}" />
+                <!--<Setter Property="HighlightBrush"
+                        Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />-->
             </Style>
         </nodify:NodifyEditor.ItemContainerStyle>
     </nodify:NodifyEditor>

@@ -18,6 +18,7 @@
                              Width="{TemplateBinding Width}"
                              Height="{TemplateBinding Height}"
                              Stroke="{TemplateBinding BorderBrush}"
+                             Fill="Transparent"
                              StrokeThickness="2" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsConnected"
@@ -26,11 +27,11 @@
                                     Property="Ellipse.Fill"
                                     Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Trigger>
-                        <Trigger Property="IsConnected"
-                                 Value="False">
+                        <Trigger Property="local:PendingConnection.IsOverElement"
+                                 Value="True">
                             <Setter TargetName="Connector"
                                     Property="Ellipse.Fill"
-                                    Value="Transparent" />
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

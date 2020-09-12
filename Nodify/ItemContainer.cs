@@ -24,23 +24,13 @@ namespace Nodify
             elem.SetValue(LocationOverrideProperty, value);
         }
 
-        // TODO: Check if this causes memory leak
         private static void OnLocationOverrideChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is FrameworkElement elem)
             {
                 elem.Loaded += OnLocationOverridenElementLoaded;
-                //elem.Unloaded += OnLocationOverrideElementUnloaded;
             }
         }
-
-        //private static void OnLocationOverrideElementUnloaded(object sender, RoutedEventArgs e)
-        //{
-        //    var elem = (FrameworkElement)sender;
-
-        //    elem.Loaded -= OnLocationOverridenElementLoaded;
-        //    elem.Unloaded -= OnLocationOverrideElementUnloaded;
-        //}
 
         private static void OnLocationOverridenElementLoaded(object sender, RoutedEventArgs e)
         {
@@ -57,6 +47,7 @@ namespace Nodify
 
         #region Dependency Properties
 
+        public static readonly DependencyProperty HighlightBrushProperty = StateNode.HighlightBrushProperty.AddOwner(typeof(ItemContainer));
         public static readonly DependencyProperty SelectedBrushProperty = DependencyProperty.Register(nameof(SelectedBrush), typeof(Brush), typeof(ItemContainer));
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
@@ -64,6 +55,12 @@ namespace Nodify
         public static readonly DependencyProperty DesiredSizeForSelectionProperty = DependencyProperty.Register(nameof(DesiredSizeForSelection), typeof(Size?), typeof(ItemContainer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.NotDataBindable));
         public static readonly DependencyPropertyKey IsPreviewingLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingLocation), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPreviewingLocationProperty = IsPreviewingLocationPropertyKey.DependencyProperty;
+
+        public Brush HighlightBrush
+        {
+            get => (Brush)GetValue(HighlightBrushProperty);
+            set => SetValue(HighlightBrushProperty, value);
+        }
 
         public Brush SelectedBrush
         {
@@ -226,7 +223,7 @@ namespace Nodify
                     ParentHost?.UnselectAll();
                     IsSelected = true;
                 }
-                
+
                 Focus();
                 e.Handled = true;
             }

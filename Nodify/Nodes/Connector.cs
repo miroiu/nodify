@@ -46,7 +46,6 @@ namespace Nodify
 
         public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(Point), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False, OnIsConnectedChanged));
-        public static readonly DependencyProperty IsPendingConnectionOverProperty = DependencyProperty.Register(nameof(IsPendingConnectionOver), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty StartPendingConnectionCommandProperty = DependencyProperty.Register(nameof(StartPendingConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty CompletePendingConnectionCommandProperty = DependencyProperty.Register(nameof(CompletePendingConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
@@ -61,12 +60,6 @@ namespace Nodify
         {
             get => (bool)GetValue(IsConnectedProperty);
             set => SetValue(IsConnectedProperty, value);
-        }
-
-        public bool IsPendingConnectionOver
-        {
-            get => (bool)GetValue(IsPendingConnectionOverProperty);
-            set => SetValue(IsPendingConnectionOverProperty, value);
         }
 
         public ICommand DisconnectCommand
@@ -128,7 +121,7 @@ namespace Nodify
                 // If events are not already hooked and we are asked to subscribe
                 if (value && !_isHooked)
                 {
-                    Container.PreviewLocationChanged += UpdateConnectorOptimized;
+                    Container.PreviewLocationChanged += UpdateAnchorOptimized;
                     Container.LocationChanged += OnLocationChanged;
                     Editor.ViewportUpdated += OnViewportUpdated;
                     _isHooked = true;
@@ -136,7 +129,7 @@ namespace Nodify
                 // If events are already hooked and we are asked to unsubscribe
                 else if (_isHooked && !value)
                 {
-                    Container.PreviewLocationChanged -= UpdateConnectorOptimized;
+                    Container.PreviewLocationChanged -= UpdateAnchorOptimized;
                     Container.LocationChanged -= OnLocationChanged;
                     Editor.ViewportUpdated -= OnViewportUpdated;
                 }
@@ -152,7 +145,7 @@ namespace Nodify
         private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var con = (Connector)d;
-            con.UpdateConnectorSafe();
+            con.UpdateAnchor();
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -164,22 +157,22 @@ namespace Nodify
             {
                 TrySetAnchorUpdateEvents(true);
 
-                UpdateConnectorOptimized(Container!.Location);
+                UpdateAnchorOptimized(Container!.Location);
             }
         }
 
         private void OnLocationChanged(object sender, RoutedEventArgs e)
-            => UpdateConnectorOptimized(Container!.Location);
+            => UpdateAnchorOptimized(Container!.Location);
 
         private void OnViewportUpdated(object sender, RoutedEventArgs args)
         {
             if (Container != null && !Container.IsPreviewingLocation && _lastUpdatedContainerPosition != Container.Location)
             {
-                UpdateConnectorOptimized(Container.Location);
+                UpdateAnchorOptimized(Container.Location);
             }
         }
 
-        private void UpdateConnectorOptimized(Point location)
+        private void UpdateAnchorOptimized(Point location)
         {
             // Update only connectors that are connected
             if (Editor != null && IsConnected)
@@ -188,16 +181,16 @@ namespace Nodify
 
                 if (shouldOptimize)
                 {
-                    UpdateConnectorBasedOnLocation(Editor, location);
+                    UpdateAnchorBasedOnLocation(Editor, location);
                 }
                 else
                 {
-                    UpdateConnector(location);
+                    UpdateAnchor(location);
                 }
             }
         }
 
-        protected void UpdateConnectorBasedOnLocation(NodifyEditor editor, Point location)
+        protected void UpdateAnchorBasedOnLocation(NodifyEditor editor, Point location)
         {
             var viewport = editor.Viewport;
             var offset = OptimizeMinDistance / editor.Scale;
@@ -207,11 +200,11 @@ namespace Nodify
             // Update only the connectors that are in the viewport or will be in the viewport
             if (area.Contains(location))
             {
-                UpdateConnector(location);
+                UpdateAnchor(location);
             }
         }
 
-        protected void UpdateConnector(Point location)
+        protected void UpdateAnchor(Point location)
         {
             _lastUpdatedContainerPosition = location;
 
@@ -224,11 +217,11 @@ namespace Nodify
             }
         }
 
-        protected void UpdateConnectorSafe()
+        public void UpdateAnchor()
         {
             if (Container != null)
             {
-                UpdateConnector(Container.Location);
+                UpdateAnchor(Container.Location);
             }
         }
 
@@ -245,7 +238,7 @@ namespace Nodify
             }
             else
             {
-                UpdateConnectorSafe();
+                UpdateAnchor();
                 OnConnectorDragStarted();
 
                 CaptureMouse();
@@ -308,9 +301,9 @@ namespace Nodify
 
             RaiseEvent(args);
 
-            if (!args.Handled)
+            if (!args.Handled && (StartPendingConnectionCommand?.CanExecute(DataContext) ?? false))
             {
-                StartPendingConnectionCommand?.Execute(DataContext);
+                StartPendingConnectionCommand.Execute(DataContext);
             }
         }
 
@@ -319,7 +312,7 @@ namespace Nodify
             FrameworkElement? elem = null;
             if (Editor != null)
             {
-                elem = GetTargetUnderMouse(Editor);
+                elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
             }
 
             var target = elem?.DataContext;
@@ -334,9 +327,9 @@ namespace Nodify
 
             RaiseEvent(args);
 
-            if (!args.Handled)
+            if (!args.Handled && (CompletePendingConnectionCommand?.CanExecute(target) ?? false))
             {
-                CompletePendingConnectionCommand?.Execute(DataContext);
+                CompletePendingConnectionCommand.Execute(target);
             }
         }
 
@@ -354,26 +347,11 @@ namespace Nodify
 
                 RaiseEvent(args);
 
-                if (!args.Handled)
+                if (!args.Handled && (DisconnectCommand?.CanExecute(connector) ?? false))
                 {
-                    DisconnectCommand?.Execute(connector);
+                    DisconnectCommand.Execute(connector);
                 }
             }
-        }
-
-        private FrameworkElement? GetTargetUnderMouse(FrameworkElement container)
-        {
-            FrameworkElement? connector = container.GetElementUnderMouse<Connector>();
-
-            if (Editor != null)
-            {
-                if (connector == null && !PendingConnection.GetAllowOnlyConnectorsAttached(Editor))
-                {
-                    connector = container.GetElementUnderMouse<Node>() ?? container.GetElementUnderMouse<FrameworkElement>();
-                }
-            }
-
-            return connector;
         }
 
         #endregion
