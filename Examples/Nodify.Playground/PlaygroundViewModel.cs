@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Nodify.Playground
@@ -15,6 +16,9 @@ namespace Nodify.Playground
             PerformanceTestCommand = new DelegateCommand(PerformanceTest);
             ToggleConnectionsCommand = new DelegateCommand(ToggleConnections);
             ResetCommand = new DelegateCommand(ResetGraph);
+
+            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Nodes, GraphViewModel.Nodes);
+            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, GraphViewModel.Connections);
         }
 
         private void ResetGraph()
@@ -96,15 +100,16 @@ namespace Nodify.Playground
         {
             if (Async)
             {
-                for (int i = 0; i <= source.Count - batches;)
+                await Task.Run(() =>
                 {
-                    for (int j = 0; j < batches; j++, i++)
+                    for (int i = 0; i <= source.Count - batches;)
                     {
-                        target.Add(source[i]);
+                        for (int j = 0; j < batches; j++, i++)
+                        {
+                            target.Add(source[i]);
+                        }
                     }
-
-                    await Task.Delay(1);
-                }
+                });
             }
             else
             {
