@@ -65,7 +65,8 @@ namespace Nodify
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(Connector));
 
         /// <summary>
-        /// The location where <see cref="Connection"/>s can be attached to.
+        /// Gets the location where <see cref="Connection"/>s can be attached to. 
+        /// Bind with <see cref="System.Windows.Data.BindingMode.OneWayToSource"/>
         /// </summary>
         public Point Anchor
         {
@@ -100,28 +101,30 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
+        #region Fields
+
         /// <summary>
-        /// The <see cref="FrameworkElement"/> used to calculate the <see cref="Anchor"/>.
+        /// Gets the <see cref="FrameworkElement"/> used to calculate the <see cref="Anchor"/>.
         /// </summary>
         protected FrameworkElement? Thumb { get; private set; }
 
         /// <summary>
-        /// The <see cref="ItemContainer"/> that contains this <see cref="Connector"/>.
+        /// Gets the <see cref="ItemContainer"/> that contains this <see cref="Connector"/>.
         /// </summary>
         protected ItemContainer? Container { get; private set; }
 
         /// <summary>
-        /// The <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
+        /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
         /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 
         /// <summary>
-        /// The safe zone outside the <see cref="NodifyEditor.Viewport"/> that will not trigger optimizations.
+        /// Gets or sets the safe zone outside the <see cref="NodifyEditor.Viewport"/> that will not trigger optimizations.
         /// </summary>
         public static double OptimizeSafeZone = 1000d;
 
         /// <summary>
-        /// The minimum selected items needed to trigger optimizations.
+        /// Gets or sets the minimum selected items needed to trigger optimizations.
         /// </summary>
         public static double OptimizeMinimumSelectedItems = 100;
 
@@ -133,6 +136,8 @@ namespace Nodify
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
         private bool _isHooked;
+
+        #endregion
 
         public override void OnApplyTemplate()
         {

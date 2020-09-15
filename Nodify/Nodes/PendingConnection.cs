@@ -158,6 +158,8 @@ namespace Nodify
 
         #endregion
 
+        #region Commands
+
         public static readonly DependencyProperty CompletedCommandProperty = DependencyProperty.Register(nameof(CompletedCommand), typeof(ICommand), typeof(PendingConnection));
 
         /// <summary>
@@ -171,12 +173,18 @@ namespace Nodify
             set => SetValue(CompletedCommandProperty, value);
         }
 
+        #endregion
+
+        #region Fields
+
         /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="PendingConnection"/>.
         /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 
         private FrameworkElement? _previousConnector;
+
+        #endregion
 
         static PendingConnection()
         {
@@ -276,6 +284,8 @@ namespace Nodify
 
         #endregion
 
+        #region Helpers
+
         /// <summary>
         /// Searches for a potential connector prioritizing <see cref="Connector"/>s
         /// </summary>
@@ -293,5 +303,7 @@ namespace Nodify
 
             return connector;
         }
+
+        #endregion
     }
 }
