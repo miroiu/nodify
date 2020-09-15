@@ -24,9 +24,12 @@
                          SelectedItems="{Binding SelectedNodes}"
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
+                         DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                          GridCellSize="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}}"
                          EnableRealtimeSelection="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}"
-                         DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
+                         DisableAutoPanning="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
+                         DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
+                         DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}">
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"
                         Command="{Binding DeleteSelectionCommand}" />

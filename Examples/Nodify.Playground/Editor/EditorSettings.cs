@@ -40,5 +40,27 @@
             get => _realtimeSelection;
             set => SetProperty(ref _realtimeSelection, value);
         }
+
+        private bool _disableAutoPanning = false;
+        public bool DisableAutoPanning
+        {
+            get => _disableAutoPanning;
+            set => SetProperty(ref _disableAutoPanning, value);
+        }
+
+        private bool _disablePanning = false;
+        public bool DisablePanning
+        {
+            get => _disablePanning;
+            set => SetProperty(ref _disablePanning, value);
+        }
+        
+
+        private bool _disableZooming = false;
+        public bool DisableZooming
+        {
+            get => _disableZooming;
+            set => SetProperty(ref _disableZooming, value);
+        }
     }
 }
