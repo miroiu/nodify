@@ -139,14 +139,14 @@
                         <TextBlock.Inlines>
                             <Run Text="Realtime selection: " />
                             <Run Foreground="Green"
-                                 Text="{Binding GraphViewModel.Viewport.RealtimeSelection, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                                 Text="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                     <TextBlock>
                         <TextBlock.Inlines>
                             <Run Text="Grid spacing: " />
                             <Run Foreground="Red"
-                                 Text="{Binding GraphViewModel.Viewport.GridSpacing, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                                 Text="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                     <TextBlock>

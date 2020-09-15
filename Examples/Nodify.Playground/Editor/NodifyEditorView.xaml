@@ -24,9 +24,8 @@
                          SelectedItems="{Binding SelectedNodes}"
                          Offset="{Binding Viewport.Offset}"
                          Scale="{Binding Viewport.Scale}"
-                         GridCellSize="{Binding Viewport.GridSpacing}"
-                         EnableRealtimeSelection="{Binding Viewport.RealtimeSelection}"
-                         ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
+                         GridCellSize="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}}"
+                         EnableRealtimeSelection="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}"
                          DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"
@@ -46,22 +45,26 @@
 
         <nodify:NodifyEditor.Resources>
             <Style TargetType="{x:Type nodify:PendingConnection}">
+                <Setter Property="CompletedCommand"
+                        Value="{Binding Graph.CreateConnectionCommand}" />
                 <Setter Property="Source"
                         Value="{Binding Source, Mode=OneWayToSource}" />
+                <Setter Property="Target"
+                        Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
                 <Setter Property="PreviewTarget"
                         Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
                 <Setter Property="Content"
                         Value="{Binding PreviewText}" />
                 <Setter Property="EnablePreview"
-                        Value="True" />
+                        Value="{Binding EnablePendingConnectionPreview, Source={x:Static local:EditorSettings.Instance}}" />
                 <Setter Property="EnableSnapping"
-                        Value="True" />
+                        Value="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}" />
                 <Setter Property="AllowOnlyConnectors"
-                        Value="False" />
+                        Value="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}" />
                 <Setter Property="Background"
-                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}"/>
+                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}" />
                 <Setter Property="BorderBrush"
-                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}"/>
+                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}" />
             </Style>
 
             <Style TargetType="{x:Type nodify:Connector}">

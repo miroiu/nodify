@@ -10,7 +10,7 @@ namespace Nodify.Playground
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0);
             CommentSelectionCommand = new DelegateCommand(() => Schema.AddCommentAroundNodes(SelectedNodes, "New comment"), () => SelectedNodes.Count > 0);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(c => c.Disconnect());
-            CreateConnectionCommand = new DelegateCommand(() => Schema.TryAddConnection(PendingConnection.Source!, PendingConnection.PreviewTarget), () => PendingConnection.Source != null && PendingConnection.PreviewTarget != null);
+            CreateConnectionCommand = new DelegateCommand<object>(target => Schema.TryAddConnection(PendingConnection.Source!, target), target => PendingConnection.Source != null && target != null);
 
             PendingConnection = new PendingConnectionViewModel
             {
