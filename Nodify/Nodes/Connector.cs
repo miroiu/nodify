@@ -4,6 +4,10 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents a connector control which starts a <see cref="PendingConnection"/> when being dragged and completes it when released.
+    /// Has a <see cref="ElementConnector"/> that the <see cref="Anchor"/> is calculated from for the <see cref="PendingConnection"/>. Center of this control is used if missing.
+    /// </summary>
     [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
     public class Connector : Control
     {
@@ -16,24 +20,36 @@ namespace Nodify
         public static readonly RoutedEvent PendingConnectionDragEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionDrag), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectorEventHandler), typeof(Connector));
 
+        /// <summary>
+        /// Occurs when the <see cref="Connector"/> is clicked.
+        /// </summary>
         public event PendingConnectionEventHandler PendingConnectionStarted
         {
             add => AddHandler(PendingConnectionStartedEvent, value);
             remove => RemoveHandler(PendingConnectionStartedEvent, value);
         }
 
+        /// <summary>
+        /// Occurs when the <see cref="Connector"/> loses mouse capture.
+        /// </summary>
         public event PendingConnectionEventHandler PendingConnectionCompleted
         {
             add => AddHandler(PendingConnectionCompletedEvent, value);
             remove => RemoveHandler(PendingConnectionCompletedEvent, value);
         }
 
+        /// <summary>
+        /// Occurs when the mouse is changing position and the <see cref="Connector"/> has mouse capture.
+        /// </summary>
         public event PendingConnectionEventHandler PendingConnectionDrag
         {
             add => AddHandler(PendingConnectionDragEvent, value);
             remove => RemoveHandler(PendingConnectionDragEvent, value);
         }
 
+        /// <summary>
+        /// Occurs when the <see cref="ModifierKeys.Alt"/> key is held and the <see cref="Connector"/> is clicked.
+        /// </summary>
         public event ConnectorEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
@@ -46,38 +62,34 @@ namespace Nodify
 
         public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(Point), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False, OnIsConnectedChanged));
-        public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty StartPendingConnectionCommandProperty = DependencyProperty.Register(nameof(StartPendingConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty CompletePendingConnectionCommandProperty = DependencyProperty.Register(nameof(CompletePendingConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
+        public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(Connector));
 
+        /// <summary>
+        /// The location where <see cref="Connection"/>s can be attached to.
+        /// </summary>
         public Point Anchor
         {
             get => (Point)GetValue(AnchorProperty);
             set => SetValue(AnchorProperty, value);
         }
 
+        /// <summary>
+        /// If this is set to false, the <see cref="Disconnect"/> event will not be invoked and the connector will stop updating its <see cref="Anchor"/> when moved, resized etc.
+        /// </summary>
         public bool IsConnected
         {
             get => (bool)GetValue(IsConnectedProperty);
             set => SetValue(IsConnectedProperty, value);
         }
 
+        /// <summary>
+        /// Invoked if the <see cref="Disconnect"/> event is not handled.
+        /// Parameter is the <see cref="FrameworkElement.DataContext"/> of this control.
+        /// </summary>
         public ICommand DisconnectCommand
         {
             get => (ICommand)GetValue(DisconnectCommandProperty);
             set => SetValue(DisconnectCommandProperty, value);
-        }
-
-        public ICommand StartPendingConnectionCommand
-        {
-            get => (ICommand)GetValue(StartPendingConnectionCommandProperty);
-            set => SetValue(StartPendingConnectionCommandProperty, value);
-        }
-
-        public ICommand CompletePendingConnectionCommand
-        {
-            get => (ICommand)GetValue(CompletePendingConnectionCommandProperty);
-            set => SetValue(CompletePendingConnectionCommandProperty, value);
         }
 
         #endregion
@@ -88,13 +100,36 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
+        /// <summary>
+        /// The <see cref="FrameworkElement"/> used to calculate the <see cref="Anchor"/>.
+        /// </summary>
         protected FrameworkElement? Thumb { get; private set; }
+
+        /// <summary>
+        /// The <see cref="ItemContainer"/> that contains this <see cref="Connector"/>.
+        /// </summary>
         protected ItemContainer? Container { get; private set; }
+
+        /// <summary>
+        /// The <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
+        /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 
-        public static double OptimizeMinDistance = 1000d;
-        public static double OptimizeMinSelection = 100;
+        /// <summary>
+        /// The safe zone outside the <see cref="NodifyEditor.Viewport"/> that will not trigger optimizations.
+        /// </summary>
+        public static double OptimizeSafeZone = 1000d;
+
+        /// <summary>
+        /// The minimum selected items needed to trigger optimizations.
+        /// </summary>
+        public static double OptimizeMinimumSelectedItems = 100;
+
+        /// <summary>
+        /// Gets or sets if <see cref="Connector"/>s should enable optimizations based on <see cref="OptimizeSafeZone"/> and <see cref="OptimizeMinimumSelectedItems"/>.
+        /// </summary>
         public static bool EnableOptimizations = true;
+
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
         private bool _isHooked;
@@ -106,7 +141,7 @@ namespace Nodify
             Thumb = Template.FindName(ElementConnector, this) as FrameworkElement ?? this;
 
             Container = this.GetParentOfType<ItemContainer>();
-            Editor = this.GetParentOfType<NodifyEditor>();
+            Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
 
             Loaded += OnConnectorLoaded;
             Unloaded += OnConnectorUnloaded;
@@ -114,6 +149,7 @@ namespace Nodify
 
         #region Update connector
 
+        // Toggle events that could be used to update the Anchor
         private void TrySetAnchorUpdateEvents(bool value)
         {
             if (Container != null && Editor != null)
@@ -145,7 +181,11 @@ namespace Nodify
         private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var con = (Connector)d;
-            con.UpdateAnchor();
+
+            if ((bool)e.NewValue)
+            {
+                con.UpdateAnchor();
+            }
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -172,12 +212,16 @@ namespace Nodify
             }
         }
 
-        private void UpdateAnchorOptimized(Point location)
+        /// <summary>
+        /// Updates the <see cref="Anchor"/> and applies optimizations if needed based on <see cref="EnableOptimizations"/> flag
+        /// </summary>
+        /// <param name="location"></param>
+        protected void UpdateAnchorOptimized(Point location)
         {
             // Update only connectors that are connected
             if (Editor != null && IsConnected)
             {
-                bool shouldOptimize = EnableOptimizations && Editor.SelectedItems?.Count > OptimizeMinSelection;
+                bool shouldOptimize = EnableOptimizations && Editor.SelectedItems?.Count > OptimizeMinimumSelectedItems;
 
                 if (shouldOptimize)
                 {
@@ -190,10 +234,10 @@ namespace Nodify
             }
         }
 
-        protected void UpdateAnchorBasedOnLocation(NodifyEditor editor, Point location)
+        private void UpdateAnchorBasedOnLocation(NodifyEditor editor, Point location)
         {
             var viewport = editor.Viewport;
-            var offset = OptimizeMinDistance / editor.Scale;
+            var offset = OptimizeSafeZone / editor.Scale;
 
             var area = Rect.Inflate(viewport, offset, offset);
 
@@ -204,6 +248,10 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Updates the <see cref="Anchor"/> relative to a location. (usually <see cref="Container"/>'s location)
+        /// </summary>
+        /// <param name="location">The relative location</param>
         protected void UpdateAnchor(Point location)
         {
             _lastUpdatedContainerPosition = location;
@@ -217,6 +265,9 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Updates the <see cref="Anchor"/> based on <see cref="Container"/>'s location.
+        /// </summary>
         public void UpdateAnchor()
         {
             if (Container != null)
@@ -300,11 +351,6 @@ namespace Nodify
             };
 
             RaiseEvent(args);
-
-            if (!args.Handled && (StartPendingConnectionCommand?.CanExecute(DataContext) ?? false))
-            {
-                StartPendingConnectionCommand.Execute(DataContext);
-            }
         }
 
         protected virtual void OnConnectorDragCompleted()
@@ -326,11 +372,6 @@ namespace Nodify
             };
 
             RaiseEvent(args);
-
-            if (!args.Handled && (CompletePendingConnectionCommand?.CanExecute(target) ?? false))
-            {
-                CompletePendingConnectionCommand.Execute(target);
-            }
         }
 
         protected virtual void OnDisconnect()
@@ -347,6 +388,7 @@ namespace Nodify
 
                 RaiseEvent(args);
 
+                // raise DisconnectCommand if event is Disconnect not handled
                 if (!args.Handled && (DisconnectCommand?.CanExecute(connector) ?? false))
                 {
                     DisconnectCommand.Execute(connector);

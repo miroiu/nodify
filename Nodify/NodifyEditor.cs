@@ -298,7 +298,7 @@ namespace Nodify
         #endregion
 
         #region Command Dependency Properties
-
+        
         public static readonly DependencyProperty ConnectionCompletedCommandProperty = DependencyProperty.Register(nameof(ConnectionCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
@@ -505,18 +505,20 @@ namespace Nodify
 
         private void OnConnectorDisconnected(object sender, ConnectorEventArgs e)
         {
-            if (DisconnectConnectorCommand != null && DisconnectConnectorCommand.CanExecute(null))
+            if (DisconnectConnectorCommand?.CanExecute(e.Connector) ?? false)
             {
                 DisconnectConnectorCommand.Execute(e.Connector);
+                e.Handled = true;
             }
         }
 
         private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
             var result = (e.SourceConnector, e.TargetConnector);
-            if (ConnectionCompletedCommand != null && ConnectionCompletedCommand.CanExecute(result))
+            if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
             {
                 ConnectionCompletedCommand.Execute(result);
+                e.Handled = true;
             }
         }
 

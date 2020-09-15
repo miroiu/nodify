@@ -140,8 +140,8 @@ namespace Nodify
             HeaderControl = Template.FindName(ElementHeader, this) as FrameworkElement;
             ContentControl = Template.FindName(ElementContent, this) as FrameworkElement;
 
-            Editor = this.GetParentOfType<NodifyEditor>();
             Container = this.GetParentOfType<ItemContainer>();
+            Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
 
             if (Container != null)
             {

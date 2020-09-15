@@ -103,7 +103,7 @@ namespace Nodify
             var item = (ItemContainer)d;
             item.OnLocationChanged();
 
-            var host = item.ParentHost;
+            var host = item.Editor;
 
             if (!host?.IsBulkUpdatingItems ?? true)
             {
@@ -177,7 +177,19 @@ namespace Nodify
             PreviewLocationChanged?.Invoke(newLocation);
         }
 
-        protected NodifyEditor? ParentHost => ItemsControl.ItemsControlFromItemContainer(this) as NodifyEditor;
+        private NodifyEditor? _editor;
+        public NodifyEditor? Editor
+        {
+            get
+            {
+                if (_editor == null)
+                {
+                    _editor = ItemsControl.ItemsControlFromItemContainer(this) as NodifyEditor;
+                }
+
+                return _editor;
+            }
+        }
 
         static ItemContainer()
         {
@@ -220,7 +232,7 @@ namespace Nodify
                 }
                 else
                 {
-                    ParentHost?.UnselectAll();
+                    Editor?.UnselectAll();
                     IsSelected = true;
                 }
 
@@ -231,9 +243,9 @@ namespace Nodify
 
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
-            if (ParentHost != null && !IsSelected && IsInsideContainer(e.GetPosition(this)))
+            if (Editor != null && !IsSelected && IsInsideContainer(e.GetPosition(this)))
             {
-                ParentHost.UnselectAll();
+                Editor.UnselectAll();
                 IsSelected = true;
                 Focus();
             }
