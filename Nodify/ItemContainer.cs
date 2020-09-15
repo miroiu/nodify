@@ -267,7 +267,7 @@ namespace Nodify
         /// Checks if <paramref name="position"/> is selectable.
         /// </summary>
         /// <param name="position">A position inside this <see cref="ItemContainer"/>.</param>
-        /// <returns></returns>
+        /// <returns>True if <paramref name="position"/> is selectable.</returns>
         protected virtual bool IsSelectableLocation(Point position)
         {
             Size size = DesiredSizeForSelection ?? RenderSize;
@@ -275,15 +275,15 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Checks if <paramref name="outer"/> contains or intersects with this <see cref="ItemContainer"/> taking into consideration the <see cref="DesiredSizeForSelection"/>.
+        /// Checks if <paramref name="area"/> contains or intersects with this <see cref="ItemContainer"/> taking into consideration the <see cref="DesiredSizeForSelection"/>.
         /// </summary>
-        /// <param name="outer">The area that can contain or intersect this <see cref="ItemContainer"/>.</param>
-        /// <param name="isContained">If true will check if <paramref name="outer"/> contains this, otherwise will check if <paramref name="outer"/> intersects with this.</param>
-        /// <returns></returns>
-        public virtual bool Intersects(Rect outer, bool isContained)
+        /// <param name="area">The area to check if contains or intersects this <see cref="ItemContainer"/>.</param>
+        /// <param name="isContained">If true will check if <paramref name="area"/> contains this, otherwise will check if <paramref name="area"/> intersects with this.</param>
+        /// <returns>True if <paramref name="area"/> contains or intersects this <see cref="ItemContainer"/>.</returns>
+        public virtual bool IsSelectableInArea(Rect area, bool isContained)
         {
             var bounds = new Rect(Location, DesiredSizeForSelection ?? RenderSize);
-            return isContained ? outer.Contains(bounds) : outer.IntersectsWith(bounds);
+            return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

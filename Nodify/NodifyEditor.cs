@@ -21,8 +21,8 @@ namespace Nodify
         #region Cosmetic Dependency Properties
 
         public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnScaleChanged, ConstrainScaleToRange));
-        public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumChanged));
-        public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumChanged, CoerceMaximum));
+        public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged));
+        public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
         public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
         public static readonly DependencyProperty FocusLocationAnimationDurationProperty = DependencyProperty.Register(nameof(FocusLocationAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
@@ -35,6 +35,8 @@ namespace Nodify
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
+
+        #region Callbacks
 
         private static void OnViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnViewportUpdated();
@@ -73,91 +75,21 @@ namespace Nodify
             editor.ScaleOverride((double)e.NewValue);
             editor.CoerceValue(ViewportProperty);
         }
-
-        public Rect Viewport => (Rect)GetValue(ViewportProperty);
-
-        public Point Offset
-        {
-            get => (Point)GetValue(OffsetProperty);
-            set => SetValue(OffsetProperty, value);
-        }
-
-        public TransformGroup AppliedTransform => (TransformGroup)GetValue(AppliedTransformProperty);
-
-        public double FocusLocationAnimationDuration
-        {
-            get => (double)GetValue(FocusLocationAnimationDurationProperty);
-            set => SetValue(FocusLocationAnimationDurationProperty, value);
-        }
-
-        public bool DisableAutoPanning
-        {
-            get => (bool)GetValue(DisableAutoPanningProperty);
-            set => SetValue(DisableAutoPanningProperty, value);
-        }
-
-        public double AutoPanSpeed
-        {
-            get => (double)GetValue(AutoPanSpeedProperty);
-            set => SetValue(AutoPanSpeedProperty, value);
-        }
-
-        public double AutoPanEdgeDistance
-        {
-            get => (double)GetValue(AutoPanEdgeDistanceProperty);
-            set => SetValue(AutoPanEdgeDistanceProperty, value);
-        }
-
-        public double Scale
-        {
-            get => (double)GetValue(ScaleProperty);
-            set => SetValue(ScaleProperty, value);
-        }
-
-        public double MinScale
-        {
-            get => (double)GetValue(MinScaleProperty);
-            set => SetValue(MinScaleProperty, value);
-        }
-
-        public double MaxScale
-        {
-            get => (double)GetValue(MaxScaleProperty);
-            set => SetValue(MaxScaleProperty, value);
-        }
-
-        public DataTemplate ConnectionTemplate
-        {
-            get => (DataTemplate)GetValue(ConnectionTemplateProperty);
-            set => SetValue(ConnectionTemplateProperty, value);
-        }
-
-        public DataTemplate PendingConnectionTemplate
-        {
-            get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
-            set => SetValue(PendingConnectionTemplateProperty, value);
-        }
-
-        public Style SelectionRectangleStyle
-        {
-            get => (Style)GetValue(SelectionRectangleStyleProperty);
-            set => SetValue(SelectionRectangleStyleProperty, value);
-        }
-
-        private static void OnMinimumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        
+        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
             zoom.CoerceValue(MaxScaleProperty);
             zoom.CoerceValue(ScaleProperty);
         }
 
-        private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnMaximumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
             zoom.CoerceValue(ScaleProperty);
         }
 
-        private static object CoerceMaximum(DependencyObject d, object value)
+        private static object CoerceMaximumScale(DependencyObject d, object value)
         {
             var zoom = (NodifyEditor)d;
             var min = zoom.MinScale;
@@ -190,16 +122,13 @@ namespace Nodify
             return value;
         }
 
-        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
-        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
-
-        protected virtual void OffsetOverride(Point newValue)
+        private void OffsetOverride(Point newValue)
         {
             TranslateTransform.X = -newValue.X;
             TranslateTransform.Y = -newValue.Y;
         }
 
-        protected virtual void ScaleOverride(double newValue)
+        private void ScaleOverride(double newValue)
         {
             ScaleTransform.ScaleX = newValue;
             ScaleTransform.ScaleY = newValue;
@@ -207,6 +136,115 @@ namespace Nodify
 
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
+
+        #endregion
+
+        /// <summary>
+        /// Gets the area of the <see cref="NodifyEditor"/> that is seen on the screen. (<see cref="Offset"/> and <see cref="Scale"/> applied)
+        /// </summary>
+        public Rect Viewport => (Rect)GetValue(ViewportProperty);
+
+        /// <summary>
+        /// Gets the transform that is applied to all child controls.
+        /// </summary>
+        public TransformGroup AppliedTransform => (TransformGroup)GetValue(AppliedTransformProperty);
+
+        /// <summary>
+        /// Gets or sets the <see cref="Viewport"/>'s top left coordinates.
+        /// </summary>
+        public Point Offset
+        {
+            get => (Point)GetValue(OffsetProperty);
+            set => SetValue(OffsetProperty, value);
+        }
+
+        // TODO: Calculate this based on the distance from the Viewport to the target point
+        public double FocusLocationAnimationDuration
+        {
+            get => (double)GetValue(FocusLocationAnimationDurationProperty);
+            set => SetValue(FocusLocationAnimationDurationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether to disable the auto panning when selecting or dragging near the edge of the editor configured by <see cref="AutoPanEdgeDistance"/>.
+        /// </summary>
+        public bool DisableAutoPanning
+        {
+            get => (bool)GetValue(DisableAutoPanningProperty);
+            set => SetValue(DisableAutoPanningProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the speed used when auto-panning scaled by <see cref="AutoPanningTimerIntervalMilliseconds"/>
+        /// </summary>
+        public double AutoPanSpeed
+        {
+            get => (double)GetValue(AutoPanSpeedProperty);
+            set => SetValue(AutoPanSpeedProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum distance in pixels from the edge of the editor that will trigger auto-panning.
+        /// </summary>
+        public double AutoPanEdgeDistance
+        {
+            get => (double)GetValue(AutoPanEdgeDistanceProperty);
+            set => SetValue(AutoPanEdgeDistanceProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the zoom factor of the <see cref="Viewport"/>.
+        /// </summary>
+        public double Scale
+        {
+            get => (double)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum zoom factor of the <see cref="Viewport"/>
+        /// </summary>
+        public double MinScale
+        {
+            get => (double)GetValue(MinScaleProperty);
+            set => SetValue(MinScaleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum zoom factor of the <see cref="Viewport"/>
+        /// </summary>
+        public double MaxScale
+        {
+            get => (double)GetValue(MaxScaleProperty);
+            set => SetValue(MaxScaleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="BaseConnection"/>.
+        /// </summary>
+        public DataTemplate ConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(ConnectionTemplateProperty);
+            set => SetValue(ConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use for the <see cref="PendingConnection"/>.
+        /// </summary>
+        public DataTemplate PendingConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
+            set => SetValue(PendingConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style to use for the selection rectangle.
+        /// </summary>
+        public Style SelectionRectangleStyle
+        {
+            get => (Style)GetValue(SelectionRectangleStyleProperty);
+            set => SetValue(SelectionRectangleStyleProperty, value);
+        }
 
         #endregion
 
@@ -226,70 +264,104 @@ namespace Nodify
         public static readonly DependencyProperty IsPanningProperty = DependencyProperty.Register(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty MouseLocationProperty = DependencyProperty.Register(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
 
+        /// <summary>
+        /// Gets or sets the value of an invisible grid used to adjust locations (snapping) of <see cref="ItemContainer"/>s.
+        /// </summary>
         public int GridCellSize
         {
             get => (int)GetValue(GridCellSizeProperty);
             set => SetValue(GridCellSizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the data source that <see cref="BaseConnection"/>s will be generated for.
+        /// </summary>
         public IEnumerable Connections
         {
             get => (IEnumerable)GetValue(ConnectionsProperty);
             set => SetValue(ConnectionsProperty, value);
         }
 
+        /// <summary>
+        /// Gets of sets the <see cref="FrameworkElement.DataContext"/> of the <see cref="Nodify.PendingConnection"/>.
+        /// </summary>
         public object PendingConnection
         {
             get => GetValue(PendingConnectionProperty);
             set => SetValue(PendingConnectionProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the items in the <see cref="NodifyEditor"/> that are selected.
+        /// </summary>
         public new IList? SelectedItems
         {
             get => (IList?)GetValue(SelectedItemsProperty);
             set => SetValue(SelectedItemsProperty, value);
         }
 
+        /// <summary>
+        /// Gets the area that is currently selected while <see cref="IsSelecting"/> is true.
+        /// </summary>
         public Rect SelectingRectangle
         {
             get => (Rect)GetValue(SelectingRectangleProperty);
             protected internal set => SetValue(SelectingRectanglePropertyKey, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether zooming should be disabled.
+        /// </summary>
         public bool DisableZooming
         {
             get => (bool)GetValue(DisableZoomingProperty);
             set => SetValue(DisableZoomingProperty, value);
         }
-
+        
+        /// <summary>
+        /// Gets or sets whether panning should be disabled.
+        /// </summary>
         public bool DisablePanning
         {
             get => (bool)GetValue(DisablePanningProperty);
             set => SetValue(DisablePanningProperty, value);
         }
-
+        
+        /// <summary>
+        /// Gets a value indicating if a selection operation in progress.
+        /// </summary>
         public bool IsSelecting
         {
             get => (bool)GetValue(IsSelectingProperty);
             internal set => SetValue(IsSelectingPropertyKey, value);
         }
 
+        /// <summary>
+        /// Enables selecting and deselecting items while the <see cref="SelectingRectangle"/> changes.
+        /// Disable for maximum performance when hundreds of items are generated.
+        /// </summary>
         public bool EnableRealtimeSelection
         {
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
         }
 
+        /// <summary>
+        /// Gets a value indicating if a panning operation is in progress.
+        /// </summary>
         public bool IsPanning
         {
             get => (bool)GetValue(IsPanningProperty);
-            set => SetValue(IsPanningProperty, value);
+            private set => SetValue(IsPanningProperty, value);
         }
 
+        /// <summary>
+        /// Gets the current transformed mouse location using the <see cref="AppliedTransform"/>.
+        /// </summary>
         public Point MouseLocation
         {
             get => (Point)GetValue(MouseLocationProperty);
-            set => SetValue(MouseLocationProperty, value);
+            private set => SetValue(MouseLocationProperty, value);
         }
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -304,24 +376,40 @@ namespace Nodify
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
+        /// <summary>
+        /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
+        /// If you override the <see cref="Nodify.PendingConnection"/> style or <see cref="PendingConnectionTemplate"/>, please use the <see cref="PendingConnection.CompletedCommand"/> instead. <br />
+        /// Parameters is <see cref="Tuple{object, object}"/> where <see cref="Tuple{object, object}.Item1"/> is the <see cref="PendingConnection.Source"/> and <see cref="Tuple{object, object}.Item2"/> is <see cref="PendingConnection.Target"/>.
+        /// </summary>
         public ICommand ConnectionCompletedCommand
         {
             get => (ICommand)GetValue(ConnectionCompletedCommandProperty);
             set => SetValue(ConnectionCompletedCommandProperty, value);
         }
 
+        /// <summary>
+        /// Invoked when the <see cref="Connector.Disconnect"/> event is raised. <br />
+        /// Can also be handled at the <see cref="Connector"/> level using the <see cref="Connector.DisconnectCommand"/> command. <br />
+        /// Parameter is the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/>.
+        /// </summary>
         public ICommand DisconnectConnectorCommand
         {
             get => (ICommand)GetValue(DisconnectConnectorCommandProperty);
             set => SetValue(DisconnectConnectorCommandProperty, value);
         }
 
+        /// <summary>
+        /// Invoked when a drag operation starts for the <see cref="SelectedItems"/>.
+        /// </summary>
         public ICommand ItemsDragStartedCommand
         {
             get => (ICommand)GetValue(ItemsDragStartedCommandProperty);
             set => SetValue(ItemsDragStartedCommandProperty, value);
         }
 
+        /// <summary>
+        /// Invoked when a drag operation is completed for the <see cref="SelectedItems"/>.
+        /// </summary>
         public ICommand ItemsDragCompletedCommand
         {
             get => (ICommand)GetValue(ItemsDragCompletedCommandProperty);
@@ -337,6 +425,9 @@ namespace Nodify
         public void OnViewportUpdated()
             => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
 
+        /// <summary>
+        /// Occurs whenever the <see cref="Viewport"/> changes.
+        /// </summary>
         public event RoutedEventHandler ViewportUpdated
         {
             add => AddHandler(ViewportUpdatedEvent, value);
@@ -344,6 +435,16 @@ namespace Nodify
         }
 
         #endregion
+
+        /// <summary>
+        /// The transform used to offset the <see cref="Viewport"/>.
+        /// </summary>
+        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
+
+        /// <summary>
+        /// The transform used to scale the <see cref="Viewport"/>.
+        /// </summary>
+        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
 
         /// <summary>
         /// Value is number of pixels squared.
@@ -479,6 +580,10 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Called when the <see cref="DisableAutoPanning"/> changes.
+        /// </summary>
+        /// <param name="shouldDisable">Whether to enable or disable auto panning.</param>
         protected virtual void OnDisableAutoPanningChanged(bool shouldDisable)
         {
             if (!shouldDisable)
@@ -718,24 +823,11 @@ namespace Nodify
 
         #region Selection
 
-        public void AppendSelection(Rect area, bool fit = false)
-        {
-            var items = Items;
-            var selected = base.SelectedItems;
-
-            BeginUpdateSelectedItems();
-            for (int i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
-                if (container.Intersects(area, fit))
-                {
-                    selected.Add(items[i]);
-                }
-            }
-            EndUpdateSelectedItems();
-        }
-
+        /// <summary>
+        /// Inverts the <see cref="ItemContainer"/>s selection in the specified <paramref name="area"/>.
+        /// </summary>
+        /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void InvertSelection(Rect area, bool fit = false)
         {
             var items = Items;
@@ -746,7 +838,7 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (container.Intersects(area, fit))
+                if (container.IsSelectableInArea(area, fit))
                 {
                     var item = items[i];
                     if (container.IsSelected)
@@ -762,6 +854,12 @@ namespace Nodify
             EndUpdateSelectedItems();
         }
 
+        /// <summary>
+        /// Selects the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
+        /// </summary>
+        /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
+        /// <param name="append">If true, it will add to the existing </param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
             if (!append)
@@ -769,88 +867,81 @@ namespace Nodify
                 UnselectAll();
             }
 
-            AppendSelection(area, fit);
+            var items = Items;
+            var selected = base.SelectedItems;
+
+            BeginUpdateSelectedItems();
+            for (int i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+
+                if (container.IsSelectableInArea(area, fit))
+                {
+                    selected.Add(items[i]);
+                }
+            }
+            EndUpdateSelectedItems();
         }
 
+        /// <summary>
+        /// Unselects the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
+        /// </summary>
+        /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void UnselectArea(Rect area, bool fit = false)
         {
-            var items = GetItemsInArea(area, fit);
-            SetSelectedItems(items, false);
+            var items = Items;
+            var selected = base.SelectedItems;
+
+            BeginUpdateSelectedItems();
+            for (int i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+
+                if (container.IsSelectableInArea(area, fit))
+                {
+                    selected.Remove(items[i]);
+                }
+            }
+            EndUpdateSelectedItems();
         }
 
-        public void SetSelectedItems(List<ItemContainer> items, bool selected = true)
+        /// <summary>
+        /// Adds or removes the <paramref name="items"/> to/from the <see cref="SelectedItems"/> list.
+        /// </summary>
+        /// <param name="items">The items to select or unselect.</param>
+        /// <param name="selected">True to add, false to remove.</param>
+        internal void SetSelectedItems(IList<object> items, bool selected = true)
         {
+            var selectedItems = base.SelectedItems;
+
             BeginUpdateSelectedItems();
             if (selected)
             {
                 for (int i = 0; i < items.Count; i++)
                 {
-                    base.SelectedItems.Add(items[i].DataContext);
+                    selectedItems.Add(items[i]);
                 }
             }
             else
             {
                 for (int i = 0; i < items.Count; i++)
                 {
-                    base.SelectedItems.Remove(items[i].DataContext);
+                    selectedItems.Remove(items[i]);
                 }
             }
             EndUpdateSelectedItems();
-        }
-
-        public List<ItemContainer> GetItemsInArea(Rect area, bool fit = false)
-        {
-            var items = Items;
-            List<ItemContainer> inArea = new List<ItemContainer>(items.Count / 2);
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
-                if (container.Intersects(area, fit))
-                {
-                    inArea.Add(container);
-                }
-            }
-
-            return inArea;
-        }
-
-        protected internal void GetItemsInAreaNoAlloc(List<ItemContainer> outItems, Rect area, bool fit = false)
-        {
-            var items = Items;
-            outItems.Clear();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
-                if (container.Intersects(area, fit))
-                {
-                    outItems.Add(container);
-                }
-            }
-        }
-
-        public List<ItemContainer> GetSelectedItems()
-        {
-            var selectedItems = base.SelectedItems;
-            List<ItemContainer> selected = new List<ItemContainer>(selectedItems.Count);
-
-            for (int i = 0; i < selectedItems.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
-                selected.Add(container);
-            }
-
-            return selected;
         }
 
         #endregion
 
         #region Dragging
 
+        /// <summary>
+        /// Gets the <see cref="ItemContainer"/> that started the drag operation.
+        /// </summary>
         protected ItemContainer? DragInstigator;
+
         private Vector _dragAccumulator;
 
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
@@ -906,10 +997,11 @@ namespace Nodify
             }
 
             IsBulkUpdatingItems = false;
+            DragInstigator = null;
 
             ItemsHost?.InvalidateArrange();
 
-            if (ItemsDragCompletedCommand != null && ItemsDragCompletedCommand.CanExecute(null))
+            if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
             {
                 ItemsDragCompletedCommand.Execute(null);
             }
@@ -930,7 +1022,7 @@ namespace Nodify
                 DragInstigator.IsSelected = true;
             }
 
-            if (ItemsDragStartedCommand != null && ItemsDragStartedCommand.CanExecute(null))
+            if (ItemsDragStartedCommand?.CanExecute(null) ?? false)
             {
                 ItemsDragStartedCommand.Execute(null);
             }
@@ -943,6 +1035,14 @@ namespace Nodify
         private Point GetMousePositionTransformed(Point location)
             => new Point((Offset.X + location.X) / Scale, (Offset.Y + location.Y) / Scale);
 
+        protected Point PointToViewportCenter(Point point)
+            => (Point)((Vector)point * Scale - new Vector(ActualWidth / 2, ActualHeight / 2));
+
+        /// <summary>
+        /// Zoom at the specified location.
+        /// </summary>
+        /// <param name="scale">The zoom factor.</param>
+        /// <param name="pos">The location to focus when zooming.</param>
         public void ScaleAtPosition(double scale, Point pos)
         {
             var position = (Vector)pos;
@@ -956,9 +1056,11 @@ namespace Nodify
             }
         }
 
-        protected virtual Point PointToViewportCenter(Point point)
-            => (Point)((Vector)point * Scale - new Vector(ActualWidth / 2, ActualHeight / 2));
-
+        /// <summary>
+        /// Moves the <see cref="Viewport"/> at the specified location.
+        /// </summary>
+        /// <param name="point">The location where to move the <see cref="Viewport"/>.</param>
+        /// <param name="animated">True to animate the movement.</param>
         public void FocusLocation(Point point, bool animated = true)
         {
             Focus();

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Nodify
@@ -12,8 +11,7 @@ namespace Nodify
         private Point _startLocation;
         private SelectionType _selectionType;
         private bool _realtime;
-        private List<ItemContainer> _selectedNodes = default!;
-        private List<ItemContainer> _nodesInArea = default!;
+        private object[] _selectedNodes = Array.Empty<object>();
 
         public SelectionHelper(NodifyEditor host)
             => _host = host;
@@ -44,8 +42,10 @@ namespace Nodify
 
             _realtime = realtime;
             _startLocation = location;
-            _selectedNodes = _host.GetSelectedItems();
-            _nodesInArea = new List<ItemContainer>(_host.Items.Count / 2);
+
+            var items = ((MultiSelector)_host).SelectedItems;
+            _selectedNodes = new object[items.Count];
+            items.CopyTo(_selectedNodes, 0);
 
             _host.SelectingRectangle = new Rect();
             _host.IsSelecting = true;
@@ -77,8 +77,7 @@ namespace Nodify
                     ApplySelection(rect);
                 }
 
-                _selectedNodes.Clear();
-                _nodesInArea.Clear();
+                _selectedNodes = Array.Empty<object>();
             }
         }
 
@@ -87,49 +86,36 @@ namespace Nodify
             switch (_selectionType)
             {
                 case SelectionType.Replace:
-                    _host.UnselectAll();
-                    _host.AppendSelection(area);
+                    _host.SelectArea(area, false);
                     break;
 
                 case SelectionType.Remove:
-                    _host.GetItemsInAreaNoAlloc(_nodesInArea, area);
-
                     if (_realtime)
                     {
                         _host.SetSelectedItems(_selectedNodes, true);
                     }
 
-                    _host.SetSelectedItems(_nodesInArea, false);
+                    _host.UnselectArea(area);
                     break;
 
                 case SelectionType.Append:
-                    _host.GetItemsInAreaNoAlloc(_nodesInArea, area);
-
                     if (_realtime)
                     {
                         _host.UnselectAll();
                         _host.SetSelectedItems(_selectedNodes, true);
                     }
 
-                    _host.SetSelectedItems(_nodesInArea, true);
+                    _host.SelectArea(area, true);
                     break;
 
                 case SelectionType.Invert:
                     if (_realtime)
                     {
-                        _host.GetItemsInAreaNoAlloc(_nodesInArea, area);
-                        var toSelect = _nodesInArea.Except(_selectedNodes).ToList();
-                        var toDeselect = _nodesInArea.Except(toSelect).ToList();
-
                         _host.UnselectAll();
                         _host.SetSelectedItems(_selectedNodes, true);
-                        _host.SetSelectedItems(toSelect, true);
-                        _host.SetSelectedItems(toDeselect, false);
                     }
-                    else
-                    {
-                        _host.InvertSelection(area);
-                    }
+
+                    _host.InvertSelection(area);
                     break;
             }
         }
