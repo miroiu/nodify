@@ -62,7 +62,7 @@ namespace Nodify
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            if (!ContentControl?.IsAncestorOf(e.OriginalSource as DependencyObject) ?? true)
+            if (e.OriginalSource is DependencyObject dp && (!ContentControl?.IsAncestorOf(dp) ?? true))
             {
                 base.OnMouseLeftButtonDown(e);
             }
@@ -70,7 +70,7 @@ namespace Nodify
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            if (!ContentControl?.IsAncestorOf(e.OriginalSource as DependencyObject) ?? true)
+            if (e.OriginalSource is DependencyObject dp && (!ContentControl?.IsAncestorOf(dp) ?? true))
             {
                 base.OnMouseLeftButtonUp(e);
             }

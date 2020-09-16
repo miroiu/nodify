@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.Playground"
+        xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
         Width="800">
 
     <Window.Resources>
-        <local:DebugConverter x:Key="DebugConverter" />
-        <local:ToStringConverter x:Key="ToStringConverter" />
+        <shared:DebugConverter x:Key="DebugConverter" />
+        <shared:ToStringConverter x:Key="ToStringConverter" />
     </Window.Resources>
 
     <Window.DataContext>

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Nodify.StateMachine
+namespace Nodify
 {
     public class BooleanToVisibilityConverter : MarkupExtension, IValueConverter
     {

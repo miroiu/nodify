@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Nodify.Playground
+namespace Nodify
 {
     public class DebugConverter : IValueConverter
     {

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.StateMachine"
+        xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
@@ -27,7 +28,8 @@
                              Connections="{Binding Transitions}"
                              PendingConnection="{Binding PendingTransition}"
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
-                             ConnectionCompletedCommand="{Binding CreateTransitionCommand}">
+                             ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
+                             Background="{DynamicResource EditorBackgroundBrush}">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:PendingConnection}"
                        BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
@@ -36,7 +38,7 @@
                     <Setter Property="EnablePreview"
                             Value="True" />
                     <Setter Property="BorderBrush"
-                            Value="White" />
+                            Value="{DynamicResource ConnectionBrush}" />
                 </Style>
             </nodify:NodifyEditor.Resources>
 
@@ -73,14 +75,14 @@
                                 <Setter Property="StrokeThickness"
                                         Value="3" />
                                 <Setter Property="Stroke"
-                                        Value="White" />
+                                        Value="{DynamicResource ConnectionBrush}" />
                                 <Setter Property="Fill"
-                                        Value="White" />
+                                        Value="{DynamicResource ConnectionBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsActive}"
                                                  Value="True">
                                         <Setter Property="Stroke"
-                                                Value="#8DD28A" />
+                                                Value="{DynamicResource ActiveStateBrush}" />
                                         <Setter Property="StrokeThickness"
                                                 Value="6" />
                                     </DataTrigger>
@@ -105,27 +107,32 @@
                     <nodify:StateNode Content="{Binding}"
                                       IsConnected="True"
                                       Size="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
-                                      Anchor="{Binding Anchor, Mode=OneWayToSource}">
+                                      Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                      Background="{DynamicResource StateBackgroundBrush}"
+                                      HighlightBrush="{DynamicResource StateHighlightBrush}">
                         <nodify:StateNode.ContentTemplate>
                             <DataTemplate DataType="{x:Type local:StateViewModel}">
-                                <local:EditableTextBlock Text="{Binding Name}"
-                                                         IsEditing="{Binding IsRenaming}"
-                                                         IsEditable="{Binding IsEditable}"
-                                                         MaxLength="30" />
+                                <shared:EditableTextBlock Text="{Binding Name}"
+                                                          Foreground="{DynamicResource ContrastForegroundBrush}"
+                                                          IsEditing="{Binding IsRenaming}"
+                                                          IsEditable="{Binding IsEditable}"
+                                                          MaxLength="30" />
                             </DataTemplate>
                         </nodify:StateNode.ContentTemplate>
                         <nodify:StateNode.Style>
                             <Style TargetType="{x:Type nodify:StateNode}">
+                                <Setter Property="BorderBrush"
+                                        Value="{DynamicResource BorderBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsEditable}"
                                                  Value="False">
                                         <Setter Property="BorderBrush"
-                                                Value="#E6AF86" />
+                                                Value="{DynamicResource ReadOnlyStateBrush}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsActive}"
                                                  Value="True">
                                         <Setter Property="BorderBrush"
-                                                Value="#8DD28A" />
+                                                Value="{DynamicResource ActiveStateBrush}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -170,7 +177,7 @@
                               Icon="{StaticResource DeleteIcon}"
                               InputGestureText="Delete"
                               Command="{Binding DeleteSelectionCommand}" />
-                    <Separator Background="#2D2D30" />
+                    <Separator Background="{DynamicResource BorderBrush}" />
                     <MenuItem Header="_Select All"
                               Icon="{StaticResource SelectAllIcon}"
                               InputGestureText="Ctrl+A"
@@ -193,7 +200,7 @@
         <!--TRANSITIONS-->
         <Expander Header="Transitions"
                   HorizontalAlignment="Left"
-                  Background="#2D2D30"
+                  Background="{DynamicResource PanelBackgroundBrush}"
                   Padding="4 1 0 3"
                   ExpandDirection="Right"
                   IsExpanded="True">
@@ -228,7 +235,7 @@
                               DisplayMemberPath="Name" />
                 </DataTemplate>
             </Expander.Resources>
-            <Border BorderBrush="#333336"
+            <Border BorderBrush="{DynamicResource BackgroundBrush}"
                     BorderThickness="1"
                     Width="250"
                     Padding="10"
@@ -246,7 +253,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                                         <Expander BorderThickness="0 0 0 1"
-                                                  BorderBrush="#333337">
+                                                  BorderBrush="{DynamicResource BackgroundBrush}">
                                             <Expander.Style>
                                                 <Style TargetType="{x:Type Expander}"
                                                        BasedOn="{StaticResource {x:Type Expander}}">
@@ -266,12 +273,12 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="{x:Type TextBlock}">
                                                             <Setter Property="Foreground"
-                                                                    Value="White" />
+                                                                    Value="{DynamicResource ForegroundBrush}" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsActive}"
                                                                              Value="True">
                                                                     <Setter Property="Foreground"
-                                                                            Value="#8DD28A" />
+                                                                            Value="{DynamicResource ActiveStateBrush}" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -281,7 +288,7 @@
                                                     <Run Text="{Binding Target.Name, Mode=OneWay}" />
                                                 </TextBlock>
                                             </Expander.Header>
-                                            <Border BorderBrush="#333336"
+                                            <Border BorderBrush="{DynamicResource BackgroundBrush}"
                                                     BorderThickness="1"
                                                     HorizontalAlignment="Stretch">
                                                 <!--TODO: Condition Editor-->
@@ -294,7 +301,7 @@
                     </Grid>
 
                     <!--NODES-->
-                    <Grid Visibility="{Binding SelectedStates.Count, Converter={local:BooleanToVisibilityConverter}}"
+                    <Grid Visibility="{Binding SelectedStates.Count, Converter={shared:BooleanToVisibilityConverter}}"
                           Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -308,21 +315,21 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <local:EditableTextBlock Text="{Binding SelectedState.Name}"
-                                                     IsEditing="{Binding IsChecked, ElementName=EditStateName}"
-                                                     IsEditable="{Binding SelectedState.IsEditable}"
-                                                     FontWeight="Bold"
-                                                     FontSize="16"
-                                                     MaxLength="20" />
+                            <shared:EditableTextBlock Text="{Binding SelectedState.Name}"
+                                                      IsEditing="{Binding IsChecked, ElementName=EditStateName}"
+                                                      IsEditable="{Binding SelectedState.IsEditable}"
+                                                      Foreground="{DynamicResource ForegroundBrush}"
+                                                      FontWeight="Bold"
+                                                      FontSize="16"
+                                                      MaxLength="20" />
                             <CheckBox x:Name="EditStateName"
-                                      Visibility="{Binding SelectedState.IsEditable, Converter={local:BooleanToVisibilityConverter}}"
+                                      Visibility="{Binding SelectedState.IsEditable, Converter={shared:BooleanToVisibilityConverter}}"
                                       Content="{StaticResource EditIcon}"
                                       Style="{StaticResource IconCheckBox}"
                                       Grid.Column="1" />
                         </Grid>
 
                         <Separator Height="2"
-                                   Background="#333337"
                                    Width="Auto"
                                    Margin="0 2 0 10"
                                    Grid.Row="1" />
@@ -350,8 +357,8 @@
                                       Grid.Row="1"
                                       Grid.ColumnSpan="2"
                                       BorderThickness="0 0 0 1"
-                                      BorderBrush="#333337"
-                                      Visibility="{Binding SelectedState.Action.Input.Count, Converter={local:BooleanToVisibilityConverter}}">
+                                      BorderBrush="{DynamicResource BackgroundBrush}"
+                                      Visibility="{Binding SelectedState.Action.Input.Count, Converter={shared:BooleanToVisibilityConverter}}">
 
                                 <Expander.Style>
                                     <Style TargetType="{x:Type Expander}"
@@ -394,47 +401,9 @@
                                                              Grid.Column="1" />
 
                                                     <ContentPresenter Content="{Binding}"
-                                                                      x:Name="ValueEditor"
+                                                                      ContentTemplate="{StaticResource KeyTemplate}"
                                                                       Grid.Column="2" />
                                                 </Grid>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Boolean">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource BooleanTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Integer">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource IntegerTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Double">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource DecimalTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="String">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource StringTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Object">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource ObjectTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Key">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource KeyTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -446,8 +415,8 @@
                                       Grid.Row="2"
                                       Grid.ColumnSpan="2"
                                       BorderThickness="0 0 0 1"
-                                      BorderBrush="#333337"
-                                      Visibility="{Binding SelectedState.Action.Output.Count, Converter={local:BooleanToVisibilityConverter}}">
+                                      BorderBrush="{DynamicResource BackgroundBrush}"
+                                      Visibility="{Binding SelectedState.Action.Output.Count, Converter={shared:BooleanToVisibilityConverter}}">
                                 <Expander.Style>
                                     <Style TargetType="{x:Type Expander}"
                                            BasedOn="{StaticResource {x:Type Expander}}">
@@ -468,7 +437,6 @@
                                 </Expander.Header>
                                 <StackPanel>
                                     <Separator Height="2"
-                                               Background="#333337"
                                                Width="Auto" />
 
                                     <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}">
@@ -493,47 +461,9 @@
                                                              Grid.Column="1" />
 
                                                     <ContentPresenter Content="{Binding}"
-                                                                      x:Name="ValueEditor"
+                                                                      ContentTemplate="{StaticResource KeyTemplate}"
                                                                       Grid.Column="2" />
                                                 </Grid>
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Boolean">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource BooleanTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Integer">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource IntegerTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Double">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource DecimalTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="String">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource StringTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Object">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource ObjectTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}"
-                                                                 Value="Key">
-                                                        <Setter Property="ContentTemplate"
-                                                                Value="{StaticResource KeyTemplate}"
-                                                                TargetName="ValueEditor" />
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -543,7 +473,7 @@
                     </Grid>
 
                     <!--BLACKBOARD-->
-                    <Grid Visibility="{Binding SelectedStates.Count, Converter={local:BooleanToVisibilityConverter Negate=True}}"
+                    <Grid Visibility="{Binding SelectedStates.Count, Converter={shared:BooleanToVisibilityConverter Negate=True}}"
                           Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -556,11 +486,12 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <local:EditableTextBlock Text="{Binding Name}"
-                                                     IsEditing="{Binding IsChecked, ElementName=EditName}"
-                                                     FontWeight="Bold"
-                                                     FontSize="16"
-                                                     MaxLength="20" />
+                            <shared:EditableTextBlock Text="{Binding Name}"
+                                                      IsEditing="{Binding IsChecked, ElementName=EditName}"
+                                                      Foreground="{DynamicResource ForegroundBrush}"
+                                                      FontWeight="Bold"
+                                                      FontSize="16"
+                                                      MaxLength="20" />
 
                             <StackPanel Orientation="Horizontal"
                                         Grid.Column="1">
@@ -576,7 +507,6 @@
                         </Grid>
 
                         <Separator Height="2"
-                                   Background="#333337"
                                    Width="Auto"
                                    Margin="0 2 0 10"
                                    Grid.Row="1" />
@@ -597,9 +527,10 @@
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
 
-                                            <local:EditableTextBlock Text="{Binding Name}" />
+                                            <shared:EditableTextBlock Text="{Binding Name}"
+                                                                      Foreground="{DynamicResource ForegroundBrush}" />
 
-                                            <ComboBox ItemsSource="{Binding Type, Converter={local:EnumValuesConverter}}"
+                                            <ComboBox ItemsSource="{Binding Type, Converter={shared:EnumValuesConverter}}"
                                                       DisplayMemberPath="Name"
                                                       SelectedValuePath="Value"
                                                       SelectedValue="{Binding Type}"
@@ -611,7 +542,6 @@
                                                               Grid.Column="2" />
 
                                             <Separator Height="2"
-                                                       Background="#333337"
                                                        Width="Auto"
                                                        Margin="0 2 0 10"
                                                        Grid.Row="1"
@@ -666,7 +596,7 @@
 
         <!--TOOLBAR-->
         <Border CornerRadius="2"
-                Background="#2D2D30"
+                Background="{DynamicResource PanelBackgroundBrush}"
                 BorderThickness="0 0 0 1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"

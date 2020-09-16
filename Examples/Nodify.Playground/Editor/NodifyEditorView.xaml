@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Nodify.Playground"
              xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
+             xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -14,8 +15,8 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
-        <local:RandomBrushConverter x:Key="RandomBrushConverter" />
-        <local:DebugConverter x:Key="DebugConverter" />
+        <shared:RandomBrushConverter x:Key="RandomBrushConverter" />
+        <shared:DebugConverter x:Key="DebugConverter" />
     </UserControl.Resources>
 
     <nodify:NodifyEditor ItemsSource="{Binding Nodes}"

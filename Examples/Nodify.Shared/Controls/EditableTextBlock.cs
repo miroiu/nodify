@@ -2,8 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Nodify.Shared;
 
-namespace Nodify.StateMachine
+namespace Nodify
 {
     [TemplatePart(Name = ElementTextBox, Type = typeof(TextBox))]
     public class EditableTextBlock : Control

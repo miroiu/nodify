@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Nodify.StateMachine
+namespace Nodify
 {
     public readonly struct EnumValue
     {
