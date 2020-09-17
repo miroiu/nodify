@@ -13,7 +13,10 @@ namespace Nodify.StateMachine
 
         public Task<bool> Evaluate(Blackboard blackboard)
         {
-            throw new System.NotImplementedException();
+            var left = blackboard.GetObject(Left);
+            var right = blackboard.GetObject(Right);
+
+            return Task.FromResult(left == right);
         }
     }
 }

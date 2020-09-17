@@ -3,7 +3,7 @@
 namespace Nodify.StateMachine
 {
     [BlackboardItem("Set State Delay")]
-    public class SetDelayAction : IBlackboardAction
+    public class SetStateDelayAction : IBlackboardAction
     {
         [BlackboardKey("Delay", BlackboardKeyType.Integer)]
         public BlackboardKey Delay { get; set; }

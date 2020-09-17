@@ -66,10 +66,10 @@
                         <Trigger Property="IsEnabled"
                                  Value="False">
                             <Setter Property="BorderBrush"
-                                    Value="{StaticResource DisabledBorderBrush}" />
+                                    Value="{DynamicResource DisabledBorderBrush}" />
                             <Setter TargetName="PART_CheckMark"
                                     Property="Stroke"
-                                    Value="{StaticResource DisabledBorderBrush}" />
+                                    Value="{DynamicResource DisabledBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -385,7 +385,8 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type Separator}">
+    <Style TargetType="{x:Type Separator}"
+           BasedOn="{StaticResource {x:Type Separator}}">
         <Setter Property="Focusable"
                 Value="False" />
         <Setter Property="VerticalAlignment"
@@ -598,9 +599,7 @@
                             </CheckBox>
                             <ContentPresenter x:Name="PART_Content"
                                               Focusable="False"
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Margin="{TemplateBinding Padding}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Visibility="Collapsed" />
                         </DockPanel>
                     </Border>

@@ -9,7 +9,7 @@
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
         Title="State Machine Editor"
-        Height="450"
+        Height="500"
         Width="800">
     <Window.DataContext>
         <local:StateMachineViewModel />
@@ -17,11 +17,16 @@
 
     <Window.Resources>
         <shared:BindingProxy x:Key="EditorProxy"
-                            DataContext="{Binding}" />
+                             DataContext="{Binding}" />
         <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
     </Window.Resources>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
         <nodify:NodifyEditor ItemsSource="{Binding States}"
                              SelectedItem="{Binding SelectedState}"
                              SelectedItems="{Binding SelectedStates}"
@@ -29,7 +34,8 @@
                              PendingConnection="{Binding PendingTransition}"
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
                              ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
-                             Background="{DynamicResource EditorBackgroundBrush}">
+                             Background="{DynamicResource EditorBackgroundBrush}"
+                             Grid.Column="1">
             <nodify:NodifyEditor.PendingConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                     <nodify:PendingConnection Source="{Binding Source, Mode=OneWayToSource}"
@@ -188,13 +194,100 @@
             </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 
-        <!--TRANSITIONS-->
-        <Expander Header="Transitions"
+        <!--TOOLBAR-->
+        <Border CornerRadius="2"
+                Background="{DynamicResource PanelBackgroundBrush}"
+                BorderThickness="0 0 0 1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="10 0"
+                Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding PauseCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}"
+                               BasedOn="{StaticResource IconButton}">
+                            <Setter Property="Content"
+                                    Value="{StaticResource PauseIcon}" />
+                            <Setter Property="ToolTip"
+                                    Value="Pause" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Runner.State}"
+                                             Value="Stopped">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Runner.State}"
+                                             Value="Paused">
+                                    <Setter Property="Content"
+                                            Value="{StaticResource UnpauseIcon}" />
+                                    <Setter Property="ToolTip"
+                                            Value="Continue" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Command="{Binding RunCommand}"
+                        Style="{StaticResource IconButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentPresenter DataContext="{Binding}"
+                                          Margin="0 0 4 0">
+                            <ContentPresenter.Style>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Content"
+                                            Value="{StaticResource StopIcon}" />
+                                    <Setter Property="ToolTip"
+                                            Value="Stop" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Runner.State}"
+                                                     Value="Stopped">
+                                            <Setter Property="Content"
+                                                    Value="{StaticResource RunIcon}" />
+                                            <Setter Property="ToolTip"
+                                                    Value="Run" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentPresenter.Style>
+                        </ContentPresenter>
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </Button>
+                <Separator Height="Auto"
+                           BorderThickness="0 0 1 0" />
+                <Button Content="{StaticResource ZoomInIcon}"
+                        ToolTip="Zoom In"
+                        Style="{StaticResource IconButton}" />
+                <Button Content="{StaticResource ZoomOutIcon}"
+                        ToolTip="Zoom Out"
+                        Style="{StaticResource IconButton}" />
+            </StackPanel>
+        </Border>
+
+        <!--Settings-->
+        <Expander HorizontalContentAlignment="Left"
+                  VerticalContentAlignment="Center"
                   HorizontalAlignment="Left"
                   Background="{DynamicResource PanelBackgroundBrush}"
-                  Padding="4 1 0 3"
-                  ExpandDirection="Right"
-                  IsExpanded="True">
+                  Padding="0 1 4 3"
+                  IsExpanded="True"
+                  ExpandDirection="Left">
+            <Expander.Style>
+                <Style TargetType="{x:Type Expander}"
+                       BasedOn="{StaticResource {x:Type Expander}}">
+                    <Setter Property="Tag"
+                            Value="{StaticResource ExpandRightIcon}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsExpanded"
+                                 Value="True">
+                            <Setter Property="Tag"
+                                    Value="{StaticResource ExpandLeftIcon}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Expander.Style>
+
             <Expander.Resources>
                 <DataTemplate x:Key="BooleanTemplate"
                               DataType="{x:Type local:BlackboardKeyViewModel}">
@@ -229,124 +322,144 @@
 
             <Border BorderBrush="{DynamicResource BackgroundBrush}"
                     BorderThickness="1"
-                    Width="250"
+                    Width="270"
                     Padding="10"
                     HorizontalAlignment="Stretch">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition MinHeight="200" />
-                        <RowDefinition MinHeight="200" />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <!--TRANSITIONS-->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Transitions}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                                    <Expander BorderThickness="0 0 0 1"
-                                              Padding="0 5 0 0"
-                                              BorderBrush="{DynamicResource BackgroundBrush}">
-                                        <Expander.Style>
-                                            <Style TargetType="{x:Type Expander}"
-                                                   BasedOn="{StaticResource {x:Type Expander}}">
-                                                <Setter Property="Tag"
-                                                        Value="{StaticResource ExpandRightIcon}" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsExpanded"
-                                                             Value="True">
-                                                        <Setter Property="Tag"
-                                                                Value="{StaticResource ExpandDownIcon}" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Expander.Style>
-                                        <Expander.Header>
-                                            <TextBlock>
-                                                <TextBlock.Style>
-                                                    <Style TargetType="{x:Type TextBlock}">
-                                                        <Setter Property="Foreground"
-                                                                Value="{DynamicResource ForegroundBrush}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsActive}"
-                                                                         Value="True">
-                                                                <Setter Property="Foreground"
-                                                                        Value="{DynamicResource ActiveStateBrush}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
+                    <ScrollViewer Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter Negate=True}}"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Grid.Row="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Transitions"
+                                       Foreground="{DynamicResource ForegroundBrush}"
+                                       FontWeight="Bold"
+                                       FontSize="16" />
+
+                            <Separator Height="2"
+                                       Width="Auto"
+                                       Margin="0 2 0 5"
+                                       Grid.Row="1" />
+
+                            <ItemsControl ItemsSource="{Binding Transitions}"
+                                          Grid.Row="2">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                                        <Expander BorderThickness="0 0 0 1"
+                                                  Padding="0 5 0 0"
+                                                  BorderBrush="{DynamicResource BackgroundBrush}">
+                                            <Expander.Style>
+                                                <Style TargetType="{x:Type Expander}"
+                                                       BasedOn="{StaticResource {x:Type Expander}}">
+                                                    <Setter Property="Tag"
+                                                            Value="{StaticResource ExpandRightIcon}" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsExpanded"
+                                                                 Value="True">
+                                                            <Setter Property="Tag"
+                                                                    Value="{StaticResource ExpandDownIcon}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Expander.Style>
+                                            <Expander.Header>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource ForegroundBrush}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}"
+                                                                             Value="True">
+                                                                    <Setter Property="Foreground"
+                                                                            Value="{DynamicResource ActiveStateBrush}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
                                                     <Run Text="{Binding Source.Name, Mode=OneWay}" />
                                                     <Run Text="🠚" />
                                                     <Run Text="{Binding Target.Name, Mode=OneWay}" />
-                                            </TextBlock>
-                                        </Expander.Header>
+                                                </TextBlock>
+                                            </Expander.Header>
 
-                                        <Border HorizontalAlignment="Stretch">
-                                            <Grid IsSharedSizeScope="True">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"
-                                                                      SharedSizeGroup="ConditionName" />
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
+                                            <Border HorizontalAlignment="Stretch">
+                                                <Grid IsSharedSizeScope="True">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"
+                                                                          SharedSizeGroup="ConditionName" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
 
-                                                <!--CONDITION-->
-                                                <TextBlock Text="Condition"
-                                                           Margin="0 0 10 0"
-                                                           VerticalAlignment="Center" />
+                                                    <!--CONDITION-->
+                                                    <TextBlock Text="Condition"
+                                                               Margin="0 0 10 0"
+                                                               VerticalAlignment="Center" />
 
-                                                <ComboBox ItemsSource="{Binding DataContext.Blackboard.Conditions, Source={StaticResource EditorProxy}}"
-                                                          SelectedItem="{Binding ConditionReference}"
-                                                          DisplayMemberPath="Name"
-                                                          Grid.Column="1" />
+                                                    <ComboBox ItemsSource="{Binding DataContext.Blackboard.Conditions, Source={StaticResource EditorProxy}}"
+                                                              SelectedItem="{Binding ConditionReference}"
+                                                              DisplayMemberPath="Name"
+                                                              Grid.Column="1" />
 
-                                                <!--INPUT-->
-                                                <ItemsControl ItemsSource="{Binding Condition.Input}"
-                                                              Padding="0 5 0 0"
-                                                              Grid.Row="1"
-                                                              Grid.ColumnSpan="2">
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid Margin="0 0 0 2">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="Auto"
-                                                                                      SharedSizeGroup="ConditionName" />
-                                                                    <ColumnDefinition SharedSizeGroup="ConditionType" />
-                                                                    <ColumnDefinition />
-                                                                </Grid.ColumnDefinitions>
+                                                    <!--INPUT-->
+                                                    <ItemsControl ItemsSource="{Binding Condition.Input}"
+                                                                  Padding="0 5 0 0"
+                                                                  Grid.Row="1"
+                                                                  Grid.ColumnSpan="2">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid Margin="0 0 0 2">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"
+                                                                                          SharedSizeGroup="ConditionName" />
+                                                                        <ColumnDefinition SharedSizeGroup="ConditionType" />
+                                                                        <ColumnDefinition />
+                                                                    </Grid.ColumnDefinitions>
 
-                                                                <TextBlock Text="{Binding Name}"
-                                                                           VerticalAlignment="Center" />
+                                                                    <TextBlock Text="{Binding Name}"
+                                                                               VerticalAlignment="Center" />
 
-                                                                <TextBox Text="{Binding Type}"
-                                                                         IsEnabled="False"
-                                                                         Margin="0 0 5 0"
-                                                                         Grid.Column="1" />
+                                                                    <TextBox Text="{Binding Type}"
+                                                                             IsEnabled="False"
+                                                                             Margin="0 0 5 0"
+                                                                             Grid.Column="1" />
 
-                                                                <ContentPresenter Content="{Binding}"
-                                                                                  ContentTemplate="{StaticResource KeyTemplate}"
-                                                                                  Grid.Column="2" />
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </Grid>
-                                        </Border>
-                                    </Expander>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                                                    <ContentPresenter Content="{Binding}"
+                                                                                      ContentTemplate="{StaticResource KeyTemplate}"
+                                                                                      Grid.Column="2" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                            </Border>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
                     </ScrollViewer>
 
                     <!--STATES-->
                     <Grid Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter}}"
                           Grid.Row="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -377,141 +490,141 @@
                                    Margin="0 2 0 10"
                                    Grid.Row="1" />
 
-                        <Grid Visibility="{Binding SelectedState.Action, Converter={shared:BooleanToVisibilityConverter}}"
-                              IsSharedSizeScope="True"
-                              Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
+                        <ScrollViewer Visibility="{Binding SelectedState.Action, Converter={shared:BooleanToVisibilityConverter}}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Grid.Row="2">
+                            <Grid IsSharedSizeScope="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
 
-                            <!--ACTION-->
-                            <TextBlock Text="Action"
-                                       Margin="0 0 10 0"
-                                       VerticalAlignment="Center" />
-                            <ComboBox ItemsSource="{Binding Blackboard.Actions}"
-                                      SelectedItem="{Binding SelectedState.ActionReference}"
-                                      IsEnabled="{Binding SelectedState.IsEditable}"
-                                      DisplayMemberPath="Name"
-                                      Grid.Column="1" />
+                                <!--ACTION-->
+                                <TextBlock Text="Action"
+                                           Margin="0 0 10 0"
+                                           VerticalAlignment="Center" />
+                                <ComboBox ItemsSource="{Binding Blackboard.Actions}"
+                                          SelectedItem="{Binding SelectedState.ActionReference}"
+                                          IsEnabled="{Binding SelectedState.IsEditable}"
+                                          DisplayMemberPath="Name"
+                                          Grid.Column="1" />
 
-                            <!--INPUT-->
-                            <Expander Margin="0 5 0 0"
-                                      Padding="0 5 0 0"
-                                      Grid.Row="1"
-                                      Grid.ColumnSpan="2"
-                                      BorderThickness="0 0 0 1"
-                                      Header="Input"
-                                      FontWeight="Bold"
-                                      BorderBrush="{DynamicResource BackgroundBrush}"
-                                      Visibility="{Binding SelectedState.Action.Input.Count, Converter={shared:BooleanToVisibilityConverter}}">
-                                <Expander.Style>
-                                    <Style TargetType="{x:Type Expander}"
-                                           BasedOn="{StaticResource {x:Type Expander}}">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandRightIcon}" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsExpanded"
-                                                     Value="True">
-                                                <Setter Property="Tag"
-                                                        Value="{StaticResource ExpandDownIcon}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Expander.Style>
-                                <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}"
-                                              FontWeight="Normal">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid Margin="0 0 0 2">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"
-                                                                      SharedSizeGroup="KeyName" />
-                                                    <ColumnDefinition Width=".5*" />
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
+                                <!--INPUT-->
+                                <Expander Margin="0 5 0 0"
+                                          Padding="0 5 0 0"
+                                          Grid.Row="1"
+                                          Grid.ColumnSpan="2"
+                                          BorderThickness="0 0 0 1"
+                                          Header="Input"
+                                          FontWeight="Bold"
+                                          BorderBrush="{DynamicResource BackgroundBrush}"
+                                          Visibility="{Binding SelectedState.Action.Input.Count, Converter={shared:BooleanToVisibilityConverter}}">
+                                    <Expander.Style>
+                                        <Style TargetType="{x:Type Expander}"
+                                               BasedOn="{StaticResource {x:Type Expander}}">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandRightIcon}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsExpanded"
+                                                         Value="True">
+                                                    <Setter Property="Tag"
+                                                            Value="{StaticResource ExpandDownIcon}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Expander.Style>
+                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}"
+                                                  FontWeight="Normal">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0 0 0 2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"
+                                                                          SharedSizeGroup="KeyName" />
+                                                        <ColumnDefinition Width=".5*" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="{Binding Name}"
-                                                           VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}"
+                                                               VerticalAlignment="Center" />
 
-                                                <TextBox Text="{Binding Type}"
-                                                         IsEnabled="False"
-                                                         Margin="5 0"
-                                                         Grid.Column="1" />
+                                                    <TextBox Text="{Binding Type}"
+                                                             IsEnabled="False"
+                                                             Margin="5 0"
+                                                             Grid.Column="1" />
 
-                                                <ContentPresenter Content="{Binding}"
-                                                                  ContentTemplate="{StaticResource KeyTemplate}"
-                                                                  Grid.Column="2" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Expander>
+                                                    <ContentPresenter Content="{Binding}"
+                                                                      ContentTemplate="{StaticResource KeyTemplate}"
+                                                                      Grid.Column="2" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
 
-                            <!--OUTPUT-->
-                            <Expander Margin="0 5 0 0"
-                                      Padding="0 5 0 0"
-                                      Grid.Row="2"
-                                      Grid.ColumnSpan="2"
-                                      Header="Output"
-                                      FontWeight="Bold"
-                                      BorderThickness="0 0 0 1"
-                                      BorderBrush="{DynamicResource BackgroundBrush}"
-                                      Visibility="{Binding SelectedState.Action.Output.Count, Converter={shared:BooleanToVisibilityConverter}}">
-                                <Expander.Style>
-                                    <Style TargetType="{x:Type Expander}"
-                                           BasedOn="{StaticResource {x:Type Expander}}">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandRightIcon}" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsExpanded"
-                                                     Value="True">
-                                                <Setter Property="Tag"
-                                                        Value="{StaticResource ExpandDownIcon}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Expander.Style>
-                                <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}"
-                                              FontWeight="Normal">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"
-                                                                      SharedSizeGroup="KeyName" />
-                                                    <ColumnDefinition Width=".5*" />
-                                                    <ColumnDefinition />
-                                                </Grid.ColumnDefinitions>
+                                <!--OUTPUT-->
+                                <Expander Margin="0 5 0 0"
+                                          Padding="0 5 0 0"
+                                          Grid.Row="2"
+                                          Grid.ColumnSpan="2"
+                                          Header="Output"
+                                          FontWeight="Bold"
+                                          BorderThickness="0 0 0 1"
+                                          BorderBrush="{DynamicResource BackgroundBrush}"
+                                          Visibility="{Binding SelectedState.Action.Output.Count, Converter={shared:BooleanToVisibilityConverter}}">
+                                    <Expander.Style>
+                                        <Style TargetType="{x:Type Expander}"
+                                               BasedOn="{StaticResource {x:Type Expander}}">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandRightIcon}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsExpanded"
+                                                         Value="True">
+                                                    <Setter Property="Tag"
+                                                            Value="{StaticResource ExpandDownIcon}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Expander.Style>
+                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}"
+                                                  FontWeight="Normal">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"
+                                                                          SharedSizeGroup="KeyName" />
+                                                        <ColumnDefinition Width=".5*" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="{Binding Name}"
-                                                           VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}"
+                                                               VerticalAlignment="Center" />
 
-                                                <TextBox Text="{Binding Type}"
-                                                         IsEnabled="False"
-                                                         Margin="5 0"
-                                                         Grid.Column="1" />
+                                                    <TextBox Text="{Binding Type}"
+                                                             IsEnabled="False"
+                                                             Margin="5 0"
+                                                             Grid.Column="1" />
 
-                                                <ContentPresenter Content="{Binding}"
-                                                                  ContentTemplate="{StaticResource KeyTemplate}"
-                                                                  Grid.Column="2" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Expander>
-                        </Grid>
+                                                    <ContentPresenter Content="{Binding}"
+                                                                      ContentTemplate="{StaticResource KeyTemplate}"
+                                                                      Grid.Column="2" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
+                            </Grid>
+                        </ScrollViewer>
                     </Grid>
 
                     <!--BLACKBOARD-->
-                    <Grid Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter Negate=True}}"
-                          Grid.Row="1"
-                          IsSharedSizeScope="True">
+                    <Grid IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -567,7 +680,8 @@
                                                                       IsEditing="{Binding IsChecked, ElementName=EditName}"
                                                                       Foreground="{DynamicResource ForegroundBrush}"
                                                                       VerticalAlignment="Stretch"
-                                                                      VerticalContentAlignment="Center" />
+                                                                      VerticalContentAlignment="Center"
+                                                                      Margin="1 1" />
 
                                             <ComboBox ItemsSource="{Binding Type, Converter={shared:EnumValuesConverter}}"
                                                       DisplayMemberPath="Name"
@@ -638,75 +752,5 @@
                 </Grid>
             </Border>
         </Expander>
-
-        <!--TOOLBAR-->
-        <Border CornerRadius="2"
-                Background="{DynamicResource PanelBackgroundBrush}"
-                BorderThickness="0 0 0 1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Margin="10 0">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding PauseCommand}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}"
-                               BasedOn="{StaticResource IconButton}">
-                            <Setter Property="Content"
-                                    Value="{StaticResource PauseIcon}" />
-                            <Setter Property="ToolTip"
-                                    Value="Pause" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Runner.State}"
-                                             Value="Stopped">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Runner.State}"
-                                             Value="Paused">
-                                    <Setter Property="Content"
-                                            Value="{StaticResource UnpauseIcon}" />
-                                    <Setter Property="ToolTip"
-                                            Value="Continue" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Command="{Binding RunCommand}"
-                        Style="{StaticResource IconButton}">
-                    <StackPanel Orientation="Horizontal">
-                        <ContentPresenter DataContext="{Binding}"
-                                          Margin="0 0 4 0">
-                            <ContentPresenter.Style>
-                                <Style TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Content"
-                                            Value="{StaticResource StopIcon}" />
-                                    <Setter Property="ToolTip"
-                                            Value="Stop" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Runner.State}"
-                                                     Value="Stopped">
-                                            <Setter Property="Content"
-                                                    Value="{StaticResource RunIcon}" />
-                                            <Setter Property="ToolTip"
-                                                    Value="Run" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ContentPresenter.Style>
-                        </ContentPresenter>
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </Button>
-                <Separator Height="Auto"
-                           BorderThickness="0 0 1 0" />
-                <Button Content="{StaticResource ZoomInIcon}"
-                        ToolTip="Zoom In"
-                        Style="{StaticResource IconButton}" />
-                <Button Content="{StaticResource ZoomOutIcon}"
-                        ToolTip="Zoom Out"
-                        Style="{StaticResource IconButton}" />
-            </StackPanel>
-        </Border>
     </Grid>
 </Window>

@@ -18,6 +18,8 @@
                 Value="White" />
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:EditableTextBlock}">
@@ -47,10 +49,10 @@
                                  MaxLength="{TemplateBinding MaxLength}"
                                  MinLines="{TemplateBinding MinLines}"
                                  MaxLines="{TemplateBinding MinLines}"
-                                 AcceptsTab="True"
-                                 Visibility="Collapsed"
                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                 AcceptsTab="True"
+                                 Visibility="Collapsed"
                                  Margin="-1"
                                  x:Name="PART_TextBox" />
                     </Grid>

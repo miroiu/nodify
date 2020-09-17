@@ -5,10 +5,19 @@ namespace Nodify.StateMachine
     [BlackboardItem("Has Key")]
     public class HasKeyCondition : IBlackboardCondition
     {
-        [BlackboardKey(BlackboardKeyType.Object)]
+        [BlackboardKey("Key Name", BlackboardKeyType.String)]
         public BlackboardKey Key { get; set; }
 
         public Task<bool> Evaluate(Blackboard blackboard)
-            => Task.FromResult(blackboard.HasKey(Key));
+        {
+            var keyName = blackboard.GetObject<string>(Key);
+
+            if (keyName != null)
+            {
+                return Task.FromResult(blackboard.HasKey(keyName));
+            }
+
+            return Task.FromResult(false);
+        }
     }
 }

@@ -92,6 +92,31 @@
         </Rectangle.Fill>
     </Rectangle>
 
+    <Rectangle x:Key="ExpandLeftIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.LayoutTransform>
+            <RotateTransform Angle="180" />
+        </Rectangle.LayoutTransform>
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M6.3906,13.6943L3.9156,11.2193 7.1356,8.0003 3.9156,4.7803 6.3906,2.3053 12.0836,8.0003z" />
+                            <GeometryDrawing Brush="#FF0081E4"
+                                             Geometry="F1M6.3901,12.2803L5.3291,11.2193 8.5491,8.0003 5.3291,4.7803 6.3901,3.7193 10.6701,8.0003z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="ExpandDownIcon"
                x:Shared="False"
                Width="16"

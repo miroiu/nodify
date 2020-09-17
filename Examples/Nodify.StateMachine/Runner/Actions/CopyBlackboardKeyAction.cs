@@ -2,7 +2,7 @@
 
 namespace Nodify.StateMachine
 {
-    [BlackboardItem("Copy Blackboard Key")]
+    [BlackboardItem("Copy Key")]
     public class CopyBlackboardKeyAction : IBlackboardAction
     {
         [BlackboardKey("Source", BlackboardKeyType.Object)]
