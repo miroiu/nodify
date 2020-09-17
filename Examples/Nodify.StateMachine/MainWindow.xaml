@@ -16,7 +16,7 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <local:BindingProxy x:Key="EditorProxy"
+        <shared:BindingProxy x:Key="EditorProxy"
                             DataContext="{Binding}" />
         <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
     </Window.Resources>

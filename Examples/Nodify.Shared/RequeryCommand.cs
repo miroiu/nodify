@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Nodify.StateMachine
+namespace Nodify
 {
     public class RequeryCommand : INodifyCommand
     {
@@ -57,7 +57,16 @@ namespace Nodify.StateMachine
         }
 
         public void Execute(object parameter)
-            => _action((T)parameter);
+        {
+            if (parameter is T value)
+            {
+                _action(value);
+            }
+            else
+            {
+                _action(default!);
+            }
+        }
 
         public void RaiseCanExecuteChanged() { }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Nodify.StateMachine
+namespace Nodify
 {
     public class BindingProxy : Freezable
     {

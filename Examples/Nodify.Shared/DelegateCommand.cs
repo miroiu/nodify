@@ -55,7 +55,16 @@ namespace Nodify
         }
 
         public void Execute(object parameter)
-            => _action((T)parameter);
+        {
+            if (parameter is T value)
+            {
+                _action(value);
+            }
+            else
+            {
+                _action(default!);
+            }
+        }
 
         public void RaiseCanExecuteChanged()
             => CanExecuteChanged?.Invoke(this, new EventArgs());

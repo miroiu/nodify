@@ -210,6 +210,7 @@ namespace Nodify
         /// <param name="newValue">True if selected, false otherwise.</param>
         protected void OnSelectedChanged(bool newValue)
         {
+            // Raise event after the selection operation ended
             if (!(Editor?.IsSelecting ?? false))
             {
                 RaiseEvent(new RoutedEventArgs(newValue ? SelectedEvent : UnselectedEvent, this));
