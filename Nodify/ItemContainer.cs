@@ -178,7 +178,6 @@ namespace Nodify
 
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is selected.
-        /// TODO: Does not play well with <see cref="NodifyEditor.EnableRealtimeSelection"/>.
         /// </summary>
         public event RoutedEventHandler Selected
         {
@@ -188,7 +187,6 @@ namespace Nodify
 
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is unselected.
-        /// TODO: Does not play well with <see cref="NodifyEditor.EnableRealtimeSelection"/>.
         /// </summary>
         public event RoutedEventHandler Unselected
         {
@@ -211,7 +209,12 @@ namespace Nodify
         /// </summary>
         /// <param name="newValue">True if selected, false otherwise.</param>
         protected void OnSelectedChanged(bool newValue)
-            => RaiseEvent(new RoutedEventArgs(newValue ? SelectedEvent : UnselectedEvent, this));
+        {
+            if (!(Editor?.IsSelecting ?? false))
+            {
+                RaiseEvent(new RoutedEventArgs(newValue ? SelectedEvent : UnselectedEvent, this));
+            }
+        }
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
