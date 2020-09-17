@@ -3,9 +3,9 @@
 namespace Nodify.StateMachine
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class BlackboardActionAttribute : Attribute
+    public sealed class BlackboardItemAttribute : Attribute
     {
-        public BlackboardActionAttribute(string displayName)
+        public BlackboardItemAttribute(string displayName)
         {
             DisplayName = displayName;
         }

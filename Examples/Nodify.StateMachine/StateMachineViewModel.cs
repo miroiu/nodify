@@ -11,14 +11,10 @@ namespace Nodify.StateMachine
             PendingTransition = new TransitionViewModel();
             Runner = new StateMachineRunnerViewModel(this);
 
-            // TODO: Load from assembly based on attributes
             Blackboard = new BlackboardViewModel()
             {
-                Actions = new NodifyObservableCollection<ActionReferenceViewModel>
-                {
-                   ActionDescriptor.GetReference(typeof(CopyBlackboardKeyAction)),
-                   ActionDescriptor.GetReference(typeof(SetDelayAction))
-                }
+                Actions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>(BlackboardDescriptor.GetAvailableItems<IBlackboardAction>()),
+                Conditions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>(BlackboardDescriptor.GetAvailableItems<IBlackboardCondition>())
             };
 
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))

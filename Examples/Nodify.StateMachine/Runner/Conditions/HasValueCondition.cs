@@ -1,0 +1,14 @@
+﻿using System.Threading.Tasks;
+
+namespace Nodify.StateMachine
+{
+    [BlackboardItem("Has Value")]
+    public class HasValueCondition : IBlackboardCondition
+    {
+        [BlackboardKey(BlackboardKeyType.Object)]
+        public BlackboardKey Key { get; set; }
+
+        public Task<bool> Evaluate(Blackboard blackboard)
+            => Task.FromResult(blackboard.GetObject(Key) != null);
+    }
+}

@@ -7,7 +7,7 @@ namespace Nodify.StateMachine
         Input,
         Output
     }
-    
+
     /// <summary>
     /// Properties decorated with this attribute must always be of type <see cref="BlackboardKey"/>.
     /// </summary>
@@ -19,14 +19,19 @@ namespace Nodify.StateMachine
         /// </summary>
         /// <param name="name">The display name of the key.</param>
         /// <param name="type">The data type of the value that the key refers to.</param>
-        public BlackboardKeyAttribute(string name, BlackboardKeyType type = BlackboardKeyType.Object, BlackboardKeyUsage usage = BlackboardKeyUsage.Input)
+        public BlackboardKeyAttribute(string? name, BlackboardKeyType type = BlackboardKeyType.Object, BlackboardKeyUsage usage = BlackboardKeyUsage.Input)
         {
             Name = name;
             Type = type;
             Usage = usage;
         }
 
-        public string Name { get; }
+        public BlackboardKeyAttribute(BlackboardKeyType type = BlackboardKeyType.Object, BlackboardKeyUsage usage = BlackboardKeyUsage.Input) : this(null, type, usage)
+        {
+
+        }
+
+        public string? Name { get; }
         public BlackboardKeyType Type { get; }
         public BlackboardKeyUsage Usage { get; }
     }

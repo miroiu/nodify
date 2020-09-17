@@ -244,6 +244,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                                     <Expander BorderThickness="0 0 0 1"
+                                              Padding="0 5 0 0"
                                               BorderBrush="{DynamicResource BackgroundBrush}">
                                         <Expander.Style>
                                             <Style TargetType="{x:Type Expander}"
@@ -279,10 +280,61 @@
                                                     <Run Text="{Binding Target.Name, Mode=OneWay}" />
                                             </TextBlock>
                                         </Expander.Header>
-                                        <Border BorderBrush="{DynamicResource BackgroundBrush}"
-                                                BorderThickness="1"
-                                                HorizontalAlignment="Stretch">
-                                            <!--TODO: Condition Editor-->
+
+                                        <Border HorizontalAlignment="Stretch">
+                                            <Grid IsSharedSizeScope="True">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"
+                                                                      SharedSizeGroup="ConditionName" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <!--CONDITION-->
+                                                <TextBlock Text="Condition"
+                                                           Margin="0 0 10 0"
+                                                           VerticalAlignment="Center" />
+
+                                                <ComboBox ItemsSource="{Binding DataContext.Blackboard.Conditions, Source={StaticResource EditorProxy}}"
+                                                          SelectedItem="{Binding ConditionReference}"
+                                                          DisplayMemberPath="Name"
+                                                          Grid.Column="1" />
+
+                                                <!--INPUT-->
+                                                <ItemsControl ItemsSource="{Binding Condition.Input}"
+                                                              Padding="0 5 0 0"
+                                                              Grid.Row="1"
+                                                              Grid.ColumnSpan="2">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="0 0 0 2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"
+                                                                                      SharedSizeGroup="ConditionName" />
+                                                                    <ColumnDefinition SharedSizeGroup="ConditionType" />
+                                                                    <ColumnDefinition />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Text="{Binding Name}"
+                                                                           VerticalAlignment="Center" />
+
+                                                                <TextBox Text="{Binding Type}"
+                                                                         IsEnabled="False"
+                                                                         Margin="0 0 5 0"
+                                                                         Grid.Column="1" />
+
+                                                                <ContentPresenter Content="{Binding}"
+                                                                                  ContentTemplate="{StaticResource KeyTemplate}"
+                                                                                  Grid.Column="2" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
                                         </Border>
                                     </Expander>
                                 </DataTemplate>
@@ -292,8 +344,7 @@
 
                     <!--STATES-->
                     <Grid Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter}}"
-                          Grid.Row="1"
-                          IsSharedSizeScope="True">
+                          Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -327,6 +378,7 @@
                                    Grid.Row="1" />
 
                         <Grid Visibility="{Binding SelectedState.Action, Converter={shared:BooleanToVisibilityConverter}}"
+                              IsSharedSizeScope="True"
                               Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -383,10 +435,6 @@
                                                     <ColumnDefinition Width=".5*" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
 
                                                 <TextBlock Text="{Binding Name}"
                                                            VerticalAlignment="Center" />
@@ -440,10 +488,6 @@
                                                     <ColumnDefinition Width=".5*" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
 
                                                 <TextBlock Text="{Binding Name}"
                                                            VerticalAlignment="Center" />
@@ -510,7 +554,7 @@
                             <ItemsControl ItemsSource="{Binding Blackboard.Keys}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <Grid>
+                                        <Grid Margin="0 0 0 2">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"
                                                                   SharedSizeGroup="KeyName" />
@@ -518,14 +562,12 @@
                                                 <ColumnDefinition />
                                                 <ColumnDefinition SharedSizeGroup="Actions" />
                                             </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
 
                                             <shared:EditableTextBlock Text="{Binding Name}"
                                                                       IsEditing="{Binding IsChecked, ElementName=EditName}"
-                                                                      Foreground="{DynamicResource ForegroundBrush}" />
+                                                                      Foreground="{DynamicResource ForegroundBrush}"
+                                                                      VerticalAlignment="Stretch"
+                                                                      VerticalContentAlignment="Center" />
 
                                             <ComboBox ItemsSource="{Binding Type, Converter={shared:EnumValuesConverter}}"
                                                       DisplayMemberPath="Name"
@@ -549,12 +591,6 @@
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource IconButton}" />
                                             </StackPanel>
-
-                                            <Separator Height="2"
-                                                       Width="Auto"
-                                                       Margin="0 2 0 10"
-                                                       Grid.Row="1"
-                                                       Grid.ColumnSpan="4" />
                                         </Grid>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding Type}"

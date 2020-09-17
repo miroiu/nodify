@@ -2,7 +2,7 @@
 
 namespace Nodify.StateMachine
 {
-    public class ActionViewModel : ObservableObject
+    public class BlackboardItemViewModel : ObservableObject
     {
         private string? _name;
         public string? Name

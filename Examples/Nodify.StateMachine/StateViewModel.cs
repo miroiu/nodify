@@ -55,8 +55,8 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _isActive, value);
         }
 
-        private ActionReferenceViewModel? _actionReference;
-        public ActionReferenceViewModel? ActionReference
+        private BlackboardItemReferenceViewModel? _actionReference;
+        public BlackboardItemReferenceViewModel? ActionReference
         {
             get => _actionReference;
             set
@@ -68,15 +68,15 @@ namespace Nodify.StateMachine
             }
         }
 
-        public ActionViewModel? Action { get; private set; }
+        public BlackboardItemViewModel? Action { get; private set; }
 
         public bool IsEditable { get; set; } = true;
         public StateMachineViewModel Graph { get; internal set; } = default!;
         public NodifyObservableCollection<StateViewModel> Transitions { get; } = new NodifyObservableCollection<StateViewModel>();
 
-        private void SetAction(ActionReferenceViewModel? actionRef)
+        private void SetAction(BlackboardItemReferenceViewModel? actionRef)
         {
-            Action = ActionDescriptor.GetAction(actionRef);
+            Action = BlackboardDescriptor.GetItem(actionRef);
 
             OnPropertyChanged(nameof(Action));
         }

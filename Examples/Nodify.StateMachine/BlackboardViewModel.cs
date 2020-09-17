@@ -11,11 +11,18 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _keys, value);
         }
 
-        private NodifyObservableCollection<ActionReferenceViewModel> _actions = new NodifyObservableCollection<ActionReferenceViewModel>();
-        public NodifyObservableCollection<ActionReferenceViewModel> Actions
+        private NodifyObservableCollection<BlackboardItemReferenceViewModel> _actions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>();
+        public NodifyObservableCollection<BlackboardItemReferenceViewModel> Actions
         {
             get => _actions;
             set => SetProperty(ref _actions, value);
+        }
+
+        private NodifyObservableCollection<BlackboardItemReferenceViewModel> _conditions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>();
+        public NodifyObservableCollection<BlackboardItemReferenceViewModel> Conditions
+        {
+            get => _conditions;
+            set => SetProperty(ref _conditions, value);
         }
 
         public INodifyCommand AddKeyCommand { get; }

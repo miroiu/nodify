@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Nodify.StateMachine
 {
-    public class ActionDescriptor
+    public static class BlackboardDescriptor
     {
         private class KeyDescription
         {
@@ -21,16 +21,16 @@ namespace Nodify.StateMachine
             public BlackboardKeyType Type { get; }
         }
 
-        private class ActionDescription
+        private class ItemDescription
         {
             public string? Name { get; set; }
             public List<KeyDescription> Input { get; } = new List<KeyDescription>();
             public List<KeyDescription> Output { get; } = new List<KeyDescription>();
         }
 
-        public static ActionViewModel? GetAction(ActionReferenceViewModel? actionRef)
+        public static BlackboardItemViewModel? GetItem(BlackboardItemReferenceViewModel? actionRef)
         {
-            if (actionRef?.Type != null && typeof(IBlackboardAction).IsAssignableFrom(actionRef.Type))
+            if (actionRef?.Type != null)
             {
                 var description = GetDescription(actionRef.Type);
 
@@ -48,7 +48,7 @@ namespace Nodify.StateMachine
                     PropertyName = d.PropertyName
                 });
 
-                return new ActionViewModel
+                return new BlackboardItemViewModel
                 {
                     Name = actionRef.Name,
                     Type = actionRef.Type,
@@ -60,30 +60,25 @@ namespace Nodify.StateMachine
             return default;
         }
 
-        public static ActionReferenceViewModel GetReference(Type type)
+        public static BlackboardItemReferenceViewModel GetReference(Type type)
         {
-            if (typeof(IBlackboardAction).IsAssignableFrom(type))
+            var desc = GetDescription(type);
+
+            return new BlackboardItemReferenceViewModel
             {
-                var desc = GetDescription(type);
-
-                return new ActionReferenceViewModel
-                {
-                    Name = desc.Name,
-                    Type = type
-                };
-            }
-
-            throw new NotSupportedException(type.Name);
+                Name = desc.Name,
+                Type = type
+            };
         }
 
-        private static readonly Dictionary<Type, ActionDescription> _descriptions = new Dictionary<Type, ActionDescription>();
-        private static ActionDescription GetDescription(Type type)
+        private static readonly Dictionary<Type, ItemDescription> _descriptions = new Dictionary<Type, ItemDescription>();
+        private static ItemDescription GetDescription(Type type)
         {
             if (!_descriptions.TryGetValue(type, out var description))
             {
-                var actionAttr = type.GetCustomAttribute<BlackboardActionAttribute>();
+                var actionAttr = type.GetCustomAttribute<BlackboardItemAttribute>();
 
-                var desc = new ActionDescription
+                var desc = new ItemDescription
                 {
                     Name = actionAttr?.DisplayName ?? type.Name
                 };
@@ -98,19 +93,40 @@ namespace Nodify.StateMachine
                     {
                         if (keyAttr.Usage == BlackboardKeyUsage.Input)
                         {
-                            desc.Input.Add(new KeyDescription(keyAttr.Name, prop.Name, keyAttr.Type));
+                            desc.Input.Add(new KeyDescription(keyAttr.Name ?? prop.Name, prop.Name, keyAttr.Type));
                         }
                         else
                         {
-                            desc.Output.Add(new KeyDescription(keyAttr.Name, prop.Name, keyAttr.Type));
+                            desc.Output.Add(new KeyDescription(keyAttr.Name ?? prop.Name, prop.Name, keyAttr.Type));
                         }
                     }
                 }
+
+                _descriptions.Add(type, desc);
 
                 return desc;
             }
 
             return description;
+        }
+
+        public static List<BlackboardItemReferenceViewModel> GetAvailableItems<T>()
+        {
+            var result = new List<BlackboardItemReferenceViewModel>();
+            var ourType = typeof(T);
+
+            var types = ourType.Assembly.GetTypes();
+
+            for (int i = 0; i < types.Length; i++)
+            {
+                var type = types[i];
+                if (type.IsClass && !type.IsAbstract && ourType.IsAssignableFrom(type))
+                {
+                    result.Add(GetReference(type));
+                }
+            }
+
+            return result;
         }
     }
 }
