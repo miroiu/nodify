@@ -4,45 +4,37 @@ namespace Nodify.StateMachine
 {
     public class BlackboardViewModel : ObservableObject
     {
-        public NodifyObservableCollection<BlackboardKeyViewModel> Keys { get; } = new NodifyObservableCollection<BlackboardKeyViewModel>();
-
-        // TODO: Load from assembly based on attributes
-        public NodifyObservableCollection<ActionViewModel> Actions { get; } = new NodifyObservableCollection<ActionViewModel>
+        private NodifyObservableCollection<BlackboardKeyViewModel> _keys = new NodifyObservableCollection<BlackboardKeyViewModel>();
+        public NodifyObservableCollection<BlackboardKeyViewModel> Keys
         {
-            new ActionViewModel
-            {
-                Name = "Copy Blackboard Key",
-                Type = typeof(CopyBlackboardKeyAction),
-                Input = new NodifyObservableCollection<BlackboardKeyViewModel>
-                {
-                    new BlackboardKeyViewModel
-                    {
-                        Name = "Source",
-                        Type = BlackboardKeyType.Key
-                    },
-                    new BlackboardKeyViewModel
-                    {
-                        Name = "Target",
-                        Type = BlackboardKeyType.Key
-                    }
-                }
-            }
-        };
+            get => _keys;
+            set => SetProperty(ref _keys, value);
+        }
+
+        private NodifyObservableCollection<ActionReferenceViewModel> _actions = new NodifyObservableCollection<ActionReferenceViewModel>();
+        public NodifyObservableCollection<ActionReferenceViewModel> Actions
+        {
+            get => _actions;
+            set => SetProperty(ref _actions, value);
+        }
 
         public INodifyCommand AddKeyCommand { get; }
+        public INodifyCommand RemoveKeyCommand { get; }
 
         public BlackboardViewModel()
         {
+            AddKeyCommand = new DelegateCommand(() => Keys.Add(new BlackboardKeyViewModel
+            {
+                Name = "New Key "
+            }));
+
+            RemoveKeyCommand = new DelegateCommand<BlackboardKeyViewModel>(key => Keys.Remove(key));
+
             Keys.WhenAdded(key =>
             {
                 var existingKeyNames = Keys.Where(k => k != key).Select(k => k.Name).ToList();
                 key.Name = existingKeyNames.GetUnique(key.Name);
             });
-
-            AddKeyCommand = new DelegateCommand(() => Keys.Add(new BlackboardKeyViewModel
-            {
-                Name = "New Key "
-            }));
         }
     }
 }

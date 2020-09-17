@@ -57,17 +57,33 @@ namespace Nodify.StateMachine
 
         private IBlackboardAction? CreateAction(ActionViewModel? action)
         {
-            var type = action?.Type;
-            if (type != null && typeof(IBlackboardAction).IsAssignableFrom(type))
+            if (action?.Type != null && typeof(IBlackboardAction).IsAssignableFrom(action.Type))
             {
-                return (IBlackboardAction?)Activator.CreateInstance(type, new object[] { CreateKeys(action!.Input), CreateKeys(action.Output) });
+                // TODO: DI Container
+                var result = (IBlackboardAction?)Activator.CreateInstance(action.Type);
+
+                for (int i = 0; i < action.Input.Count; i++)
+                {
+                    var vm = action.Input[i];
+                    var key = CreateBlackboardKey(vm);
+
+                    // TODO: Property cache
+                    if (vm.PropertyName != null)
+                    {
+                        var prop = action.Type.GetProperty(vm.PropertyName);
+
+                        if (prop?.CanWrite ?? false)
+                        {
+                            prop.SetValue(result, key);
+                        }
+                    }
+                }
+
+                return result;
             }
 
             return default;
         }
-
-        private IEnumerable<BlackboardKey> CreateKeys(NodifyObservableCollection<BlackboardKeyViewModel> keys)
-            => keys.Select(k => CreateBlackboardKey(k));
 
         private Transition CreateTransition(StateViewModel from, StateViewModel to)
         {
@@ -98,7 +114,7 @@ namespace Nodify.StateMachine
 
         private BlackboardKey CreateBlackboardKey(BlackboardKeyViewModel key)
         {
-            if (key.Type == BlackboardKeyType.Key && key.Value is BlackboardKeyViewModel bkv)
+            if (key.Value is BlackboardKeyViewModel bkv)
             {
                 return CreateBlackboardKey(bkv);
             }

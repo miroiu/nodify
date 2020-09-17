@@ -30,22 +30,13 @@
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
                              ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
                              Background="{DynamicResource EditorBackgroundBrush}">
-            <nodify:NodifyEditor.Resources>
-                <Style TargetType="{x:Type nodify:PendingConnection}"
-                       BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
-                    <Setter Property="StrokeDashArray"
-                            Value="" />
-                    <Setter Property="EnablePreview"
-                            Value="True" />
-                    <Setter Property="BorderBrush"
-                            Value="{DynamicResource ConnectionBrush}" />
-                </Style>
-            </nodify:NodifyEditor.Resources>
-
             <nodify:NodifyEditor.PendingConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                     <nodify:PendingConnection Source="{Binding Source, Mode=OneWayToSource}"
-                                              Target="{Binding Target, Mode=OneWayToSource}">
+                                              Target="{Binding Target, Mode=OneWayToSource}"
+                                              StrokeDashArray=""
+                                              EnablePreview="True"
+                                              BorderBrush="{DynamicResource ConnectionBrush}">
                         <nodify:PendingConnection.Template>
                             <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
                                 <nodify:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
@@ -215,7 +206,7 @@
                               DataType="{x:Type local:BlackboardKeyViewModel}">
                     <TextBox Text="{Binding Value}" />
                 </DataTemplate>
-                <DataTemplate x:Key="DecimalTemplate"
+                <DataTemplate x:Key="DoubleTemplate"
                               DataType="{x:Type local:BlackboardKeyViewModel}">
                     <TextBox Text="{Binding Value}" />
                 </DataTemplate>
@@ -231,10 +222,11 @@
                 <DataTemplate x:Key="KeyTemplate"
                               DataType="{x:Type local:BlackboardKeyViewModel}">
                     <ComboBox ItemsSource="{Binding DataContext.Blackboard.Keys, Source={StaticResource EditorProxy}}"
-                              SelectedItem="{Binding Value, Mode=OneWayToSource}"
+                              SelectedItem="{Binding Value}"
                               DisplayMemberPath="Name" />
                 </DataTemplate>
             </Expander.Resources>
+
             <Border BorderBrush="{DynamicResource BackgroundBrush}"
                     BorderThickness="1"
                     Width="250"
@@ -247,62 +239,61 @@
                     </Grid.RowDefinitions>
 
                     <!--TRANSITIONS-->
-                    <Grid>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <ItemsControl ItemsSource="{Binding Transitions}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                                        <Expander BorderThickness="0 0 0 1"
-                                                  BorderBrush="{DynamicResource BackgroundBrush}">
-                                            <Expander.Style>
-                                                <Style TargetType="{x:Type Expander}"
-                                                       BasedOn="{StaticResource {x:Type Expander}}">
-                                                    <Setter Property="Tag"
-                                                            Value="{StaticResource ExpandRightIcon}" />
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsExpanded"
-                                                                 Value="True">
-                                                            <Setter Property="Tag"
-                                                                    Value="{StaticResource ExpandDownIcon}" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Expander.Style>
-                                            <Expander.Header>
-                                                <TextBlock>
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="{x:Type TextBlock}">
-                                                            <Setter Property="Foreground"
-                                                                    Value="{DynamicResource ForegroundBrush}" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsActive}"
-                                                                             Value="True">
-                                                                    <Setter Property="Foreground"
-                                                                            Value="{DynamicResource ActiveStateBrush}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Transitions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                                    <Expander BorderThickness="0 0 0 1"
+                                              BorderBrush="{DynamicResource BackgroundBrush}">
+                                        <Expander.Style>
+                                            <Style TargetType="{x:Type Expander}"
+                                                   BasedOn="{StaticResource {x:Type Expander}}">
+                                                <Setter Property="Tag"
+                                                        Value="{StaticResource ExpandRightIcon}" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsExpanded"
+                                                             Value="True">
+                                                        <Setter Property="Tag"
+                                                                Value="{StaticResource ExpandDownIcon}" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Expander.Style>
+                                        <Expander.Header>
+                                            <TextBlock>
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Foreground"
+                                                                Value="{DynamicResource ForegroundBrush}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsActive}"
+                                                                         Value="True">
+                                                                <Setter Property="Foreground"
+                                                                        Value="{DynamicResource ActiveStateBrush}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
                                                     <Run Text="{Binding Source.Name, Mode=OneWay}" />
                                                     <Run Text="🠚" />
                                                     <Run Text="{Binding Target.Name, Mode=OneWay}" />
-                                                </TextBlock>
-                                            </Expander.Header>
-                                            <Border BorderBrush="{DynamicResource BackgroundBrush}"
-                                                    BorderThickness="1"
-                                                    HorizontalAlignment="Stretch">
-                                                <!--TODO: Condition Editor-->
-                                            </Border>
-                                        </Expander>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </Grid>
+                                            </TextBlock>
+                                        </Expander.Header>
+                                        <Border BorderBrush="{DynamicResource BackgroundBrush}"
+                                                BorderThickness="1"
+                                                HorizontalAlignment="Stretch">
+                                            <!--TODO: Condition Editor-->
+                                        </Border>
+                                    </Expander>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
 
-                    <!--NODES-->
-                    <Grid Visibility="{Binding SelectedStates.Count, Converter={shared:BooleanToVisibilityConverter}}"
-                          Grid.Row="1">
+                    <!--STATES-->
+                    <Grid Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter}}"
+                          Grid.Row="1"
+                          IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -310,6 +301,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
+                        <!--STATE NAME-->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -334,10 +326,11 @@
                                    Margin="0 2 0 10"
                                    Grid.Row="1" />
 
-                        <Grid Grid.Row="2">
+                        <Grid Visibility="{Binding SelectedState.Action, Converter={shared:BooleanToVisibilityConverter}}"
+                              Grid.Row="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -345,21 +338,26 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Action" />
+                            <!--ACTION-->
+                            <TextBlock Text="Action"
+                                       Margin="0 0 10 0"
+                                       VerticalAlignment="Center" />
                             <ComboBox ItemsSource="{Binding Blackboard.Actions}"
-                                      SelectedItem="{Binding SelectedState.Action}"
-                                      SelectedIndex="0"
+                                      SelectedItem="{Binding SelectedState.ActionReference}"
+                                      IsEnabled="{Binding SelectedState.IsEditable}"
                                       DisplayMemberPath="Name"
                                       Grid.Column="1" />
 
                             <!--INPUT-->
                             <Expander Margin="0 5 0 0"
+                                      Padding="0 5 0 0"
                                       Grid.Row="1"
                                       Grid.ColumnSpan="2"
                                       BorderThickness="0 0 0 1"
+                                      Header="Input"
+                                      FontWeight="Bold"
                                       BorderBrush="{DynamicResource BackgroundBrush}"
                                       Visibility="{Binding SelectedState.Action.Input.Count, Converter={shared:BooleanToVisibilityConverter}}">
-
                                 <Expander.Style>
                                     <Style TargetType="{x:Type Expander}"
                                            BasedOn="{StaticResource {x:Type Expander}}">
@@ -374,46 +372,46 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Expander.Style>
-                                <Expander.Header>
-                                    <TextBlock Text="Input"
-                                               FontWeight="Bold" />
-                                </Expander.Header>
-                                <StackPanel>
-                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid IsSharedSizeScope="True">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
+                                <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}"
+                                              FontWeight="Normal">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0 0 0 2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"
+                                                                      SharedSizeGroup="KeyName" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
 
-                                                    <TextBlock Text="{Binding Name}" />
+                                                <TextBlock Text="{Binding Name}"
+                                                           VerticalAlignment="Center" />
 
-                                                    <TextBox Text="{Binding Type}"
-                                                             IsEnabled="False"
-                                                             Margin="5 0"
-                                                             Grid.Column="1" />
+                                                <TextBox Text="{Binding Type}"
+                                                         IsEnabled="False"
+                                                         Margin="5 0"
+                                                         Grid.Column="1" />
 
-                                                    <ContentPresenter Content="{Binding}"
-                                                                      ContentTemplate="{StaticResource KeyTemplate}"
-                                                                      Grid.Column="2" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
+                                                <ContentPresenter Content="{Binding}"
+                                                                  ContentTemplate="{StaticResource KeyTemplate}"
+                                                                  Grid.Column="2" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Expander>
 
                             <!--OUTPUT-->
                             <Expander Margin="0 5 0 0"
+                                      Padding="0 5 0 0"
                                       Grid.Row="2"
                                       Grid.ColumnSpan="2"
+                                      Header="Output"
+                                      FontWeight="Bold"
                                       BorderThickness="0 0 0 1"
                                       BorderBrush="{DynamicResource BackgroundBrush}"
                                       Visibility="{Binding SelectedState.Action.Output.Count, Converter={shared:BooleanToVisibilityConverter}}">
@@ -431,50 +429,45 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Expander.Style>
-                                <Expander.Header>
-                                    <TextBlock Text="Output"
-                                               FontWeight="Bold" />
-                                </Expander.Header>
-                                <StackPanel>
-                                    <Separator Height="2"
-                                               Width="Auto" />
+                                <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}"
+                                              FontWeight="Normal">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"
+                                                                      SharedSizeGroup="KeyName" />
+                                                    <ColumnDefinition Width=".5*" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
 
-                                    <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid IsSharedSizeScope="True">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
+                                                <TextBlock Text="{Binding Name}"
+                                                           VerticalAlignment="Center" />
 
-                                                    <TextBlock Text="{Binding Name}" />
+                                                <TextBox Text="{Binding Type}"
+                                                         IsEnabled="False"
+                                                         Margin="5 0"
+                                                         Grid.Column="1" />
 
-                                                    <TextBox Text="{Binding Type}"
-                                                             IsEnabled="False"
-                                                             Margin="5 0"
-                                                             Grid.Column="1" />
-
-                                                    <ContentPresenter Content="{Binding}"
-                                                                      ContentTemplate="{StaticResource KeyTemplate}"
-                                                                      Grid.Column="2" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
+                                                <ContentPresenter Content="{Binding}"
+                                                                  ContentTemplate="{StaticResource KeyTemplate}"
+                                                                  Grid.Column="2" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Expander>
                         </Grid>
                     </Grid>
 
                     <!--BLACKBOARD-->
-                    <Grid Visibility="{Binding SelectedStates.Count, Converter={shared:BooleanToVisibilityConverter Negate=True}}"
-                          Grid.Row="1">
+                    <Grid Visibility="{Binding SelectedState, Converter={shared:BooleanToVisibilityConverter Negate=True}}"
+                          Grid.Row="1"
+                          IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -512,15 +505,18 @@
                                    Grid.Row="1" />
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto"
                                       Grid.Row="2">
                             <ItemsControl ItemsSource="{Binding Blackboard.Keys}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
-                                        <Grid IsSharedSizeScope="True">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"
+                                                                  SharedSizeGroup="KeyName" />
+                                                <ColumnDefinition SharedSizeGroup="KeyType" />
                                                 <ColumnDefinition />
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
+                                                <ColumnDefinition SharedSizeGroup="Actions" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition />
@@ -528,6 +524,7 @@
                                             </Grid.RowDefinitions>
 
                                             <shared:EditableTextBlock Text="{Binding Name}"
+                                                                      IsEditing="{Binding IsChecked, ElementName=EditName}"
                                                                       Foreground="{DynamicResource ForegroundBrush}" />
 
                                             <ComboBox ItemsSource="{Binding Type, Converter={shared:EnumValuesConverter}}"
@@ -541,11 +538,23 @@
                                                               x:Name="ValueEditor"
                                                               Grid.Column="2" />
 
+                                            <StackPanel Orientation="Horizontal"
+                                                        Grid.Column="3">
+                                                <CheckBox x:Name="EditName"
+                                                          Content="{StaticResource EditIcon}"
+                                                          ToolTip="Edit Name"
+                                                          Style="{StaticResource IconCheckBox}" />
+                                                <Button Content="{StaticResource RemoveKeyIcon}"
+                                                        Command="{Binding DataContext.Blackboard.RemoveKeyCommand, Source={StaticResource EditorProxy}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource IconButton}" />
+                                            </StackPanel>
+
                                             <Separator Height="2"
                                                        Width="Auto"
                                                        Margin="0 2 0 10"
                                                        Grid.Row="1"
-                                                       Grid.ColumnSpan="3" />
+                                                       Grid.ColumnSpan="4" />
                                         </Grid>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding Type}"
@@ -563,7 +572,7 @@
                                             <DataTrigger Binding="{Binding Type}"
                                                          Value="Double">
                                                 <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource DecimalTemplate}"
+                                                        Value="{StaticResource DoubleTemplate}"
                                                         TargetName="ValueEditor" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Type}"

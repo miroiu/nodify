@@ -1,10 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Nodify.StateMachine
 {
+    public enum BlackboardKeyType
+    {
+        Boolean,
+        Integer,
+        Double,
+        String,
+        Object
+    }
+
+    [DebuggerDisplay("{Name}: {Type}")]
     public readonly struct BlackboardKey : IEquatable<BlackboardKey>
     {
+        // TODO: Won't work with multiple blackboards
         private static readonly Dictionary<string, BlackboardKey> _keys = new Dictionary<string, BlackboardKey>();
 
         public BlackboardKey(string name, BlackboardKeyType type)
@@ -49,5 +61,11 @@ namespace Nodify.StateMachine
 
         public static bool operator !=(BlackboardKey left, BlackboardKey right)
             => !(left == right);
+    }
+
+    public static class BlackboardKeyExtensions
+    {
+        public static bool IsValid(this BlackboardKey key)
+            => !string.IsNullOrWhiteSpace(key.Name);
     }
 }

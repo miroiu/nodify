@@ -10,7 +10,16 @@ namespace Nodify.StateMachine
         {
             PendingTransition = new TransitionViewModel();
             Runner = new StateMachineRunnerViewModel(this);
-            Blackboard = new BlackboardViewModel();
+
+            // TODO: Load from assembly based on attributes
+            Blackboard = new BlackboardViewModel()
+            {
+                Actions = new NodifyObservableCollection<ActionReferenceViewModel>
+                {
+                   ActionDescriptor.GetReference(typeof(CopyBlackboardKeyAction)),
+                   ActionDescriptor.GetReference(typeof(SetDelayAction))
+                }
+            };
 
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
             .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
@@ -41,14 +50,14 @@ namespace Nodify.StateMachine
                 Name = "New State",
                 IsRenaming = true,
                 Location = p,
-                Action = Blackboard.Actions.Count > 0 ? Blackboard.Actions[0] : null
+                ActionReference = Blackboard.Actions.Count > 0 ? Blackboard.Actions[0] : null
             }), p => !IsRunning);
 
             CreateTransitionCommand = new DelegateCommand<(object Source, object? Target)>(s => Transitions.Add(new TransitionViewModel
             {
                 Source = (StateViewModel)s.Source,
                 Target = (StateViewModel)s.Target!
-            }), s => !IsRunning && s.Source is StateViewModel source && s.Target is StateViewModel target && target != s.Source && !source.Transitions.Contains(s.Target));
+            }), s => !IsRunning && s.Source is StateViewModel source && s.Target is StateViewModel target && target != s.Source && target != States[0] && !source.Transitions.Contains(s.Target));
 
             DeleteTransitionCommand = new RequeryCommand<TransitionViewModel>(t => Transitions.Remove(t), t => !IsRunning);
 
@@ -128,7 +137,7 @@ namespace Nodify.StateMachine
             {
                 Name = "Copy Key",
                 Location = new Point(500, 100),
-                Action = Blackboard.Actions[0]
+                ActionReference = Blackboard.Actions[0]
             });
 
             Transitions.Add(new TransitionViewModel
@@ -137,7 +146,7 @@ namespace Nodify.StateMachine
                 Target = States[1]
             });
 
-            SelectedStates.Add(States[1]);
+            //SelectedStates.Add(States[1]);
 
             Blackboard.Keys.Add(new BlackboardKeyViewModel
             {

@@ -1,30 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
     [BlackboardAction("Copy Blackboard Key")]
-    [BlackboardKey("Source", BlackboardKeyType.Key, BlackboardKeyUsage.Input)]
-    [BlackboardKey("Target", BlackboardKeyType.Key, BlackboardKeyUsage.Input)]
-    public class CopyBlackboardKeyAction : BlackboardAction
+    public class CopyBlackboardKeyAction : IBlackboardAction
     {
-        public CopyBlackboardKeyAction(IEnumerable<BlackboardKey> input, IEnumerable<BlackboardKey> output) : base(input, output)
-        {
-        }
+        [BlackboardKey("Source", BlackboardKeyType.Object)]
+        public BlackboardKey Source { get; set; }
 
-        public CopyBlackboardKeyAction(BlackboardKey source, BlackboardKey target) : base(new List<BlackboardKey> { source, target })
-        {
-        }
+        [BlackboardKey("Target", BlackboardKeyType.Object)]
+        public BlackboardKey Target { get; set; }
 
-        public override Task Execute(Blackboard blackboard)
+        public Task Execute(Blackboard blackboard)
         {
-            var source = Input[0];
-            var target = Input[1];
-
-            if (source != target)
+            if (Source != Target && Source.IsValid() && Target.IsValid())
             {
-                var value = blackboard.GetObject(source);
-                blackboard.Set(target, value);
+                var value = blackboard.GetObject(Source);
+                blackboard.Set(Target, value);
             }
 
             return Task.CompletedTask;
