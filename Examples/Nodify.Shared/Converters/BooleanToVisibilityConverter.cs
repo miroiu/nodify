@@ -18,12 +18,13 @@ namespace Nodify
             {
                 return (Negate ? !b : b) ? Visibility.Visible : FalseVisibility;
             }
-            else if(double.TryParse(stringValue, out var d))
+            else if (double.TryParse(stringValue, out var d))
             {
                 return (Negate ? !(d > 0) : (d > 0)) ? Visibility.Visible : FalseVisibility;
             }
 
-            return value;
+            bool result = value != null;
+            return (Negate ? !result : result) ? Visibility.Visible : FalseVisibility;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

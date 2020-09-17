@@ -163,6 +163,7 @@
                         <ToggleButton Focusable="False"
                                       IsThreeState="False"
                                       IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      IsEnabled="{TemplateBinding IsEnabled}"
                                       ClickMode="Press" />
 
                         <ContentPresenter x:Name="PART_Content"
@@ -398,7 +399,7 @@
         <Setter Property="Background"
                 Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="BorderBrush"
-                Value="{DynamicResource BackgroundBrush}" />
+                Value="{DynamicResource BorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
@@ -560,6 +561,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Expander}">
                     <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
                             SnapsToDevicePixels="True">
                         <DockPanel LastChildFill="True">
                             <CheckBox ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -571,7 +573,6 @@
                                       FontFamily="{TemplateBinding FontFamily}"
                                       FontSize="{TemplateBinding FontSize}"
                                       Foreground="{TemplateBinding Foreground}"
-                                      Padding="{TemplateBinding Padding}"
                                       Tag="{TemplateBinding Tag}"
                                       IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
