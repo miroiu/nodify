@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Nodify.StateMachine
@@ -16,15 +15,12 @@ namespace Nodify.StateMachine
     [DebuggerDisplay("{Name}: {Type}")]
     public readonly struct BlackboardKey : IEquatable<BlackboardKey>
     {
-        // TODO: Won't work with multiple blackboards
-        private static readonly Dictionary<string, BlackboardKey> _keys = new Dictionary<string, BlackboardKey>();
+        public static BlackboardKey Invalid = new BlackboardKey();
 
         public BlackboardKey(string name, BlackboardKeyType type)
         {
             Name = name ?? throw new ArgumentException(nameof(name));
             Type = type;
-
-            _keys[name] = this;
         }
 
         public BlackboardKey(string name) : this(name, BlackboardKeyType.Object)
@@ -35,14 +31,7 @@ namespace Nodify.StateMachine
         public readonly BlackboardKeyType Type;
 
         public static implicit operator BlackboardKey(string name)
-        {
-            if (_keys.TryGetValue(name, out var key))
-            {
-                return key;
-            }
-
-            return new BlackboardKey(name);
-        }
+            => new BlackboardKey(name);
 
         public static implicit operator string(BlackboardKey key)
             => key.Name;
@@ -51,7 +40,7 @@ namespace Nodify.StateMachine
             => obj is BlackboardKey bk && bk.Equals(this);
 
         public override int GetHashCode()
-            => Name.GetHashCode();
+            => Name?.GetHashCode() ?? -1;
 
         public bool Equals(BlackboardKey other)
             => other.Name == Name;
@@ -66,6 +55,6 @@ namespace Nodify.StateMachine
     public static class BlackboardKeyExtensions
     {
         public static bool IsValid(this BlackboardKey key)
-            => !string.IsNullOrWhiteSpace(key.Name);
+            => key != BlackboardKey.Invalid;
     }
 }

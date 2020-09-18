@@ -13,20 +13,14 @@ namespace Nodify.StateMachine
 
         public Task Execute(Blackboard blackboard)
         {
-            if (Delay.IsValid())
+            var delay = blackboard.GetValue<int>(Delay);
+
+            if (delay.HasValue)
             {
-                var delay = blackboard.GetValue<int>(Delay);
-
-                if (delay.HasValue)
-                {
-                    blackboard.Set(DebugBlackboardDecorator.StateDelayKey, delay);
-                }
-
-                if (Success.IsValid())
-                {
-                    blackboard.Set(Success, delay.HasValue);
-                }
+                blackboard[DebugBlackboardDecorator.StateDelayKey] = delay;
             }
+
+            blackboard[Success] = delay.HasValue;
 
             return Task.CompletedTask;
         }

@@ -13,10 +13,10 @@ namespace Nodify.StateMachine
 
         public Task Execute(Blackboard blackboard)
         {
-            if (Source != Target && Source.IsValid() && Target.IsValid())
+            if (Source != Target)
             {
-                var value = blackboard.GetObject(Source);
-                blackboard.Set(Target, value);
+                var value = blackboard[Source];
+                blackboard[Target] =  value;
             }
 
             return Task.CompletedTask;

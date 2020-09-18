@@ -33,6 +33,7 @@ namespace Nodify.StateMachine
                      OnCreateDefaultNodes();
                  });
 
+            OnCreateDefaultKeys();
             OnCreateDefaultNodes();
 
             SelectAllCommand = new DelegateCommand(() => SelectedStates.AddRange(States), () => States.Count > 0);
@@ -129,12 +130,47 @@ namespace Nodify.StateMachine
                 IsEditable = false
             });
 
+            var defaultDelayKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "Default Delay");
+            var newDelayKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "New Delay");
+            var originalDelayKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "Original Delay");
+
             States.Add(new StateViewModel
             {
-                Name = "Copy Key",
+                Name = "Set new delay",
                 Location = new Point(300, 100),
-                ActionReference = Blackboard.Actions[0]
+                ActionReference = Blackboard.Actions.FirstOrDefault(a => a.Type == typeof(CopyBlackboardKeyAction))
             });
+
+            States[1].Action!.Input[0].Value = newDelayKey;
+            States[1].Action!.Input[1].Value = defaultDelayKey;
+
+            States.Add(new StateViewModel
+            {
+                Name = "Set default delay",
+                Location = new Point(380, 250),
+                ActionReference = Blackboard.Actions.FirstOrDefault(a => a.Type == typeof(SetStateDelayAction))
+            });
+
+            States[2].Action!.Input[0].Value = newDelayKey;
+
+            States.Add(new StateViewModel
+            {
+                Name = "Reset delay",
+                Location = new Point(300, 350),
+                ActionReference = Blackboard.Actions.FirstOrDefault(a => a.Type == typeof(CopyBlackboardKeyAction))
+            });
+
+            States[3].Action!.Input[0].Value = originalDelayKey;
+            States[3].Action!.Input[1].Value = defaultDelayKey;
+
+            States.Add(new StateViewModel
+            {
+                Name = "Set original delay",
+                Location = new Point(200, 250),
+                ActionReference = Blackboard.Actions.FirstOrDefault(a => a.Type == typeof(SetStateDelayAction))
+            });
+
+            States[4].Action!.Input[0].Value = originalDelayKey;
 
             Transitions.Add(new TransitionViewModel
             {
@@ -142,19 +178,52 @@ namespace Nodify.StateMachine
                 Target = States[1]
             });
 
-            //SelectedStates.Add(States[1]);
+            Transitions.Add(new TransitionViewModel
+            {
+                Source = States[1],
+                Target = States[2]
+            });
 
+            Transitions.Add(new TransitionViewModel
+            {
+                Source = States[2],
+                Target = States[3]
+            });
+
+            Transitions.Add(new TransitionViewModel
+            {
+                Source = States[3],
+                Target = States[4]
+            });
+
+            Transitions.Add(new TransitionViewModel
+            {
+                Source = States[4],
+                Target = States[1]
+            });
+        }
+
+        protected virtual void OnCreateDefaultKeys()
+        {
             Blackboard.Keys.Add(new BlackboardKeyViewModel
             {
-                Name = "New Boolean",
-                Type = BlackboardKeyType.Boolean
+                Name = "Default Delay",
+                Type = BlackboardKeyType.Integer,
+                Value = 1000
             });
 
             Blackboard.Keys.Add(new BlackboardKeyViewModel
             {
-                Name = "New Integer",
+                Name = "New Delay",
                 Type = BlackboardKeyType.Integer,
-                Value = 99
+                Value = 100
+            });
+
+            Blackboard.Keys.Add(new BlackboardKeyViewModel
+            {
+                Name = "Original Delay",
+                Type = BlackboardKeyType.Integer,
+                Value = 1000
             });
 
             Blackboard.Keys.Add(new BlackboardKeyViewModel

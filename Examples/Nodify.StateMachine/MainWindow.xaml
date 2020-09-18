@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="State Machine Editor"
         Height="500"
-        Width="800">
+        Width="900">
     <Window.DataContext>
         <local:StateMachineViewModel />
     </Window.DataContext>

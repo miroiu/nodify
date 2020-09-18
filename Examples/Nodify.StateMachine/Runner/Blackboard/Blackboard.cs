@@ -33,7 +33,7 @@ namespace Nodify.StateMachine
 
         public virtual object? GetObject(BlackboardKey key)
         {
-            if(_objects.TryGetValue(key, out var value))
+            if (_objects.TryGetValue(key, out var value))
             {
                 return value;
             }
@@ -47,10 +47,24 @@ namespace Nodify.StateMachine
         public virtual bool HasKey(BlackboardKey key)
             => _objects.ContainsKey(key);
 
-        public virtual void Clear(BlackboardKey key)
+        public virtual void Remove(BlackboardKey key)
             => _objects.Remove(key);
 
         public virtual void Clear()
             => _objects.Clear();
+
+        public void CopyTo(Blackboard newBlackboard)
+        {
+            foreach (var kvp in _objects)
+            {
+                newBlackboard.Set(kvp.Key, kvp.Value);
+            }
+        }
+
+        public object? this[BlackboardKey key]
+        {
+            get => GetObject(key);
+            set => Set(key, value);
+        }
     }
 }

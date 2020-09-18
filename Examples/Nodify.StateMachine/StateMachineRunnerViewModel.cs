@@ -9,6 +9,8 @@ namespace Nodify.StateMachine
         private StateMachine? _stateMachine;
         private StateViewModel? _activeState;
         private TransitionViewModel? _activeTransition;
+        private readonly DebugBlackboardDecorator _debugger = new DebugBlackboardDecorator();
+        private readonly Blackboard _original = new Blackboard();
 
         protected StateMachineViewModel StateMachineViewModel { get; }
 
@@ -29,6 +31,16 @@ namespace Nodify.StateMachine
         public StateMachineRunnerViewModel(StateMachineViewModel stateMachineViewModel)
         {
             StateMachineViewModel = stateMachineViewModel;
+            _debugger.ValueChanged += OnBlackboardKeyValueChanged;
+        }
+
+        private void OnBlackboardKeyValueChanged(BlackboardKey key, object? newValue)
+        {
+            var existing = StateMachineViewModel.Blackboard.Keys.FirstOrDefault(k => k.Name == key.Name && k.Type == key.Type);
+            if (existing != null)
+            {
+                existing.Value = newValue;
+            }
         }
 
         #region State Machine Actions
@@ -81,9 +93,20 @@ namespace Nodify.StateMachine
             if (newState == MachineState.Stopped)
             {
                 SetActiveStateAndTransition(false);
+                ResetBlackboardToOriginal();
             }
 
             State = newState;
+        }
+
+        private void ResetBlackboardToOriginal()
+        {
+            var keys = StateMachineViewModel.Blackboard.Keys;
+            for (int i = 0; i < keys.Count; i++)
+            {
+                var key = keys[i];
+                key.Value = _original.GetObject(key.Name);
+            }
         }
 
         public void TogglePause()
@@ -183,7 +206,10 @@ namespace Nodify.StateMachine
                 }
             }
 
-            return new DebugBlackboardDecorator(result);
+            result.CopyTo(_original);
+
+            _debugger.Attach(result);
+            return _debugger;
         }
 
         private BlackboardKey CreateBlackboardKey(BlackboardKeyViewModel key)

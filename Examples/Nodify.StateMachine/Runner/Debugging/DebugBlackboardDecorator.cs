@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Nodify.StateMachine
 {
@@ -7,51 +8,44 @@ namespace Nodify.StateMachine
         public static BlackboardKey StateDelayKey { get; } = "__state.delay";
         public static BlackboardKey TransitionDelayKey { get; } = "__transition.delay";
 
-        private readonly Blackboard _blackboard;
+        private Blackboard? _blackboard;
 
-        public DebugBlackboardDecorator(Blackboard blackboard)
+        public event Action<BlackboardKey, object?>? ValueChanged;
+
+        public DebugBlackboardDecorator(Blackboard? blackboard = default)
         {
             _blackboard = blackboard;
 
             Set(StateDelayKey, 1000);
         }
 
-        public override IReadOnlyCollection<BlackboardKey> Keys => _blackboard.Keys;
+        public override IReadOnlyCollection<BlackboardKey> Keys => _blackboard?.Keys ?? Array.Empty<BlackboardKey>();
 
-        public override void Clear(BlackboardKey key)
-        {
-            _blackboard.Clear(key);
-        }
+        public override void Remove(BlackboardKey key)
+            => _blackboard?.Remove(key);
 
-        public override void Clear()
-        {
-            _blackboard.Clear();
-        }
+        public override void Clear() 
+            => _blackboard?.Clear();
 
-        public override T? GetObject<T>(BlackboardKey key)
-            where T : class
-        {
-            return _blackboard.GetObject<T>(key);
-        }
+        public override T? GetObject<T>(BlackboardKey key) where T : class
+            => _blackboard?.GetObject<T>(key);
 
         public override T? GetValue<T>(BlackboardKey key)
-        {
-            return _blackboard.GetValue<T>(key);
-        }
+            => _blackboard?.GetValue<T>(key);
 
         public override void Set(BlackboardKey key, object? value)
         {
-            _blackboard.Set(key, value);
+            _blackboard?.Set(key, value);
+            ValueChanged?.Invoke(key, value);
         }
 
         public override bool HasKey(BlackboardKey key)
-        {
-            return _blackboard.HasKey(key);
-        }
+            => _blackboard?.HasKey(key) ?? false;
 
         public override object? GetObject(BlackboardKey key)
-        {
-            return _blackboard.GetObject(key);
-        }
+            => _blackboard?.GetObject(key);
+
+        public virtual void Attach(Blackboard blackboard)
+            => _blackboard = blackboard;
     }
 }

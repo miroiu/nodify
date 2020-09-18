@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Nodify.StateMachine
 {
@@ -15,10 +16,7 @@ namespace Nodify.StateMachine
         {
             int? delay = blackboard.GetValue<int>(DebugBlackboardDecorator.StateDelayKey);
 
-            if (delay > 0)
-            {
-                await Task.Delay(delay.Value);
-            }
+            await Task.Delay(Math.Max(10, delay ?? 10));
 
             await _state.Activate(blackboard);
         }
