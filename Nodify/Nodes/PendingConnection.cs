@@ -21,11 +21,12 @@ namespace Nodify
         public static readonly DependencyProperty EnablePreviewProperty = DependencyProperty.Register(nameof(EnablePreview), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty StrokeThicknessProperty = Shape.StrokeThicknessProperty.AddOwner(typeof(PendingConnection));
         public static readonly DependencyProperty StrokeDashArrayProperty = Shape.StrokeDashArrayProperty.AddOwner(typeof(PendingConnection));
+        public static readonly DependencyProperty StrokeProperty = Shape.StrokeProperty.AddOwner(typeof(PendingConnection));
         public static readonly DependencyProperty AllowOnlyConnectorsProperty = DependencyProperty.Register(nameof(AllowOnlyConnectors), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True, OnAllowOnlyConnectorsChanged));
         public static readonly DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
 
         /// <summary>
-        /// Starting point for the connection.
+        /// Gets or sets the starting point for the connection.
         /// </summary>
         public Point SourceAnchor
         {
@@ -34,7 +35,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// End point for the connection.
+        /// Gets or sets the end point for the connection.
         /// </summary>
         public Point TargetAnchor
         {
@@ -43,7 +44,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// The <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> that started this pending connection.
+        /// Gets or sets the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> that started this pending connection.
         /// </summary>
         public object? Source
         {
@@ -52,7 +53,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// The <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> (or potentially an <see cref="ItemContainer"/>'s <see cref="FrameworkElement.DataContext"/> if <see cref="AllowOnlyConnectors"/> is false) that the <see cref="Source"/> can connect to.
+        /// Gets or sets the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> (or potentially an <see cref="ItemContainer"/>'s <see cref="FrameworkElement.DataContext"/> if <see cref="AllowOnlyConnectors"/> is false) that the <see cref="Source"/> can connect to.
         /// Only set when the connection is completed (see <see cref="CompletedCommand"/>).
         /// </summary>
         public object? Target
@@ -71,7 +72,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// The <see cref="Connector"/> or the <see cref="ItemContainer"/> (if <see cref="AllowOnlyConnectors"/> is false) that we're previewing.
+        /// Gets or sets the <see cref="Connector"/> or the <see cref="ItemContainer"/> (if <see cref="AllowOnlyConnectors"/> is false) that we're previewing.
         /// </summary>
         public object? PreviewTarget
         {
@@ -107,12 +108,21 @@ namespace Nodify
         }
 
         /// <summary>
-        /// The pattern of dashes and gaps that is used to outline the connection.
+        /// Gets or sets the pattern of dashes and gaps that is used to outline the connection.
         /// </summary>
         public DoubleCollection StrokeDashArray
         {
             get => (DoubleCollection)GetValue(StrokeDashArrayProperty);
             set => SetValue(StrokeDashArrayProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the stroke color of the connection.
+        /// </summary>
+        public Brush Stroke
+        {
+            get => (Brush)GetValue(StrokeProperty);
+            set => SetValue(StrokeProperty, value);
         }
 
         /// <summary>
@@ -178,7 +188,7 @@ namespace Nodify
         #region Fields
 
         /// <summary>
-        /// The <see cref="NodifyEditor"/> that owns this <see cref="PendingConnection"/>.
+        /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="PendingConnection"/>.
         /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 

@@ -11,6 +11,8 @@
                 Value="Transparent" />
         <Setter Property="Foreground"
                 Value="DodgerBlue" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
         <Setter Property="Padding"
                 Value="15 5" />
         <Setter Property="Cursor"

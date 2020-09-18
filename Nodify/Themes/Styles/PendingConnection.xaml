@@ -9,21 +9,29 @@
                 Value="False" />
         <Setter Property="Background"
                 Value="#121212" />
-        <Setter Property="BorderBrush"
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Stroke"
                 Value="DodgerBlue" />
+        <Setter Property="BorderBrush"
+                Value="Black" />
         <Setter Property="EnablePreview"
                 Value="False" />
         <Setter Property="StrokeThickness"
                 Value="3" />
+        <Setter Property="BorderThickness"
+                Value="1" />
         <Setter Property="Visibility"
                 Value="Hidden" />
         <Setter Property="StrokeDashArray"
                 Value="4 4" />
+        <Setter Property="Padding"
+                Value="5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PendingConnection}">
                     <Canvas>
-                        <Line Stroke="{TemplateBinding BorderBrush}"
+                        <Line Stroke="{TemplateBinding Stroke}"
                               StrokeThickness="{TemplateBinding StrokeThickness}"
                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
                               X1="{Binding SourceAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
@@ -35,9 +43,9 @@
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                 Visibility="{TemplateBinding EnablePreview, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Margin="15"
-                                Padding="5"
-                                BorderThickness="1"
-                                BorderBrush="Black"
+                                Padding="{TemplateBinding Padding}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
                                 CornerRadius="3">
                             <ContentPresenter />
                         </Border>

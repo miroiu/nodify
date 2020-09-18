@@ -14,8 +14,8 @@
                 <GeometryDrawing Brush="{StaticResource ItemContainer.HighlightColor}">
                     <GeometryDrawing.Geometry>
                         <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,50,50" />
-                            <RectangleGeometry Rect="50,50,50,50" />
+                            <RectangleGeometry Rect="0 0 50 50" />
+                            <RectangleGeometry Rect="50 50 50 50" />
                         </GeometryGroup>
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>

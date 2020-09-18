@@ -1,0 +1,200 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <!--NODIFY EDITOR-->
+
+    <SolidColorBrush x:Key="NodifyEditor.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.SelectionRectangleStrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.SelectionRectangleBackgroundBrush"
+                     o:Freeze="True"
+                     Opacity="0.1"
+                     Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
+
+    <!--ITEM CONTAINER-->
+
+    <SolidColorBrush x:Key="ItemContainer.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource ItemContainer.BorderColor}" />
+
+    <DrawingBrush x:Key="ItemContainer.HighlightBrush"
+                  o:Freeze="True"
+                  Viewport="0 0 24 24"
+                  ViewportUnits="Absolute"
+                  TileMode="Tile">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{DynamicResource ItemContainer.BorderBrush}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0 0 50 50" />
+                            <RectangleGeometry Rect="50 50 50 50" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <SolidColorBrush x:Key="ItemContainer.SelectedBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource ItemContainer.SelectedColor}" />
+
+    <!--NODE-->
+
+    <SolidColorBrush x:Key="Node.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="Node.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="Node.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.BorderColor}" />
+
+    <SolidColorBrush x:Key="Node.HeaderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.HeaderColor}" />
+
+    <SolidColorBrush x:Key="Node.FooterBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.FooterColor}" />
+
+    <!--STATE NODE-->
+
+    <SolidColorBrush x:Key="StateNode.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource StateNode.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="StateNode.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource StateNode.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="StateNode.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource StateNode.BorderColor}" />
+
+    <SolidColorBrush x:Key="StateNode.HighlightBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource StateNode.HighlightColor}" />
+
+    <!--GROUPING NODE-->
+
+    <SolidColorBrush x:Key="GroupingNode.BackgroundBrush"
+                     o:Freeze="True"
+                     Opacity=".5" 
+                     Color="{DynamicResource GroupingNode.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="GroupingNode.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource GroupingNode.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="GroupingNode.HeaderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource GroupingNode.HeaderColor}" />
+
+    <SolidColorBrush x:Key="GroupingNode.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource GroupingNode.BorderColor}" />
+
+    <!--KNOT NODE-->
+
+    <SolidColorBrush x:Key="KnotNode.BackgroundBrush"
+                     o:Freeze="True"
+                     Opacity=".5" 
+                     Color="{DynamicResource KnotNode.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="KnotNode.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource KnotNode.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="KnotNode.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource KnotNode.BorderColor}" />
+
+    <!--CONNECTOR-->
+
+    <SolidColorBrush x:Key="Connector.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Connector.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="Connector.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Connector.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="Connector.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Connector.BorderColor}" />
+
+    <!--NODE INPUT-->
+
+    <SolidColorBrush x:Key="NodeInput.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeInput.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="NodeInput.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeInput.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="NodeInput.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeInput.BorderColor}" />
+
+    <!--NODE OUTPUT-->
+
+    <SolidColorBrush x:Key="NodeOutput.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeOutput.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="NodeOutput.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeOutput.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="NodeOutput.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodeOutput.BorderColor}" />
+
+    <!--CONNECTION-->
+
+    <SolidColorBrush x:Key="Connection.StrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Connection.StrokeColor}" />
+
+    <!--DIRECTIONAL CONNECTION-->
+
+    <SolidColorBrush x:Key="DirectionalConnection.StrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource DirectionalConnection.StrokeColor}" />
+
+    <!--PENDING CONNECTION-->
+    
+    <SolidColorBrush x:Key="PendingConnection.StrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource PendingConnection.StrokeColor}" />
+    
+    <SolidColorBrush x:Key="PendingConnection.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource PendingConnection.BorderColor}" />
+    
+    <SolidColorBrush x:Key="PendingConnection.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource PendingConnection.ForegroundColor}" />
+    
+    <SolidColorBrush x:Key="PendingConnection.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource PendingConnection.BackgroundColor}" />
+
+</ResourceDictionary>

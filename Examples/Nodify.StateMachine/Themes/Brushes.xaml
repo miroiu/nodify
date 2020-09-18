@@ -7,18 +7,6 @@
                      o:Freeze="True"
                      Color="{DynamicResource PanelBackgroundColor}" />
     
-    <SolidColorBrush x:Key="EditorBackgroundBrush"
-                     o:Freeze="True"
-                     Color="{DynamicResource EditorBackgroundColor}" />
-    
-    <SolidColorBrush x:Key="StateBackgroundBrush"
-                     o:Freeze="True"
-                     Color="{DynamicResource StateBackgroundColor}" />
-    
-    <SolidColorBrush x:Key="StateHighlightBrush"
-                     o:Freeze="True"
-                     Color="{DynamicResource StateHighlightColor}" />
-    
     <SolidColorBrush x:Key="ActiveStateBrush"
                      o:Freeze="True"
                      Color="{DynamicResource ActiveStateColor}" />
@@ -26,13 +14,5 @@
     <SolidColorBrush x:Key="ReadOnlyStateBrush"
                      o:Freeze="True"
                      Color="{DynamicResource ReadOnlyStateColor}" />
-    
-    <SolidColorBrush x:Key="ConnectionBrush"
-                     o:Freeze="True"
-                     Color="{DynamicResource ConnectionColor}" />
-    
-    <SolidColorBrush x:Key="ContrastForegroundBrush"
-                     o:Freeze="True"
-                     Color="{DynamicResource ContrastForegroundColor}" />
     
 </ResourceDictionary>

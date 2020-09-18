@@ -42,13 +42,13 @@
             <DataTemplate>
                 <nodify:Connection Source="{Binding Output.Anchor}"
                                    Target="{Binding Input.Anchor}"
-                                   Stroke="{Binding ., Converter={StaticResource RandomBrushConverter}}"
                                    Cursor="Hand" />
             </DataTemplate>
         </nodify:NodifyEditor.ConnectionTemplate>
 
         <nodify:NodifyEditor.Resources>
-            <Style TargetType="{x:Type nodify:PendingConnection}">
+            <Style TargetType="{x:Type nodify:PendingConnection}"
+                   BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
                 <Setter Property="CompletedCommand"
                         Value="{Binding Graph.CreateConnectionCommand}" />
                 <Setter Property="Source"
@@ -65,31 +65,34 @@
                         Value="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}" />
                 <Setter Property="AllowOnlyConnectors"
                         Value="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}" />
-                <Setter Property="Background"
-                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}" />
-                <Setter Property="BorderBrush"
-                        Value="{Binding PreviewTarget, Converter={StaticResource RandomBrushConverter}}" />
             </Style>
 
-            <Style TargetType="{x:Type nodify:Connector}">
+            <Style TargetType="{x:Type nodify:Connector}"
+                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
                 <Setter Property="Anchor"
                         Value="{Binding Anchor, Mode=OneWayToSource}" />
                 <Setter Property="IsConnected"
                         Value="{Binding IsConnected}" />
-                <Setter Property="BorderBrush"
-                        Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />
             </Style>
 
             <Style TargetType="{x:Type nodify:NodeInput}"
-                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                   BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
                 <Setter Property="Header"
                         Value="{Binding Title}" />
+                <Setter Property="Anchor"
+                        Value="{Binding Anchor, Mode=OneWayToSource}" />
+                <Setter Property="IsConnected"
+                        Value="{Binding IsConnected}" />
             </Style>
 
             <Style TargetType="{x:Type nodify:NodeOutput}"
-                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                   BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
                 <Setter Property="Header"
                         Value="{Binding Title}" />
+                <Setter Property="Anchor"
+                        Value="{Binding Anchor, Mode=OneWayToSource}" />
+                <Setter Property="IsConnected"
+                        Value="{Binding IsConnected}" />
             </Style>
 
             <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
@@ -98,9 +101,7 @@
 
             <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
                 <nodify:GroupingNode ActualSize="{Binding Size}"
-                                     Header="{Binding Title}"
-                                     HeaderBrush="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.8}"
-                                     Background="{Binding ., Converter={StaticResource RandomBrushConverter}, ConverterParameter=0.3}" />
+                                     Header="{Binding Title}" />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
@@ -111,7 +112,8 @@
         </nodify:NodifyEditor.Resources>
 
         <nodify:NodifyEditor.ItemContainerStyle>
-            <Style TargetType="{x:Type nodify:ItemContainer}">
+            <Style TargetType="{x:Type nodify:ItemContainer}"
+                   BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                 <Setter Property="Location"
                         Value="{Binding Location}" />
                 <!--<Setter Property="HighlightBrush"

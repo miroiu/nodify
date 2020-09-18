@@ -1,0 +1,167 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--NODIFY EDITOR-->
+
+    <Style x:Key="NodifyEditor.SelectionRectangleStyle"
+           TargetType="Rectangle">
+        <Setter Property="Stroke"
+                Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Fill"
+                Value="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type local:NodifyEditor}"
+           BasedOn="{StaticResource {x:Type local:NodifyEditor}}">
+        <Setter Property="Background"
+                Value="{StaticResource NodifyEditor.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource NodifyEditor.ForegroundBrush}" />
+        <Setter Property="SelectionRectangleStyle"
+                Value="{StaticResource NodifyEditor.SelectionRectangleStyle}" />
+    </Style>
+
+    <!--ITEM CONTAINER-->
+
+    <Style TargetType="{x:Type local:ItemContainer}"
+           BasedOn="{StaticResource {x:Type local:ItemContainer}}">
+        <Setter Property="HighlightBrush"
+                Value="{StaticResource ItemContainer.HighlightBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ItemContainer.BorderBrush}" />
+        <Setter Property="SelectedBrush"
+                Value="{StaticResource ItemContainer.SelectedBrush}" />
+    </Style>
+
+    <!--NODE-->
+
+    <Style TargetType="{x:Type local:Node}"
+           BasedOn="{StaticResource {x:Type local:Node}}">
+        <Setter Property="Background"
+                Value="{StaticResource Node.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Node.ForegroundBrush}" />
+        <Setter Property="HeaderBrush"
+                Value="{StaticResource Node.HeaderBrush}" />
+        <Setter Property="FooterBrush"
+                Value="{StaticResource Node.FooterBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource Node.BorderBrush}" />
+    </Style>
+
+    <!--STATE NODE-->
+
+    <Style TargetType="{x:Type local:StateNode}"
+           BasedOn="{StaticResource {x:Type local:StateNode}}">
+        <Setter Property="Background"
+                Value="{StaticResource StateNode.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource StateNode.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource StateNode.BorderBrush}" />
+        <Setter Property="HighlightBrush"
+                Value="{StaticResource StateNode.HighlightBrush}" />
+    </Style>
+    
+    <!--GROUPING NODE-->
+
+    <Style TargetType="{x:Type local:GroupingNode}"
+           BasedOn="{StaticResource {x:Type local:GroupingNode}}">
+        <Setter Property="Background"
+                Value="{StaticResource GroupingNode.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource GroupingNode.ForegroundBrush}" />
+        <Setter Property="HeaderBrush"
+                Value="{StaticResource GroupingNode.HeaderBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource GroupingNode.BorderBrush}" />
+    </Style>
+    
+    <!--KNOT NODE-->
+
+    <Style TargetType="{x:Type local:KnotNode}"
+           BasedOn="{StaticResource {x:Type local:KnotNode}}">
+        <Setter Property="Background"
+                Value="{StaticResource KnotNode.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource KnotNode.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource KnotNode.BorderBrush}" />
+    </Style>
+    
+    <!--CONNECTOR-->
+
+    <Style TargetType="{x:Type local:Connector}"
+           BasedOn="{StaticResource {x:Type local:Connector}}">
+        <Setter Property="Background"
+                Value="{StaticResource Connector.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Connector.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource Connector.BorderBrush}" />
+    </Style>
+    
+    <!--NODE INPUT-->
+
+    <Style TargetType="{x:Type local:NodeInput}"
+           BasedOn="{StaticResource {x:Type local:NodeInput}}">
+        <Setter Property="Background"
+                Value="{StaticResource NodeInput.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource NodeInput.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource NodeInput.BorderBrush}" />
+    </Style>
+    
+    <!--NODE OUTPUT-->
+
+    <Style TargetType="{x:Type local:NodeOutput}"
+           BasedOn="{StaticResource {x:Type local:NodeOutput}}">
+        <Setter Property="Background"
+                Value="{StaticResource NodeOutput.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource NodeOutput.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource NodeOutput.BorderBrush}" />
+    </Style>
+    
+    <!--CONNECTION-->
+
+    <Style TargetType="{x:Type local:Connection}"
+           BasedOn="{StaticResource {x:Type local:Connection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource Connection.StrokeBrush}" />
+    </Style>
+    
+    <!--DIRECTIONAL CONNECTION-->
+
+    <Style TargetType="{x:Type local:DirectionalConnection}"
+           BasedOn="{StaticResource {x:Type local:DirectionalConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource DirectionalConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource DirectionalConnection.StrokeBrush}" />
+    </Style>
+
+    <!--PENDING CONNECTION-->
+    
+    <Style TargetType="{x:Type local:PendingConnection}"
+           BasedOn="{StaticResource {x:Type local:PendingConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource PendingConnection.StrokeBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource PendingConnection.BorderBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource PendingConnection.ForegroundBrush}" />
+        <Setter Property="Background"
+                Value="{StaticResource PendingConnection.BackgroundBrush}" />
+    </Style>
+
+</ResourceDictionary>

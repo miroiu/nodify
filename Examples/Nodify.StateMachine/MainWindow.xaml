@@ -37,23 +37,19 @@
                              PendingConnection="{Binding PendingTransition}"
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
                              ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
-                             Background="{DynamicResource EditorBackgroundBrush}"
                              Grid.Column="1">
             <nodify:NodifyEditor.PendingConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                     <nodify:PendingConnection Source="{Binding Source, Mode=OneWayToSource}"
                                               Target="{Binding Target, Mode=OneWayToSource}"
                                               StrokeDashArray=""
-                                              EnablePreview="True"
-                                              BorderBrush="{DynamicResource ConnectionBrush}">
+                                              EnablePreview="True">
                         <nodify:PendingConnection.Template>
                             <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
                                 <nodify:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
                                                               Target="{TemplateBinding TargetAnchor}"
-                                                              Stroke="{TemplateBinding BorderBrush}"
                                                               StrokeThickness="{TemplateBinding StrokeThickness}"
                                                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                              Fill="{TemplateBinding BorderBrush}"
                                                               SourceOffset="{Binding Source.Size}"
                                                               OffsetMode="Edge" />
                             </ControlTemplate>
@@ -71,13 +67,10 @@
                                                   OffsetMode="Edge"
                                                   Tag="{Binding}">
                         <nodify:DirectionalConnection.Style>
-                            <Style TargetType="{x:Type nodify:DirectionalConnection}">
+                            <Style TargetType="{x:Type nodify:DirectionalConnection}"
+                                   BasedOn="{StaticResource {x:Type nodify:DirectionalConnection}}">
                                 <Setter Property="StrokeThickness"
                                         Value="3" />
-                                <Setter Property="Stroke"
-                                        Value="{DynamicResource ConnectionBrush}" />
-                                <Setter Property="Fill"
-                                        Value="{DynamicResource ConnectionBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsActive}"
                                                  Value="True">
@@ -107,22 +100,18 @@
                     <nodify:StateNode Content="{Binding}"
                                       IsConnected="True"
                                       Size="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
-                                      Anchor="{Binding Anchor, Mode=OneWayToSource}"
-                                      Background="{DynamicResource StateBackgroundBrush}"
-                                      HighlightBrush="{DynamicResource StateHighlightBrush}">
+                                      Anchor="{Binding Anchor, Mode=OneWayToSource}">
                         <nodify:StateNode.ContentTemplate>
                             <DataTemplate DataType="{x:Type local:StateViewModel}">
                                 <shared:EditableTextBlock Text="{Binding Name}"
-                                                          Foreground="{DynamicResource ContrastForegroundBrush}"
                                                           IsEditing="{Binding IsRenaming}"
                                                           IsEditable="{Binding IsEditable}"
                                                           MaxLength="30" />
                             </DataTemplate>
                         </nodify:StateNode.ContentTemplate>
                         <nodify:StateNode.Style>
-                            <Style TargetType="{x:Type nodify:StateNode}">
-                                <Setter Property="BorderBrush"
-                                        Value="{DynamicResource BorderBrush}" />
+                            <Style TargetType="{x:Type nodify:StateNode}"
+                                   BasedOn="{StaticResource {x:Type nodify:StateNode}}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsEditable}"
                                                  Value="False">

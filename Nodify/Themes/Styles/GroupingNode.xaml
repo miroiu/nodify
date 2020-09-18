@@ -8,13 +8,15 @@
         <Setter Property="Background">
             <Setter.Value>
                 <SolidColorBrush Color="#3E3E42"
-                                 Opacity=".8" />
+                                 Opacity=".5" />
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="HeaderBrush"
-                Value="#2D2D30" />
+                Value="#1E1E1E" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
         <Setter Property="Padding"
                 Value="7 3" />
         <Setter Property="VerticalAlignment"
@@ -38,13 +40,14 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Grid local:DragBehavior.IsDraggable="True"
-                                  Background="{TemplateBinding HeaderBrush}"
-                                  Cursor="SizeAll"
-                                  x:Name="PART_Header">
+                            <Border local:DragBehavior.IsDraggable="True"
+                                    Background="{TemplateBinding HeaderBrush}"
+                                    Cursor="SizeAll"
+                                    CornerRadius="3 3 0 0"
+                                    x:Name="PART_Header">
                                 <ContentPresenter ContentSource="Header"
                                                   Margin="{TemplateBinding Padding}" />
-                            </Grid>
+                            </Border>
 
                             <Grid Grid.Row="1"
                                   Background="{TemplateBinding Background}">
@@ -53,7 +56,7 @@
                                 <Thumb x:Name="PART_ResizeThumb"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Bottom"
-                                       Margin="0,0,2,2"
+                                       Margin="0 0 2 2"
                                        MinHeight="20"
                                        Cursor="SizeNWSE"
                                        Foreground="{TemplateBinding Foreground}"

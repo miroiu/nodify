@@ -1,0 +1,71 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Controls.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--NODIFY EDITOR-->
+
+    <Color x:Key="NodifyEditor.BackgroundColor">White</Color>
+    <Color x:Key="NodifyEditor.ForegroundColor">Black</Color>
+    <Color x:Key="NodifyEditor.SelectionRectangleColor">DodgerBlue</Color>
+
+    <!--ITEM CONTAINER-->
+
+    <Color x:Key="ItemContainer.BorderColor">#7EB4EA</Color>
+    <Color x:Key="ItemContainer.SelectedColor">Orange</Color>
+
+    <!--NODE-->
+    <Color x:Key="Node.BackgroundColor">#CBCCDF</Color>
+    <Color x:Key="Node.ForegroundColor">White</Color>
+    <Color x:Key="Node.HeaderColor">#5C6A98</Color>
+    <Color x:Key="Node.FooterColor">#5C6A98</Color>
+    <Color x:Key="Node.BorderColor">Transparent</Color>
+
+    <!--STATE NODE-->
+    <Color x:Key="StateNode.BackgroundColor">#5C6A98</Color>
+    <Color x:Key="StateNode.ForegroundColor">White</Color>
+    <Color x:Key="StateNode.BorderColor">#CBCCDF</Color>
+    <Color x:Key="StateNode.HighlightColor">#B1C5FF</Color>
+
+    <!--GROUPING NODE-->
+    <Color x:Key="GroupingNode.BackgroundColor">#CBCCDF</Color>
+    <Color x:Key="GroupingNode.ForegroundColor">White</Color>
+    <Color x:Key="GroupingNode.HeaderColor">#5C6A98</Color>
+    <Color x:Key="GroupingNode.BorderColor">Transparent</Color>
+
+    <!--KNOT NODE-->
+    <Color x:Key="KnotNode.BackgroundColor">#CBCCDF</Color>
+    <Color x:Key="KnotNode.ForegroundColor">White</Color>
+    <Color x:Key="KnotNode.BorderColor">Transparent</Color>
+
+    <!--CONNECTOR-->
+    <Color x:Key="Connector.BackgroundColor">#B1C5FF</Color>
+    <Color x:Key="Connector.ForegroundColor">White</Color>
+    <Color x:Key="Connector.BorderColor">#7EB4EA</Color>
+
+    <!--NODE INPUT-->
+    <Color x:Key="NodeInput.BackgroundColor">Transparent</Color>
+    <Color x:Key="NodeInput.ForegroundColor">Black</Color>
+    <Color x:Key="NodeInput.BorderColor">#4B91B8</Color>
+
+    <!--NODE OUTPUT-->
+    <Color x:Key="NodeOutput.BackgroundColor">Transparent</Color>
+    <Color x:Key="NodeOutput.ForegroundColor">Black</Color>
+    <Color x:Key="NodeOutput.BorderColor">#4B91B8</Color>
+
+    <!--CONNECTION-->
+    <Color x:Key="Connection.StrokeColor">#5CA2C9</Color>
+
+    <!--DIRECTIONAL CONNECTION-->
+    <Color x:Key="DirectionalConnection.StrokeColor">#5CA2C9</Color>
+
+    <!--PENDING CONNECTION-->
+    <Color x:Key="PendingConnection.StrokeColor">#5CA2C9</Color>
+    <Color x:Key="PendingConnection.BorderColor">Black</Color>
+    <Color x:Key="PendingConnection.ForegroundColor">White</Color>
+    <Color x:Key="PendingConnection.BackgroundColor">#5C6A98</Color>
+
+</ResourceDictionary>

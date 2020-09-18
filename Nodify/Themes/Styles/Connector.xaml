@@ -5,6 +5,8 @@
     <Style TargetType="{x:Type local:Connector}">
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
+        <Setter Property="Foreground"
+                Value="White" />
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Width"

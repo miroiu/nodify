@@ -11,6 +11,8 @@
                 Value="#484848" />
         <Setter Property="Background"
                 Value="#171717" />
+        <Setter Property="Foreground"
+                Value="White" />
         <Setter Property="HighlightBrush"
                 Value="#D6D3D6" />
         <Setter Property="CornerRadius"

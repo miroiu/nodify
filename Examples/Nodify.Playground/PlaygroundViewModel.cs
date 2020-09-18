@@ -76,7 +76,7 @@ namespace Nodify.Playground
         private async void PerformanceTest()
         {
             int count = 1000;
-            int distance = 400;
+            int distance = 500;
             int size = count / (int)Math.Sqrt(count);
 
             var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(count)

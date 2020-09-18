@@ -18,8 +18,12 @@
                 Value="#2D2D30" />
         <Setter Property="HeaderBrush"
                 Value="#1E1E1E" />
-        <Setter Property="Padding"
-                Value="1" />
+        <Setter Property="FooterBrush"
+                Value="#1E1E1E" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
         <Setter Property="MinHeight"
                 Value="15" />
         <Setter Property="MinWidth"
@@ -55,6 +59,7 @@
 
                             <!--Header-->
                             <Border Background="{TemplateBinding HeaderBrush}"
+                                    CornerRadius="3 3 0 0"
                                     Grid.ColumnSpan="3">
                                 <StackPanel Orientation="Horizontal"
                                             Margin="6 0 6 0">
@@ -99,6 +104,7 @@
                             <!--Footer-->
                             <Border Visibility="{TemplateBinding Footer, Converter={StaticResource NullToVisibilityConverter}}"
                                     Background="{TemplateBinding FooterBrush}"
+                                    CornerRadius="0 0 3 3"
                                     Grid.Row="2"
                                     Grid.ColumnSpan="3">
                                 <ContentPresenter ContentSource="Footer" />

@@ -8,15 +8,7 @@
     
     <Color x:Key="PanelBackgroundColor">#2D2D30</Color>
 
-    <Color x:Key="EditorBackgroundColor">#1E1E1E</Color>
-    
-    <Color x:Key="StateHighlightColor">#D6D3D6</Color>
-    <Color x:Key="StateBackgroundColor">#171717</Color>
     <Color x:Key="ActiveStateColor">#8DD28A</Color>
     <Color x:Key="ReadOnlyStateColor">#E6AF86</Color>
-    
-    <Color x:Key="ConnectionColor">White</Color>
-
-    <Color x:Key="ContrastForegroundColor">White</Color>
     
 </ResourceDictionary>

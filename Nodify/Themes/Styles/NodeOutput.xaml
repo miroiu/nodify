@@ -12,8 +12,8 @@
     </ControlTemplate>
 
     <LinearGradientBrush x:Key="FadeOpacityMask"
-                         StartPoint="0,0"
-                         EndPoint="1,0">
+                         StartPoint="0 0"
+                         EndPoint="1 0">
         <GradientStop Color="#22FFFFFF"
                       Offset="0" />
         <GradientStop Color="#88FFFFFF"
@@ -27,12 +27,14 @@
     <Style TargetType="{x:Type local:NodeOutput}">
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
+        <Setter Property="Background"
+                Value="#2D2D30" />
+        <Setter Property="Foreground"
+                Value="White" />
         <Setter Property="Padding"
                 Value="4 2" />
         <Setter Property="Margin"
                 Value="16 0 0 0" />
-        <Setter Property="Background"
-                Value="Transparent" />
         <Setter Property="ConnectorTemplate"
                 Value="{StaticResource ConnectorThumbTemplate}" />
         <Setter Property="Template">
@@ -45,7 +47,6 @@
                                 Background="{TemplateBinding BorderBrush}" />
 
                         <StackPanel Orientation="Horizontal"
-                                    Background="{TemplateBinding Background}"
                                     Margin="{TemplateBinding Padding}">
 
                             <ContentPresenter ContentSource="Header" />
