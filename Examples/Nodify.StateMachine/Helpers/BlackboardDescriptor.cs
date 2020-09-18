@@ -9,16 +9,18 @@ namespace Nodify.StateMachine
     {
         private class KeyDescription
         {
-            public KeyDescription(string displayName, string propertyName, BlackboardKeyType type)
+            public KeyDescription(string displayName, string propertyName, BlackboardKeyType type, bool canChangeType)
             {
                 DisplayName = displayName;
                 PropertyName = propertyName;
                 Type = type;
+                CanChangeType = canChangeType;
             }
 
-            public string DisplayName { get; set; }
+            public string DisplayName { get; }
             public string PropertyName { get; }
             public BlackboardKeyType Type { get; }
+            public bool CanChangeType { get; }
         }
 
         private class ItemDescription
@@ -38,14 +40,18 @@ namespace Nodify.StateMachine
                 {
                     Name = d.DisplayName,
                     Type = d.Type,
-                    PropertyName = d.PropertyName
+                    PropertyName = d.PropertyName,
+                    CanChangeType = d.CanChangeType,
+                    ValueIsKey = true
                 });
 
                 var output = description.Output.Select(d => new BlackboardKeyViewModel
                 {
                     Name = d.DisplayName,
                     Type = d.Type,
-                    PropertyName = d.PropertyName
+                    PropertyName = d.PropertyName,
+                    CanChangeType = d.CanChangeType,
+                    ValueIsKey = true
                 });
 
                 return new BlackboardItemViewModel
@@ -87,17 +93,19 @@ namespace Nodify.StateMachine
                 for (int i = 0; i < props.Length; i++)
                 {
                     var prop = props[i];
-                    var keyAttr = prop.GetCustomAttribute<BlackboardKeyAttribute>();
+                    var keyAttr = prop.GetCustomAttribute<BlackboardPropertyAttribute>();
 
                     if (keyAttr != null)
                     {
+                        var key = new KeyDescription(keyAttr.Name ?? prop.Name, prop.Name, keyAttr.Type, keyAttr.CanChangeType);
+
                         if (keyAttr.Usage == BlackboardKeyUsage.Input)
                         {
-                            desc.Input.Add(new KeyDescription(keyAttr.Name ?? prop.Name, prop.Name, keyAttr.Type));
+                            desc.Input.Add(key);
                         }
                         else
                         {
-                            desc.Output.Add(new KeyDescription(keyAttr.Name ?? prop.Name, prop.Name, keyAttr.Type));
+                            desc.Output.Add(key);
                         }
                     }
                 }

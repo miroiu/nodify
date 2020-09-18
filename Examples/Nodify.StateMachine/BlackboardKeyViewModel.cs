@@ -1,7 +1,12 @@
-﻿namespace Nodify.StateMachine
+﻿using System.Collections.Generic;
+
+namespace Nodify.StateMachine
 {
     public class BlackboardKeyViewModel : ObservableObject
     {
+        // Cache the key and the input value so we can restore them when swapping input types
+        private readonly Dictionary<bool, object?> _values = new Dictionary<bool, object?>();
+
         public string? PropertyName { get; set; }
 
         private string _name = "New key";
@@ -34,7 +39,27 @@
         public object? Value
         {
             get => _value;
-            set => SetProperty(ref _value, GetRealValue(value));
+            set => SetProperty(ref _value, GetRealValue(value)).Then(() => _values[ValueIsKey] = Value);
+        }
+
+        private bool _valueIsKey;
+        public bool ValueIsKey
+        {
+            get => _valueIsKey;
+            set
+            {
+                if (SetProperty(ref _valueIsKey, value) && _values.TryGetValue(_valueIsKey, out var existingValue))
+                {
+                    Value = existingValue;
+                }
+            }
+        }
+
+        private bool _canChangeType = true;
+        public bool CanChangeType
+        {
+            get => _canChangeType;
+            set => SetProperty(ref _canChangeType, value);
         }
 
         private object? GetRealValue(object? value)
@@ -44,24 +69,18 @@
                 switch (Type)
                 {
                     case BlackboardKeyType.Boolean:
-                        if (bool.TryParse(str, out var b))
-                        {
-                            value = b;
-                        }
+                        bool.TryParse(str, out var b);
+                        value = b;
                         break;
 
                     case BlackboardKeyType.Integer:
-                        if (int.TryParse(str, out var i))
-                        {
-                            value = i;
-                        }
+                        int.TryParse(str, out var i);
+                        value = i;
                         break;
 
                     case BlackboardKeyType.Double:
-                        if (double.TryParse(str, out var d))
-                        {
-                            value = d;
-                        }
+                        double.TryParse(str, out var d);
+                        value = d;
                         break;
 
                     case BlackboardKeyType.String:

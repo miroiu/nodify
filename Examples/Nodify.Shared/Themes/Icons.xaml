@@ -2,6 +2,54 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
+    <Rectangle x:Key="DiamondFillIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M1.5859,8L7.9999,1.586 14.4139,8 7.9999,14.414z" />
+                            <GeometryDrawing Brush="#FF414141"
+                                             Geometry="F1M4.4141,8L8.0001,4.414 11.5861,8 8.0001,11.586z M8.0001,3L3.0001,8 8.0001,13 13.0001,8z" />
+                            <GeometryDrawing Brush="#FFFFCC00"
+                                             Geometry="F1M8,4.4141L11.586,8.0001 8,11.5861 4.414,8.0001z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="DiamondIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M1.5859,8L7.9999,1.586 14.4139,8 7.9999,14.414z" />
+                            <GeometryDrawing Brush="#FFEFEFF0"
+                                             Geometry="F1M8,4.4141L11.586,8.0001 8,11.5861 4.414,8.0001z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M4.4141,8L8.0001,4.414 11.5861,8 8.0001,11.586z M8.0001,3L3.0001,8 8.0001,13 13.0001,8z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="PlusIcon"
                x:Shared="False"
                Width="16"

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Nodify.StateMachine"
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
         Title="State Machine Editor"
@@ -18,6 +19,8 @@
     <Window.Resources>
         <shared:BindingProxy x:Key="EditorProxy"
                              DataContext="{Binding}" />
+        <shared:BindingProxy x:Key="BlackboardProxy"
+                             DataContext="{Binding Blackboard}" />
         <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
     </Window.Resources>
 
@@ -288,48 +291,6 @@
                 </Style>
             </Expander.Style>
 
-            <Expander.Resources>
-                <DataTemplate x:Key="BooleanTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <CheckBox IsChecked="{Binding Value}"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center" />
-                </DataTemplate>
-                <DataTemplate x:Key="IntegerTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <TextBox Text="{Binding Value}" />
-                </DataTemplate>
-                <DataTemplate x:Key="DoubleTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <TextBox Text="{Binding Value}" />
-                </DataTemplate>
-                <DataTemplate x:Key="StringTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <TextBox Text="{Binding Value}" />
-                </DataTemplate>
-                <DataTemplate x:Key="ObjectTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <TextBox Text="{Binding Value}"
-                             IsEnabled="False" />
-                </DataTemplate>
-                <DataTemplate x:Key="KeyTemplate"
-                              DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <ComboBox SelectedItem="{Binding Value}"
-                              DisplayMemberPath="Name">
-                        <ComboBox.ItemsSource>
-                            <MultiBinding Converter="{local:FilterBlackboardKeysConverter}">
-                                <Binding Source="{StaticResource EditorProxy}"
-                                         Path="DataContext.Blackboard.Keys" />
-                                <Binding Path="Type" />
-                                <!--USED TO NOTIFY OF COLLECTION CHANGED-->
-                                <Binding Source="{StaticResource EditorProxy}"
-                                         Path="DataContext.Blackboard.Keys.Count" />
-                            </MultiBinding>
-                        </ComboBox.ItemsSource>
-                    </ComboBox>
-                </DataTemplate>
-            </Expander.Resources>
-
             <Border BorderBrush="{DynamicResource BackgroundBrush}"
                     BorderThickness="1"
                     Width="270"
@@ -338,7 +299,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition />
+                        <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
 
                     <!--TRANSITIONS-->
@@ -368,6 +329,7 @@
                                     <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                                         <Expander BorderThickness="0 0 0 1"
                                                   Padding="0 5 0 0"
+                                                  IsExpanded="True"
                                                   BorderBrush="{DynamicResource BackgroundBrush}">
                                             <Expander.Style>
                                                 <Style TargetType="{x:Type Expander}"
@@ -433,27 +395,16 @@
                                                                   Grid.Row="1"
                                                                   Grid.ColumnSpan="2">
                                                         <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Grid Margin="0 0 0 2">
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="Auto"
-                                                                                          SharedSizeGroup="ConditionName" />
-                                                                        <ColumnDefinition SharedSizeGroup="ConditionType" />
-                                                                        <ColumnDefinition />
-                                                                    </Grid.ColumnDefinitions>
-
-                                                                    <TextBlock Text="{Binding Name}"
-                                                                               VerticalAlignment="Center" />
-
-                                                                    <TextBox Text="{Binding Type}"
-                                                                             IsEnabled="False"
-                                                                             Margin="0 0 5 0"
-                                                                             Grid.Column="1" />
-
-                                                                    <ContentPresenter Content="{Binding}"
-                                                                                      ContentTemplate="{StaticResource KeyTemplate}"
-                                                                                      Grid.Column="2" />
-                                                                </Grid>
+                                                            <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
+                                                                <local:BlackboardKeyEditorView Margin="0 0 0 2">
+                                                                    <local:BlackboardKeyEditorView.DataContext>
+                                                                        <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=True}">
+                                                                            <Binding Source="{StaticResource BlackboardProxy}"
+                                                                                     Path="DataContext.Keys" />
+                                                                            <Binding BindsDirectlyToSource="True" />
+                                                                        </MultiBinding>
+                                                                    </local:BlackboardKeyEditorView.DataContext>
+                                                                </local:BlackboardKeyEditorView>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
@@ -532,6 +483,7 @@
                                           BorderThickness="0 0 0 1"
                                           Header="Input"
                                           FontWeight="Bold"
+                                          IsExpanded="True"
                                           BorderBrush="{DynamicResource BackgroundBrush}"
                                           Visibility="{Binding SelectedState.Action.Input.Count, Converter={shared:BooleanToVisibilityConverter}}">
                                     <Expander.Style>
@@ -551,27 +503,16 @@
                                     <ItemsControl ItemsSource="{Binding SelectedState.Action.Input}"
                                                   FontWeight="Normal">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0 0 0 2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"
-                                                                          SharedSizeGroup="KeyName" />
-                                                        <ColumnDefinition Width=".5*" />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <TextBlock Text="{Binding Name}"
-                                                               VerticalAlignment="Center" />
-
-                                                    <TextBox Text="{Binding Type}"
-                                                             IsEnabled="False"
-                                                             Margin="5 0"
-                                                             Grid.Column="1" />
-
-                                                    <ContentPresenter Content="{Binding}"
-                                                                      ContentTemplate="{StaticResource KeyTemplate}"
-                                                                      Grid.Column="2" />
-                                                </Grid>
+                                            <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
+                                                <local:BlackboardKeyEditorView Margin="0 0 0 2">
+                                                    <local:BlackboardKeyEditorView.DataContext>
+                                                        <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=True}">
+                                                            <Binding Source="{StaticResource BlackboardProxy}"
+                                                                     Path="DataContext.Keys" />
+                                                            <Binding BindsDirectlyToSource="True" />
+                                                        </MultiBinding>
+                                                    </local:BlackboardKeyEditorView.DataContext>
+                                                </local:BlackboardKeyEditorView>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -585,6 +526,7 @@
                                           Header="Output"
                                           FontWeight="Bold"
                                           BorderThickness="0 0 0 1"
+                                          IsExpanded="True"
                                           BorderBrush="{DynamicResource BackgroundBrush}"
                                           Visibility="{Binding SelectedState.Action.Output.Count, Converter={shared:BooleanToVisibilityConverter}}">
                                     <Expander.Style>
@@ -604,27 +546,16 @@
                                     <ItemsControl ItemsSource="{Binding SelectedState.Action.Output}"
                                                   FontWeight="Normal">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"
-                                                                          SharedSizeGroup="KeyName" />
-                                                        <ColumnDefinition Width=".5*" />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <TextBlock Text="{Binding Name}"
-                                                               VerticalAlignment="Center" />
-
-                                                    <TextBox Text="{Binding Type}"
-                                                             IsEnabled="False"
-                                                             Margin="5 0"
-                                                             Grid.Column="1" />
-
-                                                    <ContentPresenter Content="{Binding}"
-                                                                      ContentTemplate="{StaticResource KeyTemplate}"
-                                                                      Grid.Column="2" />
-                                                </Grid>
+                                            <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
+                                                <local:BlackboardKeyEditorView Margin="0 0 0 2">
+                                                    <local:BlackboardKeyEditorView.DataContext>
+                                                        <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=True}">
+                                                            <Binding Source="{StaticResource BlackboardProxy}"
+                                                                     Path="DataContext.Keys" />
+                                                            <Binding BindsDirectlyToSource="True" />
+                                                        </MultiBinding>
+                                                    </local:BlackboardKeyEditorView.DataContext>
+                                                </local:BlackboardKeyEditorView>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -679,34 +610,25 @@
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
                                         <Grid Margin="0 0 0 2">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"
-                                                                  SharedSizeGroup="KeyName" />
-                                                <ColumnDefinition SharedSizeGroup="KeyType" />
                                                 <ColumnDefinition />
                                                 <ColumnDefinition SharedSizeGroup="Actions" />
                                             </Grid.ColumnDefinitions>
 
-                                            <shared:EditableTextBlock Text="{Binding Name}"
-                                                                      IsEditing="{Binding IsChecked, ElementName=EditName}"
-                                                                      Foreground="{DynamicResource ForegroundBrush}"
-                                                                      VerticalAlignment="Stretch"
-                                                                      VerticalContentAlignment="Center"
-                                                                      Margin="1 1" />
-
-                                            <ComboBox ItemsSource="{Binding Type, Converter={shared:EnumValuesConverter}}"
-                                                      DisplayMemberPath="Name"
-                                                      SelectedValuePath="Value"
-                                                      SelectedValue="{Binding Type}"
-                                                      Margin="5 0"
-                                                      Grid.Column="1" />
-
-                                            <ContentPresenter Content="{Binding}"
-                                                              x:Name="ValueEditor"
-                                                              Grid.Column="2" />
+                                            <local:BlackboardKeyEditorView>
+                                                <local:BlackboardKeyEditorView.DataContext>
+                                                    <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=False}">
+                                                        <Binding Source="{StaticResource BlackboardProxy}"
+                                                                 Path="DataContext.Keys" />
+                                                        <Binding BindsDirectlyToSource="True" />
+                                                        <Binding ElementName="EditKeyName"
+                                                                 Path="IsChecked" />
+                                                    </MultiBinding>
+                                                </local:BlackboardKeyEditorView.DataContext>
+                                            </local:BlackboardKeyEditorView>
 
                                             <StackPanel Orientation="Horizontal"
                                                         Grid.Column="3">
-                                                <CheckBox x:Name="EditName"
+                                                <CheckBox x:Name="EditKeyName"
                                                           Content="{StaticResource EditIcon}"
                                                           ToolTip="Edit Name"
                                                           Style="{StaticResource IconCheckBox}" />
@@ -716,44 +638,6 @@
                                                         Style="{StaticResource IconButton}" />
                                             </StackPanel>
                                         </Grid>
-                                        <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="Boolean">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource BooleanTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="Integer">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource IntegerTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="Double">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource DoubleTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="String">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource StringTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="Object">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource ObjectTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Type}"
-                                                         Value="Key">
-                                                <Setter Property="ContentTemplate"
-                                                        Value="{StaticResource KeyTemplate}"
-                                                        TargetName="ValueEditor" />
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

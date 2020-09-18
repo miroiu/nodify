@@ -66,5 +66,23 @@ namespace Nodify.StateMachine
             get => GetObject(key);
             set => Set(key, value);
         }
+
+        public T? GetValue<T>(BlackboardProperty value) where T : struct
+            => value.IsValue ? value.GetValue<T>() : GetValue<T>(value.Key);
+
+        public T? GetObject<T>(BlackboardProperty value) where T : class
+            => value.IsValue ? value.GetObject<T>() : GetObject<T>(value.Key);
+
+        public object? GetObject(BlackboardProperty value)
+            => value.IsValue ? value.Value : GetObject(value.Key);
+    }
+
+    public static class BlackboardExtensions
+    {
+        public static bool IsValid(this BlackboardKey key)
+            => key != BlackboardKey.Invalid;
+
+        public static bool IsValid(this BlackboardProperty action)
+            => action != BlackboardProperty.Invalid;
     }
 }

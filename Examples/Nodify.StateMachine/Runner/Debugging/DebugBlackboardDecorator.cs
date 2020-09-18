@@ -13,18 +13,14 @@ namespace Nodify.StateMachine
         public event Action<BlackboardKey, object?>? ValueChanged;
 
         public DebugBlackboardDecorator(Blackboard? blackboard = default)
-        {
-            _blackboard = blackboard;
-
-            Set(StateDelayKey, 1000);
-        }
+            => Attach(blackboard);
 
         public override IReadOnlyCollection<BlackboardKey> Keys => _blackboard?.Keys ?? Array.Empty<BlackboardKey>();
 
         public override void Remove(BlackboardKey key)
             => _blackboard?.Remove(key);
 
-        public override void Clear() 
+        public override void Clear()
             => _blackboard?.Clear();
 
         public override T? GetObject<T>(BlackboardKey key) where T : class
@@ -45,7 +41,11 @@ namespace Nodify.StateMachine
         public override object? GetObject(BlackboardKey key)
             => _blackboard?.GetObject(key);
 
-        public virtual void Attach(Blackboard blackboard)
-            => _blackboard = blackboard;
+        public virtual void Attach(Blackboard? blackboard)
+        {
+            _blackboard = blackboard;
+
+            Set(StateDelayKey, 100);
+        }
     }
 }

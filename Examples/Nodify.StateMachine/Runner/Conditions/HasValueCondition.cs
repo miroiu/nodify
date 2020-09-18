@@ -5,7 +5,7 @@ namespace Nodify.StateMachine
     [BlackboardItem("Has Value")]
     public class HasValueCondition : IBlackboardCondition
     {
-        [BlackboardKey(BlackboardKeyType.Object)]
+        [BlackboardProperty(BlackboardKeyType.Object)]
         public BlackboardKey Key { get; set; }
 
         public Task<bool> Evaluate(Blackboard blackboard)

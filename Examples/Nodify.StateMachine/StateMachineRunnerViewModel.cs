@@ -36,10 +36,13 @@ namespace Nodify.StateMachine
 
         private void OnBlackboardKeyValueChanged(BlackboardKey key, object? newValue)
         {
-            var existing = StateMachineViewModel.Blackboard.Keys.FirstOrDefault(k => k.Name == key.Name && k.Type == key.Type);
-            if (existing != null)
+            if (_stateMachine != null && _stateMachine.State != MachineState.Stopped)
             {
-                existing.Value = newValue;
+                var existing = StateMachineViewModel.Blackboard.Keys.FirstOrDefault(k => k.Name == key.Name && k.Type == key.Type);
+                if (existing != null)
+                {
+                    existing.Value = newValue;
+                }
             }
         }
 
@@ -179,7 +182,7 @@ namespace Nodify.StateMachine
             for (int i = 0; i < keys.Count; i++)
             {
                 var vm = keys[i];
-                var key = CreateBlackboardKey(vm);
+                var key = CreateActionValue(vm);
 
                 // TODO: Property cache
                 if (vm.PropertyName != null)
@@ -202,7 +205,7 @@ namespace Nodify.StateMachine
                 var key = blackboard.Keys[i];
                 if (!string.IsNullOrWhiteSpace(key.Name))
                 {
-                    result.Set(CreateBlackboardKey(key), key.Value);
+                    result.Set(new BlackboardKey(key.Name, key.Type), key.Value);
                 }
             }
 
@@ -212,14 +215,14 @@ namespace Nodify.StateMachine
             return _debugger;
         }
 
-        private BlackboardKey CreateBlackboardKey(BlackboardKeyViewModel key)
+        private BlackboardProperty CreateActionValue(BlackboardKeyViewModel key)
         {
             if (key.Value is BlackboardKeyViewModel bkv)
             {
-                return CreateBlackboardKey(bkv);
+                return new BlackboardProperty(new BlackboardKey(bkv.Name, bkv.Type));
             }
 
-            return new BlackboardKey(key.Name, key.Type);
+            return new BlackboardProperty(key.Value);
         }
 
         #endregion

@@ -15,7 +15,7 @@ namespace Nodify.StateMachine
     [DebuggerDisplay("{Name}: {Type}")]
     public readonly struct BlackboardKey : IEquatable<BlackboardKey>
     {
-        public static BlackboardKey Invalid = new BlackboardKey();
+        public static BlackboardKey Invalid { get; } = new BlackboardKey();
 
         public BlackboardKey(string name, BlackboardKeyType type)
         {
@@ -50,11 +50,5 @@ namespace Nodify.StateMachine
 
         public static bool operator !=(BlackboardKey left, BlackboardKey right)
             => !(left == right);
-    }
-
-    public static class BlackboardKeyExtensions
-    {
-        public static bool IsValid(this BlackboardKey key)
-            => key != BlackboardKey.Invalid;
     }
 }
