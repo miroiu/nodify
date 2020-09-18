@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         Title="State Machine Editor"
         Height="500"
-        Width="900">
+        Width="930">
     <Window.DataContext>
         <local:StateMachineViewModel />
     </Window.DataContext>
@@ -293,7 +293,7 @@
 
             <Border BorderBrush="{DynamicResource BackgroundBrush}"
                     BorderThickness="1"
-                    Width="270"
+                    Width="300"
                     Padding="10"
                     HorizontalAlignment="Stretch">
                 <Grid>
@@ -549,7 +549,7 @@
                                             <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
                                                 <local:BlackboardKeyEditorView Margin="0 0 0 2">
                                                     <local:BlackboardKeyEditorView.DataContext>
-                                                        <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=True}">
+                                                        <MultiBinding Converter="{local:BlackboardKeyEditorConverter CanChangeInputType=False}">
                                                             <Binding Source="{StaticResource BlackboardProxy}"
                                                                      Path="DataContext.Keys" />
                                                             <Binding BindsDirectlyToSource="True" />
