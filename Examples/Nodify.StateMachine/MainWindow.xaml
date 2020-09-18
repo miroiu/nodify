@@ -314,9 +314,19 @@
                 </DataTemplate>
                 <DataTemplate x:Key="KeyTemplate"
                               DataType="{x:Type local:BlackboardKeyViewModel}">
-                    <ComboBox ItemsSource="{Binding DataContext.Blackboard.Keys, Source={StaticResource EditorProxy}}"
-                              SelectedItem="{Binding Value}"
-                              DisplayMemberPath="Name" />
+                    <ComboBox SelectedItem="{Binding Value}"
+                              DisplayMemberPath="Name">
+                        <ComboBox.ItemsSource>
+                            <MultiBinding Converter="{local:FilterBlackboardKeysConverter}">
+                                <Binding Source="{StaticResource EditorProxy}"
+                                         Path="DataContext.Blackboard.Keys" />
+                                <Binding Path="Type" />
+                                <!--USED TO NOTIFY OF COLLECTION CHANGED-->
+                                <Binding Source="{StaticResource EditorProxy}"
+                                         Path="DataContext.Blackboard.Keys.Count" />
+                            </MultiBinding>
+                        </ComboBox.ItemsSource>
+                    </ComboBox>
                 </DataTemplate>
             </Expander.Resources>
 
