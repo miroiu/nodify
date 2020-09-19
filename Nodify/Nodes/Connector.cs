@@ -285,6 +285,15 @@ namespace Nodify
 
         #region Event Handlers
 
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            // Handle right click if is pending connection so context menus don't open
+            if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            {
+                e.Handled = true;
+            }
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             Focus();

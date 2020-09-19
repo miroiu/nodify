@@ -324,7 +324,12 @@ namespace Nodify
 
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
-            if (Editor != null && !IsSelected && IsSelectableLocation(e.GetPosition(this)))
+            // Handle right click if is previewing location so context menus don't open
+            if (IsPreviewingLocation)
+            {
+                e.Handled = true;
+            }
+            else if (Editor != null && !IsSelected && IsSelectableLocation(e.GetPosition(this)))
             {
                 Editor.UnselectAll();
                 IsSelected = true;
