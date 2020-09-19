@@ -27,4 +27,5 @@ jobs:
         PACKAGE_NAME: Nodify
         PROJECT_FILE_PATH: Nodify/Nodify.csproj
         NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        TAG_COMMIT: false
       
