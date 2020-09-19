@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Nodify
@@ -10,6 +11,19 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
+        private const double _baseOffset = 100d;
+        private const double _offsetGrowthRate = 25d;
+
+        private readonly BezierSegment _firstSegment = new BezierSegment();
+        private readonly PathFigure _figure = new PathFigure() { IsClosed = false };
+        private readonly PathGeometry _cachedGeometry = new PathGeometry();
+
+        public Connection()
+        {
+            _cachedGeometry.Figures.Add(_figure);
+            _figure.Segments.Add(_firstSegment);
+        }
+
         protected override Geometry DefiningGeometry
         {
             get
@@ -19,32 +33,27 @@ namespace Nodify
                 var source = Source + sourceOffset;
                 var target = Target + targetOffset;
 
-                double width = target.X - source.X;
-                double height = target.Y - source.Y;
+                var direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
-                Point p2 = new Point(source.X + (width / 4d), source.Y);
-                Point p3 = new Point(source.X + (width / 2d), source.Y + (height / 2d));
-                Point p4 = new Point(source.X + (3d * width / 4d), target.Y);
+                var delta = target - source;
+                var height = Math.Abs(delta.Y);
+                var width = Math.Abs(delta.X);
 
-                var result = new PathGeometry
-                {
-                    Figures = new PathFigureCollection
-                    {
-                        new PathFigure
-                        {
-                            StartPoint = source,
-                            IsClosed = false,
-                            Segments =
-                            {
-                                new BezierSegment(source, p2, p3, true),
-                                new BezierSegment(p3, p4, target, true)
-                            }
-                        }
-                    }
-                };
+                // Smooth curve when distance is lower than base offset
+                var smooth = Math.Min(_baseOffset, height);
+                // Calculate offset based on distance
+                var offset = Math.Max(smooth, width / 2d);
+                // Grow slowly with distance
+                offset = Math.Min(_baseOffset + Math.Sqrt(width * _offsetGrowthRate), offset);
 
-                result.Freeze();
-                return result;
+                var controlPoint = new Vector(offset * direction, 0d);
+
+                _figure.StartPoint = source;
+                _firstSegment.Point1 = source + controlPoint;
+                _firstSegment.Point2 = target - controlPoint;
+                _firstSegment.Point3 = target;
+
+                return _cachedGeometry;
             }
         }
     }

@@ -273,7 +273,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value indicating if a selection operation in progress.
+        /// Gets a value indicating if a selection operation is in progress.
         /// </summary>
         public bool IsSelecting
         {

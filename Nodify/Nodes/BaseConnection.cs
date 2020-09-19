@@ -13,6 +13,12 @@ namespace Nodify
         Edge,
     }
 
+    public enum ConnectionDirection
+    {
+        Forward,
+        Backward
+    }
+
     public abstract class BaseConnection : Shape
     {
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(Point), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -20,6 +26,7 @@ namespace Nodify
         public static readonly DependencyProperty SourceOffsetProperty = DependencyProperty.Register(nameof(SourceOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
 
         public Point Source
         {
@@ -49,6 +56,12 @@ namespace Nodify
         {
             get => (ConnectionOffsetMode)GetValue(OffsetModeProperty);
             set => SetValue(OffsetModeProperty, value);
+        }
+
+        public ConnectionDirection Direction
+        {
+            get => (ConnectionDirection)GetValue(DirectionProperty);
+            set => SetValue(DirectionProperty, value);
         }
 
         protected static readonly Vector ZeroVector = new Vector(0, 0);

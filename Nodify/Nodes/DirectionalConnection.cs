@@ -50,7 +50,14 @@ namespace Nodify
 
             if (ArrowSize.Width != 0 && ArrowSize.Height != 0)
             {
-                DrawArrowGeometry(context, source, target);
+                if (Direction == ConnectionDirection.Forward)
+                {
+                    DrawArrowGeometry(context, source, target);
+                }
+                else
+                {
+                    DrawArrowGeometry(context, target, source);
+                }
             }
         }
 
