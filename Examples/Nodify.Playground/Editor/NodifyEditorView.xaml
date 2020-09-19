@@ -116,8 +116,6 @@
                    BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                 <Setter Property="Location"
                         Value="{Binding Location}" />
-                <!--<Setter Property="HighlightBrush"
-                        Value="{Binding ., Converter={StaticResource RandomBrushConverter}}" />-->
             </Style>
         </nodify:NodifyEditor.ItemContainerStyle>
     </nodify:NodifyEditor>

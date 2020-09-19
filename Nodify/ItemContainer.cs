@@ -119,7 +119,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Overrides the size to check against when calculating if this <see cref="ItemContainer"/> is part of the current <see cref="NodifyEditor.SelectingRectangle"/>.
+        /// Overrides the size to check against when calculating if this <see cref="ItemContainer"/> can be part of the current <see cref="NodifyEditor.SelectedArea"/>.
         /// Defaults to <see cref="UIElement.RenderSize"/>.
         /// </summary>
         public Size? DesiredSizeForSelection

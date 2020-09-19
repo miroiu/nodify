@@ -16,7 +16,7 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     public class NodifyEditor : MultiSelector
     {
-        private const string ElementItemsHost = "PART_ItemsHost";
+        protected const string ElementItemsHost = "PART_ItemsHost";
 
         #region Cosmetic Dependency Properties
 
@@ -28,10 +28,6 @@ namespace Nodify
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
-        protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
-        public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
-        protected internal static readonly DependencyPropertyKey ViewportPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Viewport), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnViewportChanged, OnCoerceViewport));
-        public static readonly DependencyProperty ViewportProperty = ViewportPropertyKey.DependencyProperty;
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
@@ -139,16 +135,6 @@ namespace Nodify
         #endregion
 
         /// <summary>
-        /// Gets the area of the <see cref="NodifyEditor"/> that is seen on the screen. (<see cref="Offset"/> and <see cref="Scale"/> applied)
-        /// </summary>
-        public Rect Viewport => (Rect)GetValue(ViewportProperty);
-
-        /// <summary>
-        /// Gets the transform that is applied to all child controls.
-        /// </summary>
-        public TransformGroup AppliedTransform => (TransformGroup)GetValue(AppliedTransformProperty);
-
-        /// <summary>
         /// Gets or sets the <see cref="Viewport"/>'s top left coordinates.
         /// </summary>
         public Point Offset
@@ -247,21 +233,83 @@ namespace Nodify
 
         #endregion
 
+        #region Readonly Dependency Properties
+
+        protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
+        public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
+
+        protected internal static readonly DependencyPropertyKey ViewportPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Viewport), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnViewportChanged, OnCoerceViewport));
+        public static readonly DependencyProperty ViewportProperty = ViewportPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey SelectedAreaPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectedArea), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
+        public static readonly DependencyProperty SelectedAreaProperty = SelectedAreaPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
+
+        public static readonly DependencyPropertyKey IsPanningPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsPanningProperty = IsPanningPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
+        public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
+
+        /// <summary>
+        /// Gets the area of the <see cref="NodifyEditor"/> that is seen on the screen. (<see cref="Offset"/> and <see cref="Scale"/> applied)
+        /// </summary>
+        public Rect Viewport => (Rect)GetValue(ViewportProperty);
+
+        /// <summary>
+        /// Gets the transform that is applied to all child controls.
+        /// </summary>
+        public Transform AppliedTransform => (Transform)GetValue(AppliedTransformProperty);
+
+        /// <summary>
+        /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
+        /// </summary>
+        public Rect SelectedArea
+        {
+            get => (Rect)GetValue(SelectedAreaProperty);
+            internal set => SetValue(SelectedAreaPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating if a selection operation in progress.
+        /// </summary>
+        public bool IsSelecting
+        {
+            get => (bool)GetValue(IsSelectingProperty);
+            internal set => SetValue(IsSelectingPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating if a panning operation is in progress.
+        /// </summary>
+        public bool IsPanning
+        {
+            get => (bool)GetValue(IsPanningProperty);
+            protected set => SetValue(IsPanningPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Gets the current transformed mouse location using the <see cref="AppliedTransform"/>.
+        /// </summary>
+        public Point MouseLocation
+        {
+            get => (Point)GetValue(MouseLocationProperty);
+            protected set => SetValue(MouseLocationPropertyKey, value);
+        }
+
+        #endregion
+
         #region Dependency Properties
 
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
+        public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(int), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Int1));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
-        protected internal static readonly DependencyPropertyKey SelectingRectanglePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectingRectangle), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
-        public static readonly DependencyProperty SelectingRectangleProperty = SelectingRectanglePropertyKey.DependencyProperty;
-        protected internal static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
-        public static readonly DependencyProperty IsPanningProperty = DependencyProperty.Register(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty MouseLocationProperty = DependencyProperty.Register(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
 
         /// <summary>
         /// Gets or sets the value of an invisible grid used to adjust locations (snapping) of <see cref="ItemContainer"/>s.
@@ -300,15 +348,6 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets the area that is currently selected while <see cref="IsSelecting"/> is true.
-        /// </summary>
-        public Rect SelectingRectangle
-        {
-            get => (Rect)GetValue(SelectingRectangleProperty);
-            protected internal set => SetValue(SelectingRectanglePropertyKey, value);
-        }
-
-        /// <summary>
         /// Gets or sets whether zooming should be disabled.
         /// </summary>
         public bool DisableZooming
@@ -327,40 +366,13 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value indicating if a selection operation in progress.
-        /// </summary>
-        public bool IsSelecting
-        {
-            get => (bool)GetValue(IsSelectingProperty);
-            internal set => SetValue(IsSelectingPropertyKey, value);
-        }
-
-        /// <summary>
-        /// Enables selecting and deselecting items while the <see cref="SelectingRectangle"/> changes.
+        /// Enables selecting and deselecting items while the <see cref="SelectedArea"/> changes.
         /// Disable for maximum performance when hundreds of items are generated.
         /// </summary>
         public bool EnableRealtimeSelection
         {
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
-        }
-
-        /// <summary>
-        /// Gets a value indicating if a panning operation is in progress.
-        /// </summary>
-        public bool IsPanning
-        {
-            get => (bool)GetValue(IsPanningProperty);
-            private set => SetValue(IsPanningProperty, value);
-        }
-
-        /// <summary>
-        /// Gets the current transformed mouse location using the <see cref="AppliedTransform"/>.
-        /// </summary>
-        public Point MouseLocation
-        {
-            get => (Point)GetValue(MouseLocationProperty);
-            private set => SetValue(MouseLocationProperty, value);
         }
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -421,9 +433,6 @@ namespace Nodify
 
         public static readonly RoutedEvent ViewportUpdatedEvent = EventManager.RegisterRoutedEvent(nameof(ViewportUpdated), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NodifyEditor));
 
-        public void OnViewportUpdated()
-            => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
-
         /// <summary>
         /// Occurs whenever the <see cref="Viewport"/> changes.
         /// </summary>
@@ -432,6 +441,13 @@ namespace Nodify
             add => AddHandler(ViewportUpdatedEvent, value);
             remove => RemoveHandler(ViewportUpdatedEvent, value);
         }
+
+        /// <summary>
+        /// Raises the <see cref="ViewportUpdatedEvent"/>.
+        /// Called when the <see cref="Offset"/> or <see cref="Scale"/> is changed.
+        /// </summary>
+        protected void OnViewportUpdated()
+            => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
 
         #endregion
 
@@ -474,7 +490,7 @@ namespace Nodify
         protected internal Panel? ItemsHost { get; private set; }
 
         /// <summary>
-        /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectingRectangle"/> and <see cref="IsSelecting"/> properties.
+        /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectedArea"/> and <see cref="IsSelecting"/> properties.
         /// </summary>
         protected SelectionHelper Selection { get; private set; }
 
@@ -941,28 +957,18 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Adds or removes the <paramref name="items"/> to/from the <see cref="SelectedItems"/> list.
+        /// Adds the <paramref name="items"/> to the <see cref="SelectedItems"/> list.
         /// </summary>
-        /// <param name="items">The items to select or unselect.</param>
+        /// <param name="items">The items to select.</param>
         /// <param name="selected">True to add, false to remove.</param>
-        internal void SetSelectedItems(IList<object> items, bool selected = true)
+        internal void SelectItems(IList<object> items)
         {
             var selectedItems = base.SelectedItems;
 
             BeginUpdateSelectedItems();
-            if (selected)
+            for (int i = 0; i < items.Count; i++)
             {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    selectedItems.Add(items[i]);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    selectedItems.Remove(items[i]);
-                }
+                selectedItems.Add(items[i]);
             }
             EndUpdateSelectedItems();
         }

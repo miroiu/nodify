@@ -8,7 +8,7 @@ namespace Nodify
     [TemplatePart(Name = ElementContent, Type = typeof(UIElement))]
     public class StateNode : Connector
     {
-        private const string ElementContent = "PART_Content";
+        protected const string ElementContent = "PART_Content";
 
         public static readonly DependencyProperty HighlightBrushProperty = DependencyProperty.Register(nameof(HighlightBrush), typeof(Brush), typeof(StateNode));
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(nameof(Content), typeof(object), typeof(StateNode));

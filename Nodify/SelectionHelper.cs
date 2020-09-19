@@ -10,8 +10,8 @@ namespace Nodify
         private readonly NodifyEditor _host;
         private Point _startLocation;
         private SelectionType _selectionType;
-        private bool _realtime;
-        private object[] _selectedNodes = Array.Empty<object>();
+        private bool _isRealtime;
+        private object[] _initialSelection = Array.Empty<object>();
 
         public SelectionHelper(NodifyEditor host)
             => _host = host;
@@ -40,14 +40,14 @@ namespace Nodify
                 _host.UnselectAll();
             }
 
-            _realtime = realtime;
+            _isRealtime = realtime;
             _startLocation = location;
 
             var items = ((MultiSelector)_host).SelectedItems;
-            _selectedNodes = new object[items.Count];
-            items.CopyTo(_selectedNodes, 0);
+            _initialSelection = new object[items.Count];
+            items.CopyTo(_initialSelection, 0);
 
-            _host.SelectingRectangle = new Rect();
+            _host.SelectedArea = new Rect();
             _host.IsSelecting = true;
         }
 
@@ -58,11 +58,11 @@ namespace Nodify
             var width = Math.Abs(endLocation.X - _startLocation.X);
             var height = Math.Abs(endLocation.Y - _startLocation.Y);
 
-            _host.SelectingRectangle = new Rect(left, top, width, height);
+            _host.SelectedArea = new Rect(left, top, width, height);
 
-            if (_realtime)
+            if (_isRealtime)
             {
-                ApplySelection(_host.SelectingRectangle);
+                ApplySelection(_host.SelectedArea);
             }
         }
 
@@ -71,13 +71,13 @@ namespace Nodify
             if (_host.IsSelecting)
             {
                 _host.IsSelecting = false;
-                var rect = _host.SelectingRectangle;
+                var rect = _host.SelectedArea;
                 if (rect.Width > 0 && rect.Height > 0)
                 {
                     ApplySelection(rect);
                 }
 
-                _selectedNodes = Array.Empty<object>();
+                _initialSelection = Array.Empty<object>();
             }
         }
 
@@ -90,29 +90,29 @@ namespace Nodify
                     break;
 
                 case SelectionType.Remove:
-                    if (_realtime)
+                    if (_isRealtime)
                     {
-                        _host.SetSelectedItems(_selectedNodes, true);
+                        _host.SelectItems(_initialSelection);
                     }
 
                     _host.UnselectArea(area);
                     break;
 
                 case SelectionType.Append:
-                    if (_realtime)
+                    if (_isRealtime)
                     {
                         _host.UnselectAll();
-                        _host.SetSelectedItems(_selectedNodes, true);
+                        _host.SelectItems(_initialSelection);
                     }
 
                     _host.SelectArea(area, true);
                     break;
 
                 case SelectionType.Invert:
-                    if (_realtime)
+                    if (_isRealtime)
                     {
                         _host.UnselectAll();
-                        _host.SetSelectedItems(_selectedNodes, true);
+                        _host.SelectItems(_initialSelection);
                     }
 
                     _host.InvertSelection(area);

@@ -18,16 +18,16 @@ namespace Nodify
     [TemplatePart(Name = ElementContent, Type = typeof(FrameworkElement))]
     public class GroupingNode : HeaderedContentControl
     {
-        private static readonly object GroupMovement = GroupingMovementMode.Group;
+        protected static readonly object GroupMovementBoxed = GroupingMovementMode.Group;
 
-        private const string ElementResizeThumb = "PART_ResizeThumb";
-        private const string ElementHeader = "PART_Header";
-        private const string ElementContent = "PART_Content";
+        protected const string ElementResizeThumb = "PART_ResizeThumb";
+        protected const string ElementHeader = "PART_Header";
+        protected const string ElementContent = "PART_Content";
 
         public static readonly DependencyProperty HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner(typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
-        public static readonly DependencyProperty DefaultMovementModeProperty = DependencyProperty.Register(nameof(DefaultMovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovement));
+        public static readonly DependencyProperty DefaultMovementModeProperty = DependencyProperty.Register(nameof(DefaultMovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
 
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -75,10 +75,10 @@
 
                             <Rectangle x:Name="PART_SelectionRectangle"
                                        Style="{TemplateBinding SelectionRectangleStyle}"
-                                       Canvas.Top="{Binding SelectingRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Canvas.Left="{Binding SelectingRectangle.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Width="{Binding SelectingRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Height="{Binding SelectingRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Width="{Binding SelectedArea.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Height="{Binding SelectedArea.Height, RelativeSource={RelativeSource TemplatedParent}}"
                                        Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <ContentPresenter ContentSource="PendingConnection" />
