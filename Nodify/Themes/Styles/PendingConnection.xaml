@@ -31,13 +31,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PendingConnection}">
                     <Canvas>
-                        <Line Stroke="{TemplateBinding Stroke}"
-                              StrokeThickness="{TemplateBinding StrokeThickness}"
-                              StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                              X1="{Binding SourceAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
-                              Y1="{Binding SourceAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                              X2="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
-                              Y2="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <local:Connection Source="{TemplateBinding SourceAnchor}"
+                                          Target="{TemplateBinding TargetAnchor}"
+                                          Stroke="{TemplateBinding Stroke}"
+                                          StrokeThickness="{TemplateBinding StrokeThickness}"
+                                          StrokeDashArray="{TemplateBinding StrokeDashArray}" />
                         <Border Background="{TemplateBinding Background}"
                                 Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
