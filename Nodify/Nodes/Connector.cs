@@ -11,7 +11,7 @@ namespace Nodify
     [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
     public class Connector : Control
     {
-        private const string ElementConnector = "PART_Connector";
+        protected const string ElementConnector = "PART_Connector";
 
         #region Routed Events
 
@@ -63,6 +63,8 @@ namespace Nodify
         public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(Point), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False, OnIsConnectedChanged));
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(Connector));
+        private static readonly DependencyPropertyKey _isPendingConnectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPendingConnection), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsPendingConnectionProperty = _isPendingConnectionPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the location where <see cref="Connection"/>s can be attached to. 
@@ -81,6 +83,15 @@ namespace Nodify
         {
             get => (bool)GetValue(IsConnectedProperty);
             set => SetValue(IsConnectedProperty, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating if a <see cref="PendingConnection"/> is in progress for this <see cref="Connector"/>.
+        /// </summary>
+        public bool IsPendingConnection
+        {
+            get => (bool)GetValue(IsPendingConnectionProperty);
+            protected set => SetValue(_isPendingConnectionPropertyKey, value);
         }
 
         /// <summary>
@@ -285,12 +296,21 @@ namespace Nodify
 
         #region Event Handlers
 
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            if (IsPendingConnection)
+            {
+                OnConnectorDragCompleted(cancel: true);
+            }
+        }
+
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
-            // Handle right click if is pending connection so context menus don't open
-            if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            // Cancel pending connection
+            if (IsMouseCaptured && IsPendingConnection)
             {
-                e.Handled = true;
+                OnConnectorDragCompleted(cancel: true);
+                ReleaseMouseCapture();
             }
         }
 
@@ -318,8 +338,8 @@ namespace Nodify
 
             if (IsMouseCaptured)
             {
-                ReleaseMouseCapture();
                 OnConnectorDragCompleted();
+                ReleaseMouseCapture();
             }
 
             e.Handled = true;
@@ -365,9 +385,10 @@ namespace Nodify
             };
 
             RaiseEvent(args);
+            IsPendingConnection = true;
         }
 
-        protected virtual void OnConnectorDragCompleted()
+        protected virtual void OnConnectorDragCompleted(bool cancel = false)
         {
             FrameworkElement? elem = null;
             if (Editor != null)
@@ -382,9 +403,11 @@ namespace Nodify
                 TargetConnector = target,
                 RoutedEvent = PendingConnectionCompletedEvent,
                 Anchor = Anchor,
-                Source = this
+                Source = this,
+                Canceled = cancel
             };
 
+            IsPendingConnection = false;
             RaiseEvent(args);
         }
 

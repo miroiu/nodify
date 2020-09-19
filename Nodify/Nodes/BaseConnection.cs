@@ -119,7 +119,7 @@ namespace Nodify
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == this)
+            if (IsMouseCaptured)
             {
                 ReleaseMouseCapture();
             }

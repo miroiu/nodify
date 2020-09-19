@@ -276,7 +276,6 @@ namespace Nodify
             if (IsVisible)
             {
                 IsVisible = false;
-                Target = e.TargetConnector;
 
                 if (_previousConnector != null)
                 {
@@ -284,10 +283,15 @@ namespace Nodify
                     _previousConnector = null;
                 }
 
-                // invoke the CompletedCommand if event is not handled
-                if (!e.Handled && (CompletedCommand?.CanExecute(Target) ?? false))
+                if (!e.Canceled)
                 {
-                    CompletedCommand?.Execute(Target);
+                    Target = e.TargetConnector;
+
+                    // invoke the CompletedCommand if event is not handled
+                    if (!e.Handled && (CompletedCommand?.CanExecute(Target) ?? false))
+                    {
+                        CompletedCommand?.Execute(Target);
+                    }
                 }
             }
         }

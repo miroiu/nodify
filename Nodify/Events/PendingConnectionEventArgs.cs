@@ -18,5 +18,7 @@ namespace Nodify
 
         public double OffsetX { get; set; }
         public double OffsetY { get; set; }
+
+        public bool Canceled { get; set; }
     }
 }

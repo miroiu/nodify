@@ -270,12 +270,12 @@ namespace Nodify
         /// <summary>
         /// Checks if <paramref name="position"/> is selectable.
         /// </summary>
-        /// <param name="position">A position inside this <see cref="ItemContainer"/>.</param>
+        /// <param name="position">A position relative to this <see cref="ItemContainer"/>.</param>
         /// <returns>True if <paramref name="position"/> is selectable.</returns>
         protected virtual bool IsSelectableLocation(Point position)
         {
             Size size = DesiredSizeForSelection ?? RenderSize;
-            return position.X <= size.Width && position.Y <= size.Height;
+            return position.X >= 0 && position.Y >= 0 && position.X <= size.Width && position.Y <= size.Height;
         }
 
         /// <summary>

@@ -66,7 +66,6 @@ namespace Nodify
             var editor = (NodifyEditor)d;
             editor.OffsetOverride((Point)e.NewValue);
             editor.CoerceValue(ViewportProperty);
-            editor.IsPanning = true;
         }
 
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -75,7 +74,7 @@ namespace Nodify
             editor.ScaleOverride((double)e.NewValue);
             editor.CoerceValue(ViewportProperty);
         }
-        
+
         private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
@@ -175,7 +174,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the speed used when auto-panning scaled by <see cref="AutoPanningTimerIntervalMilliseconds"/>
+        /// Gets or sets the speed used when auto-panning scaled by <see cref="AutoPanningTickRate"/>
         /// </summary>
         public double AutoPanSpeed
         {
@@ -317,7 +316,7 @@ namespace Nodify
             get => (bool)GetValue(DisableZoomingProperty);
             set => SetValue(DisableZoomingProperty, value);
         }
-        
+
         /// <summary>
         /// Gets or sets whether panning should be disabled.
         /// </summary>
@@ -326,7 +325,7 @@ namespace Nodify
             get => (bool)GetValue(DisablePanningProperty);
             set => SetValue(DisablePanningProperty, value);
         }
-        
+
         /// <summary>
         /// Gets a value indicating if a selection operation in progress.
         /// </summary>
@@ -370,7 +369,7 @@ namespace Nodify
         #endregion
 
         #region Command Dependency Properties
-        
+
         public static readonly DependencyProperty ConnectionCompletedCommandProperty = DependencyProperty.Register(nameof(ConnectionCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
@@ -436,21 +435,23 @@ namespace Nodify
 
         #endregion
 
+        #region Fields
+
         /// <summary>
-        /// The transform used to offset the <see cref="Viewport"/>.
+        /// Gets the transform used to offset the <see cref="Viewport"/>.
         /// </summary>
         protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
 
         /// <summary>
-        /// The transform used to scale the <see cref="Viewport"/>.
+        /// Gets the transform used to scale the <see cref="Viewport"/>.
         /// </summary>
         protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
 
         /// <summary>
-        /// Value is number of pixels squared.
+        /// Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
         /// Useful for <see cref="ContextMenu"/>s to appear if mouse only moved a bit or not at all.
         /// </summary>
-        public static double HandleRightClickAfterPanningThreshold { get; set; } = 144d;
+        public static double HandleRightClickAfterPanningThreshold { get; set; } = 12d;
 
         /// <summary>
         /// Correct <see cref="ItemContainer"/>'s position after moving if starting position is not snapped to grid.
@@ -458,10 +459,9 @@ namespace Nodify
         public static bool EnableSnappingCorrection { get; set; } = true;
 
         /// <summary>
-        /// How often should we calculate the new <see cref="Offset"/> when dragging or selecting.
+        /// Gets or sets how often the new <see cref="Offset"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
         /// </summary>
-        /// 
-        public static double AutoPanningTimerIntervalMilliseconds { get; set; } = 1;
+        public static double AutoPanningTickRate { get; set; } = 1;
 
         /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
@@ -469,7 +469,7 @@ namespace Nodify
         public bool IsBulkUpdatingItems { get; protected set; }
 
         /// <summary>
-        /// The panel that holds all the <see cref="ItemContainer"/>s.
+        /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
         protected internal Panel? ItemsHost { get; private set; }
 
@@ -479,24 +479,26 @@ namespace Nodify
         protected SelectionHelper Selection { get; private set; }
 
         /// <summary>
-        /// Tells where the mouse cursor was the previous time it moved relative to the <see cref="NodifyEditor"/>.
+        /// Gets where the mouse cursor was the previous time it moved relative to the <see cref="NodifyEditor"/>.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point PreviousMousePosition;
 
         /// <summary>
-        /// Tells where the mouse cursor is right now relative to the <see cref="NodifyEditor"/>.
+        /// Gets where the mouse cursor is right now relative to the <see cref="NodifyEditor"/>.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point CurrentMousePosition;
 
         /// <summary>
-        /// Tells where the mouse cursor was when the user started interacting with the <see cref="NodifyEditor"/>.
+        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occured.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point InitialMousePosition;
 
         private DispatcherTimer? _autoPanningTimer;
+
+        #endregion
 
         public NodifyEditor()
         {
@@ -549,7 +551,7 @@ namespace Nodify
             {
                 var mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
-                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTimerIntervalMilliseconds);
+                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate);
                 double x = Offset.X;
                 double y = Offset.Y;
 
@@ -590,11 +592,11 @@ namespace Nodify
             {
                 if (_autoPanningTimer == null)
                 {
-                    _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTimerIntervalMilliseconds), DispatcherPriority.Background, new EventHandler(HandleAutoPanning), Dispatcher);
+                    _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate), DispatcherPriority.Background, new EventHandler(HandleAutoPanning), Dispatcher);
                 }
                 else
                 {
-                    _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTimerIntervalMilliseconds);
+                    _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
                     _autoPanningTimer.Start();
                 }
             }
@@ -619,11 +621,14 @@ namespace Nodify
 
         private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
-            var result = (e.SourceConnector, e.TargetConnector);
-            if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
+            if (!e.Canceled)
             {
-                ConnectionCompletedCommand.Execute(result);
-                e.Handled = true;
+                var result = (e.SourceConnector, e.TargetConnector);
+                if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
+                {
+                    ConnectionCompletedCommand.Execute(result);
+                    e.Handled = true;
+                }
             }
         }
 
@@ -645,20 +650,22 @@ namespace Nodify
             {
                 MouseLocation = GetMousePositionTransformed(CurrentMousePosition);
 
-                if (Mouse.Captured == this)
+                if (IsMouseCaptured)
                 {
                     // Panning
                     if (e.RightButton == MouseButtonState.Pressed)
                     {
                         Offset -= CurrentMousePosition - PreviousMousePosition;
+                        IsPanning = true;
                         e.Handled = true;
                     }
                     else if (IsSelecting)
                     {
                         Selection.Update(MouseLocation);
                     }
-                    else if (Mouse.Captured == this)
+                    else
                     {
+                        // Should not reach this
                         ReleaseMouseCapture();
                     }
                 }
@@ -667,25 +674,33 @@ namespace Nodify
             }
         }
 
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            // End selection if selecting
+            Selection.End();
+            IsPanning = false;
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (Mouse.Captured == null)
             {
-                Selection.Start(MouseLocation, EnableRealtimeSelection);
-
                 Focus();
                 CaptureMouse();
 
                 InitialMousePosition = e.GetPosition(this);
+                Selection.Start(MouseLocation, EnableRealtimeSelection);
             }
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == this && e.RightButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
-            {
-                Selection.End();
+            // End selection if selecting
+            Selection.End();
 
+            // If panning, don't interrupt
+            if (!IsPanning && IsMouseCaptured)
+            {
                 Focus();
                 ReleaseMouseCapture();
             }
@@ -704,19 +719,38 @@ namespace Nodify
 
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == this && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            // If right clicking without panning or selecting allow context menu
+            if (IsMouseCaptured && !IsPanning && !IsSelecting)
             {
                 Focus();
                 ReleaseMouseCapture();
+            }
+            // If is selecting but not panning, end selection and show context menu
+            else if (IsSelecting && !IsPanning)
+            {
+                Selection.End();
+            }
+            else if (IsPanning)
+            {
+                IsPanning = false;
 
-                if (IsPanning)
+                // Allow selecting and panning at the same time and disable context menu
+                if (IsSelecting)
                 {
-                    IsPanning = false;
-
-                    // Handle right click if IsPanning and moved the mouse more than threshold so context menus don't open
-                    if ((CurrentMousePosition - InitialMousePosition).LengthSquared > HandleRightClickAfterPanningThreshold)
+                    e.Handled = true;
+                }
+                // If is panning but not selecting, release mouse capture and show context menu if necessary
+                else
+                {
+                    // Handle right click if is panning and moved the mouse more than threshold so context menus don't open
+                    if ((CurrentMousePosition - InitialMousePosition).LengthSquared > HandleRightClickAfterPanningThreshold * HandleRightClickAfterPanningThreshold)
                     {
                         e.Handled = true;
+                    }
+
+                    if (IsMouseCaptured)
+                    {
+                        ReleaseMouseCapture();
                     }
                 }
             }
