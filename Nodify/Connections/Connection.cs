@@ -4,6 +4,9 @@ using System.Windows.Media;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents a bezier curve.
+    /// </summary>
     public class Connection : BaseConnection
     {
         static Connection()
@@ -18,6 +21,9 @@ namespace Nodify
         private readonly PathFigure _figure = new PathFigure() { IsClosed = false };
         private readonly PathGeometry _cachedGeometry = new PathGeometry();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Connection"/> class.
+        /// </summary>
         public Connection()
         {
             _cachedGeometry.Figures.Add(_figure);

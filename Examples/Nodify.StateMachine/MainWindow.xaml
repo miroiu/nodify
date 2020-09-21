@@ -99,7 +99,7 @@
                     <!--If IsConnected is false, Anchor won't be updated-->
                     <nodify:StateNode Content="{Binding}"
                                       IsConnected="True"
-                                      Size="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
+                                      ActualSize="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
                                       Anchor="{Binding Anchor, Mode=OneWayToSource}">
                         <nodify:StateNode.ContentTemplate>
                             <DataTemplate DataType="{x:Type local:StateViewModel}">

@@ -12,6 +12,9 @@ using System.Windows.Threading;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, scale and select.
+    /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     public class NodifyEditor : MultiSelector
@@ -273,7 +276,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value indicating if a selection operation is in progress.
+        /// Gets a value that indicates whether a selection operation is in progress.
         /// </summary>
         public bool IsSelecting
         {
@@ -282,7 +285,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value indicating if a panning operation is in progress.
+        /// Gets a value that indicates whether a panning operation is in progress.
         /// </summary>
         public bool IsPanning
         {
@@ -516,6 +519,9 @@ namespace Nodify
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodifyEditor"/> class.
+        /// </summary>
         public NodifyEditor()
         {
             AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
@@ -591,6 +597,7 @@ namespace Nodify
 
                 Offset = new Point(x, y);
 
+                // Update the selecting area because the mouse might not move to update it.
                 if (IsSelecting)
                 {
                     Selection.Update(GetMousePositionTransformed(mousePosition));
@@ -1039,6 +1046,7 @@ namespace Nodify
             IsBulkUpdatingItems = false;
             DragInstigator = null;
 
+            // Draw the containers at the new position.
             ItemsHost?.InvalidateArrange();
 
             if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)

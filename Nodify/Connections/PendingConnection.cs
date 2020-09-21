@@ -245,17 +245,17 @@ namespace Nodify
 
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
-                    // look for a potential connector
+                    // Look for a potential connector
                     FrameworkElement? connector = Editor.ItemsHost != null ? GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors) : GetPotentialConnector(Editor, AllowOnlyConnectors);
 
-                    // update the connector's anchor and snap to it if snapping is enabled
+                    // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)
                     {
                         target.UpdateAnchor();
                         TargetAnchor = target.Anchor;
                     }
 
-                    // if it's not the same connector
+                    // If it's not the same connector
                     if (connector != _previousConnector)
                     {
                         if (_previousConnector != null)
@@ -263,12 +263,12 @@ namespace Nodify
                             SetIsOverElement(_previousConnector, false);
                         }
 
-                        // and we have a connector
+                        // And we have a connector
                         if (connector != null)
                         {
                             SetIsOverElement(connector, true);
 
-                            // update the preview target if enabled
+                            // Update the preview target if enabled
                             if (EnablePreview)
                             {
                                 PreviewTarget = connector.DataContext;
@@ -297,7 +297,7 @@ namespace Nodify
                 {
                     Target = e.TargetConnector;
 
-                    // invoke the CompletedCommand if event is not handled
+                    // Invoke the CompletedCommand if event is not handled
                     if (!e.Handled && (CompletedCommand?.CanExecute(Target) ?? false))
                     {
                         CompletedCommand?.Execute(Target);

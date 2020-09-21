@@ -7,12 +7,25 @@ using System.Windows.Media;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Specifies the possible movement modes of a <see cref="GroupingNode"/>.
+    /// </summary>
     public enum GroupingMovementMode
     {
+        /// <summary>
+        /// The <see cref="GroupingNode"/> will move its content when moved.
+        /// </summary>
         Group,
+
+        /// <summary>
+        /// The <see cref="GroupingNode"/> will not move its content when moved.
+        /// </summary>
         Self
     }
 
+    /// <summary>
+    /// Defines a headered area that groups <see cref="ItemContainer"/>s inside it and can be resized.
+    /// </summary>
     [TemplatePart(Name = ElementResizeThumb, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = ElementHeader, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = ElementContent, Type = typeof(FrameworkElement))]
@@ -23,6 +36,8 @@ namespace Nodify
         protected const string ElementResizeThumb = "PART_ResizeThumb";
         protected const string ElementHeader = "PART_Header";
         protected const string ElementContent = "PART_Content";
+
+        #region Dependency Properties
 
         public static readonly DependencyProperty HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner(typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
@@ -37,37 +52,89 @@ namespace Nodify
             node.Height = newSize.Height;
         }
 
+        /// <summary>
+        /// Gets or sets the brush used for the background of the <see cref="HeaderedContentControl.Header"/> of this <see cref="GroupingNode"/>.
+        /// </summary>
         public Brush HeaderBrush
         {
             get => (Brush)GetValue(HeaderBrushProperty);
             set => SetValue(HeaderBrushProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value that indicates whether this <see cref="GroupingNode"/> can be resized.
+        /// </summary>
         public bool CanResize
         {
             get => (bool)GetValue(CanResizeProperty);
             set => SetValue(CanResizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the actual size of this <see cref="GroupingNode"/>.
+        /// </summary>
         public Size ActualSize
         {
             get => (Size)GetValue(ActualSizeProperty);
             set => SetValue(ActualSizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the default movement mode which can be temporarily changed by holding the <see cref="SwitchMovementModeModifierKey"/> while dragging by the header.
+        /// </summary>
         public GroupingMovementMode DefaultMovementMode
         {
             get => (GroupingMovementMode)GetValue(DefaultMovementModeProperty);
             set => SetValue(DefaultMovementModeProperty, value);
         }
 
+        #endregion
+        
+        #region Fields
+
+        /// <summary>
+        /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="GroupingNode"/>.
+        /// </summary>
+        protected NodifyEditor? Editor { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
+        /// </summary>
+        protected ItemContainer? Container { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="FrameworkElement"/> used to resize this <see cref="GroupingNode"/>.
+        /// </summary>
+        protected FrameworkElement? ResizeThumb;
+
+        /// <summary>
+        /// Gets the <see cref="HeaderedContentControl.Header"/> control of this <see cref="GroupingNode"/>.
+        /// </summary>
+        protected FrameworkElement? HeaderControl;
+
+        /// <summary>
+        /// Gets the <see cref="ContentControl.Content"/> control of this <see cref="GroupingNode"/>.
+        /// </summary>
+        protected FrameworkElement? ContentControl;
+
+        /// <summary>
+        /// Gets or sets the key that will toggle between <see cref="GroupingMovementMode"/>s.
+        /// </summary>
         public static ModifierKeys SwitchMovementModeModifierKey { get; set; } = ModifierKeys.Shift;
+
+        private double _minHeight = 30;
+        private double _minWidth = 30;
+
+        #endregion
 
         static GroupingNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(typeof(GroupingNode)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupingNode"/> class.
+        /// </summary>
         public GroupingNode()
         {
             AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnResize));
@@ -76,16 +143,6 @@ namespace Nodify
             Loaded += OnNodeLoaded;
             Unloaded += OnNodeUnloaded;
         }
-
-        protected NodifyEditor? Editor { get; private set; }
-        protected ItemContainer? Container { get; private set; }
-
-        protected FrameworkElement? ResizeThumb;
-        protected FrameworkElement? HeaderControl;
-        protected FrameworkElement? ContentControl;
-
-        private double _minHeight = 30;
-        private double _minWidth = 30;
 
         private void OnNodeLoaded(object sender, RoutedEventArgs e)
         {
@@ -110,21 +167,25 @@ namespace Nodify
         {
             if (Container != null && Editor != null)
             {
+                // Switch the default movement mode if necessary
                 if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
                 {
                     DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
 
+                // Deselect all so we can move without the content
                 if (DefaultMovementMode == GroupingMovementMode.Self)
                 {
                     Editor.UnselectAll();
                 }
+                // Select the content and move with it
                 else if (Keyboard.Modifiers != ModifierKeys.Control)
                 {
                     Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
                     Container.IsSelected = true;
                 }
 
+                // Switch the default movement mode back
                 if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
                 {
                     DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
@@ -184,6 +245,7 @@ namespace Nodify
                 _minHeight = Math.Max(HeaderControl.ActualHeight + ResizeThumb.ActualHeight, MinHeight);
                 _minWidth = Math.Max(ResizeThumb.ActualWidth, MinWidth);
 
+                // If there's content don't resize it
                 if (ContentControl != null)
                 {
                     _minWidth = Math.Max(_minWidth, ContentControl.DesiredSize.Width);
@@ -191,6 +253,7 @@ namespace Nodify
                 }
             }
 
+            // Allow selecting only by the header
             if (Container != null)
             {
                 Container.DesiredSizeForSelection = new Size(ActualWidth, Math.Max(HeaderControl?.ActualHeight ?? _minHeight, MinHeight));

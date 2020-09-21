@@ -86,7 +86,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value indicating if a <see cref="PendingConnection"/> is in progress for this <see cref="Connector"/>.
+        /// Gets a value that indicates whether a <see cref="PendingConnection"/> is in progress for this <see cref="Connector"/>.
         /// </summary>
         public bool IsPendingConnection
         {
@@ -425,7 +425,7 @@ namespace Nodify
 
                 RaiseEvent(args);
 
-                // raise DisconnectCommand if event is Disconnect not handled
+                // Raise DisconnectCommand if event is Disconnect not handled
                 if (!args.Handled && (DisconnectCommand?.CanExecute(connector) ?? false))
                 {
                     DisconnectCommand.Execute(connector);

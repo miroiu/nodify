@@ -4,10 +4,16 @@ using System.Windows.Media;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents a line that has an arrow indicating its <see cref="BaseConnection.Direction"/>.
+    /// </summary>
     public class DirectionalConnection : BaseConnection
     {
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(DirectionalConnection), new FrameworkPropertyMetadata(new Size(7, 7), FrameworkPropertyMetadataOptions.AffectsRender));
 
+        /// <summary>
+        /// Gets or sets the size of the arrow head.
+        /// </summary>
         public Size ArrowSize
         {
             get => (Size)GetValue(ArrowSizeProperty);

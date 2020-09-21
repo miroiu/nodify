@@ -54,7 +54,7 @@ namespace Nodify
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty HighlightBrushProperty = StateNode.HighlightBrushProperty.AddOwner(typeof(ItemContainer));
+        public static readonly DependencyProperty HighlightBrushProperty = DependencyProperty.Register(nameof(HighlightBrush), typeof(Brush), typeof(ItemContainer));
         public static readonly DependencyProperty SelectedBrushProperty = DependencyProperty.Register(nameof(SelectedBrush), typeof(Brush), typeof(ItemContainer));
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
@@ -91,6 +91,7 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets a value that indicates whether this node is selected.
         /// Can only be set if <see cref="IsSelectable"/> is true.
         /// </summary>
         public bool IsSelected
