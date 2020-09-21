@@ -36,16 +36,17 @@
                                                      Stroke="{TemplateBinding Stroke}"
                                                      StrokeThickness="{TemplateBinding StrokeThickness}"
                                                      StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                                                     Direction="{TemplateBinding Direction}"
                                                      ArrowSize="0 0" />
                         <Border Background="{TemplateBinding Background}"
                                 Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                 Visibility="{TemplateBinding EnablePreview, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Margin="15"
                                 Padding="{TemplateBinding Padding}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                CornerRadius="3">
+                                CornerRadius="3"
+                                Margin="15">
                             <ContentPresenter />
                         </Border>
                     </Canvas>

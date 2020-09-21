@@ -16,7 +16,7 @@
 
     <UserControl.Resources>
         <shared:RandomBrushConverter x:Key="RandomBrushConverter" />
-        <shared:DebugConverter x:Key="DebugConverter" />
+        <local:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
     </UserControl.Resources>
 
     <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
@@ -65,6 +65,33 @@
                         Value="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}" />
                 <Setter Property="AllowOnlyConnectors"
                         Value="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}" />
+                <Setter Property="Direction"
+                        Value="{Binding Source.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
+                            <Canvas>
+                                <nodify:Connection Source="{TemplateBinding SourceAnchor}"
+                                                   Target="{TemplateBinding TargetAnchor}"
+                                                   Stroke="{TemplateBinding Stroke}"
+                                                   StrokeThickness="{TemplateBinding StrokeThickness}"
+                                                   StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                                                   Direction="{TemplateBinding Direction}" />
+                                <Border Background="{TemplateBinding Background}"
+                                        Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Visibility="{TemplateBinding EnablePreview, Converter={shared:BooleanToVisibilityConverter}}"
+                                        Padding="{TemplateBinding Padding}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="3"
+                                        Margin="15">
+                                    <ContentPresenter />
+                                </Border>
+                            </Canvas>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style TargetType="{x:Type nodify:Connector}"

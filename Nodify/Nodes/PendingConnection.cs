@@ -24,6 +24,7 @@ namespace Nodify
         public static readonly DependencyProperty StrokeProperty = Shape.StrokeProperty.AddOwner(typeof(PendingConnection));
         public static readonly DependencyProperty AllowOnlyConnectorsProperty = DependencyProperty.Register(nameof(AllowOnlyConnectors), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True, OnAllowOnlyConnectorsChanged));
         public static readonly DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty DirectionProperty = BaseConnection.DirectionProperty.AddOwner(typeof(PendingConnection));
 
         /// <summary>
         /// Gets or sets the starting point for the connection.
@@ -132,6 +133,15 @@ namespace Nodify
         {
             get => base.IsVisible;
             set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Gets or sets the direction of this connection.
+        /// </summary>
+        public ConnectionDirection Direction
+        {
+            get => (ConnectionDirection)GetValue(DirectionProperty);
+            set => SetValue(DirectionProperty, value);
         }
 
         #endregion
