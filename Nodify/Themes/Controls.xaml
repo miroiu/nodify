@@ -54,6 +54,13 @@
                 Value="{StaticResource Node.FooterBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource Node.BorderBrush}" />
+        <Style.Triggers>
+            <Trigger Property="HasHeader"
+                     Value="True">
+                <Setter Property="Foreground"
+                        Value="{StaticResource Node.HeaderForegroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--STATE NODE-->
@@ -69,7 +76,7 @@
         <Setter Property="HighlightBrush"
                 Value="{StaticResource StateNode.HighlightBrush}" />
     </Style>
-    
+
     <!--GROUPING NODE-->
 
     <Style TargetType="{x:Type local:GroupingNode}"
@@ -83,7 +90,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource GroupingNode.BorderBrush}" />
     </Style>
-    
+
     <!--KNOT NODE-->
 
     <Style TargetType="{x:Type local:KnotNode}"
@@ -95,7 +102,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource KnotNode.BorderBrush}" />
     </Style>
-    
+
     <!--CONNECTOR-->
 
     <Style TargetType="{x:Type local:Connector}"
@@ -107,7 +114,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource Connector.BorderBrush}" />
     </Style>
-    
+
     <!--NODE INPUT-->
 
     <Style TargetType="{x:Type local:NodeInput}"
@@ -119,7 +126,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource NodeInput.BorderBrush}" />
     </Style>
-    
+
     <!--NODE OUTPUT-->
 
     <Style TargetType="{x:Type local:NodeOutput}"
@@ -131,7 +138,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource NodeOutput.BorderBrush}" />
     </Style>
-    
+
     <!--CONNECTION-->
 
     <Style TargetType="{x:Type local:Connection}"
@@ -139,7 +146,7 @@
         <Setter Property="Stroke"
                 Value="{StaticResource Connection.StrokeBrush}" />
     </Style>
-    
+
     <!--DIRECTIONAL CONNECTION-->
 
     <Style TargetType="{x:Type local:DirectionalConnection}"
@@ -151,7 +158,7 @@
     </Style>
 
     <!--PENDING CONNECTION-->
-    
+
     <Style TargetType="{x:Type local:PendingConnection}"
            BasedOn="{StaticResource {x:Type local:PendingConnection}}">
         <Setter Property="Stroke"

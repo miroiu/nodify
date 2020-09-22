@@ -19,7 +19,8 @@
 
     <!--NODE-->
     <Color x:Key="Node.BackgroundColor">#CBCCDF</Color>
-    <Color x:Key="Node.ForegroundColor">White</Color>
+    <Color x:Key="Node.ForegroundColor">Black</Color>
+    <Color x:Key="Node.HeaderForegroundColor">White</Color>
     <Color x:Key="Node.HeaderColor">#5C6A98</Color>
     <Color x:Key="Node.FooterColor">#5C6A98</Color>
     <Color x:Key="Node.BorderColor">Transparent</Color>

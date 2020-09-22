@@ -60,6 +60,10 @@
     <SolidColorBrush x:Key="Node.ForegroundBrush"
                      o:Freeze="True"
                      Color="{DynamicResource Node.ForegroundColor}" />
+    
+    <SolidColorBrush x:Key="Node.HeaderForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.HeaderForegroundColor}" />
 
     <SolidColorBrush x:Key="Node.BorderBrush"
                      o:Freeze="True"
