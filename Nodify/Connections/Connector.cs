@@ -135,7 +135,7 @@ namespace Nodify
         public static double OptimizeSafeZone = 1000d;
 
         /// <summary>
-        /// Gets or sets the minimum selected items needed to trigger optimizations.
+        /// Gets or sets the minimum selected items needed to trigger optimizations when outside of the <see cref="OptimizeSafeZone"/>.
         /// </summary>
         public static double OptimizeMinimumSelectedItems = 100;
 
