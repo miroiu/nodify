@@ -81,12 +81,15 @@
  - Ready for Undo/Redo
  - Expanding Controls library (Node, GroupingNode, Connection etc.)
  
+## Want to say thanks?
+Hit the ⭐ Star ⭐ button
+ 
 ## Documentation
 https://github.com/miroiu/nodify/wiki
 
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
 
-![Playground](https://i.imgur.com/MnbSLx8.png)
+![Playground](https://i.imgur.com/aqrUpuP.gif)
 
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
 
