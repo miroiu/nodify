@@ -1,0 +1,231 @@
+﻿<UserControl x:Class="Nodify.Playground.EditorSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nodify.Playground"
+             d:Foreground="{DynamicResource ForegroundBrush}"
+             d:Background="{DynamicResource PanelBackgroundBrush}"
+             mc:Ignorable="d">
+
+    <Border BorderThickness="1"
+            Padding="10"
+            HorizontalAlignment="Stretch">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"
+                                  SharedSizeGroup="PropertyName" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Realtime selection: "
+                       Margin="0 0 5 0" />
+            <CheckBox Grid.Column="1"
+                      Margin="0 0 5 0"
+                      IsChecked="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}" />
+
+            <TextBlock Grid.Row="1"
+                       Text="Pending connection snapping: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="1"
+                      Grid.Column="1"
+                      IsChecked="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="2"
+                       Text="Pending connection preview: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="2"
+                      Grid.Column="1"
+                      IsChecked="{Binding EnablePendingConnectionPreview, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="3"
+                       Text="Disable drop connection on node: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="3"
+                      Grid.Column="1"
+                      IsChecked="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="4"
+                       Text="Disable auto panning: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="4"
+                      Grid.Column="1"
+                      IsChecked="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="5"
+                       Text="Disable panning: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="5"
+                      Grid.Column="1"
+                      IsChecked="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="6"
+                       Text="Disable zooming: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="6"
+                      Grid.Column="1"
+                      IsChecked="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="7"
+                       Text="Grid spacing: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="7"
+                     Grid.Column="1"
+                     Text="{Binding GridSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="8"
+                       Text="Min zoom: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="8"
+                     Grid.Column="1"
+                     Text="{Binding MinZoom, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="9"
+                       Text="Max zoom: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="9"
+                     Grid.Column="1"
+                     Text="{Binding MaxZoom, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="10"
+                       Text="Auto panning speed: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="10"
+                     Grid.Column="1"
+                     Text="{Binding AutoPanningSpeed, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="11"
+                       Text="Auto panning edge distance: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="11"
+                     Grid.Column="1"
+                     Text="{Binding AutoPanningEdgeDistance, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <Expander Grid.Row="12"
+                      Grid.ColumnSpan="2"
+                      Header="Advanced"
+                      Padding="0 5 0 0"
+                      BorderThickness="0 0 0 1"
+                      IsExpanded="True"
+                      BorderBrush="{DynamicResource BackgroundBrush}">
+                <Expander.Style>
+                    <Style TargetType="{x:Type Expander}"
+                           BasedOn="{StaticResource {x:Type Expander}}">
+                        <Setter Property="Tag"
+                                Value="{StaticResource ExpandRightIcon}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsExpanded"
+                                     Value="True">
+                                <Setter Property="Tag"
+                                        Value="{StaticResource ExpandDownIcon}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+
+                <Border BorderThickness="1"
+                        HorizontalAlignment="Stretch">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"
+                                              SharedSizeGroup="PropertyName" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Disable context menu after panning: "
+                                   ToolTip="Disable after mouse moved this far"
+                                   Margin="0 0 5 0" />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding HandleRightClickAfterPanningThreshold, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 0 5 0" />
+
+                        <TextBlock Grid.Row="1"
+                                   Text="Auto panning tick rate: "
+                                   ToolTip="How often is the new position calculated in milliseconds"
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Text="{Binding AutoPanningTickRate, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="2"
+                                   Text="Enable snapping correction: "
+                                   ToolTip="Correct the final position when moving a selection"
+                                   Margin="0 5 5 0" />
+                        <CheckBox  Grid.Row="2"
+                                   Grid.Column="1"
+                                   IsChecked="{Binding EnableSnappingCorrection, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                   Margin="0 5 5 0" />
+
+                        <Separator Grid.Row="4"
+                                   Grid.ColumnSpan="2"
+                                   Width="Auto" />
+
+                        <TextBlock Grid.Row="5"
+                                   Text="Enable connector optimizations: "
+                                   ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
+                                   Margin="0 5 5 0" />
+                        <CheckBox  Grid.Row="5"
+                                   Grid.Column="1"
+                                   IsChecked="{Binding EnableConnectorOptimizations, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                   Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="6"
+                                   Text="Optimization safe zone: "
+                                   ToolTip="The minimum distance from the viewport where connectors will start optimizing"
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="6"
+                                 Grid.Column="1"
+                                 Text="{Binding OptimizeSafeZone, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="7"
+                                   Text="Optimize minimum selection: "
+                                   ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="7"
+                                 Grid.Column="1"
+                                 Text="{Binding OptimizeMinimumSelectedItems, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+                    </Grid>
+                </Border>
+            </Expander>
+        </Grid>
+    </Border>
+</UserControl>

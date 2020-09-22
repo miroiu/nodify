@@ -9,7 +9,7 @@ namespace Nodify.Playground
     {
         private static readonly Random _rand = new Random();
 
-        public NodesGeneratorSettings(int count)
+        public NodesGeneratorSettings(uint count)
         {
             GridSnap = 15;
             MinNodesCount = MaxNodesCount = count;
@@ -42,20 +42,20 @@ namespace Nodify.Playground
             };
         }
 
-        public int GridSnap;
-        public int MinNodesCount;
-        public int MaxNodesCount;
-        public int MinInputCount;
-        public int MaxInputCount;
-        public int MinOutputCount;
-        public int MaxOutputCount;
+        public uint GridSnap;
+        public uint MinNodesCount;
+        public uint MaxNodesCount;
+        public uint MinInputCount;
+        public uint MaxInputCount;
+        public uint MinOutputCount;
+        public uint MaxOutputCount;
 
-        public Func<NodesGeneratorSettings, int, string?> ConnectorNameGenerator;
-        public Func<NodesGeneratorSettings, int, string?> NodeNameGenerator;
-        public Func<NodesGeneratorSettings, int, Point> NodeLocationGenerator;
+        public Func<NodesGeneratorSettings, uint, string?> ConnectorNameGenerator;
+        public Func<NodesGeneratorSettings, uint, string?> NodeNameGenerator;
+        public Func<NodesGeneratorSettings, uint, Point> NodeLocationGenerator;
 
         public int Snap(int x)
-            => x / GridSnap * GridSnap;
+            => x / (int)GridSnap * (int)GridSnap;
     }
 
     public static class RandomNodesGenerator
@@ -66,9 +66,9 @@ namespace Nodify.Playground
             where T : FlowNodeViewModel, new()
         {
             var nodes = new List<T>();
-            var count = _rand.Next(settings.MinNodesCount, settings.MaxNodesCount);
+            var count = _rand.Next((int)settings.MinNodesCount, (int)settings.MaxNodesCount + 1);
 
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 var node = new T
                 {
@@ -77,8 +77,8 @@ namespace Nodify.Playground
                 };
 
                 nodes.Add(node);
-                node.Input.AddRange(GenerateConnectors(settings, _rand.Next(settings.MinInputCount, settings.MaxInputCount)));
-                node.Output.AddRange(GenerateConnectors(settings, _rand.Next(settings.MinOutputCount, settings.MaxOutputCount)));
+                node.Input.AddRange(GenerateConnectors(settings, _rand.Next((int)settings.MinInputCount, (int)settings.MaxInputCount + 1)));
+                node.Output.AddRange(GenerateConnectors(settings, _rand.Next((int)settings.MinOutputCount, (int)settings.MaxOutputCount + 1)));
             }
 
             return nodes;
@@ -91,7 +91,7 @@ namespace Nodify.Playground
             List<ConnectionViewModel> connections = new List<ConnectionViewModel>(nodes.Count);
             var schema = new TSchema();
 
-            for (int i = 0; i < nodes.Count; i++)
+            for (uint i = 0; i < nodes.Count; i++)
             {
                 var n1 = nodes[_rand.Next(0, nodes.Count)];
                 var n2 = nodes[_rand.Next(0, nodes.Count)];
@@ -129,8 +129,8 @@ namespace Nodify.Playground
                     outConns = newList;
                 }
 
-                var conNum = _rand.Next(0, source.Count);
-                for (int ci = 0; ci < conNum; ci++)
+                var conNum = _rand.Next(0, source.Count + 1);
+                for (uint ci = 0; ci < conNum; ci++)
                 {
                     var inP = source[_rand.Next(0, conNum)];
 
@@ -165,7 +165,7 @@ namespace Nodify.Playground
         {
             var list = new List<ConnectorViewModel>(count);
 
-            for (int i = 0; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
                 var connector = new ConnectorViewModel
                 {

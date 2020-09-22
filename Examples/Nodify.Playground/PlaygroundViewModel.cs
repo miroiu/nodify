@@ -47,9 +47,63 @@ namespace Nodify.Playground
             set => SetProperty(ref _async, value);
         }
 
+        private uint _minNodes = 10;
+        public uint MinNodes
+        {
+            get => _minNodes;
+            set => SetProperty(ref _minNodes, value);
+        }
+
+        private uint _maxNodes = 100;
+        public uint MaxNodes
+        {
+            get => _maxNodes;
+            set => SetProperty(ref _maxNodes, value);
+        }
+
+        private uint _minConnectors = 0;
+        public uint MinConnectors
+        {
+            get => _minConnectors;
+            set => SetProperty(ref _minConnectors, value);
+        }
+
+        private uint _maxConnectors = 7;
+        public uint MaxConnectors
+        {
+            get => _maxConnectors;
+            set => SetProperty(ref _maxConnectors, value);
+        }
+
+        private uint _performanceTestNodes = 1000;
+        public uint PerformanceTestNodes
+        {
+            get => _performanceTestNodes;
+            set => SetProperty(ref _performanceTestNodes, value);
+        }
+
         private async void GenerateRandomNodes()
         {
-            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(100));
+            if(MinNodes > MaxNodes)
+            {
+                MaxNodes = MinNodes;
+            }
+
+            if(MinConnectors > MaxConnectors)
+            {
+                MaxConnectors = MinConnectors;
+            }
+
+            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(MinNodes)
+            {
+                MinNodesCount = MinNodes,
+                MaxNodesCount = MaxNodes,
+                MinInputCount = MinConnectors,
+                MaxInputCount = MaxConnectors,
+                MinOutputCount = MinConnectors,
+                MaxOutputCount = MaxConnectors,
+                GridSnap = EditorSettings.Instance.GridSpacing
+            });
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);
 
@@ -75,13 +129,18 @@ namespace Nodify.Playground
 
         private async void PerformanceTest()
         {
-            int count = 1000;
+            uint count = PerformanceTestNodes;
             int distance = 500;
-            int size = count / (int)Math.Sqrt(count);
+            int size = (int)count / (int)Math.Sqrt(count);
 
             var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(count)
             {
-                NodeLocationGenerator = (s, i) => new System.Windows.Point(i % size * distance, i / size * distance)
+                NodeLocationGenerator = (s, i) => new System.Windows.Point(i % size * distance, i / size * distance),
+                MinInputCount = MinConnectors,
+                MaxInputCount = MaxConnectors,
+                MinOutputCount = MinConnectors,
+                MaxOutputCount = MaxConnectors,
+                GridSnap = EditorSettings.Instance.GridSpacing
             });
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);

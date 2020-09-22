@@ -7,8 +7,8 @@
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
-        Width="800">
+        Height="600"
+        Width="1200">
 
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
@@ -20,98 +20,134 @@
     </Window.DataContext>
 
     <Grid>
-        <local:NodifyEditorView DataContext="{Binding GraphViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <local:NodifyEditorView DataContext="{Binding GraphViewModel}"
+                                Grid.RowSpan="3" />
 
+        <!--ACTIONS-->
         <Border VerticalAlignment="Top"
+                Background="{DynamicResource PanelBackgroundBrush}"
                 Padding="10">
-            <Border.Background>
-                <SolidColorBrush Color="#1A1A1A"
-                                 Opacity=".8" />
-            </Border.Background>
             <StackPanel Orientation="Horizontal">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Margin"
-                                Value="0,0,5,0" />
-                        <Setter Property="Background"
-                                Value="Transparent" />
-                        <Setter Property="Foreground"
-                                Value="White" />
-                        <Setter Property="Padding"
-                                Value="7" />
-                        <Setter Property="BorderBrush"
-                                Value="OrangeRed" />
-                        <Setter Property="Cursor"
-                                Value="Hand" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="2"
-                                            Margin="{TemplateBinding Margin}">
-                                        <ContentPresenter Margin="{TemplateBinding Padding}" />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        Value="#2D2D30" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Resources>
                 <Button Command="{Binding GenerateRandomNodesCommand}"
-                        Content="RANDOM" />
+                        Content="GENERATE RANDOM NODES"
+                        Style="{StaticResource HollowButton}" />
                 <Button Command="{Binding PerformanceTestCommand}"
-                        Content="PERFORMANCE" />
-                <Button Command="{Binding ToggleConnectionsCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="CONNECT"
-                                   Foreground="White"
-                                   Margin="0 0 5 0" />
-                        <CheckBox IsChecked="{Binding ShouldConnectNodes}"
-                                  VerticalAlignment="Center"
-                                  Cursor="Hand" />
-                    </StackPanel>
-                </Button>
-                <Button>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="ASYNC"
-                                   Foreground="White"
-                                   Margin="0 0 5 0" />
-                        <CheckBox IsChecked="{Binding Async}"
-                                  VerticalAlignment="Center"
-                                  Cursor="Hand" />
-                    </StackPanel>
-                </Button>
+                        Content="PERFORMANCE TEST"
+                        Style="{StaticResource HollowButton}" />
+                <Button Command="{Binding ToggleConnectionsCommand}"
+                        Content="CONNECT / DISCONNECT"
+                        ToolTip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes"
+                        Style="{StaticResource HollowButton}" />
                 <Button Command="{Binding ResetCommand}"
-                        BorderBrush="Red"
-                        Content="RESET" />
+                        Content="RESET PLAYGROUND"
+                        Style="{StaticResource HollowButton}" />
             </StackPanel>
         </Border>
 
-        <Border VerticalAlignment="Bottom"
+        <!--SETTINGS-->
+        <Expander Grid.Row="1"
+                  HorizontalContentAlignment="Left"
+                  VerticalContentAlignment="Center"
+                  HorizontalAlignment="Left"
+                  Background="{DynamicResource PanelBackgroundBrush}"
+                  IsExpanded="True"
+                  ExpandDirection="Left"
+                  Padding="0 1 4 3">
+            <Expander.Style>
+                <Style TargetType="{x:Type Expander}"
+                       BasedOn="{StaticResource {x:Type Expander}}">
+                    <Setter Property="Tag"
+                            Value="{StaticResource ExpandRightIcon}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsExpanded"
+                                 Value="True">
+                            <Setter Property="Tag"
+                                    Value="{StaticResource ExpandLeftIcon}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Expander.Style>
+
+            <ScrollViewer>
+                <Grid IsSharedSizeScope="True"
+                      Width="300">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Expander Header="Playground Settings"
+                              Padding="0 5 0 0"
+                              BorderThickness="0 0 0 1"
+                              IsExpanded="True"
+                              BorderBrush="{DynamicResource BackgroundBrush}">
+                        <Expander.Style>
+                            <Style TargetType="{x:Type Expander}"
+                                   BasedOn="{StaticResource {x:Type Expander}}">
+                                <Setter Property="Tag"
+                                        Value="{StaticResource ExpandRightIcon}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsExpanded"
+                                             Value="True">
+                                        <Setter Property="Tag"
+                                                Value="{StaticResource ExpandDownIcon}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Expander.Style>
+
+                        <local:PlaygroundSettingsView />
+                    </Expander>
+
+                    <Expander Header="Editor Settings"
+                              Padding="0 5 0 0"
+                              BorderThickness="0 0 0 1"
+                              IsExpanded="True"
+                              BorderBrush="{DynamicResource BackgroundBrush}"
+                              Grid.Row="1">
+                        <Expander.Style>
+                            <Style TargetType="{x:Type Expander}"
+                                   BasedOn="{StaticResource {x:Type Expander}}">
+                                <Setter Property="Tag"
+                                        Value="{StaticResource ExpandRightIcon}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsExpanded"
+                                             Value="True">
+                                        <Setter Property="Tag"
+                                                Value="{StaticResource ExpandDownIcon}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Expander.Style>
+
+                        <local:EditorSettingsView />
+                    </Expander>
+                </Grid>
+            </ScrollViewer>
+        </Expander>
+
+        <!--INFORMATION-->
+        <Border Grid.Row="2"
+                Background="{DynamicResource PanelBackgroundBrush}"
+                VerticalAlignment="Bottom"
                 Padding="10">
-            <Border.Background>
-                <SolidColorBrush Color="#1A1A1A"
-                                 Opacity=".8" />
-            </Border.Background>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Margin"
-                                Value="0,0,10,0" />
+                    <Style TargetType="{x:Type TextBlock}"
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="Foreground"
-                                Value="White" />
+                                Value="{DynamicResource ForegroundBrush}" />
+                        <Setter Property="Margin"
+                                Value="0 0 10 0" />
                     </Style>
                 </Grid.Resources>
 
@@ -138,28 +174,14 @@
                             HorizontalAlignment="Right">
                     <TextBlock>
                         <TextBlock.Inlines>
-                            <Run Text="Realtime selection: " />
-                            <Run Foreground="Green"
-                                 Text="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
-                        </TextBlock.Inlines>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Inlines>
-                            <Run Text="Grid spacing: " />
-                            <Run Foreground="Red"
-                                 Text="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
-                        </TextBlock.Inlines>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Inlines>
                             <Run Text="Location: " />
-                            <Run Foreground="Gold"
+                            <Run Foreground="Orange"
                                  Text="{Binding GraphViewModel.Viewport.Offset, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                     <TextBlock>
                         <TextBlock.Inlines>
-                            <Run Text="Scale: " />
+                            <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"
                                  Text="{Binding GraphViewModel.Viewport.Scale, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
@@ -167,6 +189,5 @@
                 </StackPanel>
             </Grid>
         </Border>
-
     </Grid>
 </Window>

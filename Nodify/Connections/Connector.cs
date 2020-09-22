@@ -137,7 +137,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the minimum selected items needed to trigger optimizations when outside of the <see cref="OptimizeSafeZone"/>.
         /// </summary>
-        public static double OptimizeMinimumSelectedItems = 100;
+        public static uint OptimizeMinimumSelectedItems = 100;
 
         /// <summary>
         /// Gets or sets if <see cref="Connector"/>s should enable optimizations based on <see cref="OptimizeSafeZone"/> and <see cref="OptimizeMinimumSelectedItems"/>.
