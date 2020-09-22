@@ -309,7 +309,7 @@ namespace Nodify
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
-        public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(int), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Int1));
+        public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, FrameworkPropertyMetadataOptions.None, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
@@ -317,9 +317,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the value of an invisible grid used to adjust locations (snapping) of <see cref="ItemContainer"/>s.
         /// </summary>
-        public int GridCellSize
+        public uint GridCellSize
         {
-            get => (int)GetValue(GridCellSizeProperty);
+            get => (uint)GetValue(GridCellSizeProperty);
             set => SetValue(GridCellSizeProperty, value);
         }
 
@@ -380,6 +380,11 @@ namespace Nodify
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
+
+        private static object OnCoerceGridCellSize(DependencyObject d, object value)
+            => (uint)value > 0u ? value : BoxValue.UInt1;
+
+        private static void OnGridCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
         #endregion
 
@@ -994,7 +999,7 @@ namespace Nodify
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             // Move selection only if a selected item is being dragged
-            if (DragInstigator != null && GridCellSize > 0)
+            if (DragInstigator != null)
             {
                 _dragAccumulator += new Vector(e.HorizontalChange, e.VerticalChange);
                 var delta = new Vector((int)_dragAccumulator.X / GridCellSize * GridCellSize, (int)_dragAccumulator.Y / GridCellSize * GridCellSize);

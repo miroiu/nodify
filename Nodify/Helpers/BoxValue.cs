@@ -15,5 +15,6 @@ namespace Nodify
         public static readonly object Double2 = 2d;
         public static readonly object Int0 = 0;
         public static readonly object Int1 = 1;
+        public static readonly object UInt1 = 1u;
     }
 }
