@@ -69,20 +69,22 @@
 
 ## Features
  
- - Built for **MVVM**
+ - Built with **MVVM** in mind
  - Single assembly targeting **.NET Core 3.1**
- - **No** external libraries **dependency**
- - **High performance** controls **interactions**
+ - **No dependencies** other than WPF
+ - **High performance** controls interactions
  - A playground [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground)
- - Customizable through **styles** and **templates**
+ - A state machine [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine)
+ - **Customizable** through styles and templates
+ - Dark and light **themes**
  - Lots of **configurable** dependency properties
  - **Pan**, **zoom**, **select** area, **auto pan** when close to edge
- - **Select** and **move** items
- - Ready for Undo/Redo
+ - **Select**, **move** and **connect** items
+ - Ready for undo/redo
  - Expanding Controls library (Node, GroupingNode, Connection etc.)
  
 ## Want to say thanks?
-Hit the ⭐ Star ⭐ button
+Hit the ⭐ Star ⭐ button!
  
 ## Documentation
 https://github.com/miroiu/nodify/wiki
