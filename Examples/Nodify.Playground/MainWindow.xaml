@@ -32,21 +32,33 @@
         <Border VerticalAlignment="Top"
                 Background="{DynamicResource PanelBackgroundBrush}"
                 Padding="10">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding GenerateRandomNodesCommand}"
-                        Content="GENERATE RANDOM NODES"
-                        Style="{StaticResource HollowButton}" />
-                <Button Command="{Binding PerformanceTestCommand}"
-                        Content="PERFORMANCE TEST"
-                        Style="{StaticResource HollowButton}" />
-                <Button Command="{Binding ToggleConnectionsCommand}"
-                        Content="CONNECT / DISCONNECT"
-                        ToolTip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes"
-                        Style="{StaticResource HollowButton}" />
-                <Button Command="{Binding ResetCommand}"
-                        Content="RESET PLAYGROUND"
-                        Style="{StaticResource HollowButton}" />
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding GenerateRandomNodesCommand}"
+                            Content="GENERATE RANDOM NODES"
+                            Style="{StaticResource HollowButton}" />
+                    <Button Command="{Binding PerformanceTestCommand}"
+                            Content="PERFORMANCE TEST"
+                            Style="{StaticResource HollowButton}" />
+                    <Button Command="{Binding ToggleConnectionsCommand}"
+                            Content="CONNECT / DISCONNECT"
+                            ToolTip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes"
+                            Style="{StaticResource HollowButton}" />
+                    <Button Command="{Binding ResetCommand}"
+                            Content="RESET PLAYGROUND"
+                            Style="{StaticResource HollowButton}" />
+                </StackPanel>
+
+                <Button Style="{StaticResource IconButton}"
+                        Content="{StaticResource ThemeIcon}"
+                        Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}"
+                        ToolTip="Change theme"
+                        Grid.Column="1" />
+            </Grid>
         </Border>
 
         <!--SETTINGS-->

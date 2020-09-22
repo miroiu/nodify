@@ -21,13 +21,6 @@ namespace Nodify.Playground
             BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, GraphViewModel.Connections);
         }
 
-        private void ResetGraph()
-        {
-            GraphViewModel.Nodes.Clear();
-            GraphViewModel.Viewport.Offset = new System.Windows.Point(0, 0);
-            GraphViewModel.Viewport.Scale = 1.0d;
-        }
-
         public ICommand GenerateRandomNodesCommand { get; }
         public ICommand PerformanceTestCommand { get; }
         public ICommand ToggleConnectionsCommand { get; }
@@ -82,14 +75,21 @@ namespace Nodify.Playground
             set => SetProperty(ref _performanceTestNodes, value);
         }
 
+        private void ResetGraph()
+        {
+            GraphViewModel.Nodes.Clear();
+            GraphViewModel.Viewport.Offset = new System.Windows.Point(0, 0);
+            GraphViewModel.Viewport.Scale = 1.0d;
+        }
+
         private async void GenerateRandomNodes()
         {
-            if(MinNodes > MaxNodes)
+            if (MinNodes > MaxNodes)
             {
                 MaxNodes = MinNodes;
             }
 
-            if(MinConnectors > MaxConnectors)
+            if (MinConnectors > MaxConnectors)
             {
                 MaxConnectors = MinConnectors;
             }

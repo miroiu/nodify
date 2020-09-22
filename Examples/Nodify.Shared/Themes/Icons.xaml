@@ -2,6 +2,28 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
+    <Rectangle x:Key="ThemeIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M16,8C16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8 0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8" />
+                            <GeometryDrawing Brush="#FF414141"
+                                             Geometry="F1M7.999,14C7.657,14 7.325,13.965 6.999,13.91 9.836,13.434 12,10.973 12,8 12,5.027 9.836,2.567 6.999,2.09 7.325,2.035 7.657,2 7.999,2 11.312,2 13.999,4.687 13.999,8 13.999,11.313 11.312,14 7.999,14 M7.999,1C4.133,1 0.999,4.134 0.999,8 0.999,11.866 4.133,15 7.999,15 11.865,15 14.999,11.866 14.999,8 14.999,4.134 11.865,1 7.999,1" />
+                            <GeometryDrawing Brush="#FFF0EFF1"
+                                             Geometry="F1M7.999,2C7.657,2 7.325,2.035 6.999,2.09 9.836,2.567 12,5.027 12,8 12,10.973 9.836,13.434 6.999,13.91 7.325,13.965 7.657,14 7.999,14 11.312,14 13.999,11.313 13.999,8 13.999,4.687 11.312,2 7.999,2" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="DiamondFillIcon"
                x:Shared="False"
                Width="16"

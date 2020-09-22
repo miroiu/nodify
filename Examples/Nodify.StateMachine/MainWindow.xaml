@@ -220,6 +220,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                
                 <Button Command="{Binding RunCommand}"
                         Style="{StaticResource IconButton}">
                     <StackPanel Orientation="Horizontal">
@@ -246,14 +247,22 @@
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>
                 </Button>
+
                 <Separator Height="Auto"
                            BorderThickness="0 0 1 0" />
+
                 <Button Content="{StaticResource ZoomInIcon}"
                         ToolTip="Zoom In"
                         Style="{StaticResource IconButton}" />
+
                 <Button Content="{StaticResource ZoomOutIcon}"
                         ToolTip="Zoom Out"
                         Style="{StaticResource IconButton}" />
+                
+                <Button Style="{StaticResource IconButton}"
+                        Content="{StaticResource ThemeIcon}"
+                        Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}"
+                        ToolTip="Change theme" />
             </StackPanel>
         </Border>
 
