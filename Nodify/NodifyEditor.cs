@@ -1062,11 +1062,12 @@ namespace Nodify
         protected ItemContainer? DragInstigator;
 
         private Vector _dragAccumulator;
+        private List<ItemContainer>? _selectedContainers;
 
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             // Move selection only if a selected item is being dragged
-            if (DragInstigator != null)
+            if (DragInstigator != null && _selectedContainers != null)
             {
                 _dragAccumulator += new Vector(e.HorizontalChange, e.VerticalChange);
                 var delta = new Vector((int)_dragAccumulator.X / GridCellSize * GridCellSize, (int)_dragAccumulator.Y / GridCellSize * GridCellSize);
@@ -1074,11 +1075,9 @@ namespace Nodify
 
                 if (delta.X != 0 || delta.Y != 0)
                 {
-                    var selectedItems = base.SelectedItems;
-                    for (int i = 0; i < selectedItems.Count; i++)
+                    for (int i = 0; i < _selectedContainers.Count; i++)
                     {
-                        var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
-
+                        var container = _selectedContainers[i];
                         var r = (TranslateTransform)container.RenderTransform;
 
                         r.X += delta.X; // Snapping without correction
@@ -1092,38 +1091,41 @@ namespace Nodify
 
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            var selectedItems = base.SelectedItems;
-            IsBulkUpdatingItems = true;
-
-            for (int i = 0; i < selectedItems.Count; i++)
+            if (_selectedContainers != null)
             {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
-                var r = (TranslateTransform)container.RenderTransform;
+                IsBulkUpdatingItems = true;
 
-                var result = container.Location + new Vector(r.X, r.Y);
-
-                // Correct the final position
-                if (EnableSnappingCorrection)
+                for (int i = 0; i < _selectedContainers.Count; i++)
                 {
-                    result.X = (int)result.X / GridCellSize * GridCellSize;
-                    result.Y = (int)result.Y / GridCellSize * GridCellSize;
+                    var container = _selectedContainers[i];
+                    var r = (TranslateTransform)container.RenderTransform;
+
+                    var result = container.Location + new Vector(r.X, r.Y);
+
+                    // Correct the final position
+                    if (EnableSnappingCorrection)
+                    {
+                        result.X = (int)result.X / GridCellSize * GridCellSize;
+                        result.Y = (int)result.Y / GridCellSize * GridCellSize;
+                    }
+
+                    container.Location = result;
+
+                    r.X = 0;
+                    r.Y = 0;
                 }
 
-                container.Location = result;
+                IsBulkUpdatingItems = false;
+                DragInstigator = null;
+                _selectedContainers = null;
 
-                r.X = 0;
-                r.Y = 0;
-            }
+                // Draw the containers at the new position.
+                ItemsHost?.InvalidateArrange();
 
-            IsBulkUpdatingItems = false;
-            DragInstigator = null;
-
-            // Draw the containers at the new position.
-            ItemsHost?.InvalidateArrange();
-
-            if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
-            {
-                ItemsDragCompletedCommand.Execute(null);
+                if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
+                {
+                    ItemsDragCompletedCommand.Execute(null);
+                }
             }
         }
 
@@ -1142,9 +1144,22 @@ namespace Nodify
                 DragInstigator.IsSelected = true;
             }
 
-            if (ItemsDragStartedCommand?.CanExecute(null) ?? false)
+            if (base.SelectedItems.Count > 0)
             {
-                ItemsDragStartedCommand.Execute(null);
+                if (ItemsDragStartedCommand?.CanExecute(null) ?? false)
+                {
+                    ItemsDragStartedCommand.Execute(null);
+                }
+
+                // Cache selected containers
+                var selectedItems = base.SelectedItems;
+                _selectedContainers = new List<ItemContainer>(selectedItems.Count);
+
+                for (int i = 0; i < selectedItems.Count; i++)
+                {
+                    var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
+                    _selectedContainers.Add(container);
+                }
             }
         }
 
