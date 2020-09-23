@@ -104,13 +104,13 @@ namespace Nodify.Playground
                 MaxOutputCount = MaxConnectors,
                 GridSnap = EditorSettings.Instance.GridSpacing
             });
+
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);
 
             if (ShouldConnectNodes)
             {
-                var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                await CopyToAsync(connections, GraphViewModel.Connections);
+                await ConnectNodes();
             }
         }
 
@@ -118,8 +118,7 @@ namespace Nodify.Playground
         {
             if (ShouldConnectNodes)
             {
-                var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                await CopyToAsync(connections, GraphViewModel.Connections);
+                await ConnectNodes();
             }
             else
             {
@@ -142,13 +141,39 @@ namespace Nodify.Playground
                 MaxOutputCount = MaxConnectors,
                 GridSnap = EditorSettings.Instance.GridSpacing
             });
+
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);
 
             if (ShouldConnectNodes)
             {
-                var connections = RandomNodesGenerator.GenerateConnections<GraphSchema>(GraphViewModel.Nodes);
-                await CopyToAsync(connections, GraphViewModel.Connections);
+                await ConnectNodes();
+            }
+        }
+
+        private async Task ConnectNodes()
+        {
+            var schema = new GraphSchema();
+            var connections = RandomNodesGenerator.GenerateConnections(GraphViewModel.Nodes);
+
+            if (Async)
+            {
+                await Task.Run(() =>
+                {
+                    for (int i = 0; i < connections.Count; i++)
+                    {
+                        var con = connections[i];
+                        schema.TryAddConnection(con.Input, con.Output);
+                    }
+                });
+            }
+            else
+            {
+                for (int i = 0; i < connections.Count; i++)
+                {
+                    var con = connections[i];
+                    schema.TryAddConnection(con.Input, con.Output);
+                }
             }
         }
 

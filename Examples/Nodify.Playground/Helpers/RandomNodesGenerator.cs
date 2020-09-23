@@ -20,7 +20,7 @@ namespace Nodify.Playground
             NodeNameGenerator = (s, i) => $"Node {i}";
             NodeLocationGenerator = (s, i) =>
             {
-                double EaseOut(double percent, double increment, double start, double end, double total)
+                static double EaseOut(double percent, double increment, double start, double end, double total)
                     => -end * (increment /= total) * (increment - 2) + start;
 
                 var xDistanceBetweenNodes = _rand.Next(150, 350);
@@ -30,8 +30,8 @@ namespace Nodify.Playground
                 var gridOffsetX = i * xDistanceBetweenNodes;
                 var gridOffsetY = i * yDistanceBetweenNodes;
 
-                var x = gridOffsetX * Math.Sin(xDistanceBetweenNodes * randSignX/ (i+1));
-                var y = gridOffsetY * Math.Sin(yDistanceBetweenNodes * randSignY/ (i+1));
+                var x = gridOffsetX * Math.Sin(xDistanceBetweenNodes * randSignX / (i + 1));
+                var y = gridOffsetY * Math.Sin(yDistanceBetweenNodes * randSignY / (i + 1));
                 var easeX = x * EaseOut(i / count, i, 1, 0.01, count);
                 var easeY = y * EaseOut(i / count, i, 1, 0.01, count);
 
@@ -84,12 +84,10 @@ namespace Nodify.Playground
             return nodes;
         }
 
-        public static List<ConnectionViewModel> GenerateConnections<TSchema>(IList<NodeViewModel> nodes)
-            where TSchema : GraphSchema, new()
+        public static List<ConnectionViewModel> GenerateConnections(IList<NodeViewModel> nodes)
         {
             HashSet<NodeViewModel> visited = new HashSet<NodeViewModel>(nodes.Count);
             List<ConnectionViewModel> connections = new List<ConnectionViewModel>(nodes.Count);
-            var schema = new TSchema();
 
             for (uint i = 0; i < nodes.Count; i++)
             {
@@ -107,19 +105,24 @@ namespace Nodify.Playground
                 List<ConnectorViewModel> output = n2 is FlowNodeViewModel flow2 ? flow2.Output.ToList() :
                                                   n2 is KnotNodeViewModel knot2 ? new List<ConnectorViewModel> { knot2.Connector } : new List<ConnectorViewModel>();
 
-                connections.AddRange(ConnectPins(schema, input, output));
+                connections.AddRange(ConnectPins(input, output));
             }
 
             return connections;
         }
 
-        public static List<ConnectionViewModel> ConnectPins(GraphSchema schema, IList<ConnectorViewModel> source, IList<ConnectorViewModel> target)
+        public static List<ConnectionViewModel> ConnectPins(IList<ConnectorViewModel> source, IList<ConnectorViewModel> target)
         {
             Dictionary<ConnectorViewModel, List<ConnectorViewModel>> connections = new Dictionary<ConnectorViewModel, List<ConnectorViewModel>>();
             List<ConnectionViewModel> result = new List<ConnectionViewModel>();
 
             for (int di = 0; di < target.Count; di++)
             {
+                if (source.Count > 1 && target.Count > 1 && _rand.Next() % 2 == 0)
+                {
+                    continue;
+                }
+
                 var outP = target[di];
 
                 if (!connections.TryGetValue(outP, out var outConns))
@@ -141,7 +144,7 @@ namespace Nodify.Playground
                         inConns = newList;
                     }
 
-                    if (schema.CanAddConnection(inP, outP) && !connections[inP].Contains(outP) && !connections[outP].Contains(inP))
+                    if (!connections[inP].Contains(outP) && !connections[outP].Contains(inP))
                     {
                         var isInput = inP.Flow == ConnectorFlow.Input;
 
