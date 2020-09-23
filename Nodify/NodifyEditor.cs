@@ -27,7 +27,7 @@ namespace Nodify
         public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
         public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
         public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
-        public static readonly DependencyProperty FocusLocationAnimationDurationProperty = DependencyProperty.Register(nameof(FocusLocationAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
+        public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
@@ -149,11 +149,13 @@ namespace Nodify
             set => SetValue(OffsetProperty, value);
         }
 
-        // TODO: Calculate this based on the distance from the Viewport to the target point
-        public double FocusLocationAnimationDuration
+        /// <summary>
+        /// Gets or sets the animation duration in seconds when bringing a location into view.
+        /// </summary>
+        public double BringIntoViewAnimationDuration
         {
-            get => (double)GetValue(FocusLocationAnimationDurationProperty);
-            set => SetValue(FocusLocationAnimationDurationProperty, value);
+            get => (double)GetValue(BringIntoViewAnimationDurationProperty);
+            set => SetValue(BringIntoViewAnimationDurationProperty, value);
         }
 
         /// <summary>
@@ -527,6 +529,14 @@ namespace Nodify
 
         #endregion
 
+        #region Construction
+
+        static NodifyEditor()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
+            FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NodifyEditor"/> class.
         /// </summary>
@@ -550,12 +560,6 @@ namespace Nodify
             OnDisableAutoPanningChanged(DisableAutoPanning);
         }
 
-        static NodifyEditor()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
-            FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
-        }
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -572,6 +576,66 @@ namespace Nodify
 
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ItemContainer;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Zoom in at the viewport's center
+        /// </summary>
+        public void ZoomIn() => Scale *= 1.26;
+
+        /// <summary>
+        /// Zoom out at the viewport's center
+        /// </summary>
+        public void ZoomOut() => Scale /= 1.26;
+
+        /// <summary>
+        /// Moves the <see cref="Viewport"/> at the specified location.
+        /// </summary>
+        /// <param name="point">The location where to move the <see cref="Viewport"/>.</param>
+        /// <param name="animated">True to animate the movement.</param>
+        public void BringIntoView(Point point, bool animated = true)
+        {
+            Focus();
+
+            if (animated && point != Offset)
+            {
+                IsPanning = true;
+                DisableZooming = true;
+
+                this.StartAnimation(OffsetProperty, PointToViewportCenter(point), BringIntoViewAnimationDuration, (s, e) =>
+                {
+                    IsPanning = false;
+                    DisableZooming = false;
+                });
+            }
+            else
+            {
+                Offset = PointToViewportCenter(point);
+            }
+        }
+
+        /// <summary>
+        /// Zoom at the specified location.
+        /// </summary>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="pos">The location to focus when zooming.</param>
+        public void ZoomAtPosition(double zoom, Point pos)
+        {
+            var position = (Vector)pos;
+            var prevScale = Scale;
+
+            Scale *= zoom;
+
+            if (prevScale != Scale)
+            {
+                Offset = (Point)((Vector)(Offset + position) * zoom - position);
+            }
+        }
+
+        #endregion
 
         #region Auto panning
 
@@ -670,7 +734,7 @@ namespace Nodify
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             var scale = Math.Pow(2, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ScaleAtPosition(scale, e.GetPosition(this));
+            ZoomAtPosition(scale, e.GetPosition(this));
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -1093,43 +1157,6 @@ namespace Nodify
 
         protected Point PointToViewportCenter(Point point)
             => (Point)((Vector)point * Scale - new Vector(ActualWidth / 2, ActualHeight / 2));
-
-        /// <summary>
-        /// Zoom at the specified location.
-        /// </summary>
-        /// <param name="scale">The zoom factor.</param>
-        /// <param name="pos">The location to focus when zooming.</param>
-        public void ScaleAtPosition(double scale, Point pos)
-        {
-            var position = (Vector)pos;
-            var prevScale = Scale;
-
-            Scale *= scale;
-
-            if (prevScale != Scale)
-            {
-                Offset = (Point)((Vector)(Offset + position) * scale - position);
-            }
-        }
-
-        /// <summary>
-        /// Moves the <see cref="Viewport"/> at the specified location.
-        /// </summary>
-        /// <param name="point">The location where to move the <see cref="Viewport"/>.</param>
-        /// <param name="animated">True to animate the movement.</param>
-        public void FocusLocation(Point point, bool animated = true)
-        {
-            Focus();
-
-            if (animated)
-            {
-                this.StartAnimation(OffsetProperty, PointToViewportCenter(point), FocusLocationAnimationDuration);
-            }
-            else
-            {
-                Offset = PointToViewportCenter(point);
-            }
-        }
 
         #endregion
     }
