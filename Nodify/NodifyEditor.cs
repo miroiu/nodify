@@ -584,12 +584,12 @@ namespace Nodify
         /// <summary>
         /// Zoom in at the viewport's center
         /// </summary>
-        public void ZoomIn() => Scale *= 1.26;
+        public void ZoomIn() => ZoomAtPosition(1.26, RenderTransform.Transform(new Point(RenderSize.Width/ 2, RenderSize.Height / 2)));
 
         /// <summary>
         /// Zoom out at the viewport's center
         /// </summary>
-        public void ZoomOut() => Scale /= 1.26;
+        public void ZoomOut() => ZoomAtPosition(1 / 1.26, RenderTransform.Transform(new Point(RenderSize.Width/ 2, RenderSize.Height / 2)));
 
         /// <summary>
         /// Moves the <see cref="Viewport"/> at the specified location.
