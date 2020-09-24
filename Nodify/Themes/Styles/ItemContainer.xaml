@@ -32,6 +32,8 @@
                 Value="Orange" />
         <Setter Property="HighlightBrush"
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ItemContainer}">

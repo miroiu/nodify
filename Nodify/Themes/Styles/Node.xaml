@@ -87,7 +87,8 @@
 
                                 <!--Data IN-->
                                 <ItemsControl ItemsSource="{TemplateBinding Input}"
-                                              ItemTemplate="{TemplateBinding InputConnectorTemplate}" />
+                                              ItemTemplate="{TemplateBinding InputConnectorTemplate}"
+                                              Focusable="False" />
 
                                 <!--Content-->
                                 <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -98,7 +99,8 @@
                                 <ItemsControl ItemsSource="{TemplateBinding Output}"
                                               ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
                                               HorizontalContentAlignment="Right"
-                                              Grid.Column="2" />
+                                              Grid.Column="2"
+                                              Focusable="False" />
                             </Grid>
 
                             <!--Footer-->
