@@ -21,7 +21,7 @@ We must be able to understand the design of your change from this description.
 
 What are the possible side-effects or negative impacts of the code change?
 
-## 💻 Adding features
+## 🐱‍🏍 Enhancements
 
 ### Description of the Change
 
