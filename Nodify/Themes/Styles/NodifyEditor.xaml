@@ -12,21 +12,6 @@
         <local:PendingConnection IsTabStop="False" />
     </DataTemplate>
 
-    <Style x:Key="ConnectionsHostStyle"
-           TargetType="ItemsControl">
-        <Setter Property="ItemTemplate"
-                Value="{StaticResource DefaultConnectionTemplate}" />
-        <Setter Property="IsTabStop"
-                Value="False" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="SelectionRectangleStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
@@ -65,16 +50,20 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
-                            <ItemsControl x:Name="PART_ConnectionsHost"
-                                          Style="{StaticResource ConnectionsHostStyle}"
-                                          ItemsSource="{TemplateBinding Connections}"
-                                          ItemTemplate="{TemplateBinding ConnectionTemplate}" />
+                            <ItemsControl ItemsSource="{TemplateBinding Connections}"
+                                          ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                          IsTabStop="False">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
 
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True" />
 
-                            <Rectangle x:Name="PART_SelectionRectangle"
-                                       Style="{TemplateBinding SelectionRectangleStyle}"
+                            <Rectangle Style="{TemplateBinding SelectionRectangleStyle}"
                                        Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                        Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
                                        Width="{Binding SelectedArea.Width, RelativeSource={RelativeSource TemplatedParent}}"
