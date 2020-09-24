@@ -520,6 +520,153 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style TargetType="{x:Type MenuItem}">
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Setter Property="Foreground"
+                Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+        <Setter Property="Background"
+                Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Padding"
+                Value="3 0 0 0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="PART_Border"
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MinWidth="17"
+                                                  Width="Auto"
+                                                  SharedSizeGroup="MenuItemIcon" />
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="MenuItemText" />
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="MenuItemGesture" />
+                                <ColumnDefinition Width="14" />
+                            </Grid.ColumnDefinitions>
+
+                            <ContentPresenter x:Name="Icon"
+                                              Margin="4 0 6 0"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Icon"
+                                              Visibility="Visible" />
+
+                            <ContentPresenter Grid.Column="1"
+                                              x:Name="Header"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"
+                                              ContentSource="Header"
+                                              Visibility="Visible" />
+
+                            <ContentPresenter Grid.Column="2"
+                                              x:Name="InputGestureText"
+                                              Margin="32 1 8 1"
+                                              ContentSource="InputGestureText"
+                                              VerticalAlignment="Center"
+                                              Visibility="Visible" />
+
+                            <Grid Grid.Column="3"
+                                  Margin="4 0 6 0"
+                                  x:Name="ArrowPanel"
+                                  VerticalAlignment="Center">
+                                <Path x:Name="ArrowPanelPath"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Data="M0,0 L0,8 L4,4 z" />
+                            </Grid>
+
+                            <Popup AllowsTransparency="True"
+                                   IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Right"
+                                   x:Name="PART_Popup"
+                                   Focusable="False"
+                                   PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                <Border Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                                        BorderBrush="{Binding Path=BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                                        BorderThickness="{Binding Path=BorderThickness, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                                        Margin="0 0 5 5">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="5"
+                                                          Opacity="0.5" />
+                                    </Border.Effect>
+                                    <Grid Grid.IsSharedSizeScope="True">
+                                        <ItemsPresenter x:Name="ItemsPresenter"
+                                                        KeyboardNavigation.DirectionalNavigation="Cycle"
+                                                        Grid.IsSharedSizeScope="True"
+                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                        KeyboardNavigation.TabNavigation="Cycle" />
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSuspendingPopupAnimation"
+                                 Value="True">
+                            <Setter Property="PopupAnimation"
+                                    TargetName="PART_Popup"
+                                    Value="None" />
+                        </Trigger>
+
+                        <Trigger Property="Role"
+                                 Value="SubmenuItem">
+                            <Setter Property="DockPanel.Dock"
+                                    Value="Top" />
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="ArrowPanel" />
+                        </Trigger>
+
+                        <Trigger Property="Icon"
+                                 Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="Icon" />
+                        </Trigger>
+
+                        <Trigger Property="InputGestureText"
+                                 Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"
+                                    TargetName="InputGestureText" />
+                        </Trigger>
+
+                        <Trigger Property="IsHighlighted"
+                                 Value="True">
+                            <Setter Property="BorderBrush"
+                                    TargetName="PART_Border"
+                                    Value="{DynamicResource HighlightedBorderBrush}" />
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.2"
+                                                     Color="{DynamicResource FocusedBorderColor}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderThickness"
+                                    TargetName="PART_Border"
+                                    Value="1" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource DisabledForegroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="{x:Type ContextMenu}"
            BasedOn="{StaticResource {x:Type ContextMenu}}">

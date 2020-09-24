@@ -30,7 +30,8 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <nodify:NodifyEditor ItemsSource="{Binding States}"
+        <nodify:NodifyEditor x:Name="Editor"
+                             ItemsSource="{Binding States}"
                              SelectedItem="{Binding SelectedState}"
                              SelectedItems="{Binding SelectedStates}"
                              Connections="{Binding Transitions}"
@@ -149,6 +150,33 @@
                                 <MenuItem Header="_Rename"
                                           Icon="{StaticResource RenameIcon}"
                                           Command="{Binding RenameStateCommand}" />
+                                <MenuItem Header="_Alignment"
+                                          Icon="{StaticResource AlignTopIcon}">
+                                    <MenuItem Header="_Top"
+                                              Icon="{StaticResource AlignTopIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Top" />
+                                    <MenuItem Header="_Left"
+                                              Icon="{StaticResource AlignLeftIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Left" />
+                                    <MenuItem Header="_Bottom"
+                                              Icon="{StaticResource AlignBottomIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Bottom" />
+                                    <MenuItem Header="_Right"
+                                              Icon="{StaticResource AlignRightIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Right" />
+                                    <MenuItem Header="_Middle"
+                                              Icon="{StaticResource AlignMiddleIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Middle" />
+                                    <MenuItem Header="_Center"
+                                              Icon="{StaticResource AlignCenterIcon}"
+                                              Command="{x:Static nodify:EditorCommands.Align}"
+                                              CommandParameter="Center" />
+                                </MenuItem>
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
@@ -220,7 +248,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                
+
                 <Button Command="{Binding RunCommand}"
                         Style="{StaticResource IconButton}">
                     <StackPanel Orientation="Horizontal">
@@ -252,13 +280,17 @@
                            BorderThickness="0 0 1 0" />
 
                 <Button Content="{StaticResource ZoomInIcon}"
+                        Command="{x:Static nodify:EditorCommands.ZoomIn}"
+                        CommandTarget="{Binding ElementName=Editor}"
                         ToolTip="Zoom In"
                         Style="{StaticResource IconButton}" />
 
                 <Button Content="{StaticResource ZoomOutIcon}"
+                        Command="{x:Static nodify:EditorCommands.ZoomOut}"
+                        CommandTarget="{Binding ElementName=Editor}"
                         ToolTip="Zoom Out"
                         Style="{StaticResource IconButton}" />
-                
+
                 <Button Style="{StaticResource IconButton}"
                         Content="{StaticResource ThemeIcon}"
                         Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}"
@@ -375,6 +407,7 @@
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition />
+                                                        <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
 
                                                     <!--CONDITION-->
@@ -406,6 +439,41 @@
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
+
+                                                    <Grid Grid.Row="2"
+                                                          Grid.ColumnSpan="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="From: "
+                                                                       VerticalAlignment="Center" />
+                                                            <Button Style="{StaticResource IconButton}"
+                                                                    Command="{x:Static nodify:EditorCommands.BringIntoView}"
+                                                                    CommandParameter="{Binding Source.Location}"
+                                                                    CommandTarget="{Binding ElementName=Editor}"
+                                                                    Foreground="DodgerBlue">
+                                                                <TextBlock Text="{Binding Source.Name}"
+                                                                           TextDecorations="Underline" />
+                                                            </Button>
+                                                        </StackPanel>
+
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Grid.Column="1">
+                                                            <TextBlock Text="To: "
+                                                                       VerticalAlignment="Center" />
+                                                            <Button Style="{StaticResource IconButton}"
+                                                                    Command="{x:Static nodify:EditorCommands.BringIntoView}"
+                                                                    CommandParameter="{Binding Target.Location}"
+                                                                    CommandTarget="{Binding ElementName=Editor}"
+                                                                    Foreground="DodgerBlue">
+                                                                <TextBlock Text="{Binding Target.Name}"
+                                                                           TextDecorations="Underline" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Grid>
                                                 </Grid>
                                             </Border>
                                         </Expander>

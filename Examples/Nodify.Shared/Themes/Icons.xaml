@@ -2,6 +2,138 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
+    <Rectangle x:Key="AlignCenterIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M6.0003,-0.000199999999999534L6.0003,3.0008 1.0003,3.0008 1.0003,6.9998 6.0003,6.9998 6.0003,8.9998 1.9993,8.9998 1.9993,13.0008 6.0003,13.0008 6.0003,15.9998 9.0003,15.9998 9.0003,13.0008 12.9993,13.0008 12.9993,8.9998 9.0003,8.9998 9.0003,6.9998 14.0003,6.9998 14.0003,3.0008 9.0003,3.0008 9.0003,-0.000199999999999534z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M8,6L8,10 12,10 12,12 8,12 8,15 7,15 7,12 3,12 3,10 7,10 7,6 2,6 2,4 7,4 7,1 8,1 8,4 13,4 13,6z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="AlignMiddleIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M2.9997,1.9996L2.9997,6.9996 -0.000300000000000189,6.9996 -0.000300000000000189,9.9996 2.9997,9.9996 2.9997,15.0006 7.0007,15.0006 7.0007,9.9996 8.9997,9.9996 8.9997,14.0006 12.9997,14.0006 12.9997,9.9996 16.0007,9.9996 16.0007,6.9996 12.9997,6.9996 12.9997,3.0006 8.9997,3.0006 8.9997,6.9996 7.0007,6.9996 7.0007,1.9996z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M6,8L10,8 10,4 12,4 12,8 15,8 15,9 12,9 12,13 10,13 10,9 6,9 6,14 4,14 4,9 1,9 1,8 4,8 4,3 6,3z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="AlignRightIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M12.9996,-0.000199999999999534L12.9996,3.0008 -0.000400000000000844,3.0008 -0.000400000000000844,6.9998 12.9996,6.9998 12.9996,8.9998 2.9996,8.9998 2.9996,13.0008 12.9996,13.0008 12.9996,15.9998 16.0006,15.9998 16.0006,-0.000199999999999534z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M13,10L4,10 4,12 13,12z M13,4L1,4 1,6 13,6z M14,1L15,1 15,15 14,15z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="AlignBottomIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M2.9997,-0.000199999999999534L2.9997,13.0008 -0.000300000000000189,13.0008 -0.000300000000000189,15.9998 16.0007,15.9998 16.0007,13.0008 12.9997,13.0008 12.9997,3.0008 8.9997,3.0008 8.9997,13.0008 7.0007,13.0008 7.0007,-0.000199999999999534z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M12,4L10,4 10,13 12,13z M6,1L4,1 4,13 6,13z M15,15L1,15 1,14 15,14z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="AlignLeftIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M0,-0.000199999999999534L0,15.9998 3,15.9998 3,13.0008 13,13.0008 13,8.9998 3,8.9998 3,6.9998 16,6.9998 16,3.0008 3,3.0008 3,-0.000199999999999534z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M12,10L3,10 3,12 12,12z M15,4L3,4 3,6 15,6z M1,1L2,1 2,15 1,15z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="AlignTopIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="F1M16,16L0,16 0,0 16,0z" />
+                            <GeometryDrawing Brush="#FFF6F6F6"
+                                             Geometry="F1M0,-0.000199999999999534L0,4.0008 3,4.0008 3,15.9998 7,15.9998 7,4.0008 9,4.0008 9,12.0008 13,12.0008 13,4.0008 16,4.0008 16,-0.000199999999999534z" />
+                            <GeometryDrawing Brush="#FF424242"
+                                             Geometry="F1M10,11L12,11 12,4 10,4z M4,15L6,15 6,4 4,4z M15,3L1,3 1,1 15,1z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <Rectangle x:Key="ThemeIcon"
                x:Shared="False"
                Width="16"
