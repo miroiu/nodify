@@ -66,14 +66,14 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand Align { get; } = new RoutedUICommand("Align", nameof(Align), typeof(EditorCommands));
 
-        static EditorCommands()
+        internal static void Register(Type type)
         {
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(Delete, OnDelete, OnQueryDeleteStatus));
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
-            CommandManager.RegisterClassCommandBinding(typeof(NodifyEditor), new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Delete, OnDelete, OnQueryDeleteStatus));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
         }
 
         private static void OnQueryAlignStatus(object sender, CanExecuteRoutedEventArgs e)

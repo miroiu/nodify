@@ -209,8 +209,6 @@
                             Modifiers="Shift"
                             Command="{Binding AddStateCommand}"
                             CommandParameter="{Binding MouseLocation, RelativeSource={RelativeSource AncestorType={x:Type nodify:NodifyEditor}}}" />
-                <KeyBinding Gesture="Ctrl+A"
-                            Command="{Binding SelectAllCommand}" />
             </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 

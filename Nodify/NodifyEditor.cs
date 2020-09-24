@@ -535,6 +535,8 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+
+            EditorCommands.Register(typeof(NodifyEditor));
         }
 
         /// <summary>

@@ -36,7 +36,6 @@ namespace Nodify.StateMachine
             OnCreateDefaultKeys();
             OnCreateDefaultNodes();
 
-            SelectAllCommand = new DelegateCommand(() => SelectedStates.AddRange(States), () => States.Count > 0);
             RenameStateCommand = new RequeryCommand(() => SelectedStates[0].IsRenaming = true, () => SelectedStates.Count == 1 && SelectedStates[0].IsEditable);
             DisconnectStateCommand = new RequeryCommand<StateViewModel>(x => DisconnectState(x), x => !IsRunning && x.Transitions.Count > 0);
             DisconnectSelectionCommand = new RequeryCommand(() => SelectedStates.ForEach(x => DisconnectState(x)), () => !IsRunning && SelectedStates.Count > 0 && Transitions.Count > 0);
@@ -111,7 +110,6 @@ namespace Nodify.StateMachine
         public INodifyCommand RenameStateCommand { get; }
         public INodifyCommand AddStateCommand { get; }
         public INodifyCommand CreateTransitionCommand { get; }
-        public INodifyCommand SelectAllCommand { get; }
         public INodifyCommand RunCommand { get; }
         public INodifyCommand PauseCommand { get; }
 
