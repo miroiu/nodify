@@ -114,6 +114,12 @@
             set => ItemContainer.AllowDraggingCancellation = value;
         }
 
+        public bool AllowPendingConnectionCancellation
+        {
+            get => Connector.AllowPendingConnectionCancellation;
+            set => Connector.AllowPendingConnectionCancellation = value;
+        }
+
         public bool EnableSnappingCorrection
         {
             get => NodifyEditor.EnableSnappingCorrection;

@@ -166,6 +166,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="Disable context menu after panning: "
@@ -194,41 +195,50 @@
                                    Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="3"
+                                   Text="Allow pending connection cancellation: "
+                                   ToolTip="Right click to cancel pending connection."
+                                   Margin="0 5 5 0" />
+                        <CheckBox  Grid.Row="3"
+                                   Grid.Column="1"
+                                   IsChecked="{Binding AllowPendingConnectionCancellation, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                   Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="4"
                                    Text="Enable snapping correction: "
                                    ToolTip="Correct the final position when moving a selection"
                                    Margin="0 5 5 0" />
-                        <CheckBox  Grid.Row="3"
+                        <CheckBox  Grid.Row="4"
                                    Grid.Column="1"
                                    IsChecked="{Binding EnableSnappingCorrection, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                    Margin="0 5 5 0" />
 
-                        <Separator Grid.Row="4"
+                        <Separator Grid.Row="5"
                                    Grid.ColumnSpan="2"
                                    Width="Auto" />
 
-                        <TextBlock Grid.Row="5"
+                        <TextBlock Grid.Row="6"
                                    Text="Enable connector optimizations: "
                                    ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
                                    Margin="0 5 5 0" />
-                        <CheckBox  Grid.Row="5"
+                        <CheckBox  Grid.Row="6"
                                    Grid.Column="1"
                                    IsChecked="{Binding EnableConnectorOptimizations, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                    Margin="0 5 5 0" />
 
-                        <TextBlock Grid.Row="6"
+                        <TextBlock Grid.Row="7"
                                    Text="Optimization safe zone: "
                                    ToolTip="The minimum distance from the viewport where connectors will start optimizing"
                                    Margin="0 5 5 0" />
-                        <TextBox Grid.Row="6"
+                        <TextBox Grid.Row="7"
                                  Grid.Column="1"
                                  Text="{Binding OptimizeSafeZone, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />
 
-                        <TextBlock Grid.Row="7"
+                        <TextBlock Grid.Row="8"
                                    Text="Optimize minimum selection: "
                                    ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
                                    Margin="0 5 5 0" />
-                        <TextBox Grid.Row="7"
+                        <TextBox Grid.Row="8"
                                  Grid.Column="1"
                                  Text="{Binding OptimizeMinimumSelectedItems, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />

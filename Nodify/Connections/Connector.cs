@@ -144,6 +144,11 @@ namespace Nodify
         /// </summary>
         public static bool EnableOptimizations = true;
 
+        /// <summary>
+        /// Gets or sets whether cancelling a pending connection is allowed.
+        /// </summary>
+        public static bool AllowPendingConnectionCancellation { get; set; } = true;
+
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
         private bool _isHooked;
@@ -300,14 +305,14 @@ namespace Nodify
         {
             if (IsPendingConnection)
             {
-                OnConnectorDragCompleted(cancel: true);
+                OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
             }
         }
 
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             // Cancel pending connection
-            if (IsMouseCaptured && IsPendingConnection)
+            if (AllowPendingConnectionCancellation && IsMouseCaptured && IsPendingConnection)
             {
                 OnConnectorDragCompleted(cancel: true);
                 ReleaseMouseCapture();
