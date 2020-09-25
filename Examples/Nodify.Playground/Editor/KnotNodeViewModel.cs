@@ -14,5 +14,7 @@
                 }
             }
         }
+
+        public ConnectorFlow Flow { get; set; }
     }
 }

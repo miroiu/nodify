@@ -47,7 +47,7 @@ namespace Nodify.Playground
 
         public ConnectorFlow Flow { get; private set; }
 
-        public int MaxConnections { get; set; } = int.MaxValue;
+        public int MaxConnections { get; set; } = 2;
 
         public NodifyObservableCollection<ConnectionViewModel> Connections { get; } = new NodifyObservableCollection<ConnectionViewModel>();
 
@@ -76,6 +76,10 @@ namespace Nodify.Playground
             if (Node is FlowNodeViewModel flow)
             {
                 Flow = flow.Input.Contains(this) ? ConnectorFlow.Input : ConnectorFlow.Output;
+            }
+            else if (Node is KnotNodeViewModel knot)
+            {
+                Flow = knot.Flow;
             }
         }
 

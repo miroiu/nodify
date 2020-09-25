@@ -17,10 +17,8 @@ namespace Nodify.Playground
                     && source.Node.Graph == con.Node.Graph
                     && source.AllowsNewConnections()
                     && con.AllowsNewConnections()
-                    && source.Flow != con.Flow
+                    && (source.Flow != con.Flow || con.Node is KnotNodeViewModel)
                     && !source.IsConnectedTo(con);
-                    // TODO:
-                    //&& (source.Flow != con.Flow || source.Node is KnotNodeViewModel || con.Node is KnotNodeViewModel);
             }
             else if (source.AllowsNewConnections() && target is FlowNodeViewModel node)
             {
@@ -85,9 +83,10 @@ namespace Nodify.Playground
             var knot = new KnotNodeViewModel
             {
                 Location = location,
+                Flow = connector.Flow,
                 Connector = new ConnectorViewModel
                 {
-                    MaxConnections = connector == connection.Output ? connection.Input.MaxConnections : connection.Output.MaxConnections
+                    MaxConnections = connection.Output.MaxConnections + connection.Input.MaxConnections
                 }
             };
             connection.Graph.Nodes.Add(knot);
@@ -105,7 +104,7 @@ namespace Nodify.Playground
             {
                 Location = rect.Location,
                 Size = rect.Size,
-                Title = "New comment"
+                Title = text ?? "New comment"
             };
 
             nodes[0].Graph.Nodes.Add(comment);
