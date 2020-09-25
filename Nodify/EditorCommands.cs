@@ -89,24 +89,37 @@ namespace Nodify
             if (sender is NodifyEditor editor)
             {
                 var selected = ((MultiSelector)editor).SelectedItems;
-                var containers = new List<ItemContainer>(selected.Count);
+                if (selected.Count > 0)
+                {
+                    if (editor.ItemsDragStartedCommand?.CanExecute(null) ?? false)
+                    {
+                        editor.ItemsDragStartedCommand.Execute(null);
+                    }
 
-                for (int i = 0; i < selected.Count; i++)
-                {
-                    containers.Add((ItemContainer)editor.ItemContainerGenerator.ContainerFromItem(selected[i]));
-                }
+                    var containers = new List<ItemContainer>(selected.Count);
 
-                if (e.Parameter is Alignment alignment)
-                {
-                    AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
-                }
-                else if (e.Parameter is string str && Enum.TryParse(str, true, out alignment))
-                {
-                    AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
-                }
-                else
-                {
-                    AlignContainers(containers, Alignment.Top, e.OriginalSource as ItemContainer);
+                    for (int i = 0; i < selected.Count; i++)
+                    {
+                        containers.Add((ItemContainer)editor.ItemContainerGenerator.ContainerFromItem(selected[i]));
+                    }
+
+                    if (e.Parameter is Alignment alignment)
+                    {
+                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
+                    }
+                    else if (e.Parameter is string str && Enum.TryParse(str, true, out alignment))
+                    {
+                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
+                    }
+                    else
+                    {
+                        AlignContainers(containers, Alignment.Top, e.OriginalSource as ItemContainer);
+                    }
+
+                    if (editor.ItemsDragCompletedCommand?.CanExecute(null) ?? false)
+                    {
+                        editor.ItemsDragCompletedCommand.Execute(null);
+                    }
                 }
             }
         }
