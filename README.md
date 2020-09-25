@@ -6,7 +6,14 @@
 ## The core controls for a node based editor (designed for MVVM)
 ![Example](https://i.imgur.com/xSPN1s2.png)
 
-### Minimal XAML:
+## Installation
+Use the nuget package manager to install Nodify.
+
+```
+Install-Package Nodify
+```
+
+## Minimal XAML:
 ```xml
 <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
                      Connections="{Binding Connections}"
@@ -48,25 +55,6 @@
 </nodify:NodifyEditor>
 ```
 
-<details>
-  <summary>No data binding</summary>
-  
-***Note: Not much you can do with this at the moment***
-```xml
-<nodify:NodifyEditor>
-    <nodify:Node Header="My node"
-                 nodify:ItemContainer.LocationOverride="100 100" />
-    <nodify:Node Header="My other node"
-                 nodify:ItemContainer.LocationOverride="200 100" />
-    <nodify:GroupingNode Header="Grouping node"
-                         Width="300"
-                         Height="150"
-                         nodify:ItemContainer.LocationOverride="50 50" />
-    <nodify:KnotNode nodify:ItemContainer.LocationOverride="400 100" />
-</nodify:NodifyEditor>
-```
-</details>
-
 ## Features
  
  - Built with **MVVM** in mind
@@ -83,8 +71,6 @@
  - Ready for undo/redo
  - Expanding Controls library (Node, GroupingNode, Connection etc.)
  
-## Want to say thanks?
-Hit the ⭐ Star ⭐ button!
  
 ## Documentation
 https://github.com/miroiu/nodify/wiki
@@ -96,3 +82,11 @@ https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
 https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
 
 ![StateMachine](https://i.imgur.com/nVKV5ly.gif)
+
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
