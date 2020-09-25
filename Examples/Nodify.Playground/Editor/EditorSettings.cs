@@ -102,16 +102,28 @@
             set => NodifyEditor.HandleRightClickAfterPanningThreshold = value;
         }
 
+        public double AutoPanningTickRate
+        {
+            get => NodifyEditor.AutoPanningTickRate;
+            set => NodifyEditor.AutoPanningTickRate = value;
+        }
+
+        public bool AllowDraggingCancellation
+        {
+            get => ItemContainer.AllowDraggingCancellation;
+            set => ItemContainer.AllowDraggingCancellation = value;
+        }
+
         public bool EnableSnappingCorrection
         {
             get => NodifyEditor.EnableSnappingCorrection;
             set => NodifyEditor.EnableSnappingCorrection = value;
         }
 
-        public double AutoPanningTickRate
+        public bool EnableConnectorOptimizations
         {
-            get => NodifyEditor.AutoPanningTickRate;
-            set => NodifyEditor.AutoPanningTickRate = value;
+            get => Connector.EnableOptimizations;
+            set => Connector.EnableOptimizations = value;
         }
 
         public double OptimizeSafeZone
@@ -124,12 +136,6 @@
         {
             get => Connector.OptimizeMinimumSelectedItems;
             set => Connector.OptimizeMinimumSelectedItems = value;
-        }
-
-        public bool EnableConnectorOptimizations
-        {
-            get => Connector.EnableOptimizations;
-            set => Connector.EnableOptimizations = value;
         }
 
         #endregion

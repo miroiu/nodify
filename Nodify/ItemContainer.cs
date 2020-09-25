@@ -62,6 +62,7 @@ namespace Nodify
         public static readonly DependencyProperty DesiredSizeForSelectionProperty = DependencyProperty.Register(nameof(DesiredSizeForSelection), typeof(Size?), typeof(ItemContainer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.NotDataBindable));
         public static readonly DependencyPropertyKey IsPreviewingLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingLocation), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPreviewingLocationProperty = IsPreviewingLocationPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty IsDraggableProperty = DependencyProperty.Register(nameof(IsDraggable), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
 
         /// <summary>
         /// Gets or sets the brush used when the <see cref="PendingConnection.IsOverElementProperty"/> attached property is true for this <see cref="ItemContainer"/>.
@@ -129,6 +130,16 @@ namespace Nodify
             set => SetValue(DesiredSizeForSelectionProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="ItemContainer"/> can be dragged.
+        /// True by default.
+        /// </summary>
+        public bool IsDraggable
+        {
+            get => (bool)GetValue(IsDraggableProperty);
+            set => SetValue(IsDraggableProperty, value);
+        }
+
         private static void OnLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var item = (ItemContainer)d;
@@ -146,6 +157,9 @@ namespace Nodify
 
         #region Routed Events
 
+        public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent(nameof(DragStarted), RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(ItemContainer));
+        public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent(nameof(DragCompleted), RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(ItemContainer));
+        public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent(nameof(DragDelta), RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(ItemContainer));
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(ItemContainer));
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(ItemContainer));
         public static readonly RoutedEvent LocationChangedEvent = EventManager.RegisterRoutedEvent(nameof(LocationChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ItemContainer));
@@ -164,8 +178,17 @@ namespace Nodify
         /// </summary>
         public event DragStartedEventHandler DragStarted
         {
-            add => AddHandler(DragBehavior.DragStartedEvent, value);
-            remove => RemoveHandler(DragBehavior.DragStartedEvent, value);
+            add => AddHandler(DragStartedEvent, value);
+            remove => RemoveHandler(DragStartedEvent, value);
+        }
+
+        /// <summary>
+        /// Occurs when this <see cref="ItemContainer"/> is being dragged.
+        /// </summary>
+        public event DragCompletedEventHandler DragDelta
+        {
+            add => AddHandler(DragCompletedEvent, value);
+            remove => RemoveHandler(DragCompletedEvent, value);
         }
 
         /// <summary>
@@ -173,8 +196,8 @@ namespace Nodify
         /// </summary>
         public event DragCompletedEventHandler DragCompleted
         {
-            add => AddHandler(DragBehavior.DragCompletedEvent, value);
-            remove => RemoveHandler(DragBehavior.DragCompletedEvent, value);
+            add => AddHandler(DragCompletedEvent, value);
+            remove => RemoveHandler(DragCompletedEvent, value);
         }
 
         /// <summary>
@@ -229,26 +252,35 @@ namespace Nodify
 
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// Gets or sets whether cancelling a dragging operation is allowed.
+        /// </summary>
+        public static bool AllowDraggingCancellation { get; set; } = true;
+
+        private Point _previousDragPosition;
+        private Point _initialDragPosition;
+        private UIElement? _draggableHost;
+
+        #endregion
+
         /// <summary>
         /// Occurs when the <see cref="ItemContainer"/> is previewing a new location.
         /// </summary>
         public event PreviewLocationChangedDelegate? PreviewLocationChanged;
 
         /// <summary>
-        /// Called when previewing a new location. 
-        /// Raises the <see cref="PreviewLocationChanged"/> event and sets the <see cref="IsPreviewingLocation"/> value to true if <paramref name="newLocation"/> is different from <see cref="Location"/>.
+        /// Raises the <see cref="PreviewLocationChanged"/> event.
         /// </summary>
         /// <param name="newLocation">The new location.</param>
         protected internal void OnPreviewLocationChanged(Point newLocation)
-        {
-            IsPreviewingLocation = newLocation != Location;
-            PreviewLocationChanged?.Invoke(newLocation);
-        }
+            => PreviewLocationChanged?.Invoke(newLocation);
 
-        private NodifyEditor? _editor;
         /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
+        private NodifyEditor? _editor;
         public NodifyEditor? Editor
         {
             get
@@ -291,7 +323,40 @@ namespace Nodify
             return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            // Handle right click if is previewing location so context menus don't open
+            if (IsPreviewingLocation)
+            {
+                e.Handled = true;
+            }
+            // Select with right click
+            else if (!IsSelected && IsSelectableLocation(e.GetPosition(this)))
+            {
+                Editor?.UnselectAll();
+                IsSelected = true;
+                Focus();
+            }
+
+            // Cancel dragging
+            if (AllowDraggingCancellation && IsPreviewingLocation)
+            {
+                IsPreviewingLocation = false;
+                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
+
+                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
+                {
+                    RoutedEvent = DragCompletedEvent
+                });
+
+                if (IsMouseCaptured)
+                {
+                    ReleaseMouseCapture();
+                }
+            }
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (IsSelectableLocation(e.GetPosition(this)))
             {
@@ -300,9 +365,38 @@ namespace Nodify
             }
         }
 
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (IsSelectableLocation(e.GetPosition(this)))
+            {
+                // Prepare for dragging
+                _draggableHost ??= Editor?.ItemsHost ?? (UIElement)this;
+                _initialDragPosition = e.GetPosition(_draggableHost);
+                _previousDragPosition = _initialDragPosition;
+
+                Focus();
+                CaptureMouse();
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            // If it's previewing location, then we're dragging the container
+            if (IsPreviewingLocation)
+            {
+                // Do not rely on OnLocationChanged setting this to false
+                IsPreviewingLocation = false;
+                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
+
+                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, false)
+                {
+                    RoutedEvent = DragCompletedEvent
+                });
+
+                e.Handled = true;
+            }
+            else if (IsSelectableLocation(e.GetPosition(this)))
             {
                 if (Keyboard.Modifiers == ModifierKeys.Control)
                 {
@@ -321,29 +415,59 @@ namespace Nodify
                 Focus();
                 e.Handled = true;
             }
+
+            if (IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+            }
         }
 
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            // Handle right click if is previewing location so context menus don't open
+            if (e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured && IsDraggable)
+            {
+                // Needs host for snapping and to apply transform 
+                var position = e.GetPosition(_draggableHost);
+
+                if (_previousDragPosition != position)
+                {
+                    // Start dragging
+                    if (!IsPreviewingLocation)
+                    {
+                        RaiseEvent(new DragStartedEventArgs(_initialDragPosition.X, _initialDragPosition.Y)
+                        {
+                            RoutedEvent = DragStartedEvent
+                        });
+
+                        IsPreviewingLocation = true;
+                    }
+                    else
+                    {
+                        var delta = position - _previousDragPosition;
+                        _previousDragPosition = position;
+
+                        RaiseEvent(new DragDeltaEventArgs(delta.X, delta.Y)
+                        {
+                            RoutedEvent = DragDeltaEvent
+                        });
+
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
             if (IsPreviewingLocation)
             {
-                e.Handled = true;
-            }
-            else if (Editor != null && !IsSelected && IsSelectableLocation(e.GetPosition(this)))
-            {
-                Editor.UnselectAll();
-                IsSelected = true;
-                Focus();
-            }
-        }
+                IsPreviewingLocation = false;
+                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
 
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-        {
-            if (IsSelectableLocation(e.GetPosition(this)))
-            {
-                Focus();
-                e.Handled = true;
+                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, AllowDraggingCancellation)
+                {
+                    RoutedEvent = DragCompletedEvent
+                });
             }
         }
     }

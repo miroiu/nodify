@@ -185,10 +185,19 @@
                                  Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="2"
+                                   Text="Allow dragging cancellation: "
+                                   ToolTip="Right click to cancel dragging."
+                                   Margin="0 5 5 0" />
+                        <CheckBox  Grid.Row="2"
+                                   Grid.Column="1"
+                                   IsChecked="{Binding AllowDraggingCancellation, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                   Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="3"
                                    Text="Enable snapping correction: "
                                    ToolTip="Correct the final position when moving a selection"
                                    Margin="0 5 5 0" />
-                        <CheckBox  Grid.Row="2"
+                        <CheckBox  Grid.Row="3"
                                    Grid.Column="1"
                                    IsChecked="{Binding EnableSnappingCorrection, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                    Margin="0 5 5 0" />

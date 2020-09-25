@@ -18,8 +18,6 @@
                 Value="15 5" />
         <Setter Property="Cursor"
                 Value="SizeAll" />
-        <Setter Property="local:DragBehavior.IsDraggable"
-                Value="True" />
         <Setter Property="ContentTemplate"
                 Value="{StaticResource DefaultConnectorTemplate}" />
         <Setter Property="Template">

@@ -40,8 +40,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border local:DragBehavior.IsDraggable="True"
-                                    Background="{TemplateBinding HeaderBrush}"
+                            <Border Background="{TemplateBinding HeaderBrush}"
                                     Cursor="SizeAll"
                                     CornerRadius="3 3 0 0"
                                     x:Name="PART_Header">

@@ -30,8 +30,7 @@
                                 Cursor="SizeAll"
                                 MinWidth="30"
                                 MinHeight="30"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                local:DragBehavior.IsDraggable="True">
+                                CornerRadius="{TemplateBinding CornerRadius}">
                             <ContentPresenter />
                         </Border>
                         <Border.Style>

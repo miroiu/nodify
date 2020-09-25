@@ -36,8 +36,6 @@
                 Value="Center" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
-        <Setter Property="local:DragBehavior.IsDraggable"
-                Value="True" />
         <Setter Property="InputConnectorTemplate"
                 Value="{StaticResource DefaultInputConnectorTemplate}" />
         <Setter Property="OutputConnectorTemplate"
