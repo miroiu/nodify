@@ -42,7 +42,7 @@ namespace Nodify
         public static readonly DependencyProperty HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner(typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
-        public static readonly DependencyProperty DefaultMovementModeProperty = DependencyProperty.Register(nameof(DefaultMovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
+        public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
 
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -82,14 +82,14 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the default movement mode which can be temporarily changed by holding the <see cref="SwitchMovementModeModifierKey"/> while dragging by the header.
         /// </summary>
-        public GroupingMovementMode DefaultMovementMode
+        public GroupingMovementMode MovementMode
         {
-            get => (GroupingMovementMode)GetValue(DefaultMovementModeProperty);
-            set => SetValue(DefaultMovementModeProperty, value);
+            get => (GroupingMovementMode)GetValue(MovementModeProperty);
+            set => SetValue(MovementModeProperty, value);
         }
 
         #endregion
-        
+
         #region Fields
 
         /// <summary>
@@ -170,13 +170,14 @@ namespace Nodify
                 // Switch the default movement mode if necessary
                 if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
                 {
-                    DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
+                    MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
 
                 // Deselect all so we can move without the content
-                if (DefaultMovementMode == GroupingMovementMode.Self)
+                if (MovementMode == GroupingMovementMode.Self)
                 {
                     Editor.UnselectAll();
+                    Container.IsSelected = true;
                 }
                 // Select the content and move with it
                 else if (Keyboard.Modifiers != ModifierKeys.Control)
@@ -188,7 +189,7 @@ namespace Nodify
                 // Switch the default movement mode back
                 if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
                 {
-                    DefaultMovementMode = DefaultMovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
+                    MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
             }
         }
