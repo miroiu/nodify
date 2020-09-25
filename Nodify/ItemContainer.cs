@@ -271,11 +271,14 @@ namespace Nodify
         public event PreviewLocationChangedDelegate? PreviewLocationChanged;
 
         /// <summary>
-        /// Raises the <see cref="PreviewLocationChanged"/> event.
+        /// Raises the <see cref="PreviewLocationChanged"/> event and sets the <see cref="IsPreviewingLocation"/> property to true.
         /// </summary>
         /// <param name="newLocation">The new location.</param>
         protected internal void OnPreviewLocationChanged(Point newLocation)
-            => PreviewLocationChanged?.Invoke(newLocation);
+        {
+            IsPreviewingLocation = true;
+            PreviewLocationChanged?.Invoke(newLocation);
+        }
 
         /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
