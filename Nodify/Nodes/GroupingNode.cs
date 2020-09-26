@@ -130,6 +130,16 @@ namespace Nodify
         static GroupingNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(typeof(GroupingNode)));
+            Panel.ZIndexProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(-1, OnZIndexPropertyChanged));
+        }
+
+        private static void OnZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var node = (GroupingNode)d;
+            if (node.Container != null)
+            {
+                Panel.SetZIndex(node.Container, (int)e.NewValue);
+            }
         }
 
         /// <summary>
@@ -207,7 +217,7 @@ namespace Nodify
 
             if (Container != null)
             {
-                Panel.SetZIndex(Container, -1);
+                Panel.SetZIndex(Container, Panel.GetZIndex(this));
             }
         }
 
