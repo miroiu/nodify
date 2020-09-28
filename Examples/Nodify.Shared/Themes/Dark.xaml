@@ -18,5 +18,7 @@
     <Color x:Key="DisabledBorderColor">Gray</Color>
     <Color x:Key="HighlightedBorderColor">#7EB4EA</Color>
     <Color x:Key="FocusedBorderColor">#569DE5</Color>
+    
+    <Color x:Key="GridLinesColor">#333337</Color>
 
 </ResourceDictionary>

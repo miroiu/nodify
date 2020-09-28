@@ -25,55 +25,7 @@ namespace Nodify.Playground
         public ICommand PerformanceTestCommand { get; }
         public ICommand ToggleConnectionsCommand { get; }
         public ICommand ResetCommand { get; }
-
-        private bool _shouldConnectNodes = true;
-        public bool ShouldConnectNodes
-        {
-            get => _shouldConnectNodes;
-            set => SetProperty(ref _shouldConnectNodes, value);
-        }
-
-        private bool _async = true;
-        public bool Async
-        {
-            get => _async;
-            set => SetProperty(ref _async, value);
-        }
-
-        private uint _minNodes = 10;
-        public uint MinNodes
-        {
-            get => _minNodes;
-            set => SetProperty(ref _minNodes, value);
-        }
-
-        private uint _maxNodes = 100;
-        public uint MaxNodes
-        {
-            get => _maxNodes;
-            set => SetProperty(ref _maxNodes, value);
-        }
-
-        private uint _minConnectors = 0;
-        public uint MinConnectors
-        {
-            get => _minConnectors;
-            set => SetProperty(ref _minConnectors, value);
-        }
-
-        private uint _maxConnectors = 7;
-        public uint MaxConnectors
-        {
-            get => _maxConnectors;
-            set => SetProperty(ref _maxConnectors, value);
-        }
-
-        private uint _performanceTestNodes = 1000;
-        public uint PerformanceTestNodes
-        {
-            get => _performanceTestNodes;
-            set => SetProperty(ref _performanceTestNodes, value);
-        }
+        public PlaygroundSettings Settings => PlaygroundSettings.Instance;
 
         private void ResetGraph()
         {
@@ -84,31 +36,21 @@ namespace Nodify.Playground
 
         private async void GenerateRandomNodes()
         {
-            if (MinNodes > MaxNodes)
+            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(Settings.MinNodes)
             {
-                MaxNodes = MinNodes;
-            }
-
-            if (MinConnectors > MaxConnectors)
-            {
-                MaxConnectors = MinConnectors;
-            }
-
-            var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(MinNodes)
-            {
-                MinNodesCount = MinNodes,
-                MaxNodesCount = MaxNodes,
-                MinInputCount = MinConnectors,
-                MaxInputCount = MaxConnectors,
-                MinOutputCount = MinConnectors,
-                MaxOutputCount = MaxConnectors,
+                MinNodesCount = Settings.MinNodes,
+                MaxNodesCount = Settings.MaxNodes,
+                MinInputCount = Settings.MinConnectors,
+                MaxInputCount = Settings.MaxConnectors,
+                MinOutputCount = Settings.MinConnectors,
+                MaxOutputCount = Settings.MaxConnectors,
                 GridSnap = EditorSettings.Instance.GridSpacing
             });
 
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);
 
-            if (ShouldConnectNodes)
+            if (Settings.ShouldConnectNodes)
             {
                 await ConnectNodes();
             }
@@ -116,7 +58,7 @@ namespace Nodify.Playground
 
         private async void ToggleConnections()
         {
-            if (ShouldConnectNodes)
+            if (Settings.ShouldConnectNodes)
             {
                 await ConnectNodes();
             }
@@ -128,24 +70,24 @@ namespace Nodify.Playground
 
         private async void PerformanceTest()
         {
-            uint count = PerformanceTestNodes;
+            uint count = Settings.PerformanceTestNodes;
             int distance = 500;
             int size = (int)count / (int)Math.Sqrt(count);
 
             var nodes = RandomNodesGenerator.GenerateNodes<FlowNodeViewModel>(new NodesGeneratorSettings(count)
             {
                 NodeLocationGenerator = (s, i) => new System.Windows.Point(i % size * distance, i / size * distance),
-                MinInputCount = MinConnectors,
-                MaxInputCount = MaxConnectors,
-                MinOutputCount = MinConnectors,
-                MaxOutputCount = MaxConnectors,
+                MinInputCount = Settings.MinConnectors,
+                MaxInputCount = Settings.MaxConnectors,
+                MinOutputCount = Settings.MinConnectors,
+                MaxOutputCount = Settings.MaxConnectors,
                 GridSnap = EditorSettings.Instance.GridSpacing
             });
 
             GraphViewModel.Nodes.Clear();
             await CopyToAsync(nodes, GraphViewModel.Nodes);
 
-            if (ShouldConnectNodes)
+            if (Settings.ShouldConnectNodes)
             {
                 await ConnectNodes();
             }
@@ -156,7 +98,7 @@ namespace Nodify.Playground
             var schema = new GraphSchema();
             var connections = RandomNodesGenerator.GenerateConnections(GraphViewModel.Nodes);
 
-            if (Async)
+            if (Settings.AsyncLoading)
             {
                 await Task.Run(() =>
                 {
@@ -179,7 +121,7 @@ namespace Nodify.Playground
 
         private async Task CopyToAsync(IList source, IList target)
         {
-            if (Async)
+            if (Settings.AsyncLoading)
             {
                 await Task.Run(() =>
                 {

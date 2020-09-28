@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,16 +24,6 @@ namespace Nodify
             } while (!(current is T));
 
             return (T)current;
-        }
-
-        public static IEnumerable<DependencyObject> GetChildren(this DependencyObject parent)
-        {
-            int count = VisualTreeHelper.GetChildrenCount(parent);
-
-            for (int i = 0; i < count; i++)
-            {
-                yield return VisualTreeHelper.GetChild(parent, i);
-            }
         }
 
         public static T? GetChildOfType<T>(this DependencyObject? depObj) where T : DependencyObject

@@ -38,5 +38,9 @@
     <SolidColorBrush x:Key="FocusedBorderBrush"
                      o:Freeze="True"
                      Color="{DynamicResource FocusedBorderColor}" />
+    
+    <SolidColorBrush x:Key="GridLinesBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource GridLinesColor}" />
 
 </ResourceDictionary>

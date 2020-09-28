@@ -25,61 +25,70 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Connect nodes: "
+            <TextBlock Text="Show grid lines: "
                        Margin="0 0 5 0" />
             <CheckBox Grid.Column="1"
-                      IsChecked="{Binding ShouldConnectNodes}"
+                      IsChecked="{Binding Settings.ShowGridLines}"
                       Margin="0 0 5 0" />
 
             <TextBlock Grid.Row="1"
-                       Text="Async loading: "
+                       Text="Connect nodes: "
                        Margin="0 5 5 0" />
             <CheckBox Grid.Row="1"
                       Grid.Column="1"
-                      IsChecked="{Binding Async}"
+                      IsChecked="{Binding Settings.ShouldConnectNodes}"
                       Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="2"
-                       Text="Min nodes: "
+                       Text="Async loading: "
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="2"
-                     Grid.Column="1"
-                     Text="{Binding MinNodes, Mode=TwoWay}"
-                     Margin="0 5 5 0" />
+            <CheckBox Grid.Row="2"
+                      Grid.Column="1"
+                      IsChecked="{Binding Settings.AsyncLoading}"
+                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="3"
-                       Text="Max nodes: "
+                       Text="Min nodes: "
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="3"
                      Grid.Column="1"
-                     Text="{Binding MaxNodes, Mode=TwoWay}"
+                     Text="{Binding Settings.MinNodes, Mode=TwoWay}"
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="4"
-                       Text="Min connectors: "
+                       Text="Max nodes: "
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="4"
                      Grid.Column="1"
-                     Text="{Binding MinConnectors, Mode=TwoWay}"
+                     Text="{Binding Settings.MaxNodes, Mode=TwoWay}"
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="5"
-                       Text="Max connectors: "
+                       Text="Min connectors: "
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="5"
                      Grid.Column="1"
-                     Text="{Binding MaxConnectors, Mode=TwoWay}"
+                     Text="{Binding Settings.MinConnectors, Mode=TwoWay}"
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="6"
-                       Text="Performance test nodes: "
+                       Text="Max connectors: "
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="6"
                      Grid.Column="1"
+                     Text="{Binding Settings.MaxConnectors, Mode=TwoWay}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="7"
+                       Text="Performance test nodes: "
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="7"
+                     Grid.Column="1"
                      IsEnabled="False"
-                     Text="{Binding PerformanceTestNodes}"
+                     Text="{Binding Settings.PerformanceTestNodes}"
                      Margin="0 5 5 0" />
         </Grid>
     </Border>

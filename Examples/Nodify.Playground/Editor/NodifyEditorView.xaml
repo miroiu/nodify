@@ -7,6 +7,7 @@
              xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              mc:Ignorable="d"
+             Background="{DynamicResource NodifyEditor.BackgroundBrush}"
              d:DesignHeight="450"
              d:DesignWidth="800">
 
@@ -17,6 +18,11 @@
     <UserControl.Resources>
         <shared:RandomBrushConverter x:Key="RandomBrushConverter" />
         <local:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
+        <local:UIntToRectConverter x:Key="UIntToRectConverter" />
+
+        <GeometryDrawing x:Key="GridGeometry"
+                         Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                         Brush="{DynamicResource GridLinesBrush}" />
     </UserControl.Resources>
 
     <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
@@ -35,6 +41,27 @@
                          DisableAutoPanning="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
                          DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
                          DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}">
+        <nodify:NodifyEditor.Style>
+            <Style TargetType="{x:Type nodify:NodifyEditor}"
+                   BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}}"
+                                 Value="True">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <DrawingBrush TileMode="Tile"
+                                              ViewportUnits="Absolute"
+                                              Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={StaticResource UIntToRectConverter}}"
+                                              Transform="{Binding AppliedTransform, RelativeSource={RelativeSource AncestorType=nodify:NodifyEditor}}"
+                                              Drawing="{StaticResource GridGeometry}">
+                                </DrawingBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </nodify:NodifyEditor.Style>
+
         <nodify:NodifyEditor.InputBindings>
             <KeyBinding Key="Delete"
                         Command="{Binding DeleteSelectionCommand}" />
@@ -46,6 +73,7 @@
             <DataTemplate>
                 <nodify:Connection Source="{Binding Output.Anchor}"
                                    Target="{Binding Input.Anchor}"
+                                   ToolTip="Double click to split"
                                    Cursor="Hand" />
             </DataTemplate>
         </nodify:NodifyEditor.ConnectionTemplate>
