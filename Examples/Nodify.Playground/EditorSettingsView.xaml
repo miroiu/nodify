@@ -178,7 +178,7 @@
 
                         <TextBlock Grid.Row="1"
                                    Text="Auto panning tick rate: "
-                                   ToolTip="How often is the new position calculated in milliseconds"
+                                   ToolTip="How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."
                                    Margin="0 5 5 0" />
                         <TextBox Grid.Row="1"
                                  Grid.Column="1"
