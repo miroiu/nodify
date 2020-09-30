@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -199,7 +200,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                var items = ((MultiSelector)editor).SelectedItems;
+                var items = new ArrayList(((MultiSelector)editor).SelectedItems);
                 foreach (var item in items)
                 {
                     editor.Items.Remove(item);
