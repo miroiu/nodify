@@ -34,6 +34,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
+                       ToolTip="Selects items when finished if disabled."
                        Margin="0 0 5 0" />
             <CheckBox Grid.Column="1"
                       Margin="0 0 5 0"
@@ -41,6 +42,7 @@
 
             <TextBlock Grid.Row="1"
                        Text="Pending connection snapping: "
+                       ToolTip="Whether to snap the pending connection to connectors"
                        Margin="0 5 5 0" />
             <CheckBox Grid.Row="1"
                       Grid.Column="1"
@@ -49,6 +51,7 @@
 
             <TextBlock Grid.Row="2"
                        Text="Pending connection preview: "
+                       ToolTip="Show information about the pending connection."
                        Margin="0 5 5 0" />
             <CheckBox Grid.Row="2"
                       Grid.Column="1"
@@ -57,6 +60,7 @@
 
             <TextBlock Grid.Row="3"
                        Text="Disable drop connection on node: "
+                       ToolTip="Can connect directly to nodes if enabled"
                        Margin="0 5 5 0" />
             <CheckBox Grid.Row="3"
                       Grid.Column="1"
@@ -89,6 +93,7 @@
 
             <TextBlock Grid.Row="7"
                        Text="Grid spacing: "
+                       ToolTip="Snapping value in pixels"
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="7"
                      Grid.Column="1"
@@ -113,6 +118,7 @@
 
             <TextBlock Grid.Row="10"
                        Text="Auto panning speed: "
+                       ToolTip="Speed value in pixels per tick"
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="10"
                      Grid.Column="1"
@@ -121,6 +127,7 @@
 
             <TextBlock Grid.Row="11"
                        Text="Auto panning edge distance: "
+                       ToolTip="Distance from edge to trigger auto panning"
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="11"
                      Grid.Column="1"

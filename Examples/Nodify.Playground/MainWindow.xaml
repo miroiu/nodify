@@ -40,9 +40,11 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding GenerateRandomNodesCommand}"
                             Content="GENERATE RANDOM NODES"
+                            ToolTip="Generate nodes using the specified settings."
                             Style="{StaticResource HollowButton}" />
                     <Button Command="{Binding PerformanceTestCommand}"
                             Content="PERFORMANCE TEST"
+                            ToolTip="You will encounter rendering performance issues. Try disabling the connections to see the difference."
                             Style="{StaticResource HollowButton}" />
                     <Button Command="{Binding ToggleConnectionsCommand}"
                             Content="CONNECT / DISCONNECT"
@@ -50,6 +52,7 @@
                             Style="{StaticResource HollowButton}" />
                     <Button Command="{Binding ResetCommand}"
                             Content="RESET PLAYGROUND"
+                            ToolTip="Reset the Location, Zoom, Nodes and Connections."
                             Style="{StaticResource HollowButton}" />
                 </StackPanel>
 
@@ -164,7 +167,7 @@
                 </Grid.Resources>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>
+                    <TextBlock ToolTip="The number of selected items.">
                         <TextBlock.Inlines>
                             <Run Text="Selected: " />
                             <Run Foreground="YellowGreen"
@@ -173,7 +176,7 @@
                             <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock>
+                    <TextBlock ToolTip="The number of connections.">
                         <TextBlock.Inlines>
                             <Run Text="Connections: " />
                             <Run Foreground="YellowGreen"
@@ -184,14 +187,14 @@
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    <TextBlock>
+                    <TextBlock ToolTip="The viewport's Offset.">
                         <TextBlock.Inlines>
                             <Run Text="Location: " />
                             <Run Foreground="Orange"
                                  Text="{Binding GraphViewModel.Viewport.Offset, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock>
+                    <TextBlock ToolTip="The viewport's scale. Not accurate when trying to zoom outside the MinScale and MaxScale because of dependency property coercion not updating the binding with the final result.">
                         <TextBlock.Inlines>
                             <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"
