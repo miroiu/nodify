@@ -18,164 +18,182 @@
     <UserControl.Resources>
         <shared:RandomBrushConverter x:Key="RandomBrushConverter" />
         <local:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
-        <local:UIntToRectConverter x:Key="UIntToRectConverter" />
 
-        <GeometryDrawing x:Key="GridGeometry"
+        <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="{DynamicResource GridLinesBrush}" />
+
+        <GeometryDrawing x:Key="LargeGridGeometry"
+                         Geometry="M0,0 L0,1 0.015,1 0.015,0.015 1,0.015 1,0 Z"
+                         Brush="{DynamicResource GridLinesBrush}" />
+
+        <DrawingBrush x:Key="SmallGridLinesDrawingBrush"
+                      TileMode="Tile"
+                      ViewportUnits="Absolute"
+                      Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={local:UIntToRectConverter}}"
+                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Drawing="{StaticResource SmallGridGeometry}" />
+
+        <DrawingBrush x:Key="LargeGridLinesDrawingBrush"
+                      TileMode="Tile"
+                      ViewportUnits="Absolute"
+                      Opacity="0.5"
+                      Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={local:UIntToRectConverter  Multiplier=10}}"
+                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Drawing="{StaticResource LargeGridGeometry}" />
     </UserControl.Resources>
 
-    <nodify:NodifyEditor ItemsSource="{Binding Nodes}"
-                         Connections="{Binding Connections}"
-                         PendingConnection="{Binding PendingConnection}"
-                         SelectedItems="{Binding SelectedNodes}"
-                         DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
-                         Offset="{Binding Viewport.Offset}"
-                         Scale="{Binding Viewport.Scale}"
-                         MinScale="{Binding MinZoom, Source={x:Static local:EditorSettings.Instance}}"
-                         MaxScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}"
-                         AutoPanSpeed="{Binding AutoPanningSpeed, Source={x:Static local:EditorSettings.Instance}}"
-                         AutoPanEdgeDistance="{Binding AutoPanningEdgeDistance, Source={x:Static local:EditorSettings.Instance}}"
-                         GridCellSize="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}}"
-                         EnableRealtimeSelection="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}"
-                         DisableAutoPanning="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
-                         DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
-                         DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}">
-        <nodify:NodifyEditor.Style>
-            <Style TargetType="{x:Type nodify:NodifyEditor}"
-                   BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}}"
-                                 Value="True">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <DrawingBrush TileMode="Tile"
-                                              ViewportUnits="Absolute"
-                                              Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={StaticResource UIntToRectConverter}}"
-                                              Transform="{Binding AppliedTransform, RelativeSource={RelativeSource AncestorType=nodify:NodifyEditor}}"
-                                              Drawing="{StaticResource GridGeometry}">
-                                </DrawingBrush>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </nodify:NodifyEditor.Style>
+    <Grid>
+        <nodify:NodifyEditor x:Name="Editor"
+                             ItemsSource="{Binding Nodes}"
+                             Connections="{Binding Connections}"
+                             PendingConnection="{Binding PendingConnection}"
+                             SelectedItems="{Binding SelectedNodes}"
+                             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
+                             Offset="{Binding Viewport.Offset}"
+                             Scale="{Binding Viewport.Scale}"
+                             MinScale="{Binding MinZoom, Source={x:Static local:EditorSettings.Instance}}"
+                             MaxScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}"
+                             AutoPanSpeed="{Binding AutoPanningSpeed, Source={x:Static local:EditorSettings.Instance}}"
+                             AutoPanEdgeDistance="{Binding AutoPanningEdgeDistance, Source={x:Static local:EditorSettings.Instance}}"
+                             GridCellSize="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}}"
+                             EnableRealtimeSelection="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}"
+                             DisableAutoPanning="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
+                             DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
+                             DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}">
+            <nodify:NodifyEditor.Style>
+                <Style TargetType="{x:Type nodify:NodifyEditor}"
+                       BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}}"
+                                     Value="True">
+                            <Setter Property="Background"
+                                    Value="{StaticResource SmallGridLinesDrawingBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </nodify:NodifyEditor.Style>
 
-        <nodify:NodifyEditor.InputBindings>
-            <KeyBinding Key="Delete"
-                        Command="{Binding DeleteSelectionCommand}" />
-            <KeyBinding Key="C"
-                        Command="{Binding CommentSelectionCommand}" />
-        </nodify:NodifyEditor.InputBindings>
+            <nodify:NodifyEditor.InputBindings>
+                <KeyBinding Key="Delete"
+                            Command="{Binding DeleteSelectionCommand}" />
+                <KeyBinding Key="C"
+                            Command="{Binding CommentSelectionCommand}" />
+            </nodify:NodifyEditor.InputBindings>
 
-        <nodify:NodifyEditor.ConnectionTemplate>
-            <DataTemplate>
-                <nodify:Connection Source="{Binding Output.Anchor}"
-                                   Target="{Binding Input.Anchor}"
-                                   ToolTip="Double click to split"
-                                   Cursor="Hand" />
-            </DataTemplate>
-        </nodify:NodifyEditor.ConnectionTemplate>
+            <nodify:NodifyEditor.ConnectionTemplate>
+                <DataTemplate>
+                    <nodify:Connection Source="{Binding Output.Anchor}"
+                                       Target="{Binding Input.Anchor}"
+                                       ToolTip="Double click to split"
+                                       Cursor="Hand" />
+                </DataTemplate>
+            </nodify:NodifyEditor.ConnectionTemplate>
 
-        <nodify:NodifyEditor.Resources>
-            <Style TargetType="{x:Type nodify:PendingConnection}"
-                   BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
-                <Setter Property="CompletedCommand"
-                        Value="{Binding Graph.CreateConnectionCommand}" />
-                <Setter Property="Source"
-                        Value="{Binding Source, Mode=OneWayToSource}" />
-                <Setter Property="Target"
-                        Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
-                <Setter Property="PreviewTarget"
-                        Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
-                <Setter Property="Content"
-                        Value="{Binding PreviewText}" />
-                <Setter Property="EnablePreview"
-                        Value="{Binding EnablePendingConnectionPreview, Source={x:Static local:EditorSettings.Instance}}" />
-                <Setter Property="EnableSnapping"
-                        Value="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}" />
-                <Setter Property="AllowOnlyConnectors"
-                        Value="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}" />
-                <Setter Property="Direction"
-                        Value="{Binding Source.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
-                            <Canvas>
-                                <nodify:Connection Source="{TemplateBinding SourceAnchor}"
-                                                   Target="{TemplateBinding TargetAnchor}"
-                                                   Stroke="{TemplateBinding Stroke}"
-                                                   StrokeThickness="{TemplateBinding StrokeThickness}"
-                                                   StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                   Direction="{TemplateBinding Direction}" />
-                                <Border Background="{TemplateBinding Background}"
-                                        Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Visibility="{TemplateBinding EnablePreview, Converter={shared:BooleanToVisibilityConverter}}"
-                                        Padding="{TemplateBinding Padding}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        CornerRadius="3"
-                                        Margin="15">
-                                    <ContentPresenter />
-                                </Border>
-                            </Canvas>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+            <nodify:NodifyEditor.Resources>
+                <Style TargetType="{x:Type nodify:PendingConnection}"
+                       BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
+                    <Setter Property="CompletedCommand"
+                            Value="{Binding Graph.CreateConnectionCommand}" />
+                    <Setter Property="Source"
+                            Value="{Binding Source, Mode=OneWayToSource}" />
+                    <Setter Property="Target"
+                            Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
+                    <Setter Property="PreviewTarget"
+                            Value="{Binding PreviewTarget, Mode=OneWayToSource}" />
+                    <Setter Property="Content"
+                            Value="{Binding PreviewText}" />
+                    <Setter Property="EnablePreview"
+                            Value="{Binding EnablePendingConnectionPreview, Source={x:Static local:EditorSettings.Instance}}" />
+                    <Setter Property="EnableSnapping"
+                            Value="{Binding EnablePendingConnectionSnapping, Source={x:Static local:EditorSettings.Instance}}" />
+                    <Setter Property="AllowOnlyConnectors"
+                            Value="{Binding AllowConnectingToConnectorsOnly, Source={x:Static local:EditorSettings.Instance}}" />
+                    <Setter Property="Direction"
+                            Value="{Binding Source.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
+                                <Canvas>
+                                    <nodify:Connection Source="{TemplateBinding SourceAnchor}"
+                                                       Target="{TemplateBinding TargetAnchor}"
+                                                       Stroke="{TemplateBinding Stroke}"
+                                                       StrokeThickness="{TemplateBinding StrokeThickness}"
+                                                       StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                                                       Direction="{TemplateBinding Direction}" />
+                                    <Border Background="{TemplateBinding Background}"
+                                            Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                            Visibility="{TemplateBinding EnablePreview, Converter={shared:BooleanToVisibilityConverter}}"
+                                            Padding="{TemplateBinding Padding}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            CornerRadius="3"
+                                            Margin="15">
+                                        <ContentPresenter />
+                                    </Border>
+                                </Canvas>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
-            <Style TargetType="{x:Type nodify:Connector}"
-                   BasedOn="{StaticResource {x:Type nodify:Connector}}">
-                <Setter Property="Anchor"
-                        Value="{Binding Anchor, Mode=OneWayToSource}" />
-                <Setter Property="IsConnected"
-                        Value="{Binding IsConnected}" />
-            </Style>
+                <Style TargetType="{x:Type nodify:Connector}"
+                       BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
+                </Style>
 
-            <Style TargetType="{x:Type nodify:NodeInput}"
-                   BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
-                <Setter Property="Header"
-                        Value="{Binding Title}" />
-                <Setter Property="Anchor"
-                        Value="{Binding Anchor, Mode=OneWayToSource}" />
-                <Setter Property="IsConnected"
-                        Value="{Binding IsConnected}" />
-            </Style>
+                <Style TargetType="{x:Type nodify:NodeInput}"
+                       BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
+                    <Setter Property="Header"
+                            Value="{Binding Title}" />
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
+                </Style>
 
-            <Style TargetType="{x:Type nodify:NodeOutput}"
-                   BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
-                <Setter Property="Header"
-                        Value="{Binding Title}" />
-                <Setter Property="Anchor"
-                        Value="{Binding Anchor, Mode=OneWayToSource}" />
-                <Setter Property="IsConnected"
-                        Value="{Binding IsConnected}" />
-            </Style>
+                <Style TargetType="{x:Type nodify:NodeOutput}"
+                       BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
+                    <Setter Property="Header"
+                            Value="{Binding Title}" />
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
+                </Style>
 
-            <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
-                <nodify:KnotNode Content="{Binding Connector}" />
-            </DataTemplate>
+                <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
+                    <nodify:KnotNode Content="{Binding Connector}" />
+                </DataTemplate>
 
-            <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
-                <nodify:GroupingNode ActualSize="{Binding Size}"
-                                     Header="{Binding Title}" />
-            </DataTemplate>
+                <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
+                    <nodify:GroupingNode ActualSize="{Binding Size}"
+                                         Header="{Binding Title}" />
+                </DataTemplate>
 
-            <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
-                <nodify:Node Input="{Binding Input}"
-                             Output="{Binding Output}"
-                             Header="{Binding Title}" />
-            </DataTemplate>
-        </nodify:NodifyEditor.Resources>
+                <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
+                    <nodify:Node Input="{Binding Input}"
+                                 Output="{Binding Output}"
+                                 Header="{Binding Title}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.Resources>
 
-        <nodify:NodifyEditor.ItemContainerStyle>
-            <Style TargetType="{x:Type nodify:ItemContainer}"
-                   BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
-                <Setter Property="Location"
-                        Value="{Binding Location}" />
-            </Style>
-        </nodify:NodifyEditor.ItemContainerStyle>
-    </nodify:NodifyEditor>
+            <nodify:NodifyEditor.ItemContainerStyle>
+                <Style TargetType="{x:Type nodify:ItemContainer}"
+                       BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                    <Setter Property="Location"
+                            Value="{Binding Location}" />
+                </Style>
+            </nodify:NodifyEditor.ItemContainerStyle>
+        </nodify:NodifyEditor>
+
+        <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
+              Visibility="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
+              Panel.ZIndex="-2" />
+    </Grid>
+
 </UserControl>

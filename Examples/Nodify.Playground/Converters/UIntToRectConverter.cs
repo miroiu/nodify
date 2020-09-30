@@ -2,10 +2,11 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Nodify.Playground
 {
-    public class UIntToRectConverter : IValueConverter
+    public class UIntToRectConverter : MarkupExtension, IValueConverter
     {
         public uint Multiplier { get; set; } = 1;
 
@@ -19,5 +20,8 @@ namespace Nodify.Playground
         {
             throw new NotSupportedException();
         }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+            => this;
     }
 }
