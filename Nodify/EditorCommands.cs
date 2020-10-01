@@ -59,11 +59,13 @@ namespace Nodify
 
         /// <summary>
         /// Moves the <see cref="NodifyEditor.Viewport"/> to the specified location.
+        /// Parameter is a <see cref="Point"/> or a string that can be converted to a point.
         /// </summary>
         public static RoutedUICommand BringIntoView { get; } = new RoutedUICommand("Bring location into view", nameof(BringIntoView), typeof(EditorCommands));
 
         /// <summary>
-        /// Aligns <see cref="NodifyEditor.SelectedItems"/> using the specified alignment method. (see <see cref="Alignment"/>)
+        /// Aligns <see cref="NodifyEditor.SelectedItems"/> using the specified alignment method.
+        /// Parameter is of type <see cref="Alignment"/> or a string that can be converted to an alignment.
         /// </summary>
         public static RoutedUICommand Align { get; } = new RoutedUICommand("Align", nameof(Align), typeof(EditorCommands));
 

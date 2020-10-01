@@ -27,6 +27,8 @@
                 Value="4 4" />
         <Setter Property="Padding"
                 Value="5" />
+        <Setter Property="EnableSnapping"
+                Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PendingConnection}">
