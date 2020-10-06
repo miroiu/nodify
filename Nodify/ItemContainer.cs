@@ -185,10 +185,10 @@ namespace Nodify
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is being dragged.
         /// </summary>
-        public event DragCompletedEventHandler DragDelta
+        public event DragDeltaEventHandler DragDelta
         {
-            add => AddHandler(DragCompletedEvent, value);
-            remove => RemoveHandler(DragCompletedEvent, value);
+            add => AddHandler(DragDeltaEvent, value);
+            remove => RemoveHandler(DragDeltaEvent, value);
         }
 
         /// <summary>
@@ -259,9 +259,14 @@ namespace Nodify
         /// </summary>
         public static bool AllowDraggingCancellation { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets the ancestor of this container used to calculate the relative position when dragging.
+        /// Prioritizes the NodifyEditor and defaults to this ItemContainer if not found.
+        /// </summary>
+        protected virtual UIElement? DraggableHost { get; set; }
+
         private Point _previousDragPosition;
         private Point _initialDragPosition;
-        private UIElement? _draggableHost;
 
         #endregion
 
@@ -345,7 +350,7 @@ namespace Nodify
             if (AllowDraggingCancellation && IsPreviewingLocation)
             {
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
+                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
                 {
@@ -373,8 +378,8 @@ namespace Nodify
             if (IsSelectableLocation(e.GetPosition(this)))
             {
                 // Prepare for dragging
-                _draggableHost ??= Editor?.ItemsHost ?? (UIElement)this;
-                _initialDragPosition = e.GetPosition(_draggableHost);
+                DraggableHost ??= Editor?.ItemsHost ?? (UIElement)this;
+                _initialDragPosition = e.GetPosition(DraggableHost);
                 _previousDragPosition = _initialDragPosition;
 
                 Focus();
@@ -390,7 +395,7 @@ namespace Nodify
             {
                 // Do not rely on OnLocationChanged setting this to false
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
+                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, false)
                 {
@@ -430,7 +435,7 @@ namespace Nodify
             if (e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured && IsDraggable)
             {
                 // Needs host for snapping and to apply transform 
-                var position = e.GetPosition(_draggableHost);
+                var position = e.GetPosition(DraggableHost);
 
                 if (_previousDragPosition != position)
                 {
@@ -465,7 +470,7 @@ namespace Nodify
             if (IsPreviewingLocation)
             {
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(_draggableHost) - _initialDragPosition;
+                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, AllowDraggingCancellation)
                 {
