@@ -589,12 +589,12 @@ namespace Nodify
         /// <summary>
         /// Zoom in at the viewport's center
         /// </summary>
-        public void ZoomIn() => ZoomAtPosition(1.26, RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
+        public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
 
         /// <summary>
         /// Zoom out at the viewport's center
         /// </summary>
-        public void ZoomOut() => ZoomAtPosition(1 / 1.26, RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
+        public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
 
         /// <summary>
         /// Moves the <see cref="Viewport"/> at the specified location.
@@ -610,7 +610,7 @@ namespace Nodify
                 IsPanning = true;
                 DisableZooming = true;
 
-                this.StartAnimation(OffsetProperty, PointToViewportCenter(point), BringIntoViewAnimationDuration, (s, e) =>
+                this.StartAnimation(OffsetProperty, TransformToViewportCenter(point), BringIntoViewAnimationDuration, (s, e) =>
                 {
                     IsPanning = false;
                     DisableZooming = false;
@@ -618,7 +618,7 @@ namespace Nodify
             }
             else
             {
-                Offset = PointToViewportCenter(point);
+                Offset = TransformToViewportCenter(point);
             }
         }
 
@@ -636,6 +636,8 @@ namespace Nodify
 
             if (prevScale != Scale)
             {
+                // get the actual zoom value because Scale might have been coerced
+                zoom = Scale / prevScale;
                 Offset = (Point)((Vector)(Offset + position) * zoom - position);
             }
         }
@@ -677,7 +679,7 @@ namespace Nodify
                 // Update the selecting area because the mouse might not move to update it.
                 if (IsSelecting)
                 {
-                    Selection.Update(GetMousePositionTransformed(mousePosition));
+                    Selection.Update(TransformPosition(mousePosition));
                 }
             }
         }
@@ -738,7 +740,7 @@ namespace Nodify
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            var scale = Math.Pow(2, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            var scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
             ZoomAtPosition(scale, e.GetPosition(this));
         }
 
@@ -748,7 +750,7 @@ namespace Nodify
 
             if (CurrentMousePosition != PreviousMousePosition)
             {
-                MouseLocation = GetMousePositionTransformed(CurrentMousePosition);
+                MouseLocation = TransformPosition(CurrentMousePosition);
 
                 if (IsMouseCaptured)
                 {
@@ -1167,7 +1169,7 @@ namespace Nodify
                 }
 
                 // Make sure we're not adding to a previous selection
-                if(_selectedContainers.Count > 0)
+                if (_selectedContainers.Count > 0)
                 {
                     _selectedContainers.Clear();
                 }
@@ -1177,7 +1179,7 @@ namespace Nodify
                 {
                     _selectedContainers.Capacity = selectedItems.Count;
                 }
-                
+
                 // Cache selected containers
                 for (int i = 0; i < selectedItems.Count; i++)
                 {
@@ -1194,10 +1196,20 @@ namespace Nodify
 
         #region Helpers
 
-        private Point GetMousePositionTransformed(Point location)
-            => new Point((Offset.X + location.X) / Scale, (Offset.Y + location.Y) / Scale);
+        /// <summary>
+        /// Transforms the <paramref name="point"/> to a location relative to the <see cref="ItemsHost"/> panel.
+        /// </summary>
+        /// <param name="point">The location to transform.</param>
+        /// <returns>The relative location.</returns>
+        protected Point TransformPosition(Point point)
+            => new Point((Offset.X + point.X) / Scale, (Offset.Y + point.Y) / Scale);
 
-        protected Point PointToViewportCenter(Point point)
+        /// <summary>
+        /// Transforms the <paramref name="point"/> to a location relative to the <see cref="Viewport"/>'s center.
+        /// </summary>
+        /// <param name="point">The point to transform.</param>
+        /// <returns>The center location.</returns>
+        protected Point TransformToViewportCenter(Point point)
             => (Point)((Vector)point * Scale - new Vector(ActualWidth / 2, ActualHeight / 2));
 
         #endregion
