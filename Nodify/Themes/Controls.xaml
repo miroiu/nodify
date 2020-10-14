@@ -157,6 +157,16 @@
                 Value="{StaticResource DirectionalConnection.StrokeBrush}" />
     </Style>
 
+    <!--CIRCUIT CONNECTION-->
+
+    <Style TargetType="{x:Type local:CircuitConnection}"
+           BasedOn="{StaticResource {x:Type local:CircuitConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource CircuitConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource CircuitConnection.StrokeBrush}" />
+    </Style>
+
     <!--PENDING CONNECTION-->
 
     <Style TargetType="{x:Type local:PendingConnection}"

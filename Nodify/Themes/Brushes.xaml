@@ -183,6 +183,12 @@
                      o:Freeze="True"
                      Color="{DynamicResource DirectionalConnection.StrokeColor}" />
 
+    <!--CIRCUIT CONNECTION-->
+
+    <SolidColorBrush x:Key="CircuitConnection.StrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource CircuitConnection.StrokeColor}" />
+
     <!--PENDING CONNECTION-->
     
     <SolidColorBrush x:Key="PendingConnection.StrokeBrush"

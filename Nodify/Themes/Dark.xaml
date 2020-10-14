@@ -63,6 +63,9 @@
     <!--DIRECTIONAL CONNECTION-->
     <Color x:Key="DirectionalConnection.StrokeColor">DodgerBlue</Color>
 
+    <!--CIRCUIT CONNECTION-->
+    <Color x:Key="CircuitConnection.StrokeColor">DodgerBlue</Color>
+
     <!--PENDING CONNECTION-->
     <Color x:Key="PendingConnection.StrokeColor">DodgerBlue</Color>
     <Color x:Key="PendingConnection.BorderColor">Black</Color>
