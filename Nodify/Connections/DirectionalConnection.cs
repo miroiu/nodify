@@ -9,7 +9,7 @@ namespace Nodify
     /// </summary>
     public class DirectionalConnection : BaseConnection
     {
-        public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(DirectionalConnection), new FrameworkPropertyMetadata(new Size(7, 7), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(DirectionalConnection), new FrameworkPropertyMetadata(new Size(7, 6), FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
         /// Gets or sets the size of the arrow head.

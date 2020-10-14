@@ -71,7 +71,6 @@ namespace Nodify.Playground
 
         public PendingConnectionViewModel PendingConnection { get; }
         public GraphSchema Schema { get; }
-        public Viewport Viewport { get; } = new Viewport();
 
         public ICommand DeleteSelectionCommand { get; }
         public ICommand DisconnectConnectorCommand { get; }

@@ -30,8 +30,8 @@ namespace Nodify.Playground
         private void ResetGraph()
         {
             GraphViewModel.Nodes.Clear();
-            GraphViewModel.Viewport.Offset = new System.Windows.Point(0, 0);
-            GraphViewModel.Viewport.Scale = 1.0d;
+            EditorSettings.Instance.Location = new System.Windows.Point(0, 0);
+            EditorSettings.Instance.Zoom = 1.0d;
         }
 
         private async void GenerateRandomNodes()

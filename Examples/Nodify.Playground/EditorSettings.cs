@@ -1,5 +1,12 @@
 ﻿namespace Nodify.Playground
 {
+    public enum ConnectionStyle
+    {
+        Default,
+        Directional,
+        Circuit
+    }
+
     public class EditorSettings : ObservableObject
     {
         private EditorSettings() { }
@@ -7,6 +14,13 @@
         public static EditorSettings Instance { get; } = new EditorSettings();
 
         #region Default settings
+
+        private ConnectionStyle _connectionStyle;
+        public ConnectionStyle ConnectionStyle
+        {
+            get => _connectionStyle;
+            set => SetProperty(ref _connectionStyle, value);
+        }
 
         private bool _enablePendingConnectionSnapping = true;
         public bool EnablePendingConnectionSnapping
@@ -90,6 +104,62 @@
         {
             get => _maxZoom;
             set => SetProperty(ref _maxZoom, value);
+        }
+
+        private double _zoom = 1;
+        public double Zoom
+        {
+            get => _zoom;
+            set => SetProperty(ref _zoom, value);
+        }
+
+        private PointEditor _location = new PointEditor();
+        public PointEditor Location
+        {
+            get => _location;
+            set => SetProperty(ref _location, value);
+        }
+
+        private double _circuitConnectionAngle = 45;
+        public double CircuitConnectionAngle
+        {
+            get => _circuitConnectionAngle;
+            set => SetProperty(ref _circuitConnectionAngle, value);
+        }
+
+        private double _circuitConnectionSpacing = 30;
+        public double CircuitConnectionSpacing
+        {
+            get => _circuitConnectionSpacing;
+            set => SetProperty(ref _circuitConnectionSpacing, value);
+        }
+
+        private ConnectionOffsetMode _connectionOffsetMode = ConnectionOffsetMode.Circle;
+        public ConnectionOffsetMode ConnectionOffsetMode
+        {
+            get => _connectionOffsetMode;
+            set => SetProperty(ref _connectionOffsetMode, value);
+        }
+
+        private PointEditor _connectionSourceOffset = new PointEditor { X = 15, Y = 0 };
+        public PointEditor ConnectionSourceOffset
+        {
+            get => _connectionSourceOffset;
+            set => SetProperty(ref _connectionSourceOffset, value);
+        }
+
+        private PointEditor _connectionTargetOffset = new PointEditor { X = 15, Y = 0 };
+        public PointEditor ConnectionTargetOffset
+        {
+            get => _connectionTargetOffset;
+            set => SetProperty(ref _connectionTargetOffset, value);
+        }
+
+        private PointEditor _connectionArrowSize = new PointEditor { X = 7, Y = 6 };
+        public PointEditor ConnectionArrowSize
+        {
+            get => _connectionArrowSize;
+            set => SetProperty(ref _connectionArrowSize, value);
         }
 
         #endregion

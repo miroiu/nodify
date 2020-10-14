@@ -90,7 +90,7 @@
 
             <ScrollViewer>
                 <Grid IsSharedSizeScope="True"
-                      Width="300">
+                      Width="330">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -191,14 +191,14 @@
                         <TextBlock.Inlines>
                             <Run Text="Location: " />
                             <Run Foreground="Orange"
-                                 Text="{Binding GraphViewModel.Viewport.Offset, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                                 Text="{Binding Location.Value, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                     <TextBlock ToolTip="The viewport's scale. Not accurate when trying to zoom outside the MinScale and MaxScale because of dependency property coercion not updating the binding with the final result.">
                         <TextBlock.Inlines>
                             <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"
-                                 Text="{Binding GraphViewModel.Viewport.Scale, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
+                                 Text="{Binding Zoom, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>

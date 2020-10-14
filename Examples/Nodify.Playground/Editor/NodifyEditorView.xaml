@@ -41,6 +41,40 @@
                       Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={local:UIntToRectConverter  Multiplier=10}}"
                       Transform="{Binding AppliedTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
+
+        <DataTemplate x:Key="CircuitConnectionTemplate">
+            <nodify:CircuitConnection Source="{Binding Output.Anchor}"
+                                      Target="{Binding Input.Anchor}"
+                                      ToolTip="Double click to split"
+                                      OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
+                                      SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                      TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                      ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                      Spacing="{Binding CircuitConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
+                                      Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
+                                      Cursor="Hand" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ConnectionTemplate">
+            <nodify:Connection Source="{Binding Output.Anchor}"
+                               Target="{Binding Input.Anchor}"
+                               ToolTip="Double click to split"
+                               OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
+                               SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                               TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                               Cursor="Hand" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="DirectionalConnectionTemplate">
+            <nodify:DirectionalConnection Source="{Binding Output.Anchor}"
+                                          Target="{Binding Input.Anchor}"
+                                          ToolTip="Double click to split"
+                                          OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
+                                          SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                          TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                          ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                          Cursor="Hand" />
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -50,8 +84,8 @@
                              PendingConnection="{Binding PendingConnection}"
                              SelectedItems="{Binding SelectedNodes}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
-                             Offset="{Binding Viewport.Offset}"
-                             Scale="{Binding Viewport.Scale}"
+                             Offset="{Binding Location.Value, Source={x:Static local:EditorSettings.Instance}}"
+                             Scale="{Binding Zoom, Source={x:Static local:EditorSettings.Instance}}"
                              MinScale="{Binding MinZoom, Source={x:Static local:EditorSettings.Instance}}"
                              MaxScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}"
                              AutoPanSpeed="{Binding AutoPanningSpeed, Source={x:Static local:EditorSettings.Instance}}"
@@ -64,11 +98,23 @@
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
+                    <Setter Property="ConnectionTemplate"
+                            Value="{StaticResource ConnectionTemplate}" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}}"
                                      Value="True">
                             <Setter Property="Background"
                                     Value="{StaticResource SmallGridLinesDrawingBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                     Value="Directional">
+                            <Setter Property="ConnectionTemplate"
+                                    Value="{StaticResource DirectionalConnectionTemplate}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                     Value="Circuit">
+                            <Setter Property="ConnectionTemplate"
+                                    Value="{StaticResource CircuitConnectionTemplate}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -80,15 +126,6 @@
                 <KeyBinding Key="C"
                             Command="{Binding CommentSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
-
-            <nodify:NodifyEditor.ConnectionTemplate>
-                <DataTemplate>
-                    <nodify:Connection Source="{Binding Output.Anchor}"
-                                       Target="{Binding Input.Anchor}"
-                                       ToolTip="Double click to split"
-                                       Cursor="Hand" />
-                </DataTemplate>
-            </nodify:NodifyEditor.ConnectionTemplate>
 
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:PendingConnection}"
@@ -115,12 +152,13 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
                                 <Canvas>
-                                    <nodify:Connection Source="{TemplateBinding SourceAnchor}"
-                                                       Target="{TemplateBinding TargetAnchor}"
-                                                       Stroke="{TemplateBinding Stroke}"
-                                                       StrokeThickness="{TemplateBinding StrokeThickness}"
-                                                       StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                       Direction="{TemplateBinding Direction}" />
+                                    <nodify:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
+                                                                  Target="{TemplateBinding TargetAnchor}"
+                                                                  Stroke="{TemplateBinding Stroke}"
+                                                                  StrokeThickness="{TemplateBinding StrokeThickness}"
+                                                                  StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                                                                  Direction="{TemplateBinding Direction}"
+                                                                  ArrowSize="0 0" />
                                     <Border Background="{TemplateBinding Background}"
                                             Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                             Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
