@@ -18,4 +18,15 @@
                 Value="DodgerBlue" />
     </Style>
 
+    <Style TargetType="{x:Type local:CircuitConnection}">
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="Stroke"
+                Value="DodgerBlue" />
+        <Setter Property="Fill"
+                Value="DodgerBlue" />
+        <Setter Property="ArrowSize"
+                Value="6 7" />
+    </Style>
+
 </ResourceDictionary>

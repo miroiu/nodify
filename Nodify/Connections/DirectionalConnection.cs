@@ -36,7 +36,11 @@ namespace Nodify
 
                 using (StreamGeometryContext context = geometry.Open())
                 {
-                    DrawLineGeometry(context);
+                    var (sourceOffset, targetOffset) = GetOffset();
+                    Point source = Source + sourceOffset;
+                    Point target = Target + targetOffset;
+
+                    DrawLineGeometry(context, source, target);
                 }
 
                 geometry.Freeze();
@@ -44,13 +48,8 @@ namespace Nodify
             }
         }
 
-        private void DrawLineGeometry(StreamGeometryContext context)
+        protected virtual void DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (sourceOffset, targetOffset) = GetOffset();
-
-            Point source = Source + sourceOffset;
-            Point target = Target + targetOffset;
-
             context.BeginFigure(source, true, false);
             context.LineTo(target, true, true);
 
@@ -67,7 +66,7 @@ namespace Nodify
             }
         }
 
-        private void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
         {
             Vector delta = source - target;
             double angle = Math.Atan2(delta.Y, delta.X);
