@@ -134,7 +134,7 @@
             set => SetProperty(ref _circuitConnectionSpacing, value);
         }
 
-        private ConnectionOffsetMode _connectionOffsetMode = ConnectionOffsetMode.Circle;
+        private ConnectionOffsetMode _connectionOffsetMode = ConnectionOffsetMode.None;
         public ConnectionOffsetMode ConnectionOffsetMode
         {
             get => _connectionOffsetMode;

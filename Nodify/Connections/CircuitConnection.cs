@@ -53,13 +53,12 @@ namespace Nodify
         private Point GetControlPoint(Point source, Point target)
         {
             Vector delta = target - source;
+            double tangent = Math.Tan(Angle * Degrees);
 
             var dx = Math.Abs(delta.X);
             var dy = Math.Abs(delta.Y);
 
-            var slopeWidth = dy / Math.Tan(Angle * Degrees);
-            var slopeHeight = dx * Math.Tan(Angle * Degrees);
-
+            var slopeWidth = dy / tangent;
             if (dx > slopeWidth)
             {
                 if (delta.X > 0)
@@ -70,6 +69,7 @@ namespace Nodify
                 return new Point(source.X - slopeWidth, target.Y);
             }
 
+            var slopeHeight = dx * tangent;
             if (dy > slopeHeight)
             {
                 if (delta.Y > 0)

@@ -198,7 +198,7 @@
                     <MenuItem Header="_Select All"
                               Icon="{StaticResource SelectAllIcon}"
                               InputGestureText="Ctrl+A"
-                              Command="{Binding SelectAllCommand}" />
+                              Command="{x:Static nodify:EditorCommands.SelectAll}" />
                 </ContextMenu>
             </nodify:NodifyEditor.ContextMenu>
 
