@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Playground", "Exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.StateMachine", "Examples\Nodify.StateMachine\Nodify.StateMachine.csproj", "{48569CA8-81C1-4B47-963B-0FC9358C5F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Shared", "Examples\Nodify.Shared\Nodify.Shared.csproj", "{499C8539-9973-4102-B976-57DB3F3C7DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Shared", "Examples\Nodify.Shared\Nodify.Shared.csproj", "{499C8539-9973-4102-B976-57DB3F3C7DF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{499C8539-9973-4102-B976-57DB3F3C7DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{499C8539-9973-4102-B976-57DB3F3C7DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{499C8539-9973-4102-B976-57DB3F3C7DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{423D54CA-9F42-4116-8755-13641F94151D} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 		{48569CA8-81C1-4B47-963B-0FC9358C5F01} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 		{499C8539-9973-4102-B976-57DB3F3C7DF3} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
+		{7ADD1DAF-B589-4742-8E72-872D2842E73D} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B9E59DB6-FB93-48F3-A8E0-1E549009E043}
