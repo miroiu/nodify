@@ -63,6 +63,7 @@ Install-Package Nodify
  - **High performance** controls interactions
  - A playground [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground)
  - A state machine [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine)
+ - A calculator [**application example**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator)
  - **Customizable** through styles and templates
  - Dark and light **themes**
  - Lots of **configurable** dependency properties
@@ -83,6 +84,9 @@ https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
 
 ![StateMachine](https://i.imgur.com/nVKV5ly.gif)
 
+https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator
+
+![Calculator](https://i.imgur.com/jonrZAq.gif)
 
 ## Contributing
 
