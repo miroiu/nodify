@@ -8,8 +8,7 @@ namespace Nodify.Calculator
         {
             CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target => CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target), target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
-
-            UpdateAvailableOperations();
+            DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
 
             Connections.WhenAdded(c =>
             {
@@ -20,7 +19,7 @@ namespace Nodify.Calculator
 
                 c.Output.PropertyChanged += (s, e) =>
                 {
-                    if(e.PropertyName == nameof(ConnectorViewModel.Value))
+                    if (e.PropertyName == nameof(ConnectorViewModel.Value))
                     {
                         c.Input.Value = c.Output.Value;
                     }
@@ -50,6 +49,8 @@ namespace Nodify.Calculator
                     c.ForEach(con => Connections.Remove(con));
                 });
             });
+
+            UpdateAvailableOperations();
         }
 
         private NodifyObservableCollection<OperationViewModel> _operations = new NodifyObservableCollection<OperationViewModel>();
@@ -65,6 +66,13 @@ namespace Nodify.Calculator
 
         public INodifyCommand CreateConnectionCommand { get; }
         public INodifyCommand CreateOperationCommand { get; }
+        public INodifyCommand DisconnectConnectorCommand { get; }
+
+        private void DisconnectConnector(ConnectorViewModel connector)
+        {
+            var connections = Connections.Where(c => c.Input == connector || c.Output == connector).ToList();
+            connections.ForEach(c => Connections.Remove(c));
+        }
 
         private bool CanCreateConnection(ConnectorViewModel source, ConnectorViewModel? target)
             => target != null && source != target && source.Operation != target.Operation && source.IsInput != target.IsInput;
@@ -89,7 +97,7 @@ namespace Nodify.Calculator
             AvailableOperations.Add(new OperationInfoViewModel
             {
                 Type = OperationType.Expression,
-                Title = "Custom"
+                Title = "Custom",
             });
             var operations = OperationFactory.GetOperationsInfo(typeof(OperationsContainer));
             AvailableOperations.AddRange(operations);

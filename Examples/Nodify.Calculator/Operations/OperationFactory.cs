@@ -104,7 +104,8 @@ namespace Nodify.Calculator
                 {
                     Title = info.Title,
                     Output = new ConnectorViewModel(),
-                    Operation = info.Operation
+                    Operation = info.Operation,
+                    Expression = "1 + sin {a} + cos {b}"
                 };
             }
             else if (info.Type == OperationType.Expando)

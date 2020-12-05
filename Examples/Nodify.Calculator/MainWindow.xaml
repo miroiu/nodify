@@ -50,6 +50,7 @@
         <nodify:NodifyEditor ItemsSource="{Binding Operations}"
                              Connections="{Binding Connections}"
                              ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
+                             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
                              GridCellSize="15"
                              x:Name="Editor">
@@ -70,7 +71,8 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Title}"
                                                Margin="0 0 5 0" />
-                                    <TextBox Text="{Binding Value}" Visibility="{Binding IsConnected, Converter={shared:BooleanToVisibilityConverter Negate=True}}" />
+                                    <TextBox Text="{Binding Value}"
+                                             Visibility="{Binding IsConnected, Converter={shared:BooleanToVisibilityConverter Negate=True}}" />
                                 </StackPanel>
                             </DataTemplate>
                         </Setter.Value>
@@ -88,7 +90,8 @@
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
                             <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
-                                <TextBox Text="{Binding Value}" IsEnabled="False" />
+                                <TextBox Text="{Binding Value}"
+                                         IsEnabled="False" />
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>
@@ -98,7 +101,7 @@
                     <nodify:Node Content="{Binding Title}"
                                  Input="{Binding Input}"
                                  Output="{Binding Output, Converter={StaticResource ItemToListConverter}}"
-                                 Padding="5 0 0 0"/>
+                                 Padding="5 0 0 0" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:ExpandoOperationViewModel}">
@@ -122,8 +125,7 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:ExpressionOperationViewModel}">
-                    <nodify:Node Header="{Binding Title}"
-                                 Content="{Binding}"
+                    <nodify:Node Content="{Binding}"
                                  Input="{Binding Input}"
                                  Output="{Binding Output, Converter={StaticResource ItemToListConverter}}">
                         <nodify:Node.ContentTemplate>
@@ -143,7 +145,7 @@
                                               Target="{Binding Input.Anchor}"
                                               SourceOffset="10 0"
                                               TargetOffset="20 0"
-                                              OffsetMode="Circle"/>
+                                              OffsetMode="Circle" />
                 </DataTemplate>
             </nodify:NodifyEditor.ConnectionTemplate>
 
@@ -183,5 +185,14 @@
 
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
+
+        <StackPanel Margin="10">
+            <TextBlock Text="ALT + Click -> disconnect connector"
+                       FontWeight="Bold" />
+            <TextBlock Text="Right Click -> show context menu"
+                       FontWeight="Bold" />
+            <TextBlock Text="Hover over a connector to see its value"
+                       FontWeight="Bold" />
+        </StackPanel>
     </Grid>
 </Window>
