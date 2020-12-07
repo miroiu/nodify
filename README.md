@@ -52,7 +52,7 @@ Install-Package Nodify
 
 https://github.com/miroiu/nodify/wiki
 
-## ❤️ Contributing
+## ❤️ [Contributing](https://github.com/miroiu/nodify/blob/master/CONTRIBUTING.md)
 
 Helping with documentation, bug reports, features and pull requests are very welcome. 
 
