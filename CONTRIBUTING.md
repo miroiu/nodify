@@ -14,12 +14,13 @@ So if you want to join the ***nicest*** of the ***nice*** programmers, then you 
 
 - Create a pull request linking to a [bug](https://github.com/miroiu/nodify/labels/bug)
 - Create a [feature](https://github.com/miroiu/nodify/labels/enhancement) request
+- Create an [example application](https://github.com/miroiu/nodify/tree/master/Examples)
 - Help with the [documentation](https://github.com/miroiu/nodify/wiki)
 - Write clear and descriptive issues and try to avoid duplication
 
 ## How Can I Contribute?
 
-Well, you can either report and fix bugs, suggest or implement features, improve the documentation or write tests.
+Well, you can either report and fix bugs, suggest or implement features and example applications, improve the documentation or write tests.
 
 ### 🐛 Reporting and fixing bugs
 
@@ -50,9 +51,11 @@ When you are creating an enhancement suggestion, please include as many details 
 
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you suggested but missing important features, open a new issue and include a link to the original issue in the body of your new one.
 
-### ✨ Implementing your dream feature
+### ✨ Implementing your dream feature or a simple example application
 
 If you already suggested an enchancement and wrote some code for it, create a pull request linking to the existing enhancement.
+
+If you want to create an example application, then create an issue describing what is your application doing and if you need help with anything.
 
 ### 📖 Improving Documentation
 
