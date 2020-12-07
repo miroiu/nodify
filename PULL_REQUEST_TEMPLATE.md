@@ -2,8 +2,6 @@
 
 Copy the correct template for your contribution.
 
-After you create the pull request, all status checks must be pass before a maintainer reviews your contribution.
-
 ## 🐛 Bug fixing
 
 > The pull request must only fix an existing bug.
@@ -38,3 +36,9 @@ What are the possible side-effects or negative impacts of the code change?
 ### Description of the Change
 
 We must be able to understand the purpose of your change from this description.
+
+## ✨ Example application
+
+### Description of the Change
+
+We must be able to understand what your application is going to do from this description.
