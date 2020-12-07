@@ -11,19 +11,19 @@
 
 🌓 A state machine where each state represents an executable action, and each transition represents a condition for the next action to execute.
 
-https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
+> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
 
 ![StateMachine](https://i.imgur.com/nVKV5ly.gif)
 
 💻 A simple "real-time" calculator where each node represents an operation that takes input and feeds its output into other nodes input.
 
-https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator
+> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator
 
 ![Calculator](https://i.imgur.com/jonrZAq.gif)
 
 🎨 A playground application where you can try all the available settings.
 
-https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
+> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
 
 ![Playground](https://i.imgur.com/aqrUpuP.gif)
 
