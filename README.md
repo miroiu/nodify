@@ -7,7 +7,7 @@
 
  A collection of high performance controls for node based editors designed for MVVM.
 
-## Examples of different node-based applications
+## 🚀 Examples of different node-based applications
 
 🌓 A state machine where each state represents an executable action, and each transition represents a condition for the next action to execute.
 
@@ -27,14 +27,14 @@ https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
 
 ![Playground](https://i.imgur.com/aqrUpuP.gif)
 
-## Installation
+## 📥 Installation
 Use the nuget package manager to install Nodify.
 
 ```
 Install-Package Nodify
 ```
 
-## Features
+## ⭐️ Features
  
  - Built for databinding and **MVVM**
  - Single assembly targeting **.NET Core 3.1**
@@ -48,11 +48,11 @@ Install-Package Nodify
  - Expanding Controls library (Node, GroupingNode, Connection etc.)
  - Example applications: 🎨 [**Playground**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground), 🌓 [**State machine**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine), 💻 [**Calculator**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator)
  
-## Documentation
+## 📝 Documentation
 
 https://github.com/miroiu/nodify/wiki
 
-## Contributing
+## ❤️ Contributing
 
 Helping with documentation, bug reports, features and pull requests are very welcome. 
 
