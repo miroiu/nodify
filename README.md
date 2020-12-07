@@ -54,4 +54,6 @@ https://github.com/miroiu/nodify/wiki
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Helping with documentation, bug reports, features and pull requests are very welcome. 
+
+For major changes, please open an issue first to discuss what you would like to change.
