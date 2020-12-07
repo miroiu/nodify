@@ -8,7 +8,7 @@ Ok, enough of me crying... You decided to contribute to this project, right? **R
 
 Well.. cool, but hold on, we're nice people here, right? **RIGHT???**
 
-So if you want to join the ***nicest*** ***nice*** programmers, then you are expected to uphold the [Nodify Code of Conduct](CODE_OF_CONDUCT.md). *(don't even waste time reading it, it's common sense 😎)*
+So if you want to join the ***nicest*** of the ***nice*** programmers, then you are expected to uphold the [Nodify Code of Conduct](CODE_OF_CONDUCT.md). *(don't even waste time reading it, it's common sense 😎)*
 
 ## TL;DR
 
