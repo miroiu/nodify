@@ -7,6 +7,7 @@
         xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         Background="{DynamicResource NodifyEditor.BackgroundBrush}"
+        Foreground="{DynamicResource ForegroundBrush}"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
@@ -185,6 +186,9 @@
             </nodify:NodifyEditor.ContextMenu>
 
             <nodify:NodifyEditor.InputBindings>
+                <KeyBinding Key="T"
+                            Modifiers="Ctrl"
+                            Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}" />
                 <KeyBinding Key="Delete"
                             Command="{Binding DeleteSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
@@ -198,7 +202,9 @@
                        FontWeight="Bold" />
             <TextBlock Text="Right Click -> show context menu"
                        FontWeight="Bold" />
-            <TextBlock Text="Delete -> deletes selection"
+            <TextBlock Text="Delete -> delete selection"
+                       FontWeight="Bold" />
+            <TextBlock Text="CTRL + T -> change theme"
                        FontWeight="Bold" />
             <TextBlock Text="Hover over a connector to see its value"
                        FontWeight="Bold" />

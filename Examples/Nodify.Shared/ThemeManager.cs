@@ -82,13 +82,20 @@ namespace Nodify
 
             foreach (var theme in resourcesToLoad)
             {
-                var resource = new ThemeDictionary
+                try
                 {
-                    Source = theme,
-                    ThemeName = themeName
-                };
+                    var resource = new ThemeDictionary
+                    {
+                        Source = theme,
+                        ThemeName = themeName
+                    };
 
-                Application.Current.Resources.MergedDictionaries.Add(resource);
+                    Application.Current.Resources.MergedDictionaries.Add(resource);
+                }
+                catch
+                {
+
+                }
             }
 
             ActiveTheme = themeName;
