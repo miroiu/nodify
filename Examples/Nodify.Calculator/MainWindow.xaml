@@ -154,6 +154,8 @@
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                     <Setter Property="Location"
                             Value="{Binding Location}" />
+                    <Setter Property="IsSelected"
+                            Value="{Binding IsSelected}" />
                 </Style>
             </nodify:NodifyEditor.ItemContainerStyle>
 
@@ -181,6 +183,11 @@
                     </MenuItem>
                 </ContextMenu>
             </nodify:NodifyEditor.ContextMenu>
+
+            <nodify:NodifyEditor.InputBindings>
+                <KeyBinding Key="Delete"
+                            Command="{Binding DeleteSelectionCommand}" />
+            </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
@@ -190,6 +197,8 @@
             <TextBlock Text="ALT + Click -> disconnect connector"
                        FontWeight="Bold" />
             <TextBlock Text="Right Click -> show context menu"
+                       FontWeight="Bold" />
+            <TextBlock Text="Delete -> deletes selection"
                        FontWeight="Bold" />
             <TextBlock Text="Hover over a connector to see its value"
                        FontWeight="Bold" />

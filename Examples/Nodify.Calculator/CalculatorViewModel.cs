@@ -9,6 +9,7 @@ namespace Nodify.Calculator
             CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target => CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target), target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
+            DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
 
             Connections.WhenAdded(c =>
             {
@@ -48,6 +49,18 @@ namespace Nodify.Calculator
                     var c = Connections.Where(con => con.Input == i || con.Output == i).ToArray();
                     c.ForEach(con => Connections.Remove(con));
                 });
+            })
+            .WhenRemoved(x =>
+            {
+                foreach (var input in x.Input)
+                {
+                    DisconnectConnector(input);
+                }
+
+                if (x.Output != null)
+                {
+                    DisconnectConnector(x.Output);
+                }
             });
 
             UpdateAvailableOperations();
@@ -67,6 +80,7 @@ namespace Nodify.Calculator
         public INodifyCommand CreateConnectionCommand { get; }
         public INodifyCommand CreateOperationCommand { get; }
         public INodifyCommand DisconnectConnectorCommand { get; }
+        public INodifyCommand DeleteSelectionCommand { get; }
 
         private void DisconnectConnector(ConnectorViewModel connector)
         {
@@ -108,6 +122,12 @@ namespace Nodify.Calculator
             });
             var operations = OperationFactory.GetOperationsInfo(typeof(OperationsContainer));
             AvailableOperations.AddRange(operations);
+        }
+
+        private void DeleteSelection()
+        {
+            var selected = Operations.Where(o => o.IsSelected).ToList();
+            selected.ForEach(o => Operations.Remove(o));
         }
     }
 }

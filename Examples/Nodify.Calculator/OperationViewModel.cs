@@ -42,6 +42,13 @@ namespace Nodify.Calculator
             set => SetProperty(ref _title, value);
         }
 
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
         private IOperation? _operation;
         public IOperation? Operation
         {
