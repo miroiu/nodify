@@ -78,11 +78,18 @@ namespace Nodify.Calculator
             => target != null && source != target && source.Operation != target.Operation && source.IsInput != target.IsInput;
 
         private void CreateConnection(ConnectorViewModel source, ConnectorViewModel target)
-            => Connections.Add(new ConnectionViewModel
+        {
+            var input = source.IsInput ? source : target;
+            var output = target.IsInput ? source : target;
+
+            DisconnectConnector(input);
+
+            Connections.Add(new ConnectionViewModel
             {
-                Input = source.IsInput ? source : target,
-                Output = target.IsInput ? source : target
+                Input = input,
+                Output = output
             });
+        }
 
         private void CreateOperation(CreateOperationInfoViewModel arg)
         {
