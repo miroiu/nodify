@@ -189,6 +189,7 @@ namespace Nodify
                     Container.PreviewLocationChanged -= UpdateAnchorOptimized;
                     Container.LocationChanged -= OnLocationChanged;
                     Editor.ViewportUpdated -= OnViewportUpdated;
+                    _isHooked = false;
                 }
             }
         }
