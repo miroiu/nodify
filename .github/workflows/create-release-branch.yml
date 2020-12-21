@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2      
     - name: Save tag version
-      uses: olegtarasov/get-tag@v2
+      uses: little-core-labs/get-git-tag@v3.0.1
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -27,5 +27,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: release-${{ env.GIT_TAG_NAME }}
+        branch: release-${{ steps.tagName.outputs.tag }}
     
