@@ -12,19 +12,19 @@
 
 🌓 A state machine where each state represents an executable action, and each transition represents a condition for the next action to execute.
 
-> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine
+> [Examples/Nodify.StateMachine](Examples/Nodify.StateMachine)
 
 ![StateMachine](https://i.imgur.com/nVKV5ly.gif)
 
 💻 A simple "real-time" calculator where each node represents an operation that takes input and feeds its output into other nodes input.
 
-> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator
+> [Examples/Nodify.Calculator](Examples/Nodify.Calculator)
 
 ![Calculator](https://i.imgur.com/jonrZAq.gif)
 
 🎨 A playground application where you can try all the available settings.
 
-> https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground
+> [Examples/Nodify.Playground](Examples/Nodify.Playground)
 
 ![Playground](https://i.imgur.com/aqrUpuP.gif)
 
@@ -37,24 +37,20 @@ Install-Package Nodify
 
 ## ⭐️ Features
  
- - Built for databinding and **MVVM**
- - Single assembly targeting **.NET Core 3.1**
+ - Designed from start to work with **MVVM**
  - **No dependencies** other than WPF
- - **High performance** controls interactions
- - Dark and light **themes**
- - Lots of **configurable** dependency properties
- - **Pan**, **zoom**, **select** area, **auto pan** when close to edge
+ - **Optimized** for interactions with hundreds of nodes at once
+ - Built-in dark and light **themes**
+ - **Area selection**, **zoom**, **pan** with **auto panning** when close to edge
  - **Select**, **move** and **connect** nodes
+ - Lots of **configurable** dependency properties
  - Ready for undo/redo
- - Expanding Controls library (Node, GroupingNode, Connection etc.)
- - Example applications: 🎨 [**Playground**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground), 🌓 [**State machine**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine), 💻 [**Calculator**](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator)
+ - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator)
  
 ## 📝 Documentation
 
-https://github.com/miroiu/nodify/wiki
+https://github.com/miroiu/nodify/wiki - **will be replaced with a dedicated website**
 
-## ❤️ [Contributing](https://github.com/miroiu/nodify/blob/master/CONTRIBUTING.md)
+## ❤️ [Contributing](CONTRIBUTING.md)
 
-Helping with documentation, bug reports, features and pull requests are very welcome. 
-
-For major changes, please open an issue first to discuss what you would like to change.
+Helping with documentation, bug reports, pull requests or anything else is very welcome. 
