@@ -15,7 +15,7 @@ namespace Nodify.Calculator
                 var argType = value.GetType();
                 var listType = typeof(List<>).MakeGenericType(argType);
                 var list = Activator.CreateInstance(listType) as IList;
-                list.Add(value);
+                list?.Add(value);
 
                 return list;
             }
