@@ -37,7 +37,7 @@ Install-Package Nodify
 
 ## ⭐️ Features
  
- - Designed from start to work with **MVVM**
+ - Designed from the start to work with **MVVM**
  - **No dependencies** other than WPF
  - **Optimized** for interactions with hundreds of nodes at once
  - Built-in dark and light **themes**
@@ -49,7 +49,7 @@ Install-Package Nodify
  
 ## 📝 Documentation
 
-https://github.com/miroiu/nodify/wiki - **will be replaced with a dedicated website**
+[Wiki](https://github.com/miroiu/nodify/wiki) - **will be replaced with a dedicated documentation website**
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
