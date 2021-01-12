@@ -10,12 +10,12 @@ export const Copyright = () => {
 			</div>
 			<div className="additionalCopyright">
 				Built with{' '}
-				<Link to="https://v2.docusaurus.io/">
+				<Link href="https://v2.docusaurus.io/">
 					<span className="docusaurus-green">Docusaurus</span>
 				</Link>{' '}
 				· Circuit background by{' '}
-				<Link to="https://www.heropatterns.com/">
-					<span className="dheropatterns-purple">Steve Schoger</span>
+				<Link href="https://www.heropatterns.com/">
+					<span className="heropatterns-purple">Steve Schoger</span>
 				</Link>
 			</div>
 		</div>
