@@ -6,7 +6,7 @@ import { Banner } from '../../components/showcase-banner/banner';
 import { ApplicationCardList } from '../../components/application-card/card-list';
 
 const SUBMIT_APP_URL =
-	'https://github.com/miroiu/nodify-docs/edit/master/src/showcase/apps.ts';
+	'https://github.com/miroiu/nodify/edit/docs/src/showcase/apps.ts';
 
 const exampleApps = apps.filter(a => a.category === 'example-app');
 const otherApps = apps.filter(a => a.category !== 'example-app');

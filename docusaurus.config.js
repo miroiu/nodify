@@ -1,7 +1,7 @@
 module.exports = {
 	title: 'Nodify',
 	tagline: 'Build high-performance node-based editors quickly',
-	url: 'https://miroiu.github.io',
+	url: 'https://miroiu.github.io/nodify',
 	baseUrl: '/nodify/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
