@@ -1,8 +1,8 @@
 ---
-name: Example application
+name: 🚀 Example application
 about: Suggest an example application that others can benefit from
-title: "[Example]"
-labels: example
+title: "[Application]"
+labels: application
 assignees: miroiu
 
 ---
