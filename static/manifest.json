@@ -14,7 +14,7 @@
 			"sizes": "512x512"
 		}
 	],
-	"start_url": "/docs?source=pwa",
+	"start_url": "/nodify/docs?source=pwa",
 	"background_color": "#f4f1fa",
 	"display": "standalone",
 	"scope": "/nodify/",

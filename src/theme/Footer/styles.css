@@ -20,3 +20,15 @@
 		display: none;
 	}
 }
+
+.docusaurus-green {
+	color: #3ecc5f;
+}
+
+.heropatterns-purple {
+	color: #9179ba;
+}
+
+.copyright-color {
+	color: var(--ifm-color-primary);
+}

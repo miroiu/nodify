@@ -1,26 +1,21 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
-
-const docusaurusGreen = { color: '#3ECC5F' };
-const heroPatternsPurple = { color: '#9179BA' };
+import './styles.css';
 
 export const Copyright = () => {
 	return (
 		<div>
-			<div style={{ color: '#FD5618' }}>
+			<div className="copyright-color">
 				Copyright © {new Date().getFullYear()} Emanuel Miroiu.
 			</div>
 			<div className="additionalCopyright">
 				Built with{' '}
-				<Link style={docusaurusGreen} to="https://v2.docusaurus.io/">
-					Docusaurus
+				<Link to="https://v2.docusaurus.io/">
+					<span className="docusaurus-green">Docusaurus</span>
 				</Link>{' '}
 				· Circuit background by{' '}
-				<Link
-					style={heroPatternsPurple}
-					to="https://www.heropatterns.com/"
-				>
-					Steve Schoger
+				<Link to="https://www.heropatterns.com/">
+					<span className="dheropatterns-purple">Steve Schoger</span>
 				</Link>
 			</div>
 		</div>
