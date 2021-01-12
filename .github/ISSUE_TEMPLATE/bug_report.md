@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help this project improve
+name: 🐛 Bug report
+about: Create a bug report to help this project improve
 title: "[Bug]"
 labels: bug
 assignees: miroiu
