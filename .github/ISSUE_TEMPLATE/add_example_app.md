@@ -1,5 +1,5 @@
 ---
-name: 🚀 Example application
+name: "\U0001F680 Example application"
 about: Suggest an example application that others can benefit from
 title: "[Application]"
 labels: application
