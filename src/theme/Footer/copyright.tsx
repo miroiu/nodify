@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from '@docusaurus/Link';
 import './styles.css';
 
 export const Copyright = () => {
@@ -10,13 +9,13 @@ export const Copyright = () => {
 			</div>
 			<div className="additionalCopyright">
 				Built with{' '}
-				<Link href="https://v2.docusaurus.io/">
+				<a href="https://v2.docusaurus.io/" target="_blank">
 					<span className="docusaurus-green">Docusaurus</span>
-				</Link>{' '}
+				</a>{' '}
 				· Circuit background by{' '}
-				<Link href="https://www.heropatterns.com/">
+				<a href="https://www.heropatterns.com/" target="_blank">
 					<span className="heropatterns-purple">Steve Schoger</span>
-				</Link>
+				</a>
 			</div>
 		</div>
 	);
