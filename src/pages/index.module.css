@@ -1,0 +1,42 @@
+.fullWrapper {
+	max-width: 100%;
+	width: 100% !important;
+}
+
+.main {
+	background-color: var(--ifm-background-color);
+	color: var(--ifm-font-color-base);
+	padding: 72px 0;
+}
+
+.checkoutExamples {
+	padding: 48px;
+	margin: 0 auto;
+	text-align: center;
+	background-color: var(--accent-color);
+}
+
+.checkoutExamplesText {
+	margin: 0 auto;
+	max-width: 768px;
+	color: white;
+	font-weight: 700;
+	font-size: 24px;
+	letter-spacing: 0.05rem;
+}
+
+.highlightText {
+	font-weight: bold;
+}
+
+.featuresContainer {
+	grid-template-columns: repeat(3, 1fr);
+	display: grid;
+	grid-gap: 2.5rem;
+}
+
+@media only screen and (max-width: 768px) {
+	.featuresContainer {
+		grid-template-columns: repeat(1, 1fr);
+	}
+}

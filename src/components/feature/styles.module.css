@@ -1,0 +1,35 @@
+.feature {
+	padding: 40px;
+	border-bottom: 3px solid var(--accent-color);
+	background-color: #e9e3f4;
+	user-select: none;
+	margin: 0;
+	border-radius: var(--ifm-card-border-radius);
+	box-shadow: var(--ifm-global-shadow-lw);
+}
+
+.feature:hover {
+	background-color: #ded5ef;
+	transition: all 0.2s ease-in-out;
+}
+
+html[data-theme='dark'] .feature {
+	background-color: #242837;
+}
+
+html[data-theme='dark'] .feature:hover {
+	background-color: #2a2e3f;
+}
+
+.header {
+	font-weight: 600;
+	font-size: 1.25rem;
+	line-height: 1.2;
+	margin-bottom: 0.5em;
+}
+
+.body {
+	font-size: 1.125rem;
+	opacity: 0.7;
+	overflow-wrap: break-word;
+}

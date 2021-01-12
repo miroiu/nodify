@@ -1,0 +1,22 @@
+.footer {
+	padding: 30px;
+}
+
+.footer--dark {
+	--ifm-footer-background-color: #242837;
+}
+
+.footer__link-item {
+	font-weight: 600;
+}
+
+.additionalCopyright {
+	padding-top: 10px;
+	font-size: 14px;
+}
+
+@media screen and (max-width: 786px) {
+	.footer__links {
+		display: none;
+	}
+}

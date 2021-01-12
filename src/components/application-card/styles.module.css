@@ -1,0 +1,66 @@
+.cardContainer {
+	background-color: #e9e3f4;
+	height: 100%;
+	border-bottom: 3px solid var(--accent-color);
+}
+
+.cardContainer:hover {
+	transition: all 0.2s ease-in-out;
+}
+
+html[data-theme='dark'] .cardContainer {
+	background-color: #242837;
+}
+
+.title {
+	font-weight: 700;
+	font-size: 1.25rem;
+	line-height: 1.2;
+	margin-bottom: 0.7rem;
+}
+
+.description {
+	font-size: 1.125rem;
+	opacity: 0.7;
+	overflow-wrap: break-word;
+}
+
+.image {
+	max-height: 200px;
+	overflow: hidden;
+}
+
+.button {
+	background-color: var(--accent-color);
+	border-color: var(--accent-color);
+	color: var(--accent-color-contrast);
+	border-width: 1px;
+	border-style: dashed;
+}
+
+.button:hover {
+	opacity: 0.9;
+	background-color: var(--accent-color);
+}
+
+html[data-theme='dark'] .button:hover {
+	color: var(--accent-color-contrast);
+}
+
+html[data-theme='light'] .outline {
+	color: var(--accent-color);
+}
+
+html[data-theme='light'] .outline:hover {
+	color: var(--accent-color-contrast);
+}
+
+.outline {
+	background-color: transparent;
+}
+
+.listName {
+	font-size: 2rem;
+	margin: 30px 0 20px 0;
+	color: var(--ifm-color-primary);
+}

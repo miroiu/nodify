@@ -1,0 +1,190 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+	--ifm-color-primary: #fd5618;
+	--ifm-color-primary-dark: #f74402;
+	--ifm-color-primary-darker: #e94102;
+	--ifm-color-primary-darkest: #c03502;
+	--ifm-color-primary-light: #fd6a33;
+	--ifm-color-primary-lighter: #fd7441;
+	--ifm-color-primary-lightest: #fe926a;
+
+	--accent-color: #662d91;
+	--accent-color-contrast: #f4f1fa;
+
+	--ifm-navbar-background-color: var(--accent-color-contrast);
+	--ifm-background-color: var(--accent-color-contrast);
+
+	--ifm-code-font-size: 95%;
+
+	--nuget_logo_url: url(/img/NuGet_logo.svg);
+	--github_logo_url: url(/img/github_logo.svg);
+}
+
+html[data-theme='dark'] {
+	--ifm-background-color: #1f222f;
+	--ifm-navbar-background-color: #242837;
+	--nuget_logo_url: url(/img/NuGet_logo_dark.svg);
+	--github_logo_url: url(/img/github_logo_dark.svg);
+}
+
+.docusaurus-highlight-code-line {
+	background-color: rgb(72, 77, 91);
+	display: block;
+	margin: 0 calc(-1 * var(--ifm-pre-padding));
+	padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme='light'] .DocSearch {
+	/* --docsearch-primary-color: var(--ifm-color-primary); */
+	/* --docsearch-text-color: var(--ifm-font-color-base); */
+	--docsearch-muted-color: var(--ifm-color-secondary-darkest);
+	--docsearch-container-background: rgba(94, 100, 112, 0.7);
+	/* Modal */
+	--docsearch-modal-background: var(--ifm-color-secondary-lighter);
+	/* Search box */
+	--docsearch-searchbox-background: var(--ifm-color-secondary);
+	--docsearch-searchbox-focus-background: var(--ifm-color-white);
+	/* Hit */
+	--docsearch-hit-color: var(--ifm-font-color-base);
+	--docsearch-hit-active-color: var(--ifm-color-white);
+	--docsearch-hit-background: var(--ifm-color-white);
+	/* Footer */
+	--docsearch-footer-background: var(--ifm-color-white);
+}
+
+html[data-theme='dark'] .DocSearch {
+	--docsearch-text-color: var(--ifm-font-color-base);
+	--docsearch-muted-color: var(--ifm-color-secondary-darkest);
+	--docsearch-container-background: rgba(47, 55, 69, 0.7);
+	/* Modal */
+	--docsearch-modal-background: var(--ifm-background-color);
+	/* Search box */
+	--docsearch-searchbox-background: var(--ifm-background-color);
+	--docsearch-searchbox-focus-background: var(--ifm-color-black);
+	/* Hit */
+	--docsearch-hit-color: var(--ifm-font-color-base);
+	--docsearch-hit-active-color: var(--ifm-color-white);
+	--docsearch-hit-background: var(--ifm-color-emphasis-100);
+	/* Footer */
+	--docsearch-footer-background: var(--ifm-background-surface-color);
+	--docsearch-key-gradient: linear-gradient(
+		-26.5deg,
+		var(--ifm-color-emphasis-200) 0%,
+		var(--ifm-color-emphasis-100) 100%
+	);
+}
+
+html[data-theme='dark'] .hero {
+	--ifm-hero-background-color: #1f222f;
+	--ifm-hero-text-color: var(--accent-color-contrast);
+	background-image: url(/img/circuit_board_dark.svg);
+	--ifm-heading-color: var(--accent-color-contrast);
+}
+
+html[data-theme='light'] .hero {
+	--ifm-hero-background-color: var(--accent-color-contrast);
+	--ifm-hero-text-color: #242837;
+	background-image: url(/img/circuit_board.svg);
+	--ifm-heading-color: #451e63;
+}
+
+.hero__title {
+	font-size: 3.5rem;
+	text-align: left;
+}
+
+@media screen and (max-width: 996px) {
+	.hero__title {
+		font-size: 36px;
+		text-align: center;
+	}
+}
+
+article {
+	max-width: 700px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.main-wrapper {
+	max-width: 1400px;
+}
+
+@media (min-width: 1416px) {
+	.main-wrapper {
+		width: 1400px;
+		align-self: center;
+	}
+}
+
+.table-of-contents .table-of-contents__link--active {
+	font-weight: var(--ifm-font-weight-semibold);
+	margin-left: -16px;
+	padding-left: 12px;
+	border-left: 4px solid var(--ifm-link-color);
+}
+
+/* Navbar */
+
+.navbar__title {
+	color: var(--ifm-color-primary);
+}
+
+.navbar {
+	border-bottom: 2px solid var(--accent-color);
+}
+
+.navbar .navbar__items {
+	flex: auto;
+}
+
+.navbar__inner {
+	margin: 0 auto;
+	max-width: 1360px;
+}
+
+.navbar__item.navbar__link[href*='github'],
+.navbar__item.navbar__link[href*='nuget'] {
+	font-size: 0;
+	padding: 4px;
+	margin: 0 4px;
+}
+
+.navbar__item.navbar__link[href*='github']:before {
+	background-image: var(--github_logo_url);
+	background-size: cover;
+	content: '';
+	display: block;
+	width: 32px;
+	height: 32px;
+}
+
+.navbar__item.navbar__link[href*='nuget']:before {
+	background-image: var(--nuget_logo_url);
+	background-size: cover;
+	content: '';
+	display: block;
+	width: 32px;
+	height: 32px;
+}
+
+.navbar__item.navbar__link:hover {
+	opacity: 0.7;
+}
+
+.navbar .react-toggle {
+	margin-left: 8px;
+}
+
+/* Button */
+
+html[data-theme='dark'] .button.button--primary {
+	--ifm-button-color: var(--accent-color-contrast);
+}
