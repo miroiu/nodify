@@ -56,3 +56,7 @@ Documentation is moving [here](https://miroiu.github.io/nodify). If you want to 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
 Helping with documentation, bug reports, pull requests or anything else is very welcome. 
+
+## 🎉 Showcase
+
+Consider showing off your project to the rest of the world by using [this link](https://miroiu.github.io/nodify/showcase).
