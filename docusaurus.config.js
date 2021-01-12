@@ -90,7 +90,7 @@ module.exports = {
 					{
 						tagName: 'link',
 						rel: 'manifest',
-						href: '/manifest.json', // your PWA manifest
+						href: 'nodify/manifest.json', // your PWA manifest
 					},
 					{
 						tagName: 'meta',

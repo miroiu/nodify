@@ -23,15 +23,15 @@
 
 	--ifm-code-font-size: 95%;
 
-	--nuget_logo_url: url(/img/NuGet_logo.svg);
-	--github_logo_url: url(/img/github_logo.svg);
+	--nuget_logo_url: url(/nodify/img/NuGet_logo.svg);
+	--github_logo_url: url(/nodify/img/github_logo.svg);
 }
 
 html[data-theme='dark'] {
 	--ifm-background-color: #1f222f;
 	--ifm-navbar-background-color: #242837;
-	--nuget_logo_url: url(/img/NuGet_logo_dark.svg);
-	--github_logo_url: url(/img/github_logo_dark.svg);
+	--nuget_logo_url: url(/nodify/img/NuGet_logo_dark.svg);
+	--github_logo_url: url(/nodify/img/github_logo_dark.svg);
 }
 
 .docusaurus-highlight-code-line {
