@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-    - name: Read the docs
-      url: https://github.com/miroiu/nodify/wiki
+    - name: 📝 Read the docs
+      url: https://miroiu.github.io/nodify
       about: Be sure you've read the docs!
