@@ -1,0 +1,22 @@
+{
+	"short_name": "Nodify Docs",
+	"name": "Nodify Docs",
+	"description": "Documentation for https://github.com/miroiu/nodify",
+	"icons": [
+		{
+			"src": "/img/logo_192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/img/logo_512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/docs?source=pwa",
+	"background_color": "#f4f1fa",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#f4f1fa"
+}
