@@ -1,5 +1,8 @@
-import Link from '@docusaurus/Link';
 import React from 'react';
+import Link from '@docusaurus/Link';
+
+const docusaurusGreen = { color: '#3ECC5F' };
+const heroPatternsPurple = { color: '#9179BA' };
 
 export const Copyright = () => {
 	return (
@@ -9,15 +12,12 @@ export const Copyright = () => {
 			</div>
 			<div className="additionalCopyright">
 				Built with{' '}
-				<Link
-					style={{ color: '#3ECC5F' }}
-					to="https://v2.docusaurus.io/"
-				>
+				<Link style={docusaurusGreen} to="https://v2.docusaurus.io/">
 					Docusaurus
 				</Link>{' '}
 				· Circuit background by{' '}
 				<Link
-					style={{ color: '#9179BA' }}
+					style={heroPatternsPurple}
 					to="https://www.heropatterns.com/"
 				>
 					Steve Schoger

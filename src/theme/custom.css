@@ -84,14 +84,14 @@ html[data-theme='dark'] .DocSearch {
 html[data-theme='dark'] .hero {
 	--ifm-hero-background-color: #1f222f;
 	--ifm-hero-text-color: var(--accent-color-contrast);
-	background-image: url(/img/circuit_board_dark.svg);
+	background-image: url(/nodify/img/circuit_board_dark.svg);
 	--ifm-heading-color: var(--accent-color-contrast);
 }
 
 html[data-theme='light'] .hero {
 	--ifm-hero-background-color: var(--accent-color-contrast);
 	--ifm-hero-text-color: #242837;
-	background-image: url(/img/circuit_board.svg);
+	background-image: url(/nodify/img/circuit_board.svg);
 	--ifm-heading-color: #451e63;
 }
 
