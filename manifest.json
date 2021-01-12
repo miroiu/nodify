@@ -4,12 +4,12 @@
 	"description": "Documentation for https://github.com/miroiu/nodify",
 	"icons": [
 		{
-			"src": "/img/logo_192.png",
+			"src": "/nodify/img/logo_192.png",
 			"type": "image/png",
 			"sizes": "192x192"
 		},
 		{
-			"src": "/img/logo_512.png",
+			"src": "/nodify/img/logo_512.png",
 			"type": "image/png",
 			"sizes": "512x512"
 		}
