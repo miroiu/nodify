@@ -17,6 +17,6 @@
 	"start_url": "/docs?source=pwa",
 	"background_color": "#f4f1fa",
 	"display": "standalone",
-	"scope": "/",
+	"scope": "/nodify/",
 	"theme_color": "#f4f1fa"
 }
