@@ -1,117 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify
 {
-    public class ThemeDictionary : ResourceDictionary
-    {
-        public string? ThemeName { get; set; }
-    }
-
     public static class ThemeManager
     {
+        private static readonly string? _assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+
+        private static readonly Dictionary<string, List<Uri>> _themesUris = new Dictionary<string, List<Uri>>();
+        private static readonly Dictionary<string, List<ResourceDictionary>> _themesResources = new Dictionary<string, List<ResourceDictionary>>();
+
         public static string? ActiveTheme { get; private set; }
-        public static HashSet<string> AvailableThemes { get; } = new HashSet<string>
-        {
-            "Dark",
-            "Light"
-        };
+
+        private static readonly List<string> _availableThemes = new List<string>();
+        public static IReadOnlyCollection<string> AvailableThemes => _availableThemes;
 
         public static ICommand SetNextThemeCommand { get; }
 
         static ThemeManager()
         {
-            var themes = new Dictionary<Uri, string>();
-            AvailableThemes.ForEach(themeName => themes.Add(new Uri($"pack://application:,,,/Nodify;component/Themes/{themeName}.xaml"), themeName));
+            PreloadTheme("Dark");
+            PreloadTheme("Light");
+            PreloadTheme("Nodify");
 
+            SetNextThemeCommand = new DelegateCommand(SetNextTheme);
+        }
+
+        private static List<ResourceDictionary> FindExistingResources(List<Uri> uris)
+        {
+            var result = new List<ResourceDictionary>();
             foreach (var d in Application.Current.Resources.MergedDictionaries)
             {
-                if (themes.TryGetValue(d.Source, out var theme))
+                if (d.Source != null && uris.Contains(d.Source))
                 {
-                    ActiveTheme = theme;
+                    result.Add(d);
                 }
             }
 
-            SetNextThemeCommand = new DelegateCommand(SetNextTheme);
+            return result;
+        }
+
+        private static void PreloadTheme(string themeName)
+        {
+            if (!_themesUris.TryGetValue(themeName, out var preload))
+            {
+                preload = new List<Uri>(3)
+                {
+                    new Uri($"pack://application:,,,/Nodify;component/Themes/{themeName}.xaml"),
+                    new Uri($"pack://application:,,,/Nodify.Shared;component/Themes/{themeName}.xaml")
+                };
+
+                if (_assemblyName != null)
+                {
+                    preload.Add(new Uri($"pack://application:,,,/{_assemblyName};component/Themes/{themeName}.xaml"));
+                }
+
+                _themesUris.Add(themeName, preload);
+            }
+
+            var resources = FindExistingResources(preload);
+            if (resources.Count == 0)
+            {
+                for (int i = 0; i < preload.Count; i++)
+                {
+                    try
+                    {
+                        resources.Add(new ResourceDictionary
+                        {
+                            Source = preload[i]
+                        });
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+            else if (ActiveTheme == null)
+            {
+                ActiveTheme = themeName;
+            }
+
+            _themesResources.Add(themeName, resources);
+            _availableThemes.Add(themeName);
         }
 
         public static void SetNextTheme()
         {
             if (ActiveTheme != null)
             {
-                var themes = AvailableThemes.ToList();
-                var i = themes.IndexOf(ActiveTheme);
+                var i = _availableThemes.IndexOf(ActiveTheme);
+                var next = i + 1 == _availableThemes.Count ? 0 : i + 1;
 
-                var next = i + 1 == themes.Count ? 0 : i + 1;
-
-                SetTheme(themes[next]);
+                SetTheme(_availableThemes[next]);
             }
-            else if (AvailableThemes.Count > 0)
+            else if (_availableThemes.Count > 0)
             {
-                SetTheme(AvailableThemes.First());
+                SetTheme(_availableThemes[0]);
             }
         }
 
         public static void SetTheme(string themeName)
         {
-            if (ActiveTheme != null)
+            if (!_themesResources.ContainsKey(themeName))
             {
-                UnloadTheme(ActiveTheme);
+                PreloadTheme(themeName);
             }
 
-            LoadTheme(themeName);
-        }
-
-        private static void LoadTheme(string themeName)
-        {
-            var resourcesToLoad = new List<Uri>(3)
+            // Load new theme if it is valid
+            if (_themesResources.TryGetValue(themeName, out var resources))
             {
-                new Uri($"pack://application:,,,/Nodify;component/Themes/{themeName}.xaml"),
-                new Uri($"pack://application:,,,/Nodify.Shared;component/Themes/{themeName}.xaml")
-            };
-
-            var assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
-            if (assemblyName != null)
-            {
-                resourcesToLoad.Add(new Uri($"pack://application:,,,/{assemblyName};component/Themes/{themeName}.xaml"));
-            }
-
-            foreach (var theme in resourcesToLoad)
-            {
-                try
+                foreach (var res in resources)
                 {
-                    var resource = new ThemeDictionary
+                    Application.Current.Resources.MergedDictionaries.Add(res);
+                }
+
+                // Unload current theme
+                if (ActiveTheme != null)
+                {
+                    foreach (var res in _themesResources[ActiveTheme])
                     {
-                        Source = theme,
-                        ThemeName = themeName
-                    };
-
-                    Application.Current.Resources.MergedDictionaries.Add(resource);
+                        Application.Current.Resources.MergedDictionaries.Remove(res);
+                    }
                 }
-                catch
-                {
 
-                }
-            }
-
-            ActiveTheme = themeName;
-            AvailableThemes.Add(themeName);
-        }
-
-        private static void UnloadTheme(string themeName)
-        {
-            var themes = Application.Current.Resources.MergedDictionaries.ToList();
-
-            foreach (var d in themes)
-            {
-                if ((d is ThemeDictionary t && t.ThemeName == themeName) || d.Source.LocalPath.Contains($"{themeName}.xaml"))
-                {
-                    Application.Current.Resources.MergedDictionaries.Remove(d);
-                }
+                ActiveTheme = themeName;
             }
         }
     }
