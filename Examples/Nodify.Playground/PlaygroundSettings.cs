@@ -13,7 +13,7 @@
             set => SetProperty(ref _shouldConnectNodes, value);
         }
 
-        private bool _asyncLoading = true;
+        private bool _asyncLoading = false;
         public bool AsyncLoading
         {
             get => _asyncLoading;
@@ -44,7 +44,7 @@
                 .Then(() => MaxConnectors = MaxConnectors < MinConnectors ? MinConnectors : MaxConnectors);
         }
 
-        private uint _maxConnectors = 7;
+        private uint _maxConnectors = 4;
         public uint MaxConnectors
         {
             get => _maxConnectors;

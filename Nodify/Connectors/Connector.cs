@@ -194,10 +194,10 @@ namespace Nodify
             }
         }
 
-        private void OnConnectorLoaded(object sender, RoutedEventArgs? e)
+        protected virtual void OnConnectorLoaded(object sender, RoutedEventArgs? e) 
             => TrySetAnchorUpdateEvents(true);
 
-        private void OnConnectorUnloaded(object sender, RoutedEventArgs e)
+        protected virtual void OnConnectorUnloaded(object sender, RoutedEventArgs e) 
             => TrySetAnchorUpdateEvents(false);
 
         private static void OnIsConnectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

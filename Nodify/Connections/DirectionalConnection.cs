@@ -7,7 +7,7 @@ namespace Nodify
     /// <summary>
     /// Represents a line that has an arrow indicating its <see cref="BaseConnection.Direction"/>.
     /// </summary>
-    public class DirectionalConnection : BaseConnection
+    public class DirectionalConnection : SmartConnection
     {
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(DirectionalConnection), new FrameworkPropertyMetadata(new Size(7, 6), FrameworkPropertyMetadataOptions.AffectsRender));
 

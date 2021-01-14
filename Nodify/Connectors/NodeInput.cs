@@ -6,7 +6,7 @@ namespace Nodify
     /// <summary>
     /// Represents the default control for the <see cref="Node.InputConnectorTemplate"/>.
     /// </summary>
-    public class NodeInput : Connector
+    public class NodeInput : SmartConnector
     {
         #region Dependency Properties
 

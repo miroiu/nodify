@@ -7,7 +7,7 @@ namespace Nodify
     /// <summary>
     /// Represents a bezier curve.
     /// </summary>
-    public class Connection : BaseConnection
+    public class Connection : SmartConnection
     {
         static Connection()
         {

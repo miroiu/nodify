@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Windows;
 
 namespace Nodify.Playground
 {
@@ -23,13 +22,6 @@ namespace Nodify.Playground
         {
             get => _isConnected;
             set => SetProperty(ref _isConnected, value);
-        }
-
-        private Point _anchor;
-        public Point Anchor
-        {
-            get => _anchor;
-            set => SetProperty(ref _anchor, value);
         }
 
         private NodeViewModel _node = default!;
