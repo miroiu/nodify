@@ -115,6 +115,11 @@
                 Value="{StaticResource Connector.BorderBrush}" />
     </Style>
 
+    <!--SMART CONNECTOR-->
+
+    <Style TargetType="{x:Type local:SmartConnector}"
+           BasedOn="{StaticResource {x:Type local:Connector}}" />
+
     <!--NODE INPUT-->
 
     <Style TargetType="{x:Type local:NodeInput}"
