@@ -44,7 +44,7 @@
                 .Then(() => MaxConnectors = MaxConnectors < MinConnectors ? MinConnectors : MaxConnectors);
         }
 
-        private uint _maxConnectors = 7;
+        private uint _maxConnectors = 4;
         public uint MaxConnectors
         {
             get => _maxConnectors;
