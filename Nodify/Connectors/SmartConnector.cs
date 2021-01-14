@@ -10,6 +10,8 @@ namespace Nodify
 
         private object? _dataContext;
 
+        public Guid Id { get; } = Guid.NewGuid();
+
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
@@ -21,7 +23,7 @@ namespace Nodify
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            
+
             DataContextChanged += OnDataContextChanged;
         }
 
@@ -35,7 +37,7 @@ namespace Nodify
         protected override void OnConnectorLoaded(object sender, RoutedEventArgs? e)
         {
             base.OnConnectorLoaded(sender, e);
-            
+
             LoadedConnectors[DataContext] = this;
             _dataContext = DataContext;
         }
@@ -43,7 +45,7 @@ namespace Nodify
         protected override void OnConnectorUnloaded(object sender, RoutedEventArgs e)
         {
             base.OnConnectorUnloaded(sender, e);
-            
+
             if (_dataContext != null)
             {
                 LoadedConnectors.Remove(_dataContext);

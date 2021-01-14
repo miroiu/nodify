@@ -176,26 +176,16 @@
                     </Setter>
                 </Style>
 
-                <Style TargetType="{x:Type nodify:Connector}"
-                       BasedOn="{StaticResource {x:Type nodify:Connector}}">
-                    <Setter Property="IsConnected"
-                            Value="{Binding IsConnected}" />
-                </Style>
-
                 <Style TargetType="{x:Type nodify:NodeInput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
                     <Setter Property="Header"
                             Value="{Binding Title}" />
-                    <Setter Property="IsConnected"
-                            Value="{Binding IsConnected}" />
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
                     <Setter Property="Header"
                             Value="{Binding Title}" />
-                    <Setter Property="IsConnected"
-                            Value="{Binding IsConnected}" />
                 </Style>
 
                 <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">

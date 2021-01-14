@@ -17,13 +17,6 @@ namespace Nodify.Playground
             set => SetProperty(ref _title, value);
         }
 
-        private bool _isConnected;
-        public bool IsConnected
-        {
-            get => _isConnected;
-            set => SetProperty(ref _isConnected, value);
-        }
-
         private NodeViewModel _node = default!;
         public NodeViewModel Node
         {
@@ -42,26 +35,6 @@ namespace Nodify.Playground
         public int MaxConnections { get; set; } = 2;
 
         public NodifyObservableCollection<ConnectionViewModel> Connections { get; } = new NodifyObservableCollection<ConnectionViewModel>();
-
-        public ConnectorViewModel()
-        {
-            Connections.WhenAdded(c =>
-            {
-                c.Input.IsConnected = true;
-                c.Output.IsConnected = true;
-            }).WhenRemoved(c =>
-            {
-                if (c.Input.Connections.Count == 0)
-                {
-                    c.Input.IsConnected = false;
-                }
-
-                if (c.Output.Connections.Count == 0)
-                {
-                    c.Output.IsConnected = false;
-                }
-            });
-        }
 
         protected virtual void OnNodeChanged()
         {
