@@ -13,7 +13,7 @@
             set => SetProperty(ref _shouldConnectNodes, value);
         }
 
-        private bool _asyncLoading = false;
+        private bool _asyncLoading = true;
         public bool AsyncLoading
         {
             get => _asyncLoading;

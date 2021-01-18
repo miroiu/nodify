@@ -43,8 +43,8 @@
                       Drawing="{StaticResource LargeGridGeometry}" />
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
-            <nodify:CircuitConnection SourceConnector="{Binding Output}"
-                                      TargetConnector="{Binding Input}"
+            <nodify:CircuitConnection Source="{Binding Output.Anchor}"
+                                      Target="{Binding Input.Anchor}"
                                       ToolTip="Double click to split"
                                       OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                       SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -56,8 +56,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ConnectionTemplate">
-            <nodify:Connection SourceConnector="{Binding Output}"
-                               TargetConnector="{Binding Input}"
+            <nodify:Connection Source="{Binding Output.Anchor}"
+                               Target="{Binding Input.Anchor}"
                                ToolTip="Double click to split"
                                OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -66,8 +66,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="DirectionalConnectionTemplate">
-            <nodify:DirectionalConnection SourceConnector="{Binding Output}"
-                                          TargetConnector="{Binding Input}"
+            <nodify:DirectionalConnection Source="{Binding Output.Anchor}"
+                                          Target="{Binding Input.Anchor}"
                                           ToolTip="Double click to split"
                                           OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                           SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -176,16 +176,33 @@
                     </Setter>
                 </Style>
 
+
+                <Style TargetType="{x:Type nodify:Connector}"
+                       BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
+                </Style>
+
                 <Style TargetType="{x:Type nodify:NodeInput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
                     <Setter Property="Header"
                             Value="{Binding Title}" />
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
                     <Setter Property="Header"
                             Value="{Binding Title}" />
+                    <Setter Property="Anchor"
+                            Value="{Binding Anchor, Mode=OneWayToSource}" />
+                    <Setter Property="IsConnected"
+                            Value="{Binding IsConnected}" />
                 </Style>
 
                 <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">

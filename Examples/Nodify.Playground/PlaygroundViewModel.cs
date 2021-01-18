@@ -9,6 +9,8 @@ namespace Nodify.Playground
     public class PlaygroundViewModel : ObservableObject
     {
         public NodifyEditorViewModel GraphViewModel { get; } = new NodifyEditorViewModel();
+        private readonly object _syncNodes = new object();
+        private readonly object _syncConnections = new object();
 
         public PlaygroundViewModel()
         {
@@ -17,8 +19,8 @@ namespace Nodify.Playground
             ToggleConnectionsCommand = new DelegateCommand(ToggleConnections);
             ResetCommand = new DelegateCommand(ResetGraph);
 
-            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Nodes, GraphViewModel.Nodes);
-            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, GraphViewModel.Connections);
+            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Nodes, _syncNodes);
+            BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, _syncConnections);
         }
 
         public ICommand GenerateRandomNodesCommand { get; }
