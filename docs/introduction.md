@@ -1,6 +1,6 @@
 ---
 id: introduction
-title: What is Nodify?
+title: ' '
 sidebar_label: Introduction
 slug: /
 ---
@@ -11,6 +11,8 @@ import Image from '@theme/IdealImage';
 <Image img={require('./assets/editor-interaction.gif')} /> -->
 
 ![ExampleInteraction](./assets/editor-interaction.gif)
+
+## What is Nodify?
 
 Nodify is a WPF node-based [editor control](components/editor) featuring a collection of useful components like [nodes](components/nodes), [connections](components/connections) and [connectors](components/connectors) aiming to simplify the process of building node based tools.
 
