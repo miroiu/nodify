@@ -50,8 +50,12 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
+                            <local:NodifyCanvas x:Name="PART_ItemsHost"
+                                                IsItemsHost="True" />
+                            
                             <ItemsControl ItemsSource="{TemplateBinding Connections}"
                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                          Panel.ZIndex="-1"
                                           IsTabStop="False">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -59,9 +63,6 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-
-                            <local:NodifyCanvas x:Name="PART_ItemsHost"
-                                                IsItemsHost="True" />
 
                             <Rectangle Style="{TemplateBinding SelectionRectangleStyle}"
                                        Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"

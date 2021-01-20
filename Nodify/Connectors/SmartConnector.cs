@@ -6,6 +6,14 @@ namespace Nodify
 {
     public class SmartConnector : Connector
     {
+        public static readonly DependencyProperty IsSmartProperty = DependencyProperty.Register(nameof(IsSmart), typeof(bool), typeof(SmartConnector), new FrameworkPropertyMetadata(BoxValue.True));
+
+        public bool IsSmart
+        {
+            get => (bool)GetValue(IsSmartProperty);
+            set => SetValue(IsSmartProperty, value);
+        }
+
         internal readonly static Dictionary<object, SmartConnector> LoadedConnectors = new Dictionary<object, SmartConnector>();
 
         private object? _dataContext;
@@ -16,15 +24,21 @@ namespace Nodify
         {
             base.OnInitialized(e);
 
-            _dataContext = DataContext;
-            LoadedConnectors[DataContext] = this;
+            if (IsSmart)
+            {
+                _dataContext = DataContext;
+                LoadedConnectors[DataContext] = this;
+            }
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            DataContextChanged += OnDataContextChanged;
+            if (IsSmart)
+            {
+                DataContextChanged += OnDataContextChanged;
+            }
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -38,15 +52,18 @@ namespace Nodify
         {
             base.OnConnectorLoaded(sender, e);
 
-            LoadedConnectors[DataContext] = this;
-            _dataContext = DataContext;
+            if (IsSmart)
+            {
+                LoadedConnectors[DataContext] = this;
+                _dataContext = DataContext;
+            }
         }
 
         protected override void OnConnectorUnloaded(object sender, RoutedEventArgs e)
         {
             base.OnConnectorUnloaded(sender, e);
 
-            if (_dataContext != null)
+            if (IsSmart && _dataContext != null)
             {
                 LoadedConnectors.Remove(_dataContext);
             }

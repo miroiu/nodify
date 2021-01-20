@@ -9,7 +9,7 @@ namespace Nodify
     /// Represents a control that acts as a <see cref="Connector"/>.
     /// </summary>
     [TemplatePart(Name = ElementContent, Type = typeof(UIElement))]
-    public class StateNode : Connector
+    public class StateNode : SmartConnector
     {
         protected const string ElementContent = "PART_Content";
 

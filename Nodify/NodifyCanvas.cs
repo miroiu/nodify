@@ -5,6 +5,8 @@ namespace Nodify
 {
     public class NodifyCanvas : Panel
     {
+        private readonly Size _availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
+
         static NodifyCanvas()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyCanvas), new FrameworkPropertyMetadata(typeof(NodifyCanvas)));
@@ -23,11 +25,9 @@ namespace Nodify
 
         protected override Size MeasureOverride(Size constraint)
         {
-            Size availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
-
             for (int i = 0; i < InternalChildren.Count; i++)
             {
-                InternalChildren[i].Measure(availableSize);
+                InternalChildren[i].Measure(_availableSize);
             }
 
             return default;
