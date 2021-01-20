@@ -193,6 +193,8 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="IsSmart"
+                            Value="False" />
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
@@ -203,6 +205,8 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="IsSmart"
+                            Value="False" />
                 </Style>
 
                 <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">

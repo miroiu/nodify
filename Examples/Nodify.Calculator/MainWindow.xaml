@@ -60,10 +60,6 @@
                        BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
                     <Setter Property="Header"
                             Value="{Binding}" />
-                    <Setter Property="IsConnected"
-                            Value="{Binding IsConnected}" />
-                    <Setter Property="Anchor"
-                            Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="ToolTip"
                             Value="{Binding Value}" />
                     <Setter Property="HeaderTemplate">
@@ -73,7 +69,7 @@
                                     <TextBlock Text="{Binding Title}"
                                                Margin="0 0 5 0" />
                                     <TextBox Text="{Binding Value}"
-                                             Visibility="{Binding IsConnected, Converter={shared:BooleanToVisibilityConverter Negate=True}}" />
+                                             Visibility="{Binding IsConnected, RelativeSource={RelativeSource AncestorType={x:Type nodify:NodeInput}}, Converter={shared:BooleanToVisibilityConverter Negate=True}}" />
                                 </StackPanel>
                             </DataTemplate>
                         </Setter.Value>
@@ -84,10 +80,6 @@
                        BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
                     <Setter Property="Header"
                             Value="{Binding}" />
-                    <Setter Property="IsConnected"
-                            Value="{Binding IsConnected}" />
-                    <Setter Property="Anchor"
-                            Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
                             <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
@@ -142,8 +134,8 @@
 
             <nodify:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:ConnectionViewModel}">
-                    <nodify:CircuitConnection Source="{Binding Output.Anchor}"
-                                              Target="{Binding Input.Anchor}"
+                    <nodify:CircuitConnection SourceConnector="{Binding Output}"
+                                              TargetConnector="{Binding Input}"
                                               SourceOffset="10 0"
                                               TargetOffset="20 0"
                                               OffsetMode="Circle" />

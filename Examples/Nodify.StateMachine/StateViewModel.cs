@@ -20,13 +20,6 @@ namespace Nodify.StateMachine
             set => SetProperty(ref _location, value);
         }
 
-        private Point _anchor;
-        public Point Anchor
-        {
-            get => _anchor;
-            set => SetProperty(ref _anchor, value);
-        }
-
         private Size _size;
         public Size Size
         {

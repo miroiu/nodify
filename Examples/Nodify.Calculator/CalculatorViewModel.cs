@@ -13,9 +13,6 @@ namespace Nodify.Calculator
 
             Connections.WhenAdded(c =>
             {
-                c.Input.IsConnected = true;
-                c.Output.IsConnected = true;
-
                 c.Input.Value = c.Output.Value;
 
                 c.Output.PropertyChanged += (s, e) =>
@@ -25,21 +22,6 @@ namespace Nodify.Calculator
                         c.Input.Value = c.Output.Value;
                     }
                 };
-            })
-            .WhenRemoved(c =>
-            {
-                var ic = Connections.Count(con => con.Input == c.Input || con.Output == c.Input);
-                var oc = Connections.Count(con => con.Input == c.Output || con.Output == c.Output);
-
-                if (ic == 0)
-                {
-                    c.Input.IsConnected = false;
-                }
-
-                if (oc == 0)
-                {
-                    c.Output.IsConnected = false;
-                }
             });
 
             Operations.WhenAdded(x =>

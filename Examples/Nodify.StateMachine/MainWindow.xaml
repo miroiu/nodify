@@ -61,8 +61,8 @@
 
             <nodify:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                    <nodify:DirectionalConnection Source="{Binding Source.Anchor}"
-                                                  Target="{Binding Target.Anchor}"
+                    <nodify:DirectionalConnection SourceConnector="{Binding Source}"
+                                                  TargetConnector="{Binding Target}"
                                                   SourceOffset="{Binding Source.Size}"
                                                   TargetOffset="{Binding Target.Size}"
                                                   OffsetMode="Edge"
@@ -97,11 +97,8 @@
 
             <nodify:NodifyEditor.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:StateViewModel}">
-                    <!--If IsConnected is false, Anchor won't be updated-->
                     <nodify:StateNode Content="{Binding}"
-                                      IsConnected="True"
-                                      ActualSize="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
-                                      Anchor="{Binding Anchor, Mode=OneWayToSource}">
+                                      ActualSize="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}">
                         <nodify:StateNode.ContentTemplate>
                             <DataTemplate DataType="{x:Type local:StateViewModel}">
                                 <shared:EditableTextBlock Text="{Binding Name}"

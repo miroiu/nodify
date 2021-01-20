@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Nodify.Calculator
+﻿namespace Nodify.Calculator
 {
     public class ConnectorViewModel : ObservableObject
     {
@@ -18,25 +16,11 @@ namespace Nodify.Calculator
             set => SetProperty(ref _value, value);
         }
 
-        private bool _isConnected;
-        public bool IsConnected
-        {
-            get => _isConnected;
-            set => SetProperty(ref _isConnected, value);
-        }
-
         private bool _isInput;
         public bool IsInput
         {
             get => _isInput;
             set => SetProperty(ref _isInput, value);
-        }
-
-        private Point _anchor;
-        public Point Anchor
-        {
-            get => _anchor;
-            set => SetProperty(ref _anchor, value);
         }
 
         private OperationViewModel _operation = default!;
