@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.Calculator"
-        xmlns:nodify="http://miroiu.github.io/winfx/xaml/nodify"
+        xmlns:nodify="https://miroiu.github.io/nodify"
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         Background="{DynamicResource NodifyEditor.BackgroundBrush}"
         Foreground="{DynamicResource ForegroundBrush}"
