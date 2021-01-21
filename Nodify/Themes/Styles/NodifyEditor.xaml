@@ -37,6 +37,8 @@
                 Value="False" />
         <Setter Property="EnableRealtimeSelection"
                 Value="True" />
+        <Setter Property="DisplayConnectionsOnTop"
+                Value="False" />
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource SelectionRectangleStyle}" />
         <Setter Property="ConnectionTemplate"
@@ -50,18 +52,31 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
+                            <local:NodifyCanvas x:Name="PART_ItemsHost"
+                                                IsItemsHost="True" />
+
                             <ItemsControl ItemsSource="{TemplateBinding Connections}"
                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
                                           IsTabStop="False">
+                                <ItemsControl.Style>
+                                    <Style TargetType="ItemsControl">
+                                        <Setter Property="Panel.ZIndex"
+                                                Value="-1" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DisplayConnectionsOnTop, RelativeSource={RelativeSource TemplatedParent}}"
+                                                         Value="True">
+                                                <Setter Property="Panel.ZIndex"
+                                                        Value="0" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ItemsControl.Style>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Canvas />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-
-                            <local:NodifyCanvas x:Name="PART_ItemsHost"
-                                                IsItemsHost="True" />
 
                             <Rectangle Style="{TemplateBinding SelectionRectangleStyle}"
                                        Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"

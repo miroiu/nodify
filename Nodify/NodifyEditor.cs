@@ -28,6 +28,7 @@ namespace Nodify
         public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
         public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
         public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
+        public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
@@ -156,6 +157,15 @@ namespace Nodify
         {
             get => (double)GetValue(BringIntoViewAnimationDurationProperty);
             set => SetValue(BringIntoViewAnimationDurationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether to display connections on top of nodes or not.
+        /// </summary>
+        public bool DisplayConnectionsOnTop
+        {
+            get => (bool)GetValue(DisplayConnectionsOnTopProperty);
+            set => SetValue(DisplayConnectionsOnTopProperty, value);
         }
 
         /// <summary>
