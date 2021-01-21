@@ -35,3 +35,7 @@ It was built with love ❤️ and it's free!
 Nodify is feature-rich and optimized for interaction with hundreds of nodes at once.
 
 It is built to work with MVVM, meaning you can reuse the viewmodels if you plan to write your own node editor component from scratch.
+
+:::info
+Check out the [**example applications**](https://miroiu.github.io/nodify/showcase/) and their source code.
+:::
