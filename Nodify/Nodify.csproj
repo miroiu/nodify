@@ -17,7 +17,8 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
+    <PackageReleaseNotes>Added https://miroiu.github.io/nodify to xmlns namespaces</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
