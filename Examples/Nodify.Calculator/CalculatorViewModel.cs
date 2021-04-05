@@ -10,7 +10,7 @@ namespace Nodify.Calculator
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
-          
+
             Connections.WhenAdded(c =>
             {
                 c.Input.IsConnected = true;
@@ -40,11 +40,18 @@ namespace Nodify.Calculator
 
             Operations.WhenAdded(x =>
             {
-                x.Input.WhenRemoved(i =>
+                x.Input.WhenRemoved(RemoveConnection);
+
+                if (x is CalculatorInputOperationViewModel ci)
+                {
+                    ci.Output.WhenRemoved(RemoveConnection);
+                }
+
+                void RemoveConnection(ConnectorViewModel i)
                 {
                     var c = Connections.Where(con => con.Input == i || con.Output == i).ToArray();
                     c.ForEach(con => Connections.Remove(con));
-                });
+                }
             })
             .WhenRemoved(x =>
             {
