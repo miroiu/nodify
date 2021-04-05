@@ -51,7 +51,7 @@ Install-Package Nodify
 
 Documentation is moving [here](https://miroiu.github.io/nodify). If you want to help, you can do so by creating a pull-request to the [docs branch](https://github.com/miroiu/nodify/tree/docs) (the easiest way is to click 'Edit this page' in the website).
 
-[Wiki](https://github.com/miroiu/nodify/wiki) - **will be decommissioned soon**
+[Wiki](https://github.com/miroiu/nodify/wiki) - **check it out while it's there**
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
