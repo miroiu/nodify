@@ -98,40 +98,51 @@ namespace Nodify.Calculator
                 Title = i
             });
 
-            if (info.Type == OperationType.Expression)
+            switch (info.Type)
             {
-                return new ExpressionOperationViewModel
+                case OperationType.Expression:
+                    return new ExpressionOperationViewModel
+                    {
+                        Title = info.Title,
+                        Output = new ConnectorViewModel(),
+                        Operation = info.Operation,
+                        Expression = "1 + sin {a} + cos {b}"
+                    };
+
+                case OperationType.Calculator:
+                    return new CalculatorOperationViewModel
+                    {
+                        Title = info.Title,
+                        Operation = info.Operation,
+                    };
+
+                case OperationType.Expando:
                 {
-                    Title = info.Title,
-                    Output = new ConnectorViewModel(),
-                    Operation = info.Operation,
-                    Expression = "1 + sin {a} + cos {b}"
-                };
-            }
-            else if (info.Type == OperationType.Expando)
-            {
-                var o = new ExpandoOperationViewModel
+                    var o = new ExpandoOperationViewModel
+                    {
+                        MaxInput = info.MaxInput,
+                        MinInput = info.MinInput,
+                        Title = info.Title,
+                        Output = new ConnectorViewModel(),
+                        Operation = info.Operation
+                    };
+
+                    o.Input.AddRange(input);
+                    return o;
+                }
+                default:
                 {
-                    MaxInput = info.MaxInput,
-                    MinInput = info.MinInput,
-                    Title = info.Title,
-                    Output = new ConnectorViewModel(),
-                    Operation = info.Operation
-                };
+                    var op = new OperationViewModel
+                    {
+                        Title = info.Title,
+                        Output = new ConnectorViewModel(),
+                        Operation = info.Operation
+                    };
 
-                o.Input.AddRange(input);
-                return o;
+                    op.Input.AddRange(input);
+                    return op;
+                }
             }
-
-            var op = new OperationViewModel
-            {
-                Title = info.Title,
-                Output = new ConnectorViewModel(),
-                Operation = info.Operation
-            };
-
-            op.Input.AddRange(input);
-            return op;
         }
     }
 }

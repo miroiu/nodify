@@ -10,7 +10,7 @@ namespace Nodify.Calculator
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
-
+          
             Connections.WhenAdded(c =>
             {
                 c.Input.IsConnected = true;
@@ -115,6 +115,11 @@ namespace Nodify.Calculator
 
         private void UpdateAvailableOperations()
         {
+            AvailableOperations.Add(new OperationInfoViewModel
+            {
+                Type = OperationType.Calculator,
+                Title = "(New) Calculator"
+            });
             AvailableOperations.Add(new OperationInfoViewModel
             {
                 Type = OperationType.Expression,
