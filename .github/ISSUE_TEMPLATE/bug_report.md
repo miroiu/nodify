@@ -7,6 +7,13 @@ assignees: miroiu
 
 ---
 
+<!--
+  Hi! 
+  
+  All fields are optional and are present only to guide you.
+  Thanks for contributing!
+-->
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
