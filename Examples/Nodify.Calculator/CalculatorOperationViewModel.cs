@@ -10,13 +10,15 @@ namespace Nodify.Calculator
         {
             Title = "Output Parameters",
             Input = { new ConnectorViewModel() },
-            Location = new Point(500, 300)
+            Location = new Point(500, 300),
+            IsReadOnly = true
         };
 
         private CalculatorInputOperationViewModel InnerInput { get; } = new CalculatorInputOperationViewModel
         {
             Title = "Input Parameters",
-            Location = new Point(300, 300)
+            Location = new Point(300, 300),
+            IsReadOnly = true
         };
 
         public CalculatorOperationViewModel()

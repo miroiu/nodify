@@ -49,6 +49,8 @@ namespace Nodify.Calculator
             set => SetProperty(ref _isSelected, value);
         }
 
+        public bool IsReadOnly { get; set; }
+
         private IOperation? _operation;
         public IOperation? Operation
         {

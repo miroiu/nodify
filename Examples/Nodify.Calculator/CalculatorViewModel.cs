@@ -134,7 +134,7 @@ namespace Nodify.Calculator
 
         private void DeleteSelection()
         {
-            var selected = Operations.Where(o => o.IsSelected).ToList();
+            var selected = Operations.Where(o => o.IsSelected && !o.IsReadOnly).ToList();
             selected.ForEach(o => Operations.Remove(o));
         }
     }
