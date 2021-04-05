@@ -18,13 +18,7 @@ namespace Nodify.Calculator
 
                 c.Input.Value = c.Output.Value;
 
-                c.Output.PropertyChanged += (s, e) =>
-                {
-                    if (e.PropertyName == nameof(ConnectorViewModel.Value))
-                    {
-                        c.Input.Value = c.Output.Value;
-                    }
-                };
+                c.Output.ValueObservers.Add(c.Input);
             })
             .WhenRemoved(c =>
             {
@@ -40,6 +34,8 @@ namespace Nodify.Calculator
                 {
                     c.Output.IsConnected = false;
                 }
+
+                c.Output.ValueObservers.Remove(c.Input);
             });
 
             Operations.WhenAdded(x =>

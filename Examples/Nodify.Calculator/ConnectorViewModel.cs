@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Nodify.Calculator
 {
@@ -15,7 +16,8 @@ namespace Nodify.Calculator
         public decimal Value
         {
             get => _value;
-            set => SetProperty(ref _value, value);
+            set => SetProperty(ref _value, value)
+                .Then(() => ValueObservers.ForEach(o => o.Value = value));
         }
 
         private bool _isConnected;
@@ -45,5 +47,7 @@ namespace Nodify.Calculator
             get => _operation;
             set => SetProperty(ref _operation, value);
         }
+
+        public List<ConnectorViewModel> ValueObservers { get; } = new List<ConnectorViewModel>();
     }
 }

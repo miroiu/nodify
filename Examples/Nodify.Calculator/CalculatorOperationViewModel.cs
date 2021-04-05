@@ -27,7 +27,7 @@ namespace Nodify.Calculator
 
             Output = new ConnectorViewModel();
 
-            InnerOutput.Input[0].PropertyChanged += OnOutputValueChanged;
+            InnerOutput.Input[0].ValueObservers.Add(Output);
 
             InnerInput.Output.ForEach(x => Input.Add(new ConnectorViewModel
             {
@@ -47,14 +47,6 @@ namespace Nodify.Calculator
             for (var i = 0; i < Input.Count; i++)
             {
                 InnerInput.Output[i].Value = Input[i].Value;
-            }
-        }
-
-        private void OnOutputValueChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            if (Output != null && propertyChangedEventArgs.PropertyName == nameof(ConnectorViewModel.Value))
-            {
-                Output.Value = InnerOutput.Input[0].Value;
             }
         }
     }
