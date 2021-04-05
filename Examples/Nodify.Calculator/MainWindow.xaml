@@ -14,12 +14,12 @@
         Width="800">
 
     <Window.DataContext>
-        <local:CalculatorViewModel />
+        <local:ApplicationViewModel />
     </Window.DataContext>
 
     <Window.Resources>
         <shared:BindingProxy x:Key="EditorProxy"
-                             DataContext="{Binding}" />
+                             DataContext="{Binding Current}" />
 
         <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
@@ -48,7 +48,8 @@
     </Window.Resources>
 
     <Grid>
-        <nodify:NodifyEditor ItemsSource="{Binding Operations}"
+        <nodify:NodifyEditor DataContext="{Binding Current}"
+                             ItemsSource="{Binding Operations}"
                              Connections="{Binding Connections}"
                              ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
@@ -138,6 +139,56 @@
                         </nodify:Node.ContentTemplate>
                     </nodify:Node>
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:CalculatorOperationViewModel}">
+                    <nodify:Node Header="{Binding Title}"
+                                 Input="{Binding Input}"
+                                 Output="{Binding Output, Converter={StaticResource ItemToListConverter}}"
+                                 ToolTip="Double click to expand">
+                        <nodify:Node.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                          Command="{Binding DataContext.OpenCalculatorCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          CommandParameter="{Binding InnerCalculator}" />
+                        </nodify:Node.InputBindings>
+                    </nodify:Node>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:CalculatorInputOperationViewModel}">
+                    <DataTemplate.Resources>
+                        <Style TargetType="{x:Type nodify:NodeOutput}"
+                               BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
+                            <Setter Property="Header"
+                                    Value="{Binding}" />
+                            <Setter Property="IsConnected"
+                                    Value="{Binding IsConnected}" />
+                            <Setter Property="Anchor"
+                                    Value="{Binding Anchor, Mode=OneWayToSource}" />
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding Value}"
+                                                     IsEnabled="False" />
+                                            <TextBlock Text="{Binding Title}"
+                                                       Margin="5 0 0 0" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataTemplate.Resources>
+                    <nodify:Node Header="{Binding Title}"
+                                 Output="{Binding Output}">
+                        <StackPanel>
+                            <Button Style="{StaticResource IconButton}"
+                                    Content="{StaticResource PlusIcon}"
+                                    Command="{Binding AddOutputCommand}" />
+                            <Button Style="{StaticResource IconButton}"
+                                    Content="{StaticResource RemoveKeyIcon}"
+                                    Command="{Binding RemoveOutputCommand}" />
+                        </StackPanel>
+                    </nodify:Node>
+                </DataTemplate>
             </nodify:NodifyEditor.Resources>
 
             <nodify:NodifyEditor.ConnectionTemplate>
@@ -197,7 +248,21 @@
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
 
-        <StackPanel Margin="10">
+        <StackPanel Margin="10"
+                    HorizontalAlignment="Left">
+            <Button Content="⬅"
+                    FontSize="28"
+                    Foreground="Crimson"
+                    Command="{Binding BackCommand}"
+                    ToolTip="Back"
+                    Visibility="{Binding IsCalculatorOpen, Converter={shared:BooleanToVisibilityConverter FalseVisibility=Hidden}}"
+                    Style="{StaticResource IconButton}" />
+
+            <TextBlock Text="Click the arrow to navigate back"
+                       Visibility="{Binding IsCalculatorOpen, Converter={shared:BooleanToVisibilityConverter FalseVisibility=Hidden}}"
+                       Foreground="Red"
+                       FontWeight="Bold" />
+
             <TextBlock Text="ALT + Click -> disconnect connector"
                        FontWeight="Bold" />
             <TextBlock Text="Right Click -> show context menu"
@@ -207,6 +272,9 @@
             <TextBlock Text="CTRL + T -> change theme"
                        FontWeight="Bold" />
             <TextBlock Text="Hover over a connector to see its value"
+                       FontWeight="Bold" />
+            <TextBlock Text="(NEW) Create a Calculator node and double click it to open"
+                       Foreground="LawnGreen"
                        FontWeight="Bold" />
         </StackPanel>
     </Grid>

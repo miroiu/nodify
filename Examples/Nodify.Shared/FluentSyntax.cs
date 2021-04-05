@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nodify
 {
@@ -50,7 +51,23 @@ namespace Nodify
 
         public static ICollection<T> AddRange<T>(this ICollection<T> collection, IEnumerable<T> values)
         {
-            values.ForEach(v => collection.Add(v));
+            values.ForEach(collection.Add);
+            return collection;
+        }
+
+        public static ICollection<T> RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> values)
+        {
+            values.ForEach(v => collection.Remove(v));
+            return collection;
+        }
+
+        public static ICollection<T> RemoveOne<T>(this ICollection<T> collection, Func<T, bool> search)
+        {
+            if (collection.FirstOrDefault(search) is { } x)
+            {
+                collection.Remove(x);
+            }
+
             return collection;
         }
     }
