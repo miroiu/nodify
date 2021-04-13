@@ -7,7 +7,8 @@ namespace Nodify.Calculator
         Normal,
         Expando,
         Expression,
-        Calculator
+        Calculator,
+        Group
     }
 
     public class OperationInfoViewModel
