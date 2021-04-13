@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 
 namespace Nodify.Calculator
 {
@@ -163,8 +164,7 @@ namespace Nodify.Calculator
             {
                 Title = "Operations",
                 Location = bounding.Location,
-                Width = bounding.Width,
-                Height = bounding.Height
+                Size = new Size(bounding.Width,  bounding.Height)
             });
         }
     }

@@ -4,22 +4,14 @@ namespace Nodify.Calculator
 {
     public class OperationGraphViewModel : CalculatorOperationViewModel
     {
-        private double _height;
-        public double Height
+        private Size _size;
+        public Size Size
         {
-            get => _height;
-            set => SetProperty(ref _height, value);
+            get => _size;
+            set => SetProperty(ref _size, value);
         }
-
-        private double _width;
-        public double Width
-        {
-            get => _width;
-            set => SetProperty(ref _width, value);
-        }
-
-        private double _prevHeight;
-        private double _prevWidth;
+        
+        private Size _prevSize;
 
         private bool _isExpanded = true;
         public bool IsExpanded
@@ -31,16 +23,13 @@ namespace Nodify.Calculator
                 {
                     if (_isExpanded)
                     {
-                        Height = _prevHeight;
-                        Width = _prevWidth;
+                        Size = _prevSize;
                     }
                     else
                     {
-                        _prevHeight = Height;
-                        _prevWidth = Width;
-
-                        Height = 55;
-                        Width = 180;
+                        _prevSize = Size;
+                        // Fit content
+                        Size = new Size(double.NaN, double.NaN);
                     }
                 }
             }

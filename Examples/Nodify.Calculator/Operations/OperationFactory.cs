@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 
 namespace Nodify.Calculator
 {
@@ -139,8 +140,7 @@ namespace Nodify.Calculator
                     return new OperationGraphViewModel
                     {
                         Title = info.Title,
-                        Width = 420,
-                        Height = 250
+                        Size = new Size(420, 250)
                     };
 
                 default:

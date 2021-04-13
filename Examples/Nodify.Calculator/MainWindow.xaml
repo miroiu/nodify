@@ -193,15 +193,13 @@
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
                     <nodify:GroupingNode Header="{Binding Title}"
-                                         Width="{Binding Width}"
-                                         Height="{Binding Height}" />
+                                         ActualSize="{Binding Size}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                     <nodify:GroupingNode Header="{Binding}"
                                          CanResize="{Binding IsExpanded}"
-                                         Width="{Binding Width, Mode=TwoWay}"
-                                         Height="{Binding Height, Mode=TwoWay}">
+                                         ActualSize="{Binding Size, Mode=TwoWay}">
                         <nodify:GroupingNode.HeaderTemplate>
                             <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                                 <Grid>
@@ -212,6 +210,7 @@
 
                                     <TextBlock Text="{Binding Title}" />
                                     <StackPanel Orientation="Horizontal"
+                                                Margin="5 0 0 0"
                                                 Grid.Column="1">
                                         <TextBlock Text="Expand?"
                                                    Visibility="{Binding IsExpanded, Converter={shared:BooleanToVisibilityConverter}}"
@@ -230,6 +229,7 @@
                                                  ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                                                  DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                                                  Background="Transparent"
+                                                 GridCellSize="15"
                                                  Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
 
                                 <nodify:NodifyEditor.ContextMenu>
@@ -276,6 +276,13 @@
                                                 Value="{Binding IsSelected}" />
                                     </Style>
                                 </nodify:NodifyEditor.ItemContainerStyle>
+                                
+                                <nodify:NodifyEditor.InputBindings>
+                                    <KeyBinding Key="Delete"
+                                                Command="{Binding DeleteSelectionCommand}" />
+                                    <KeyBinding Key="C"
+                                                Command="{Binding GroupSelectionCommand}" />
+                                </nodify:NodifyEditor.InputBindings>
                             </nodify:NodifyEditor>
 
                             <Grid>
