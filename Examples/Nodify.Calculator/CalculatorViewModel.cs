@@ -6,7 +6,9 @@ namespace Nodify.Calculator
     {
         public CalculatorViewModel()
         {
-            CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target => CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target), target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
+            CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target =>
+                CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target),
+                target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
@@ -96,6 +98,11 @@ namespace Nodify.Calculator
 
         private void UpdateAvailableOperations()
         {
+            AvailableOperations.Add(new OperationInfoViewModel
+            {
+                Type = OperationType.Graph,
+                Title = "(New) Operation Graph",
+            });
             AvailableOperations.Add(new OperationInfoViewModel
             {
                 Type = OperationType.Calculator,

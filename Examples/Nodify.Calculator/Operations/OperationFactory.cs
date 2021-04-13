@@ -135,6 +135,14 @@ namespace Nodify.Calculator
                         Title = info.Title,
                     };
 
+                case OperationType.Graph:
+                    return new OperationGraphViewModel
+                    {
+                        Title = info.Title,
+                        Width = 420,
+                        Height = 250
+                    };
+
                 default:
                 {
                     var op = new OperationViewModel
