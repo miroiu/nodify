@@ -23,15 +23,15 @@
 
 	--ifm-code-font-size: 95%;
 
-	--nuget_logo_url: url(/nodify/img/NuGet_logo.svg);
-	--github_logo_url: url(/nodify/img/github_logo.svg);
+	--nuget_logo_url: url(/static/img/NuGet_logo.svg);
+	--github_logo_url: url(/static/img/github_logo.svg);
 }
 
 html[data-theme='dark'] {
 	--ifm-background-color: #1f222f;
 	--ifm-navbar-background-color: #242837;
-	--nuget_logo_url: url(/nodify/img/NuGet_logo_dark.svg);
-	--github_logo_url: url(/nodify/img/github_logo_dark.svg);
+	--nuget_logo_url: url(/static/img/NuGet_logo_dark.svg);
+	--github_logo_url: url(/static/img/github_logo_dark.svg);
 }
 
 .docusaurus-highlight-code-line {
@@ -84,15 +84,19 @@ html[data-theme='dark'] .DocSearch {
 html[data-theme='dark'] .hero {
 	--ifm-hero-background-color: #1f222f;
 	--ifm-hero-text-color: var(--accent-color-contrast);
-	background-image: url(/nodify/img/circuit_board_dark.svg);
+	background-image: url(/static/img/circuit_board_dark.svg);
 	--ifm-heading-color: var(--accent-color-contrast);
 }
 
 html[data-theme='light'] .hero {
 	--ifm-hero-background-color: var(--accent-color-contrast);
 	--ifm-hero-text-color: #242837;
-	background-image: url(/nodify/img/circuit_board.svg);
+	background-image: url(/static/img/circuit_board.svg);
 	--ifm-heading-color: #451e63;
+}
+
+.docusaurus-highlight-code-line {
+	background-color: var(--accent-color);
 }
 
 .hero__title {

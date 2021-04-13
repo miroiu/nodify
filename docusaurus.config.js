@@ -9,6 +9,10 @@ module.exports = {
 	organizationName: 'miroiu', // Usually your GitHub org/user name.
 	projectName: 'nodify', // Usually your repo name.
 	themeConfig: {
+		prism: {
+			additionalLanguages: ['csharp'],
+			theme: require('prism-react-renderer/themes/shadesOfPurple'),
+		},
 		colorMode: {
 			respectPrefersColorScheme: true,
 		},
@@ -63,8 +67,7 @@ module.exports = {
 			disableUserPersonalization: true,
 			// Optional: Algolia search parameters (https://autocomplete-experimental.netlify.app/docs/docsearchmodal/#searchparameters)
 			searchParameters: {},
-			// Optional: see doc section bellow
-			contextualSearch: true,
+			contextualSearch: false,
 		},
 	},
 	presets: [
