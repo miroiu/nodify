@@ -51,6 +51,7 @@
         <nodify:NodifyEditor DataContext="{Binding Current}"
                              ItemsSource="{Binding Operations}"
                              Connections="{Binding Connections}"
+                             SelectedItems="{Binding SelectedOperations}"
                              ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
@@ -189,6 +190,12 @@
                         </StackPanel>
                     </nodify:Node>
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
+                    <nodify:GroupingNode Header="{Binding Title}"
+                                         Width="{Binding Width}"
+                                         Height="{Binding Height}" />
+                </DataTemplate>
             </nodify:NodifyEditor.Resources>
 
             <nodify:NodifyEditor.ConnectionTemplate>
@@ -242,6 +249,8 @@
                             Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}" />
                 <KeyBinding Key="Delete"
                             Command="{Binding DeleteSelectionCommand}" />
+                <KeyBinding Key="C"
+                            Command="{Binding GroupSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
         </nodify:NodifyEditor>
 
@@ -249,7 +258,15 @@
               Panel.ZIndex="-2" />
 
         <StackPanel Margin="10"
-                    HorizontalAlignment="Left">
+                    HorizontalAlignment="Left"
+                    MaxWidth="250">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}"
+                       BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Margin"
+                            Value="0 0 0 5" />
+                </Style>
+            </StackPanel.Resources>
             <Button Content="⬅"
                     FontSize="28"
                     Foreground="Crimson"
@@ -264,16 +281,28 @@
                        FontWeight="Bold" />
 
             <TextBlock Text="ALT + Click -> disconnect connector"
+                       TextWrapping="Wrap"
                        FontWeight="Bold" />
             <TextBlock Text="Right Click -> show context menu"
+                       TextWrapping="Wrap"
                        FontWeight="Bold" />
             <TextBlock Text="Delete -> delete selection"
+                       TextWrapping="Wrap"
                        FontWeight="Bold" />
             <TextBlock Text="CTRL + T -> change theme"
                        FontWeight="Bold" />
-            <TextBlock Text="Hover over a connector to see its value"
+            <TextBlock Text="C -> group selection"
+                       TextWrapping="Wrap"
+                       Foreground="LawnGreen"
                        FontWeight="Bold" />
-            <TextBlock Text="(NEW) Create a Calculator node and double click it to open"
+            <TextBlock Text="Hover over a connector to see its value"
+                       TextWrapping="Wrap"
+                       FontWeight="Bold" />
+            <TextBlock Text="Create a Calculator node and double click it to open"
+                       TextWrapping="Wrap"
+                       FontWeight="Bold" />
+            <TextBlock Text="(NEW) Group operations and drag them by the header or hold SHIFT and mouse drag to move the group node alone"
+                       TextWrapping="Wrap"
                        Foreground="LawnGreen"
                        FontWeight="Bold" />
         </StackPanel>

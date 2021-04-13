@@ -10,6 +10,7 @@ namespace Nodify.Calculator
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
+            GroupSelectionCommand = new DelegateCommand(GroupSelectedOperations, () => SelectedOperations.Count > 0);
 
             Connections.WhenAdded(c =>
             {
@@ -76,6 +77,13 @@ namespace Nodify.Calculator
             set => SetProperty(ref _operations, value);
         }
 
+        private NodifyObservableCollection<OperationViewModel> _selectedOperations = new NodifyObservableCollection<OperationViewModel>();
+        public NodifyObservableCollection<OperationViewModel> SelectedOperations
+        {
+            get => _selectedOperations;
+            set => SetProperty(ref _selectedOperations, value);
+        }
+
         public NodifyObservableCollection<ConnectionViewModel> Connections { get; } = new NodifyObservableCollection<ConnectionViewModel>();
 
         public NodifyObservableCollection<OperationInfoViewModel> AvailableOperations { get; } = new NodifyObservableCollection<OperationInfoViewModel>();
@@ -84,6 +92,23 @@ namespace Nodify.Calculator
         public INodifyCommand CreateOperationCommand { get; }
         public INodifyCommand DisconnectConnectorCommand { get; }
         public INodifyCommand DeleteSelectionCommand { get; }
+        public INodifyCommand GroupSelectionCommand { get; }
+
+        private void UpdateAvailableOperations()
+        {
+            AvailableOperations.Add(new OperationInfoViewModel
+            {
+                Type = OperationType.Calculator,
+                Title = "Calculator"
+            });
+            AvailableOperations.Add(new OperationInfoViewModel
+            {
+                Type = OperationType.Expression,
+                Title = "Custom",
+            });
+            var operations = OperationFactory.GetOperationsInfo(typeof(OperationsContainer));
+            AvailableOperations.AddRange(operations);
+        }
 
         private void DisconnectConnector(ConnectorViewModel connector)
         {
@@ -116,26 +141,25 @@ namespace Nodify.Calculator
             Operations.Add(op);
         }
 
-        private void UpdateAvailableOperations()
-        {
-            AvailableOperations.Add(new OperationInfoViewModel
-            {
-                Type = OperationType.Calculator,
-                Title = "(New) Calculator"
-            });
-            AvailableOperations.Add(new OperationInfoViewModel
-            {
-                Type = OperationType.Expression,
-                Title = "Custom",
-            });
-            var operations = OperationFactory.GetOperationsInfo(typeof(OperationsContainer));
-            AvailableOperations.AddRange(operations);
-        }
-
         private void DeleteSelection()
         {
-            var selected = Operations.Where(o => o.IsSelected && !o.IsReadOnly).ToList();
+            var selected = SelectedOperations.ToList();
             selected.ForEach(o => Operations.Remove(o));
+        }
+
+        private void GroupSelectedOperations()
+        {
+            var selected = SelectedOperations.ToList();
+            var bounding = selected.GetBoundingBox(50);
+
+            Operations.Add(new OperationGroupViewModel
+            {
+                Title = "Operations",
+                Location = bounding.Location,
+                Width = bounding.Width,
+                Height = bounding.Height
+            });
         }
     }
 }
+

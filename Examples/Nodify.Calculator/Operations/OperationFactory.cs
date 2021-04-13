@@ -117,7 +117,6 @@ namespace Nodify.Calculator
                     };
 
                 case OperationType.Expando:
-                {
                     var o = new ExpandoOperationViewModel
                     {
                         MaxInput = info.MaxInput,
@@ -129,7 +128,13 @@ namespace Nodify.Calculator
 
                     o.Input.AddRange(input);
                     return o;
-                }
+
+                case OperationType.Group:
+                    return new OperationGroupViewModel
+                    {
+                        Title = info.Title,
+                    };
+
                 default:
                 {
                     var op = new OperationViewModel
