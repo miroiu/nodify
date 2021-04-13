@@ -235,6 +235,7 @@ namespace Nodify
             IsVisible = true;
             SourceAnchor = e.Anchor;
             TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
+            e.Handled = true;
         }
 
         protected virtual void OnPendingConnectionDrag(object sender, PendingConnectionEventArgs e)

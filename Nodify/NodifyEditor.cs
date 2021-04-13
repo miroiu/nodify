@@ -752,6 +752,7 @@ namespace Nodify
         {
             var scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
             ZoomAtPosition(scale, e.GetPosition(this));
+            e.Handled = true;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -802,6 +803,7 @@ namespace Nodify
 
                 InitialMousePosition = e.GetPosition(this);
                 Selection.Start(MouseLocation, EnableRealtimeSelection);
+                e.Handled = true;
             }
         }
 
@@ -1199,6 +1201,8 @@ namespace Nodify
                         _selectedContainers.Add(container);
                     }
                 }
+
+                e.Handled = true;
             }
         }
 
