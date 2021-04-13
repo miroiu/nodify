@@ -180,6 +180,7 @@ namespace Nodify
                 {
                     Container.PreviewLocationChanged += UpdateAnchorOptimized;
                     Container.LocationChanged += OnLocationChanged;
+                    Container.SizeChanged += OnContainerSizeChanged;
                     Editor.ViewportUpdated += OnViewportUpdated;
                     _isHooked = true;
                 }
@@ -188,11 +189,15 @@ namespace Nodify
                 {
                     Container.PreviewLocationChanged -= UpdateAnchorOptimized;
                     Container.LocationChanged -= OnLocationChanged;
+                    Container.SizeChanged -= OnContainerSizeChanged;
                     Editor.ViewportUpdated -= OnViewportUpdated;
                     _isHooked = false;
                 }
             }
         }
+
+        private void OnContainerSizeChanged(object sender, SizeChangedEventArgs e)
+            => UpdateAnchorOptimized(Container!.Location);
 
         private void OnConnectorLoaded(object sender, RoutedEventArgs? e)
             => TrySetAnchorUpdateEvents(true);
