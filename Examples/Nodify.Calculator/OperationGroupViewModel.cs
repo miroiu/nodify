@@ -1,19 +1,14 @@
+using System.Windows;
+
 namespace Nodify.Calculator
 {
     public class OperationGroupViewModel : OperationViewModel
     {
-        private double _height;
-        public double Height
+        private Size _size;
+        public Size Size
         {
-            get => _height;
-            set => SetProperty(ref _height, value);
-        }
-
-        private double _width;
-        public double Width
-        {
-            get => _width;
-            set => SetProperty(ref _width, value);
+            get => _size;
+            set => SetProperty(ref _size, value);
         }
     }
 }

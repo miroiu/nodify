@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 
 namespace Nodify.Calculator
 {
@@ -6,7 +7,9 @@ namespace Nodify.Calculator
     {
         public CalculatorViewModel()
         {
-            CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target => CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target), target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
+            CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target =>
+                CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target),
+                target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
@@ -98,6 +101,11 @@ namespace Nodify.Calculator
         {
             AvailableOperations.Add(new OperationInfoViewModel
             {
+                Type = OperationType.Graph,
+                Title = "(New) Operation Graph",
+            });
+            AvailableOperations.Add(new OperationInfoViewModel
+            {
                 Type = OperationType.Calculator,
                 Title = "Calculator"
             });
@@ -156,8 +164,7 @@ namespace Nodify.Calculator
             {
                 Title = "Operations",
                 Location = bounding.Location,
-                Width = bounding.Width,
-                Height = bounding.Height
+                Size = new Size(bounding.Width,  bounding.Height)
             });
         }
     }

@@ -10,8 +10,8 @@
         Foreground="{DynamicResource ForegroundBrush}"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
-        Width="800">
+        Height="650"
+        Width="1200">
 
     <Window.DataContext>
         <local:ApplicationViewModel />
@@ -193,8 +193,121 @@
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
                     <nodify:GroupingNode Header="{Binding Title}"
-                                         Width="{Binding Width}"
-                                         Height="{Binding Height}" />
+                                         ActualSize="{Binding Size}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
+                    <nodify:GroupingNode Header="{Binding}"
+                                         CanResize="{Binding IsExpanded}"
+                                         ActualSize="{Binding Size, Mode=TwoWay}">
+                        <nodify:GroupingNode.HeaderTemplate>
+                            <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Title}" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Margin="5 0 0 0"
+                                                Grid.Column="1">
+                                        <TextBlock Text="Expand?"
+                                                   Visibility="{Binding IsExpanded, Converter={shared:BooleanToVisibilityConverter}}"
+                                                   Margin="0 0 5 0" />
+                                        <CheckBox IsChecked="{Binding IsExpanded}" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </nodify:GroupingNode.HeaderTemplate>
+                        <Grid>
+                            <nodify:NodifyEditor Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}"
+                                                 DataContext="{Binding InnerCalculator}"
+                                                 ItemsSource="{Binding Operations}"
+                                                 Connections="{Binding Connections}"
+                                                 SelectedItems="{Binding SelectedOperations}"
+                                                 ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
+                                                 DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
+                                                 Background="Transparent"
+                                                 GridCellSize="15"
+                                                 Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
+
+                                <nodify:NodifyEditor.ContextMenu>
+                                    <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem Header="Add Operation"
+                                                  ItemsSource="{Binding AvailableOperations}">
+                                            <MenuItem.ItemContainerStyle>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Header"
+                                                            Value="{Binding Title}" />
+                                                    <Setter Property="Command"
+                                                            Value="{Binding DataContext.CreateOperationCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                                    <Setter Property="CommandParameter">
+                                                        <Setter.Value>
+                                                            <MultiBinding Converter="{local:OperationInfoConverter}">
+                                                                <Binding />
+                                                                <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
+                                                                         Path="PlacementTarget.MouseLocation" />
+                                                            </MultiBinding>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </MenuItem.ItemContainerStyle>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </nodify:NodifyEditor.ContextMenu>
+
+                                <nodify:NodifyEditor.ConnectionTemplate>
+                                    <DataTemplate DataType="{x:Type local:ConnectionViewModel}">
+                                        <nodify:CircuitConnection Source="{Binding Output.Anchor}"
+                                                                  Target="{Binding Input.Anchor}"
+                                                                  SourceOffset="10 0"
+                                                                  TargetOffset="20 0"
+                                                                  OffsetMode="Circle" />
+                                    </DataTemplate>
+                                </nodify:NodifyEditor.ConnectionTemplate>
+
+                                <nodify:NodifyEditor.ItemContainerStyle>
+                                    <Style TargetType="{x:Type nodify:ItemContainer}"
+                                           BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                                        <Setter Property="Location"
+                                                Value="{Binding Location}" />
+                                        <Setter Property="IsSelected"
+                                                Value="{Binding IsSelected}" />
+                                    </Style>
+                                </nodify:NodifyEditor.ItemContainerStyle>
+                                
+                                <nodify:NodifyEditor.InputBindings>
+                                    <KeyBinding Key="Delete"
+                                                Command="{Binding DeleteSelectionCommand}" />
+                                    <KeyBinding Key="C"
+                                                Command="{Binding GroupSelectionCommand}" />
+                                </nodify:NodifyEditor.InputBindings>
+                            </nodify:NodifyEditor>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Input}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <nodify:NodeInput />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <nodify:NodeOutput DataContext="{Binding Output}" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </nodify:GroupingNode>
                 </DataTemplate>
             </nodify:NodifyEditor.Resources>
 
@@ -283,7 +396,7 @@
             <TextBlock Text="ALT + Click -> disconnect connector"
                        TextWrapping="Wrap"
                        FontWeight="Bold" />
-            <TextBlock Text="Right Click -> show context menu"
+            <TextBlock Text="Right Click -> show context menu (create nodes)"
                        TextWrapping="Wrap"
                        FontWeight="Bold" />
             <TextBlock Text="Delete -> delete selection"
@@ -291,9 +404,8 @@
                        FontWeight="Bold" />
             <TextBlock Text="CTRL + T -> change theme"
                        FontWeight="Bold" />
-            <TextBlock Text="C -> group selection"
+            <TextBlock Text="C -> group selection (hold SHIFT and mouse drag the header to move the group node alone)"
                        TextWrapping="Wrap"
-                       Foreground="LawnGreen"
                        FontWeight="Bold" />
             <TextBlock Text="Hover over a connector to see its value"
                        TextWrapping="Wrap"
@@ -301,7 +413,7 @@
             <TextBlock Text="Create a Calculator node and double click it to open"
                        TextWrapping="Wrap"
                        FontWeight="Bold" />
-            <TextBlock Text="(NEW) Group operations and drag them by the header or hold SHIFT and mouse drag to move the group node alone"
+            <TextBlock Text="(New) Create an Operation Graph and add other operations to it"
                        TextWrapping="Wrap"
                        Foreground="LawnGreen"
                        FontWeight="Bold" />
