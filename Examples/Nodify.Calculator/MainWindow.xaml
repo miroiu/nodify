@@ -199,7 +199,8 @@
                 <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                     <nodify:GroupingNode Header="{Binding}"
                                          CanResize="{Binding IsExpanded}"
-                                         ActualSize="{Binding Size, Mode=TwoWay}">
+                                         ActualSize="{Binding Size, Mode=TwoWay}"
+                                         MovementMode="Self">
                         <nodify:GroupingNode.HeaderTemplate>
                             <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                                 <Grid>
