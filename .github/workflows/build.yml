@@ -5,15 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        dotnet: [ '4.7.2', '4.8', '3.1.14', '5.0.5' ]
-    name: Dotnet ${{ matrix.dotnet }} build
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1.7.2
       with:
-        dotnet-version: ${{ matrix.dotnet }}
+        dotnet-version: '5.0.x'
     - name: Build
       run: dotnet build --configuration Release
