@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:Nodify.StateMachine"
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         xmlns:nodify="https://miroiu.github.io/nodify"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
         Title="State Machine Editor"
