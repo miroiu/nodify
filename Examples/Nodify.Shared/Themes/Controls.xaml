@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Nodify">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="{x:Type CheckBox}"
            BasedOn="{StaticResource {x:Type CheckBox}}">
@@ -39,8 +38,7 @@
                                       StrokeThickness="2"
                                       StrokeEndLineCap="Round"
                                       StrokeStartLineCap="Round"
-                                      Data="M 30,100 L 80,140 L 160,60">
-                                </Path>
+                                      Data="M 30,100 L 80,140 L 160,60" />
                             </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter Margin="4,0,0,0"
