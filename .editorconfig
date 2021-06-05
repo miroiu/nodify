@@ -19,9 +19,7 @@ tab_width = 2
 # Microsoft .NET properties
 csharp_new_line_before_members_in_object_initializers = false
 csharp_preferred_modifier_order = public, private, protected, internal, new, abstract, virtual, sealed, override, static, readonly, extern, unsafe, volatile, async:suggestion
-csharp_style_var_elsewhere = true:suggestion
-csharp_style_var_for_built_in_types = true:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
 dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
 dotnet_style_parentheses_in_other_binary_operators = never_if_unnecessary:none
 dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary:none
@@ -34,6 +32,8 @@ dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
 
 # ReSharper properties
+resharper_for_built_in_types = use_var_when_evident
+resharper_for_simple_types = use_var_when_evident
 
 # ReSharper inspection severities
 resharper_arrange_object_creation_when_type_evident_highlighting = none
@@ -46,5 +46,3 @@ resharper_built_in_type_reference_style_highlighting = hint
 resharper_merge_sequential_patterns_highlighting = none
 resharper_redundant_base_qualifier_highlighting = warning
 resharper_suggest_var_or_type_built_in_types_highlighting = hint
-resharper_suggest_var_or_type_elsewhere_highlighting = hint
-resharper_suggest_var_or_type_simple_types_highlighting = hint
