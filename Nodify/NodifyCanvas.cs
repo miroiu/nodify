@@ -12,7 +12,7 @@ namespace Nodify
 
         protected override Size ArrangeOverride(Size arrangeSize)
         {
-            for (int i = 0; i < InternalChildren.Count; i++)
+            for (var i = 0; i < InternalChildren.Count; i++)
             {
                 var internalChild = (ItemContainer)InternalChildren[i];
                 internalChild.Arrange(new Rect(internalChild.Location, internalChild.DesiredSize));
@@ -23,9 +23,9 @@ namespace Nodify
 
         protected override Size MeasureOverride(Size constraint)
         {
-            Size availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
+            var availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
 
-            for (int i = 0; i < InternalChildren.Count; i++)
+            for (var i = 0; i < InternalChildren.Count; i++)
             {
                 InternalChildren[i].Measure(availableSize);
             }

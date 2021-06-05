@@ -69,7 +69,7 @@ namespace Nodify
         #endregion
         
         /// <summary>
-        /// Gets the <see cref="ContentControl.Content"/> control of this <see cref="StateNode"/>.
+        /// Gets the <see cref="ContentControl"/> control of this <see cref="StateNode"/>.
         /// </summary>
         protected UIElement? ContentControl { get; private set; }
 

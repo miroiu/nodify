@@ -21,7 +21,7 @@ namespace Nodify
 
         /// <summary>
         /// Gets or sets the <see cref="ItemContainer"/>'s location of a control.
-        /// Use the <see cref="Location"/> dependency property when databinding.
+        /// Use the <see cref="Location"/> dependency property when data-binding.
         /// </summary>
         public static readonly DependencyProperty LocationOverrideProperty = DependencyProperty.RegisterAttached("LocationOverride", typeof(Point), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.Point, OnLocationOverrideChanged));
 
@@ -145,7 +145,7 @@ namespace Nodify
             var item = (ItemContainer)d;
             item.OnLocationChanged();
 
-            var host = item.Editor;
+            NodifyEditor? host = item.Editor;
 
             if (!host?.IsBulkUpdatingItems ?? true)
             {
@@ -245,7 +245,7 @@ namespace Nodify
         {
             var elem = (ItemContainer)d;
 
-            var result = elem.IsSelectable && (bool)e.NewValue;
+            bool result = elem.IsSelectable && (bool)e.NewValue;
             elem.OnSelectedChanged(result);
             elem.IsSelected = result;
         }
@@ -289,18 +289,7 @@ namespace Nodify
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         private NodifyEditor? _editor;
-        public NodifyEditor? Editor
-        {
-            get
-            {
-                if (_editor == null)
-                {
-                    _editor = ItemsControl.ItemsControlFromItemContainer(this) as NodifyEditor;
-                }
-
-                return _editor;
-            }
-        }
+        public NodifyEditor? Editor => _editor ??= ItemsControl.ItemsControlFromItemContainer(this) as NodifyEditor;
 
         static ItemContainer()
         {
@@ -350,7 +339,7 @@ namespace Nodify
             if (AllowDraggingCancellation && IsPreviewingLocation)
             {
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
+                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
                 {
@@ -395,7 +384,7 @@ namespace Nodify
             {
                 // Do not rely on OnLocationChanged setting this to false
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
+                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, false)
                 {
@@ -406,18 +395,18 @@ namespace Nodify
             }
             else if (IsSelectableLocation(e.GetPosition(this)))
             {
-                if (Keyboard.Modifiers == ModifierKeys.Control)
+                switch (Keyboard.Modifiers)
                 {
-                    IsSelected = !IsSelected;
-                }
-                else if (Keyboard.Modifiers == ModifierKeys.Shift)
-                {
-                    IsSelected = true;
-                }
-                else
-                {
-                    Editor?.UnselectAll();
-                    IsSelected = true;
+                    case ModifierKeys.Control:
+                        IsSelected = !IsSelected;
+                        break;
+                    case ModifierKeys.Shift:
+                        IsSelected = true;
+                        break;
+                    default:
+                        Editor?.UnselectAll();
+                        IsSelected = true;
+                        break;
                 }
 
                 Focus();
@@ -435,7 +424,7 @@ namespace Nodify
             if (e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured && IsDraggable)
             {
                 // Needs host for snapping and to apply transform 
-                var position = e.GetPosition(DraggableHost);
+                Point position = e.GetPosition(DraggableHost);
 
                 if (_previousDragPosition != position)
                 {
@@ -451,7 +440,7 @@ namespace Nodify
                     }
                     else
                     {
-                        var delta = position - _previousDragPosition;
+                        Vector delta = position - _previousDragPosition;
                         _previousDragPosition = position;
 
                         RaiseEvent(new DragDeltaEventArgs(delta.X, delta.Y)
@@ -470,7 +459,7 @@ namespace Nodify
             if (IsPreviewingLocation)
             {
                 IsPreviewingLocation = false;
-                var position = e.GetPosition(DraggableHost) - _initialDragPosition;
+                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
 
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, AllowDraggingCancellation)
                 {

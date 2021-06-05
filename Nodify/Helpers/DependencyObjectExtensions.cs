@@ -11,7 +11,7 @@ namespace Nodify
         public static T? GetParentOfType<T>(this DependencyObject child)
             where T : DependencyObject
         {
-            DependencyObject current = child;
+            DependencyObject? current = child;
 
             do
             {
@@ -24,32 +24,6 @@ namespace Nodify
             } while (!(current is T));
 
             return (T)current;
-        }
-
-        public static T? GetChildOfType<T>(this DependencyObject? depObj) where T : DependencyObject
-        {
-            if (depObj == null)
-            {
-                return default;
-            }
-
-            var count = VisualTreeHelper.GetChildrenCount(depObj);
-            for (int i = 0; i < count; i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-
-                if (child is T result)
-                {
-                    return result;
-                }
-
-                if (GetChildOfType<T>(child) is T r)
-                {
-                    return r;
-                }
-            }
-
-            return default;
         }
 
         public static T? GetElementUnderMouse<T>(this UIElement container)
@@ -87,33 +61,9 @@ namespace Nodify
 
         public static void StartAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, Point toValue, double animationDurationSeconds, EventHandler? completedEvent = null)
         {
-            Point fromValue = (Point)animatableElement.GetValue(dependencyProperty);
+            var fromValue = (Point)animatableElement.GetValue(dependencyProperty);
 
             PointAnimation animation = new PointAnimation
-            {
-                From = fromValue,
-                To = toValue,
-                Duration = TimeSpan.FromSeconds(animationDurationSeconds)
-            };
-
-            animation.Completed += delegate (object? sender, EventArgs e)
-            {
-                animatableElement.SetValue(dependencyProperty, animatableElement.GetValue(dependencyProperty));
-                CancelAnimation(animatableElement, dependencyProperty);
-
-                completedEvent?.Invoke(sender, e);
-            };
-
-            animation.Freeze();
-
-            animatableElement.BeginAnimation(dependencyProperty, animation);
-        }
-
-        public static void StartAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, double toValue, double animationDurationSeconds, EventHandler? completedEvent = null)
-        {
-            double fromValue = (double)animatableElement.GetValue(dependencyProperty);
-
-            DoubleAnimation animation = new DoubleAnimation
             {
                 From = fromValue,
                 To = toValue,

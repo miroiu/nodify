@@ -22,7 +22,7 @@ namespace Nodify
             => Connector = connector;
 
         /// <summary>
-        /// Gets or sets the <see cref="Connector.Anchor"/> of the <see cref="Nodify.Connector"/> associated with this event.
+        /// Gets or sets the <see cref="Nodify.Connector.Anchor"/> of the <see cref="Nodify.Connector"/> associated with this event.
         /// </summary>
         public Point Anchor { get; set; }
 

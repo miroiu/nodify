@@ -148,17 +148,17 @@ namespace Nodify
 
         #region Attached Properties
 
-        private static readonly DependencyProperty _allowOnlyConnectorsAttachedProperty = DependencyProperty.RegisterAttached("AllowOnlyConnectorsAttached", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True));
+        private static readonly DependencyProperty AllowOnlyConnectorsAttachedProperty = DependencyProperty.RegisterAttached("AllowOnlyConnectorsAttached", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True));
         /// <summary>
         /// Will be set for <see cref="Connector"/>s and <see cref="ItemContainer"/>s when the pending connection is over the element if <see cref="EnablePreview"/> or <see cref="EnableSnapping"/> is true.
         /// </summary>
         public static readonly DependencyProperty IsOverElementProperty = DependencyProperty.RegisterAttached("IsOverElement", typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
 
         internal static bool GetAllowOnlyConnectorsAttached(UIElement elem)
-            => (bool)elem.GetValue(_allowOnlyConnectorsAttachedProperty);
+            => (bool)elem.GetValue(AllowOnlyConnectorsAttachedProperty);
 
         internal static void SetAllowOnlyConnectorsAttached(UIElement elem, bool value)
-            => elem.SetValue(_allowOnlyConnectorsAttachedProperty, value);
+            => elem.SetValue(AllowOnlyConnectorsAttachedProperty, value);
 
         public static bool GetIsOverElement(UIElement elem)
             => (bool)elem.GetValue(IsOverElementProperty);
@@ -168,7 +168,7 @@ namespace Nodify
 
         private static void OnAllowOnlyConnectorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var editor = ((PendingConnection)d).Editor;
+            NodifyEditor? editor = ((PendingConnection)d).Editor;
 
             if (editor != null)
             {
@@ -187,9 +187,9 @@ namespace Nodify
         /// Will not be invoked if <see cref="NodifyEditor.ConnectionCompletedCommand"/> is used.
         /// <see cref="Target"/> will be set to the desired <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> and will also be the command's parameter.
         /// </summary>
-        public ICommand CompletedCommand
+        public ICommand? CompletedCommand
         {
-            get => (ICommand)GetValue(CompletedCommandProperty);
+            get => (ICommand?)GetValue(CompletedCommandProperty);
             set => SetValue(CompletedCommandProperty, value);
         }
 

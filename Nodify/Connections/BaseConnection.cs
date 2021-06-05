@@ -136,11 +136,12 @@ namespace Nodify
                 ConnectionOffsetMode.Rectangle => (GetRectangleModeOffset(delta, SourceOffset), GetRectangleModeOffset(delta2, TargetOffset)),
                 ConnectionOffsetMode.Circle => (GetCircleModeOffset(delta, SourceOffset), GetCircleModeOffset(delta2, TargetOffset)),
                 ConnectionOffsetMode.Edge => (GetEdgeModeOffset(delta, SourceOffset), GetEdgeModeOffset(delta2, TargetOffset)),
-                _ => (ZeroVector, ZeroVector)
+                ConnectionOffsetMode.None => (ZeroVector, ZeroVector),
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
 
-        private Vector GetEdgeModeOffset(Vector delta, Size offset)
+        private static Vector GetEdgeModeOffset(Vector delta, Size offset)
         {
             double xOffset = Math.Min(Math.Abs(delta.X) / 2, offset.Width) * Math.Sign(delta.X);
             double yOffset = Math.Min(Math.Abs(delta.Y) / 2, offset.Height) * Math.Sign(delta.Y);
@@ -148,7 +149,7 @@ namespace Nodify
             return new Vector(xOffset, yOffset);
         }
 
-        private Vector GetCircleModeOffset(Vector delta, Size offset)
+        private static Vector GetCircleModeOffset(Vector delta, Size offset)
         {
             if (delta.LengthSquared > 0)
             {
@@ -158,7 +159,7 @@ namespace Nodify
             return new Vector(delta.X * offset.Width, delta.Y * offset.Height);
         }
 
-        private Vector GetRectangleModeOffset(Vector delta, Size offset)
+        private static Vector GetRectangleModeOffset(Vector delta, Size offset)
         {
             if (delta.LengthSquared > 0)
             {
@@ -166,7 +167,7 @@ namespace Nodify
             }
 
             double angle = Math.Atan2(delta.Y, delta.X);
-            Vector result = new Vector();
+            var result = new Vector();
 
             if (offset.Width * 2 * Math.Abs(delta.Y) < offset.Height * 2 * Math.Abs(delta.X))
             {

@@ -44,8 +44,8 @@ namespace Nodify
         private static object OnCoerceViewport(DependencyObject d, object value)
         {
             var editor = (NodifyEditor)d;
-            var offset = editor.Offset;
-            var scale = editor.Scale;
+            Point offset = editor.Offset;
+            double scale = editor.Scale;
 
             return new Rect(new Point(offset.X / scale, offset.Y / scale), new Size(editor.ActualWidth / scale, editor.ActualHeight / scale));
         }
@@ -53,12 +53,7 @@ namespace Nodify
         private static object OnCoerceOffset(DependencyObject d, object value)
         {
             var editor = (NodifyEditor)d;
-            if (editor.DisablePanning)
-            {
-                return editor.Offset;
-            }
-
-            return value;
+            return editor.DisablePanning ? editor.Offset : value;
         }
 
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -93,22 +88,22 @@ namespace Nodify
 
         private static object CoerceMaximumScale(DependencyObject d, object value)
         {
-            var zoom = (NodifyEditor)d;
-            var min = zoom.MinScale;
+            var editor = (NodifyEditor)d;
+            double min = editor.MinScale;
 
             return (double)value < min ? min : value;
         }
 
         private static object ConstrainScaleToRange(DependencyObject d, object value)
         {
-            NodifyEditor editor = (NodifyEditor)d;
+            var editor = (NodifyEditor)d;
 
             if (editor.DisableZooming)
             {
                 return editor.Scale;
             }
 
-            double num = (double)value;
+            var num = (double)value;
             double minimum = editor.MinScale;
             if (num < minimum)
             {
@@ -116,12 +111,7 @@ namespace Nodify
             }
 
             double maximum = editor.MaxScale;
-            if (num > maximum)
-            {
-                return maximum;
-            }
-
-            return value;
+            return num > maximum ? maximum : value;
         }
 
         private void OffsetOverride(Point newValue)
@@ -412,12 +402,12 @@ namespace Nodify
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
-        /// If you override the <see cref="Nodify.PendingConnection"/> style or <see cref="PendingConnectionTemplate"/>, please use the <see cref="PendingConnection.CompletedCommand"/> instead. <br />
-        /// Parameters is <see cref="Tuple{object, object}"/> where <see cref="Tuple{object, object}.Item1"/> is the <see cref="PendingConnection.Source"/> and <see cref="Tuple{object, object}.Item2"/> is <see cref="PendingConnection.Target"/>.
+        /// If you override the <see cref="Nodify.PendingConnection"/> style or <see cref="PendingConnectionTemplate"/>, please use the <see cref="Nodify.PendingConnection.CompletedCommand"/> instead. <br />
+        /// Parameters is <see cref="Tuple{object, object}"/> where <see cref="Tuple{object, object}.Item1"/> is the <see cref="Nodify.PendingConnection.Source"/> and <see cref="Tuple{object, object}.Item2"/> is <see cref="Nodify.PendingConnection.Target"/>.
         /// </summary>
-        public ICommand ConnectionCompletedCommand
+        public ICommand? ConnectionCompletedCommand
         {
-            get => (ICommand)GetValue(ConnectionCompletedCommandProperty);
+            get => (ICommand?)GetValue(ConnectionCompletedCommandProperty);
             set => SetValue(ConnectionCompletedCommandProperty, value);
         }
 
@@ -426,27 +416,27 @@ namespace Nodify
         /// Can also be handled at the <see cref="Connector"/> level using the <see cref="Connector.DisconnectCommand"/> command. <br />
         /// Parameter is the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/>.
         /// </summary>
-        public ICommand DisconnectConnectorCommand
+        public ICommand? DisconnectConnectorCommand
         {
-            get => (ICommand)GetValue(DisconnectConnectorCommandProperty);
+            get => (ICommand?)GetValue(DisconnectConnectorCommandProperty);
             set => SetValue(DisconnectConnectorCommandProperty, value);
         }
 
         /// <summary>
         /// Invoked when a drag operation starts for the <see cref="SelectedItems"/>.
         /// </summary>
-        public ICommand ItemsDragStartedCommand
+        public ICommand? ItemsDragStartedCommand
         {
-            get => (ICommand)GetValue(ItemsDragStartedCommandProperty);
+            get => (ICommand?)GetValue(ItemsDragStartedCommandProperty);
             set => SetValue(ItemsDragStartedCommandProperty, value);
         }
 
         /// <summary>
         /// Invoked when a drag operation is completed for the <see cref="SelectedItems"/>.
         /// </summary>
-        public ICommand ItemsDragCompletedCommand
+        public ICommand? ItemsDragCompletedCommand
         {
-            get => (ICommand)GetValue(ItemsDragCompletedCommandProperty);
+            get => (ICommand?)GetValue(ItemsDragCompletedCommandProperty);
             set => SetValue(ItemsDragCompletedCommandProperty, value);
         }
 
@@ -530,7 +520,7 @@ namespace Nodify
         protected Point CurrentMousePosition;
 
         /// <summary>
-        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occured.
+        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occurred.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point InitialMousePosition;
@@ -571,8 +561,6 @@ namespace Nodify
             transform.Children.Add(TranslateTransform);
 
             SetValue(AppliedTransformPropertyKey, transform);
-
-            OnDisableAutoPanningChanged(DisableAutoPanning);
         }
 
         public override void OnApplyTemplate()
@@ -580,6 +568,8 @@ namespace Nodify
             base.OnApplyTemplate();
 
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel;
+
+            OnDisableAutoPanningChanged(DisableAutoPanning);
         }
 
         protected override DependencyObject GetContainerForItemOverride()
@@ -597,12 +587,12 @@ namespace Nodify
         #region Methods
 
         /// <summary>
-        /// Zoom in at the viewport's center
+        /// Zoom in at the viewports center
         /// </summary>
         public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
 
         /// <summary>
-        /// Zoom out at the viewport's center
+        /// Zoom out at the viewports center
         /// </summary>
         public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
 
@@ -640,11 +630,11 @@ namespace Nodify
         public void ZoomAtPosition(double zoom, Point pos)
         {
             var position = (Vector)pos;
-            var prevScale = Scale;
+            double prevScale = Scale;
 
             Scale *= zoom;
 
-            if (prevScale != Scale)
+            if (Math.Abs(prevScale - Scale) > 0.001)
             {
                 // get the actual zoom value because Scale might have been coerced
                 zoom = Scale / prevScale;
@@ -660,7 +650,7 @@ namespace Nodify
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
             {
-                var mousePosition = Mouse.GetPosition(this);
+                Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
                 double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate);
                 double x = Offset.X;
@@ -700,21 +690,19 @@ namespace Nodify
         /// <param name="shouldDisable">Whether to enable or disable auto panning.</param>
         protected virtual void OnDisableAutoPanningChanged(bool shouldDisable)
         {
-            if (!shouldDisable)
+            if (shouldDisable)
             {
-                if (_autoPanningTimer == null)
-                {
-                    _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate), DispatcherPriority.Background, new EventHandler(HandleAutoPanning), Dispatcher);
-                }
-                else
-                {
-                    _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
-                    _autoPanningTimer.Start();
-                }
+                _autoPanningTimer?.Stop();
             }
-            else if (shouldDisable && _autoPanningTimer != null)
+            else if (_autoPanningTimer == null)
             {
-                _autoPanningTimer.Stop();
+                _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate),
+                    DispatcherPriority.Background, HandleAutoPanning, Dispatcher);
+            }
+            else
+            {
+                _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
+                _autoPanningTimer.Start();
             }
         }
 
@@ -735,7 +723,7 @@ namespace Nodify
         {
             if (!e.Canceled)
             {
-                var result = (e.SourceConnector, e.TargetConnector);
+                (object SourceConnector, object? TargetConnector) result = (e.SourceConnector, e.TargetConnector);
                 if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
                 {
                     ConnectionCompletedCommand.Execute(result);
@@ -750,7 +738,7 @@ namespace Nodify
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            var scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            double scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
             ZoomAtPosition(scale, e.GetPosition(this));
             e.Handled = true;
         }
@@ -893,18 +881,18 @@ namespace Nodify
                 nc.CollectionChanged += OnSelectedItemsChanged;
             }
 
-            var selectedItems = base.SelectedItems;
+            IList selectedItems = base.SelectedItems;
 
             BeginUpdateSelectedItems();
             selectedItems.Clear();
-            for (int i = 0; i < newValue.Count; i++)
+            for (var i = 0; i < newValue.Count; i++)
             {
                 selectedItems.Add(newValue[i]);
             }
             EndUpdateSelectedItems();
         }
 
-        private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -913,11 +901,11 @@ namespace Nodify
                     break;
 
                 case NotifyCollectionChangedAction.Add:
-                    var newItems = e.NewItems;
+                    IList? newItems = e.NewItems;
                     if (newItems != null)
                     {
-                        var selectedItems = base.SelectedItems;
-                        for (int i = 0; i < newItems.Count; i++)
+                        IList selectedItems = base.SelectedItems;
+                        for (var i = 0; i < newItems.Count; i++)
                         {
                             selectedItems.Add(newItems[i]);
                         }
@@ -925,11 +913,11 @@ namespace Nodify
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    var oldItems = e.OldItems;
+                    IList? oldItems = e.OldItems;
                     if (oldItems != null)
                     {
-                        var selectedItems = base.SelectedItems;
-                        for (int i = 0; i < oldItems.Count; i++)
+                        IList selectedItems = base.SelectedItems;
+                        for (var i = 0; i < oldItems.Count; i++)
                         {
                             selectedItems.Remove(oldItems[i]);
                         }
@@ -944,12 +932,12 @@ namespace Nodify
 
             if (!IsSelecting)
             {
-                var selected = SelectedItems;
+                IList? selected = SelectedItems;
 
                 if (selected != null)
                 {
-                    var added = e.AddedItems;
-                    for (int i = 0; i < added.Count; i++)
+                    IList added = e.AddedItems;
+                    for (var i = 0; i < added.Count; i++)
                     {
                         // Ensure no duplicates are added
                         if (!selected.Contains(added[i]))
@@ -958,8 +946,8 @@ namespace Nodify
                         }
                     }
 
-                    var removed = e.RemovedItems;
-                    for (int i = 0; i < removed.Count; i++)
+                    IList removed = e.RemovedItems;
+                    for (var i = 0; i < removed.Count; i++)
                     {
                         selected.Remove(removed[i]);
                     }
@@ -978,17 +966,17 @@ namespace Nodify
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void InvertSelection(Rect area, bool fit = false)
         {
-            var items = Items;
-            var selected = base.SelectedItems;
+            ItemCollection items = Items;
+            IList selected = base.SelectedItems;
 
             BeginUpdateSelectedItems();
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
                 if (container.IsSelectableInArea(area, fit))
                 {
-                    var item = items[i];
+                    object? item = items[i];
                     if (container.IsSelected)
                     {
                         selected.Remove(item);
@@ -1015,11 +1003,11 @@ namespace Nodify
                 UnselectAll();
             }
 
-            var items = Items;
-            var selected = base.SelectedItems;
+            ItemCollection items = Items;
+            IList selected = base.SelectedItems;
 
             BeginUpdateSelectedItems();
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
@@ -1032,17 +1020,17 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Unselects the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
+        /// Unselect the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void UnselectArea(Rect area, bool fit = false)
         {
-            var items = Items;
-            var selected = base.SelectedItems;
+            ItemCollection items = Items;
+            IList selected = base.SelectedItems;
 
             BeginUpdateSelectedItems();
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
@@ -1058,13 +1046,12 @@ namespace Nodify
         /// Adds the <paramref name="items"/> to the <see cref="SelectedItems"/> list.
         /// </summary>
         /// <param name="items">The items to select.</param>
-        /// <param name="selected">True to add, false to remove.</param>
         internal void SelectItems(IList<object> items)
         {
-            var selectedItems = base.SelectedItems;
+            IList selectedItems = base.SelectedItems;
 
             BeginUpdateSelectedItems();
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 selectedItems.Add(items[i]);
             }
@@ -1086,9 +1073,9 @@ namespace Nodify
 
                 if (delta.X != 0 || delta.Y != 0)
                 {
-                    for (int i = 0; i < _selectedContainers.Count; i++)
+                    for (var i = 0; i < _selectedContainers.Count; i++)
                     {
-                        var container = _selectedContainers[i];
+                        ItemContainer container = _selectedContainers[i];
                         var r = (TranslateTransform)container.RenderTransform;
 
                         r.X += delta.X; // Snapping without correction
@@ -1106,9 +1093,9 @@ namespace Nodify
             {
                 if (e.Canceled && ItemContainer.AllowDraggingCancellation)
                 {
-                    for (int i = 0; i < _selectedContainers.Count; i++)
+                    for (var i = 0; i < _selectedContainers.Count; i++)
                     {
-                        var container = _selectedContainers[i];
+                        ItemContainer container = _selectedContainers[i];
                         var r = (TranslateTransform)container.RenderTransform;
 
                         r.X = 0;
@@ -1121,12 +1108,12 @@ namespace Nodify
                 {
                     IsBulkUpdatingItems = true;
 
-                    for (int i = 0; i < _selectedContainers.Count; i++)
+                    for (var i = 0; i < _selectedContainers.Count; i++)
                     {
-                        var container = _selectedContainers[i];
+                        ItemContainer container = _selectedContainers[i];
                         var r = (TranslateTransform)container.RenderTransform;
 
-                        var result = container.Location + new Vector(r.X, r.Y);
+                        Point result = container.Location + new Vector(r.X, r.Y);
 
                         // Correct the final position
                         if (EnableSnappingCorrection)
@@ -1160,7 +1147,7 @@ namespace Nodify
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
             _dragInstigator = e.OriginalSource as ItemContainer ?? (e.OriginalSource as UIElement)?.GetParentOfType<ItemContainer>();
-            var selectedItems = base.SelectedItems;
+            IList selectedItems = base.SelectedItems;
 
             if (_dragInstigator != null)
             {
@@ -1193,7 +1180,7 @@ namespace Nodify
                 }
 
                 // Cache selected containers
-                for (int i = 0; i < selectedItems.Count; i++)
+                for (var i = 0; i < selectedItems.Count; i++)
                 {
                     var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
                     if (container.IsDraggable)

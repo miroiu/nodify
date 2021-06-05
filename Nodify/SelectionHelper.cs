@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -26,7 +27,7 @@ namespace Nodify
 
         public void Start(Point location, bool realtime = false, SelectionType? selectionType = default)
         {
-            var modifiers = Keyboard.Modifiers;
+            ModifierKeys modifiers = Keyboard.Modifiers;
             _selectionType = selectionType ?? modifiers switch
             {
                 ModifierKeys.Control => SelectionType.Invert,
@@ -43,7 +44,7 @@ namespace Nodify
             _isRealtime = realtime;
             _startLocation = location;
 
-            var items = ((MultiSelector)_host).SelectedItems;
+            IList items = ((MultiSelector)_host).SelectedItems;
             _initialSelection = new object[items.Count];
             items.CopyTo(_initialSelection, 0);
 
@@ -53,10 +54,10 @@ namespace Nodify
 
         public void Update(Point endLocation)
         {
-            var left = endLocation.X < _startLocation.X ? endLocation.X : _startLocation.X;
-            var top = endLocation.Y < _startLocation.Y ? endLocation.Y : _startLocation.Y;
-            var width = Math.Abs(endLocation.X - _startLocation.X);
-            var height = Math.Abs(endLocation.Y - _startLocation.Y);
+            double left = endLocation.X < _startLocation.X ? endLocation.X : _startLocation.X;
+            double top = endLocation.Y < _startLocation.Y ? endLocation.Y : _startLocation.Y;
+            double width = Math.Abs(endLocation.X - _startLocation.X);
+            double height = Math.Abs(endLocation.Y - _startLocation.Y);
 
             _host.SelectedArea = new Rect(left, top, width, height);
 
@@ -71,7 +72,7 @@ namespace Nodify
             if (_host.IsSelecting)
             {
                 _host.IsSelecting = false;
-                var rect = _host.SelectedArea;
+                Rect rect = _host.SelectedArea;
                 if (rect.Width > 0 && rect.Height > 0)
                 {
                     ApplySelection(rect);
@@ -86,7 +87,7 @@ namespace Nodify
             switch (_selectionType)
             {
                 case SelectionType.Replace:
-                    _host.SelectArea(area, false);
+                    _host.SelectArea(area);
                     break;
 
                 case SelectionType.Remove:
@@ -117,6 +118,9 @@ namespace Nodify
 
                     _host.InvertSelection(area);
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(SelectionType));
             }
         }
     }

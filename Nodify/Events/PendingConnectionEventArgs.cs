@@ -17,7 +17,7 @@ namespace Nodify
         /// <summary>
         /// Initializes a new instance of the <see cref="PendingConnectionEventArgs"/> class using the specified <see cref="SourceConnector"/>.
         /// </summary>
-        /// <param name="connector">The <see cref="FrameworkElement.DataContext"/> of a related <see cref="Connector"/>.</param>
+        /// <param name="sourceConnector">The <see cref="FrameworkElement.DataContext"/> of a related <see cref="Connector"/>.</param>
         public PendingConnectionEventArgs(object sourceConnector)
             => SourceConnector = sourceConnector;
         
