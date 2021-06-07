@@ -49,7 +49,23 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="IsSelected"
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected"
+                               Value="True" />
+                    <Condition Property="IsPreviewingSelection"
+                               Value="{x:Null}" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="BorderBrush"
+                            Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="BorderThickness"
+                            Value="2" />
+                    <Setter Property="Margin"
+                            Value="-1" />
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+            <Trigger Property="IsPreviewingSelection"
                      Value="True">
                 <Setter Property="BorderBrush"
                         Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />

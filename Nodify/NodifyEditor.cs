@@ -790,7 +790,7 @@ namespace Nodify
                 CaptureMouse();
 
                 InitialMousePosition = e.GetPosition(this);
-                Selection.Start(MouseLocation, EnableRealtimeSelection);
+                Selection.Start(MouseLocation);
                 e.Handled = true;
             }
         }
@@ -959,6 +959,28 @@ namespace Nodify
 
         #region Selection
 
+        internal void ApplyPreviewingSelection()
+        {
+            ItemCollection items = Items;
+            IList selected = base.SelectedItems;
+
+            BeginUpdateSelectedItems();
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                if (container.IsPreviewingSelection == true)
+                {
+                    selected.Add(items[i]);
+                }
+                else if (container.IsPreviewingSelection == false)
+                {
+                    selected.Remove(items[i]);
+                }
+                container.IsPreviewingSelection = null;
+            }
+            EndUpdateSelectedItems();
+        }
+
         /// <summary>
         /// Inverts the <see cref="ItemContainer"/>s selection in the specified <paramref name="area"/>.
         /// </summary>
@@ -1010,7 +1032,6 @@ namespace Nodify
             for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
                 if (container.IsSelectableInArea(area, fit))
                 {
                     selected.Add(items[i]);
@@ -1026,34 +1047,16 @@ namespace Nodify
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void UnselectArea(Rect area, bool fit = false)
         {
-            ItemCollection items = Items;
-            IList selected = base.SelectedItems;
+            IList items = base.SelectedItems;
 
             BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromItem(items[i]);
                 if (container.IsSelectableInArea(area, fit))
                 {
-                    selected.Remove(items[i]);
+                    items.Remove(items[i]);
                 }
-            }
-            EndUpdateSelectedItems();
-        }
-
-        /// <summary>
-        /// Adds the <paramref name="items"/> to the <see cref="SelectedItems"/> list.
-        /// </summary>
-        /// <param name="items">The items to select.</param>
-        internal void SelectItems(IList<object> items)
-        {
-            IList selectedItems = base.SelectedItems;
-
-            BeginUpdateSelectedItems();
-            for (var i = 0; i < items.Count; i++)
-            {
-                selectedItems.Add(items[i]);
             }
             EndUpdateSelectedItems();
         }
