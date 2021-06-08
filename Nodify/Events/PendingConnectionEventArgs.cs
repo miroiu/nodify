@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Nodify
 {
@@ -50,5 +51,8 @@ namespace Nodify
         /// Gets or sets a value that indicates whether this <see cref="PendingConnection"/> was cancelled.
         /// </summary>
         public bool Canceled { get; set; }
+
+        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
+            => ((PendingConnectionEventHandler)genericHandler)(genericTarget, this);
     }
 }

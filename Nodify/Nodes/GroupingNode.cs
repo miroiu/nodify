@@ -37,12 +37,28 @@ namespace Nodify
         protected const string ElementHeader = "PART_Header";
         protected const string ElementContent = "PART_Content";
 
+        #region Routed Events
+
+        public static readonly RoutedEvent ResizeCompletedEvent = EventManager.RegisterRoutedEvent(nameof(ResizeCompleted), RoutingStrategy.Bubble, typeof(ResizeEventHandler), typeof(GroupingNode));
+
+        /// <summary>
+        /// Occurs when the node is resized and <see cref="ActualSize"/> is set.
+        /// </summary>
+        public event ResizeEventHandler ResizeCompleted
+        {
+            add => AddHandler(ResizeCompletedEvent, value);
+            remove => RemoveHandler(ResizeCompletedEvent, value);
+        }
+
+        #endregion
+
         #region Dependency Properties
 
         public static readonly DependencyProperty HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner(typeof(GroupingNode));
         public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
         public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
+        public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(GroupingNode));
 
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -86,6 +102,16 @@ namespace Nodify
         {
             get => (GroupingMovementMode)GetValue(MovementModeProperty);
             set => SetValue(MovementModeProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="ResizeCompleted"/> event is not handled.
+        /// Parameter is the <see cref="ActualSize"/> of this control.
+        /// </summary>
+        public ICommand? ResizeCompletedCommand
+        {
+            get => (ICommand?)GetValue(ResizeCompletedCommandProperty);
+            set => SetValue(ResizeCompletedCommandProperty, value);
         }
 
         #endregion
@@ -244,7 +270,25 @@ namespace Nodify
         }
 
         private void OnResizeCompleted(object sender, DragCompletedEventArgs e)
-            => ActualSize = new Size(ActualWidth, ActualHeight);
+        {
+            Size previousSize = ActualSize;
+            var newSize = new Size(ActualWidth, ActualHeight);
+            ActualSize = newSize;
+
+            var args = new ResizeEventArgs(previousSize, newSize)
+            {
+                RoutedEvent = ResizeCompletedEvent,
+                Source = this
+            };
+
+            RaiseEvent(args);
+
+            // Raise ResizeCompletedCommand if ResizeCompletedEvent event is not handled
+            if (!args.Handled && (ResizeCompletedCommand?.CanExecute(newSize) ?? false))
+            {
+                ResizeCompletedCommand.Execute(newSize);
+            }
+        }
 
         private void OnHeaderSizeChanged(object sender, SizeChangedEventArgs e)
             => CalculateDesiredHeaderSize();
