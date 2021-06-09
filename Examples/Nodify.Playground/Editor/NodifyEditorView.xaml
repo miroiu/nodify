@@ -94,7 +94,8 @@
                              EnableRealtimeSelection="{Binding EnableRealtimeSelection, Source={x:Static local:EditorSettings.Instance}}"
                              DisableAutoPanning="{Binding DisableAutoPanning, Source={x:Static local:EditorSettings.Instance}}"
                              DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
-                             DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}">
+                             DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}"
+                             DisplayConnectionsOnTop="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}">
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">

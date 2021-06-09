@@ -41,6 +41,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -227,7 +228,15 @@
                                     DataContext="{Binding ConnectionTargetOffset, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                     Margin="0 5 5 0" />
 
-            <Expander Grid.Row="21"
+            <TextBlock Grid.Row="21"
+                       Text="Display connections on top: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="21"
+                      Grid.Column="1"
+                      IsChecked="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <Expander Grid.Row="22"
                       Grid.ColumnSpan="2"
                       Header="Advanced"
                       Padding="0 5 0 0"
@@ -258,6 +267,9 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -318,7 +330,7 @@
 
                         <TextBlock Grid.Row="6"
                                    Text="Enable connector optimizations: "
-                                   ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
+                                   ToolTip="Enables optimizations for connectors based on viewport distance and minimum selected nodes."
                                    Margin="0 5 5 0" />
                         <CheckBox  Grid.Row="6"
                                    Grid.Column="1"
@@ -326,7 +338,7 @@
                                    Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="7"
-                                   Text="Optimization safe zone: "
+                                   Text="Optimize connectors safe zone: "
                                    ToolTip="The minimum distance from the viewport where connectors will start optimizing"
                                    Margin="0 5 5 0" />
                         <TextBox Grid.Row="7"
@@ -335,12 +347,39 @@
                                  Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="8"
-                                   Text="Optimize minimum selection: "
+                                   Text="Optimize connectors minimum selection: "
                                    ToolTip="The minimum selected items needed to start optimizing when outside the safe zone."
                                    Margin="0 5 5 0" />
                         <TextBox Grid.Row="8"
                                  Grid.Column="1"
                                  Text="{Binding OptimizeMinimumSelectedItems, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="9"
+                                   Text="Enable nodes rendering optimization: "
+                                   ToolTip="Enables rendering optimizations for nodes based on zoom out percent and nodes count. (zoom in/out to apply optimization)"
+                                   Margin="0 5 5 0" />
+                        <CheckBox  Grid.Row="9"
+                                   Grid.Column="1"
+                                   IsChecked="{Binding EnableRenderingOptimizations, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                   Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="10"
+                                   Text="Rendering optimization zoom out percent: "
+                                   ToolTip="The zoom out percent that triggers the optimization. (percent of x = 1 - MinScale)"
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="10"
+                                 Grid.Column="1"
+                                 Text="{Binding OptimizeRenderingZoomOutPercent, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="11"
+                                   Text="Rendering optimization minimum nodes: "
+                                   ToolTip="The minimum nodes needed to start optimizing when zoom out percent is met."
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="11"
+                                 Grid.Column="1"
+                                 Text="{Binding OptimizeRenderingMinimumNodes, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />
                     </Grid>
                 </Border>
