@@ -124,6 +124,20 @@ namespace Nodify
         {
             ScaleTransform.ScaleX = newValue;
             ScaleTransform.ScaleY = newValue;
+
+            if (ItemsHost != null)
+            {
+                if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
+                {
+                    double availableZoomIn = 1.0 - MinScale;
+                    bool shouldCache = newValue / availableZoomIn <= OptimizeRenderingZoomOutPercent;
+                    ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / newValue) : null;
+                }
+                else
+                {
+                    ItemsHost.CacheMode = null;
+                }
+            }
         }
 
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -132,7 +146,7 @@ namespace Nodify
         #endregion
 
         /// <summary>
-        /// Gets or sets the <see cref="Viewport"/>'s top left coordinates.
+        /// Gets or sets the <see cref="Viewport"/>'s top and left coordinates.
         /// </summary>
         public Point Offset
         {
@@ -150,7 +164,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets whether to display connections on top of nodes or not.
+        /// Gets or sets whether to display connections on top of <see cref="ItemContainer"/>s or not.
         /// </summary>
         public bool DisplayConnectionsOnTop
         {
@@ -491,6 +505,21 @@ namespace Nodify
         /// Gets or sets how often the new <see cref="Offset"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
         /// </summary>
         public static double AutoPanningTickRate { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets if <see cref="NodifyEditor"/>s should enable optimizations based on <see cref="OptimizeRenderingMinimumContainers"/> and <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// </summary>
+        public static bool EnableRenderingContainersOptimizations { get; set; } = true;
+        
+        /// <summary>
+        /// Gets or sets the minimum selected <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// </summary>
+        public static uint OptimizeRenderingMinimumContainers { get; set; } = 700;
+        
+        /// <summary>
+        /// Gets or sets the minimum zoom out percent needed to start optimizing the rendering for <see cref="ItemContainer"/>s.
+        /// </summary>
+        public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.5;
 
         /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.

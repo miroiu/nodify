@@ -162,6 +162,13 @@
             set => SetProperty(ref _connectionArrowSize, value);
         }
 
+        private bool _displayConnectionsOnTop;
+        public bool DisplayConnectionsOnTop
+        {
+            get => _displayConnectionsOnTop;
+            set => SetProperty(ref _displayConnectionsOnTop, value);
+        }
+
         #endregion
 
         #region Advanced settings
@@ -212,6 +219,24 @@
         {
             get => Connector.OptimizeMinimumSelectedItems;
             set => Connector.OptimizeMinimumSelectedItems = value;
+        }
+
+        public bool EnableRenderingOptimizations
+        {
+            get => NodifyEditor.EnableRenderingContainersOptimizations;
+            set => NodifyEditor.EnableRenderingContainersOptimizations = value;
+        }
+
+        public uint OptimizeRenderingMinimumNodes
+        {
+            get => NodifyEditor.OptimizeRenderingMinimumContainers;
+            set => NodifyEditor.OptimizeRenderingMinimumContainers = value;
+        }
+
+        public double OptimizeRenderingZoomOutPercent
+        {
+            get => NodifyEditor.OptimizeRenderingZoomOutPercent;
+            set => NodifyEditor.OptimizeRenderingZoomOutPercent = value;
         }
 
         #endregion
