@@ -519,7 +519,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the minimum zoom out percent needed to start optimizing the rendering for <see cref="ItemContainer"/>s.
         /// </summary>
-        public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.5;
+        public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.3;
 
         /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
