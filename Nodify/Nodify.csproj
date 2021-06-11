@@ -19,11 +19,12 @@
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
     <Version>1.6.1</Version>
     <PackageReleaseNotes>Added https://miroiu.github.io/nodify to xmlns namespaces</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  
   <ItemGroup>
     <None Include="..\icon.png">
       <Pack>True</Pack>
