@@ -5,7 +5,7 @@ using System.Windows.Media;
 namespace Nodify
 {
     /// <summary>
-    /// Represents a bezier curve.
+    /// Represents a quadratic curve.
     /// </summary>
     public class Connection : BaseConnection
     {
@@ -14,7 +14,9 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
+        // ReSharper disable once InconsistentNaming
         private const double _baseOffset = 100d;
+        // ReSharper disable once InconsistentNaming
         private const double _offsetGrowthRate = 25d;
 
         private readonly BezierSegment _firstSegment = new BezierSegment();
@@ -34,21 +36,21 @@ namespace Nodify
         {
             get
             {
-                var (sourceOffset, targetOffset) = GetOffset();
+                (Vector sourceOffset, Vector targetOffset) = GetOffset();
 
-                var source = Source + sourceOffset;
-                var target = Target + targetOffset;
+                Point source = Source + sourceOffset;
+                Point target = Target + targetOffset;
 
-                var direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+                double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
-                var delta = target - source;
-                var height = Math.Abs(delta.Y);
-                var width = Math.Abs(delta.X);
+                Vector delta = target - source;
+                double height = Math.Abs(delta.Y);
+                double width = Math.Abs(delta.X);
 
                 // Smooth curve when distance is lower than base offset
-                var smooth = Math.Min(_baseOffset, height);
+                double smooth = Math.Min(_baseOffset, height);
                 // Calculate offset based on distance
-                var offset = Math.Max(smooth, width / 2d);
+                double offset = Math.Max(smooth, width / 2d);
                 // Grow slowly with distance
                 offset = Math.Min(_baseOffset + Math.Sqrt(width * _offsetGrowthRate), offset);
 

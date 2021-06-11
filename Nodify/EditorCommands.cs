@@ -91,7 +91,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                var selected = ((MultiSelector)editor).SelectedItems;
+                IList selected = ((MultiSelector)editor).SelectedItems;
                 if (selected.Count > 0)
                 {
                     if (editor.ItemsDragStartedCommand?.CanExecute(null) ?? false)
@@ -101,7 +101,7 @@ namespace Nodify
 
                     var containers = new List<ItemContainer>(selected.Count);
 
-                    for (int i = 0; i < selected.Count; i++)
+                    for (var i = 0; i < selected.Count; i++)
                     {
                         containers.Add((ItemContainer)editor.ItemContainerGenerator.ContainerFromItem(selected[i]));
                     }
@@ -132,34 +132,37 @@ namespace Nodify
             switch (alignment)
             {
                 case Alignment.Top:
-                    var top = instigator?.Location.Y ?? containers.Min(x => x.Location.Y);
+                    double top = instigator?.Location.Y ?? containers.Min(x => x.Location.Y);
                     containers.ForEach(c => c.Location = new Point(c.Location.X, top));
                     break;
 
                 case Alignment.Left:
-                    var left = instigator?.Location.X ?? containers.Min(x => x.Location.X);
+                    double left = instigator?.Location.X ?? containers.Min(x => x.Location.X);
                     containers.ForEach(c => c.Location = new Point(left, c.Location.Y));
                     break;
 
                 case Alignment.Bottom:
-                    var bottom = instigator != null ? instigator.Location.Y + instigator.ActualHeight : containers.Max(x => x.Location.Y + x.ActualHeight);
+                    double bottom = instigator != null ? instigator.Location.Y + instigator.ActualHeight : containers.Max(x => x.Location.Y + x.ActualHeight);
                     containers.ForEach(c => c.Location = new Point(c.Location.X, bottom - c.ActualHeight));
                     break;
 
                 case Alignment.Right:
-                    var right = instigator != null ? instigator.Location.X + instigator.ActualWidth : containers.Max(x => x.Location.X + x.ActualWidth);
+                    double right = instigator != null ? instigator.Location.X + instigator.ActualWidth : containers.Max(x => x.Location.X + x.ActualWidth);
                     containers.ForEach(c => c.Location = new Point(right - c.ActualWidth, c.Location.Y));
                     break;
 
                 case Alignment.Middle:
-                    var mid = instigator != null ? instigator.Location.Y + instigator.ActualHeight / 2 : containers.Average(c => c.Location.Y + c.ActualHeight / 2);
+                    double mid = instigator != null ? instigator.Location.Y + instigator.ActualHeight / 2 : containers.Average(c => c.Location.Y + c.ActualHeight / 2);
                     containers.ForEach(c => c.Location = new Point(c.Location.X, mid - c.ActualHeight / 2));
                     break;
 
                 case Alignment.Center:
-                    var center = instigator != null ? instigator.Location.X + instigator.ActualWidth / 2 : containers.Average(c => c.Location.X + c.ActualWidth / 2);
+                    double center = instigator != null ? instigator.Location.X + instigator.ActualWidth / 2 : containers.Average(c => c.Location.X + c.ActualWidth / 2);
                     containers.ForEach(c => c.Location = new Point(center - c.ActualWidth / 2, c.Location.Y));
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
             }
         }
 
@@ -175,17 +178,17 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                if (e.Parameter is Point location)
+                switch (e.Parameter)
                 {
-                    editor.BringIntoView(location);
-                }
-                else if (e.Parameter is string str)
-                {
-                    editor.BringIntoView(Point.Parse(str));
-                }
-                else
-                {
-                    editor.BringIntoView(new Point());
+                    case Point location:
+                        editor.BringIntoView(location);
+                        break;
+                    case string str:
+                        editor.BringIntoView(Point.Parse(str));
+                        break;
+                    default:
+                        editor.BringIntoView(new Point());
+                        break;
                 }
             }
         }
@@ -203,9 +206,9 @@ namespace Nodify
             if (sender is NodifyEditor editor)
             {
                 var items = new ArrayList(((MultiSelector)editor).SelectedItems);
-                foreach (var item in items)
+                foreach (object? item in items)
                 {
-                    editor.Items.Remove(item);
+                    editor.Items.Remove(item!);
                 }
             }
         }

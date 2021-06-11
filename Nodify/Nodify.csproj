@@ -17,8 +17,8 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>1.6.1</Version>
-    <PackageReleaseNotes>Added https://miroiu.github.io/nodify to xmlns namespaces</PackageReleaseNotes>
+    <Version>1.6.2</Version>
+    <PackageReleaseNotes>Added support for .NET framework and .NET 5</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

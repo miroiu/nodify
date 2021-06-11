@@ -63,8 +63,8 @@ namespace Nodify
         public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(Point), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register(nameof(IsConnected), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False, OnIsConnectedChanged));
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(Connector));
-        private static readonly DependencyPropertyKey _isPendingConnectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPendingConnection), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty IsPendingConnectionProperty = _isPendingConnectionPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey IsPendingConnectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPendingConnection), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsPendingConnectionProperty = IsPendingConnectionPropertyKey.DependencyProperty;
 
         /// <summary>
         /// Gets the location where <see cref="Connection"/>s can be attached to. 
@@ -91,16 +91,16 @@ namespace Nodify
         public bool IsPendingConnection
         {
             get => (bool)GetValue(IsPendingConnectionProperty);
-            protected set => SetValue(_isPendingConnectionPropertyKey, value);
+            protected set => SetValue(IsPendingConnectionPropertyKey, value);
         }
 
         /// <summary>
         /// Invoked if the <see cref="Disconnect"/> event is not handled.
         /// Parameter is the <see cref="FrameworkElement.DataContext"/> of this control.
         /// </summary>
-        public ICommand DisconnectCommand
+        public ICommand? DisconnectCommand
         {
-            get => (ICommand)GetValue(DisconnectCommandProperty);
+            get => (ICommand?)GetValue(DisconnectCommandProperty);
             set => SetValue(DisconnectCommandProperty, value);
         }
 
@@ -219,7 +219,7 @@ namespace Nodify
         {
             // Subscribe to events if not already subscribed 
             // Useful for advanced connectors that start collapsed because the loaded event is not called
-            var newSize = sizeInfo.NewSize;
+            Size newSize = sizeInfo.NewSize;
             if (newSize.Width > 0 || newSize.Height > 0)
             {
                 TrySetAnchorUpdateEvents(true);
@@ -263,10 +263,10 @@ namespace Nodify
 
         private void UpdateAnchorBasedOnLocation(NodifyEditor editor, Point location)
         {
-            var viewport = editor.Viewport;
-            var offset = OptimizeSafeZone / editor.Scale;
+            Rect viewport = editor.Viewport;
+            double offset = OptimizeSafeZone / editor.Scale;
 
-            var area = Rect.Inflate(viewport, offset, offset);
+            Rect area = Rect.Inflate(viewport, offset, offset);
 
             // Update only the connectors that are in the viewport or will be in the viewport
             if (area.Contains(location))
@@ -286,7 +286,7 @@ namespace Nodify
             if (Thumb != null && Container != null)
             {
                 var thumbSize = (Vector)Thumb.RenderSize;
-                var containerMargin = (Vector)Container.RenderSize - (Vector)Container.DesiredSize;
+                Vector containerMargin = (Vector)Container.RenderSize - (Vector)Container.DesiredSize;
                 Point relativeLocation = Thumb.TranslatePoint((Point)(thumbSize / 2 - containerMargin / 2), Container);
                 Anchor = new Point(location.X + relativeLocation.X, location.Y + relativeLocation.Y);
             }
@@ -360,7 +360,7 @@ namespace Nodify
         {
             if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
             {
-                var offset = e.GetPosition(Thumb) - _thumbCenter;
+                Vector offset = e.GetPosition(Thumb) - _thumbCenter;
                 OnConnectorDrag(offset);
 
                 e.Handled = true;
@@ -407,7 +407,7 @@ namespace Nodify
                 elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
             }
 
-            var target = elem?.DataContext;
+            object? target = elem?.DataContext;
 
             var args = new PendingConnectionEventArgs(DataContext)
             {
@@ -426,7 +426,7 @@ namespace Nodify
         {
             if (IsConnected)
             {
-                var connector = DataContext;
+                object? connector = DataContext;
                 var args = new ConnectorEventArgs(connector)
                 {
                     RoutedEvent = DisconnectEvent,

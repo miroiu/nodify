@@ -36,7 +36,7 @@ namespace Nodify
 
                 using (StreamGeometryContext context = geometry.Open())
                 {
-                    var (sourceOffset, targetOffset) = GetOffset();
+                    (Vector sourceOffset, Vector targetOffset) = GetOffset();
                     Point source = Source + sourceOffset;
                     Point target = Target + targetOffset;
 
@@ -70,14 +70,14 @@ namespace Nodify
         {
             Vector delta = source - target;
             double angle = Math.Atan2(delta.Y, delta.X);
-            double sint = Math.Sin(angle);
-            double cost = Math.Cos(angle);
+            double sinT = Math.Sin(angle);
+            double cosT = Math.Cos(angle);
 
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;
 
-            Point from = new Point(target.X + (headWidth * cost - headHeight * sint), target.Y + (headWidth * sint + headHeight * cost));
-            Point to = new Point(target.X + (headWidth * cost + headHeight * sint), target.Y - (headHeight * cost - headWidth * sint));
+            var from = new Point(target.X + (headWidth * cosT - headHeight * sinT), target.Y + (headWidth * sinT + headHeight * cosT));
+            var to = new Point(target.X + (headWidth * cosT + headHeight * sinT), target.Y - (headHeight * cosT - headWidth * sinT));
 
             context.BeginFigure(target, true, true);
             context.LineTo(from, true, false);

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Nodify
 {
@@ -22,7 +23,7 @@ namespace Nodify
             => Connector = connector;
 
         /// <summary>
-        /// Gets or sets the <see cref="Connector.Anchor"/> of the <see cref="Nodify.Connector"/> associated with this event.
+        /// Gets or sets the <see cref="Nodify.Connector.Anchor"/> of the <see cref="Nodify.Connector"/> associated with this event.
         /// </summary>
         public Point Anchor { get; set; }
 
@@ -30,5 +31,8 @@ namespace Nodify
         /// Gets the <see cref="FrameworkElement.DataContext"/> of the <see cref="Nodify.Connector"/> associated with this event.
         /// </summary>
         public object Connector { get; }
+
+        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
+            => ((ConnectorEventHandler)genericHandler)(genericTarget, this);
     }
 }

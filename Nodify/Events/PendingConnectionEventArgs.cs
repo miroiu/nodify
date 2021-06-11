@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Nodify
 {
@@ -17,7 +18,7 @@ namespace Nodify
         /// <summary>
         /// Initializes a new instance of the <see cref="PendingConnectionEventArgs"/> class using the specified <see cref="SourceConnector"/>.
         /// </summary>
-        /// <param name="connector">The <see cref="FrameworkElement.DataContext"/> of a related <see cref="Connector"/>.</param>
+        /// <param name="sourceConnector">The <see cref="FrameworkElement.DataContext"/> of a related <see cref="Connector"/>.</param>
         public PendingConnectionEventArgs(object sourceConnector)
             => SourceConnector = sourceConnector;
         
@@ -50,5 +51,8 @@ namespace Nodify
         /// Gets or sets a value that indicates whether this <see cref="PendingConnection"/> was cancelled.
         /// </summary>
         public bool Canceled { get; set; }
+
+        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
+            => ((PendingConnectionEventHandler)genericHandler)(genericTarget, this);
     }
 }
