@@ -4,8 +4,8 @@
   <ShortName>Nodify</ShortName>
   <Description>Search Nodify</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://miroiu.github.io/nodify/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://miroiu.github.io/nodify/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://miroiu.github.io/nodify/opensearch.xml" />
-  <moz:SearchForm>https://miroiu.github.io/nodify</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://miroiu.github.io/nodify/nodify/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://miroiu.github.io/nodify/nodify/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://miroiu.github.io/nodify/nodify/opensearch.xml" />
+  <moz:SearchForm>https://miroiu.github.io/nodify/nodify/</moz:SearchForm>
 </OpenSearchDescription>
