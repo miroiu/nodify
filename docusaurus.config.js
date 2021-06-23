@@ -33,9 +33,15 @@ module.exports = {
 			},
 			items: [
 				{
+					type: 'doc',
+					docId: 'introduction',
 					label: 'Docs',
-					to: 'docs/',
-					activeBasePath: 'docs',
+					position: 'left',
+				},
+				{
+					type: 'doc',
+					docId: 'api/Alignment',
+					label: 'API',
 					position: 'left',
 				},
 				{

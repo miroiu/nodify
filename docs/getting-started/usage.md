@@ -1,6 +1,6 @@
 ---
-title: Setting up an editor
-sidebar_label: Setting up an editor
+title: Setting up the editor
+sidebar_label: Editor Setup
 ---
 
 Make sure you have [installed Nodify](/docs/getting-started/installation) into your WPF project.
@@ -22,7 +22,7 @@ xmlns:nodify="clr-namespace:Nodify;assembly=Nodify"
 Create an editor:
 
 ```xml
-<nodify:NodifyEditor></nodify:NodifyEditor>
+<nodify:NodifyEditor />
 ```
 
 Now you should have something like this:
@@ -36,12 +36,12 @@ Now you should have something like this:
         xmlns:nodify="https://miroiu.github.io/nodify"
         mc:Ignorable="d">
 
-    <nodify:NodifyEditor></nodify:NodifyEditor>
+    <nodify:NodifyEditor />
 
 </Window>
 ```
 
-Start the application and left click and drag the mouse to create a selection rectangle.
+Start the application and left-click and drag the mouse to create a selection rectangle.
 
 :::tip
 Drag the selection rectangle near the edge of the editor area and the screen will automatically move in that direction.
@@ -67,7 +67,7 @@ Merge one of the following themes into your resource dictionary in App.xaml:
 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
 ```
 
-Now you should have something like this:
+Your code should be similar to this:
 
 ```xml
 <Application x:Class="MyProject.App"
@@ -116,8 +116,7 @@ Use the `AppliedTransform` dependency property to have the grid follow the view.
 
     <Grid Background="#1E1E1E">
         <nodify:NodifyEditor x:Name="Editor"
-                             Background="{StaticResource GridDrawingBrush}">
-        </nodify:NodifyEditor>
+                             Background="{StaticResource GridDrawingBrush}" />
     </Grid>
 </Window>
 ```
@@ -135,5 +134,44 @@ with
 ```
 
 :::tip
-Right click and drag the screen around to move the view and use the mouse wheel to zoom in and out.
+Right-click and drag the screen around to move the view and use the mouse wheel to zoom in and out.
 :::
+
+## Creating the viewmodels
+
+I will keep it simple and use only the built-in components for now. We will go more in-depth in the next sections.
+
+### Editor viewmodel
+
+Let's define a collection of items that we want to display.
+
+I will use a list of `string`s for now just to have something on the screen. Your node viewmodel can be of **any shape**, but the built-in nodes have some dependency properties that you could take advantage of by defining a more realistic viewmodel.
+
+```csharp
+public class EditorViewModel
+{
+    public IEnumerable<string> Items { get; } = new List<string>
+    {
+        "My first item",
+        "My second item"
+    };
+}
+```
+
+Now create an instance of the viewmodel and bind the `Items` property:
+
+```xml {2}
+<Window.DataContext>
+    <local:EditorViewModel />
+</Window.DataContext>
+
+<nodify:NodifyEditor ItemsSource="{Binding Items}" />
+```
+
+Start the application and you'll see two nodes overlapping in the top left corner. You can select and drag them around. As you can see, they have a border and a transparent background. This is because every node is wrapped in an [ItemContainer](/docs/components/item-container).
+
+Now that you know how to define and display nodes, let's create something more useful.
+
+### Node viewmodel
+
+### Connection viewmodel
