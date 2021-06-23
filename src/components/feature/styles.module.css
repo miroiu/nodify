@@ -1,24 +1,21 @@
 .feature {
 	padding: 40px;
-	border-bottom: 3px solid var(--accent-color);
-	background-color: #e9e3f4;
+	background-color: var(--accent-color);
 	user-select: none;
+	color: var(--accent-color-contrast);
 	margin: 0;
 	border-radius: var(--ifm-card-border-radius);
-	box-shadow: var(--ifm-global-shadow-lw);
 }
 
 .feature:hover {
 	background-color: #ded5ef;
 	transition: all 0.2s ease-in-out;
-}
-
-html[data-theme='dark'] .feature {
-	background-color: #242837;
+	color: var(--accent-color);
 }
 
 html[data-theme='dark'] .feature:hover {
 	background-color: #2a2e3f;
+	color: var(--accent-color-contrast);
 }
 
 .header {

@@ -7,6 +7,8 @@
 	background-color: var(--ifm-background-color);
 	color: var(--ifm-font-color-base);
 	padding: 72px 0;
+
+	background-color: var(--accent-color);
 }
 
 .checkoutExamples {

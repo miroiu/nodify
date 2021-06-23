@@ -37,5 +37,5 @@ Nodify is feature-rich and optimized for interaction with hundreds of nodes at o
 It is built to work with MVVM, meaning you can reuse the viewmodels if you plan to write your own node editor component from scratch.
 
 :::info
-Check out the [**example applications**](https://miroiu.github.io/nodify/showcase/) and their source code.
+Check out the [**example applications**](https://github.com/miroiu/nodify/tree/master/Examples) and their source code.
 :::

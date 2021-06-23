@@ -22,10 +22,7 @@ const GitHubStars = props => {
 const GetStarted = ({ className, ...props }) => {
 	return (
 		<Link
-			className={clsx(
-				'button button--outline button--primary button--lg',
-				className
-			)}
+			className={clsx('button button--primary button--lg', className)}
 			to={useBaseUrl('docs/')}
 			{...props}
 		>

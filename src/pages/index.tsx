@@ -4,8 +4,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { Banner } from '../components/banner/banner';
 import styles from './index.module.css';
 import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import { Feature } from '../components/feature/feature';
+import { Showcase } from '../components/showcase/showcase';
 import clsx from 'clsx';
 
 const features = [
@@ -39,17 +39,6 @@ const features = [
 	},
 ];
 
-const CheckoutExamples = ({ url }) => {
-	return (
-		<div className={styles.checkoutExamples}>
-			<h2 className={styles.checkoutExamplesText}>
-				New to <span className={styles.highlightText}>Nodify</span>?
-				Check out the <Link to={url}>example applications</Link>.
-			</h2>
-		</div>
-	);
-};
-
 const Home = () => {
 	const context = useDocusaurusContext();
 	const { siteConfig = {} } = context;
@@ -62,8 +51,8 @@ const Home = () => {
 			wrapperClassName={styles.fullWrapper}
 		>
 			<Banner />
-			<CheckoutExamples url={useBaseUrl('showcase#examples')} />
-			<main className={styles.main}>
+			<Showcase />
+			<main className={clsx(styles.main, 'margin-top--xl')}>
 				<div className={clsx('container', styles.featuresContainer)}>
 					{features.map(feature => (
 						<Feature

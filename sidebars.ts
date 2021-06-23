@@ -4,7 +4,7 @@ module.exports = {
 		{
 			type: 'link',
 			label: 'Example Projects',
-			href: 'https://miroiu.github.io/nodify/showcase#examples',
+			href: 'https://github.com/miroiu/nodify/tree/master/Examples',
 		},
 		{
 			type: 'category',

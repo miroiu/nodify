@@ -3,17 +3,17 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
-const SubmitApplication = ({ className, ...props }) => {
+export const SubmitApplication = ({ url, ...props }) => {
 	return (
 		<Link
 			className={clsx(
-				'button button--primary button--lg margin-top--lg',
-				className
+				'button button--outline button--primary button--lg margin-top--lg',
+				styles.addApplicationButton
 			)}
-			href={props.url}
+			href={url}
 			{...props}
 		>
-			Submit yours
+			Submit your project
 		</Link>
 	);
 };
@@ -26,10 +26,7 @@ const Header = ({ submitUrl }) => {
 					Explore these awesome applications people are building with
 					<span className={styles.highlightText}> Nodify</span> or
 					<div>
-						<SubmitApplication
-							url={submitUrl}
-							className={styles.addApplicationButton}
-						/>
+						<SubmitApplication url={submitUrl} />
 					</div>
 				</h1>
 			</div>

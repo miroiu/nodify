@@ -11,8 +11,8 @@ const links = [
 		to: 'docs/',
 	},
 	{
-		label: 'Showcase',
-		to: 'showcase/',
+		label: 'API',
+		to: 'docs/api/Alignment',
 	},
 	{
 		label: 'Github',

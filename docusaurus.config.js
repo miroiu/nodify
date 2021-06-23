@@ -45,12 +45,6 @@ module.exports = {
 					position: 'left',
 				},
 				{
-					label: 'Showcase',
-					to: 'showcase/',
-					activeBasePath: 'showcase',
-					position: 'left',
-				},
-				{
 					label: 'Nuget',
 					href: 'https://www.nuget.org/packages/Nodify',
 					position: 'right',

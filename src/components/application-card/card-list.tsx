@@ -17,13 +17,7 @@ export const ApplicationCardList = ({
 }: ApplicationCardListProps) => {
 	return (
 		<section {...props}>
-			<h2 id={id} className={styles.listName}>
-				{name}
-				<a href={`#${id}`} className="hash-link">
-					#
-				</a>
-			</h2>
-			<div className="row">
+			<div className="row margin-top--xl">
 				{apps.map(appInfo => (
 					<div
 						key={appInfo.title}
