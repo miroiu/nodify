@@ -60,14 +60,9 @@ module.exports = {
 			style: 'dark',
 		},
 		algolia: {
-			apiKey: '9c157424075609bedcc0a0b8e6e6b7bb',
-			indexName: 'prod_nodify_docs',
-			appId: 'FQ9D96BE5H',
-			placeholder: 'Search docs',
-			disableUserPersonalization: true,
-			// Optional: Algolia search parameters (https://autocomplete-experimental.netlify.app/docs/docsearchmodal/#searchparameters)
-			searchParameters: {},
-			contextualSearch: false,
+			apiKey: '42b4e84e4e495862fb4446497c540514',
+			indexName: 'miroiu',
+			contextualSearch: true,
 		},
 	},
 	presets: [
