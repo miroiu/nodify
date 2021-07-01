@@ -71,9 +71,9 @@ html[data-theme='dark'] .DocSearch {
 	/* Hit */
 	--docsearch-hit-color: var(--ifm-font-color-base);
 	--docsearch-hit-active-color: var(--ifm-color-white);
-	--docsearch-hit-background: var(--ifm-color-emphasis-100);
+	--docsearch-hit-background: #242837;
 	/* Footer */
-	--docsearch-footer-background: var(--ifm-background-surface-color);
+	--docsearch-footer-background: #242837;
 	--docsearch-key-gradient: linear-gradient(
 		-26.5deg,
 		var(--ifm-color-emphasis-200) 0%,
