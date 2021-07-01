@@ -60,7 +60,7 @@ module.exports = {
 			style: 'dark',
 		},
 		algolia: {
-			apiKey: '42b4e84e4e495862fb4446497c540514',
+			apiKey: 'd457787963bf9d3e9c27d65647e6d46b',
 			indexName: 'miroiu',
 			contextualSearch: true,
 		},
