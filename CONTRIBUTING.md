@@ -2,22 +2,20 @@
 
 👍🎉 First off, thanks for taking the time to contribute! 👍🎉
 
-The best contribution of all is to give this project a ⭐ **star** ⭐. It's one of the things that drives me to continue improving this library while keeping it all **free**. ❤️
+The best contribution of all is to give this project a ⭐ **star** ⭐.
 
-Ok, enough of me crying... You decided to contribute to this project, right?
-
-Well.. cool, but hold on, we're nice people here so you are expected to uphold the [Code of Conduct](CODE_OF_CONDUCT.md). *(don't even waste time reading it, it's common sense 😎)*
+Any contribution is welcome as long as you uphold the [Code of Conduct](CODE_OF_CONDUCT.md). *(don't even waste time reading it, it's common sense 😎)*
 
 ## How you can contribute
 
+- ❓ Ask [a question](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=question&template=ask-a-question.md&title=%5BQuestion%5D)
+- 🐛 Create a [bug report](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=bug&template=bug_report.md&title=%5BBug%5D)
+- 🌺 Suggest an [enhancement](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=enhancement&template=feature_request.md&title=%5BFeature%5D)
 - ✨ Check out the [example applications](https://github.com/miroiu/nodify/tree/master/Examples)
 - 🎉 Consider [showcasing your application](https://miroiu.github.io/nodify/showcase/)
 - 📝 Help with the [documentation](https://miroiu.github.io/nodify/docs)
-- 🐛 Create a [bug report](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=bug&template=bug_report.md&title=%5BBug%5D)
-- 🌺 Suggest an [enhancement](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=enhancement&template=feature_request.md&title=%5BFeature%5D)
-- Create a pull request linking to a [bug](https://github.com/miroiu/nodify/labels/bug)
+- Fix a [bug](https://github.com/miroiu/nodify/labels/bug)
 - Create a pull request linking to a [feature](https://github.com/miroiu/nodify/labels/enhancement)
-- ❓ Is there [anything else](https://github.com/miroiu/nodify/issues/new?assignees=miroiu&labels=question&template=ask-a-question.md&title=%5BQuestion%5D)?
 
 ## Some tips
 
