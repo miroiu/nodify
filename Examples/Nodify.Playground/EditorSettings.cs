@@ -169,6 +169,13 @@
             set => SetProperty(ref _displayConnectionsOnTop, value);
         }
 
+        private double _bringIntoViewAnimationDuration = 0.5;
+        public double BringIntoViewAnimationDuration
+        {
+            get => _bringIntoViewAnimationDuration;
+            set => SetProperty(ref _bringIntoViewAnimationDuration, value);
+        }
+
         #endregion
 
         #region Advanced settings

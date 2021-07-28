@@ -42,6 +42,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -236,7 +237,16 @@
                       IsChecked="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
-            <Expander Grid.Row="22"
+            <TextBlock Grid.Row="22"
+                       Text="Bring into view duration: "
+                       ToolTip="Bring location into view animation duration"
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="22"
+                     Grid.Column="1"
+                     Text="{Binding BringIntoViewAnimationDuration, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <Expander Grid.Row="23"
                       Grid.ColumnSpan="2"
                       Header="Advanced"
                       Padding="0 5 0 0"
