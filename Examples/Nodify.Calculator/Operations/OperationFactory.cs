@@ -30,8 +30,8 @@ namespace Nodify.Calculator
 
                     if (para.Length == 2)
                     {
-                        var delType = typeof(Func<decimal, decimal, decimal>);
-                        var del = (Func<decimal, decimal, decimal>)Delegate.CreateDelegate(delType, method);
+                        var delType = typeof(Func<double, double, double>);
+                        var del = (Func<double, double, double>)Delegate.CreateDelegate(delType, method);
 
                         op.Operation = new BinaryOperation(del);
                     }
@@ -41,24 +41,24 @@ namespace Nodify.Calculator
                         {
                             op.Type = OperationType.Expando;
 
-                            var delType = typeof(Func<decimal[], decimal>);
-                            var del = (Func<decimal[], decimal>)Delegate.CreateDelegate(delType, method);
+                            var delType = typeof(Func<double[], double>);
+                            var del = (Func<double[], double>)Delegate.CreateDelegate(delType, method);
 
                             op.Operation = new ParamsOperation(del);
                             op.MaxInput = int.MaxValue;
                         }
                         else
                         {
-                            var delType = typeof(Func<decimal, decimal>);
-                            var del = (Func<decimal, decimal>)Delegate.CreateDelegate(delType, method);
+                            var delType = typeof(Func<double, double>);
+                            var del = (Func<double, double>)Delegate.CreateDelegate(delType, method);
 
                             op.Operation = new UnaryOperation(del);
                         }
                     }
                     else if (para.Length == 0)
                     {
-                        var delType = typeof(Func<decimal>);
-                        var del = (Func<decimal>)Delegate.CreateDelegate(delType, method);
+                        var delType = typeof(Func<double>);
+                        var del = (Func<double>)Delegate.CreateDelegate(delType, method);
 
                         op.Operation = new ValueOperation(del);
                     }

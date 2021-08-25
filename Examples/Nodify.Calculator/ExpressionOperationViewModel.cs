@@ -1,10 +1,13 @@
 ﻿using StringMath;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nodify.Calculator
 {
     public class ExpressionOperationViewModel : OperationViewModel
     {
+        private readonly ICalculator _calculator = new StringMath.Calculator();
+
         private string? _expression;
         public string? Expression
         {
@@ -17,12 +20,12 @@ namespace Nodify.Calculator
         {
             try
             {
-                var operation = SMath.CreateOperation(Expression);
-                var toRemove = Input.Where(i => !operation.Replacements.Contains(i.Title)).ToArray();
+                OperationInfo? operation = _calculator.CreateOperation(Expression);
+                ConnectorViewModel[]? toRemove = Input.Where(i => !operation.Variables.Contains(i.Title)).ToArray();
                 toRemove.ForEach(i => Input.Remove(i));
-                var left = Input.Select(s => s.Title).ToHashSet();
+                HashSet<string?> left = Input.Select(s => s.Title).ToHashSet();
 
-                foreach (var variable in operation.Replacements.Where(s => !left.Contains(s)))
+                foreach (string variable in operation.Variables.Where(s => !left.Contains(s)))
                 {
                     Input.Add(new ConnectorViewModel
                     {
@@ -44,10 +47,8 @@ namespace Nodify.Calculator
             {
                 try
                 {
-                    var repl = new Replacements();
-                    Input.ForEach(i => repl[i.Title] = i.Value);
-
-                    Output.Value = SMath.Evaluate(Expression, repl);
+                    Input.ForEach(i => _calculator.SetValue(i.Title, i.Value));
+                    Output.Value = _calculator.Evaluate(Expression);
                 }
                 catch
                 {

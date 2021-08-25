@@ -2,6 +2,6 @@
 {
     public interface IOperation
     {
-        decimal Execute(params decimal[] operands);
+        double Execute(params double[] operands);
     }
 }

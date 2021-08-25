@@ -6,28 +6,28 @@ namespace Nodify.Calculator
     public static class OperationsContainer
     {
         [Operation(MinInput = 2, MaxInput = 10, GenerateInputNames = false)]
-        public static decimal Add(params decimal[] operands)
+        public static double Add(params double[] operands)
             => operands.Sum();
 
         [Operation(MinInput = 2, MaxInput = 10, GenerateInputNames = false)]
-        public static decimal Multiply(params decimal[] operands)
+        public static double Multiply(params double[] operands)
             => operands.Aggregate((x, y) => x * y);
 
-        public static decimal Divide(decimal a, decimal b)
+        public static double Divide(double a, double b)
             => a / b;
 
-        public static decimal Subtract(decimal a, decimal b)
+        public static double Subtract(double a, double b)
             => a - b;
 
-        public static decimal Pow(decimal value, decimal exp)
-            => (decimal)Math.Pow((double)value, (double)exp);
+        public static double Pow(double value, double exp)
+            => (double)Math.Pow((double)value, (double)exp);
 
         [Operation(GenerateInputNames = false)]
-        public static decimal Abs(decimal value)
+        public static double Abs(double value)
             => Math.Abs(value);
 
-        public static decimal PI()
-            => (decimal)Math.PI;
+        public static double PI()
+            => (double)Math.PI;
     }
 
     public sealed class OperationAttribute : Attribute

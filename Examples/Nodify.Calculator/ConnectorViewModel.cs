@@ -12,8 +12,8 @@ namespace Nodify.Calculator
             set => SetProperty(ref _title, value);
         }
 
-        private decimal _value;
-        public decimal Value
+        private double _value;
+        public double Value
         {
             get => _value;
             set => SetProperty(ref _value, value)

@@ -4,11 +4,11 @@ namespace Nodify.Calculator
 {
     public class BinaryOperation : IOperation
     {
-        private readonly Func<decimal, decimal, decimal> _func;
+        private readonly Func<double, double, double> _func;
 
-        public BinaryOperation(Func<decimal, decimal, decimal> func) => _func = func;
+        public BinaryOperation(Func<double, double, double> func) => _func = func;
 
-        public decimal Execute(params decimal[] operands)
+        public double Execute(params double[] operands)
             => _func.Invoke(operands[0], operands[1]);
     }
 }

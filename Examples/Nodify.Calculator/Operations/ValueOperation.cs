@@ -4,11 +4,11 @@ namespace Nodify.Calculator
 {
     public class ValueOperation : IOperation
     {
-        private readonly Func<decimal> _func;
+        private readonly Func<double> _func;
 
-        public ValueOperation(Func<decimal> func) => _func = func;
+        public ValueOperation(Func<double> func) => _func = func;
 
-        public decimal Execute(params decimal[] operands)
+        public double Execute(params double[] operands)
             => _func();
     }
 }
