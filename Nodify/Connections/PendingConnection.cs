@@ -25,6 +25,13 @@ namespace Nodify
         public static readonly DependencyProperty AllowOnlyConnectorsProperty = DependencyProperty.Register(nameof(AllowOnlyConnectors), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.True, OnAllowOnlyConnectorsChanged));
         public static readonly DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DirectionProperty = BaseConnection.DirectionProperty.AddOwner(typeof(PendingConnection));
+        public new static readonly DependencyProperty IsVisibleProperty = DependencyProperty.Register(nameof(IsVisible), typeof(bool), typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnVisibilityChanged));
+
+        private static void OnVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var connection = (PendingConnection)d;
+            connection.Visibility = ((bool)e.NewValue) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         /// <summary>
         /// Gets or sets the starting point for the connection.
@@ -127,12 +134,12 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the visibility of this connection.
+        /// Gets or sets the visibility of the connection.
         /// </summary>
         public new bool IsVisible
         {
             get => base.IsVisible;
-            set => Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+            set => SetValue(IsVisibleProperty, value);
         }
 
         /// <summary>
@@ -180,7 +187,19 @@ namespace Nodify
 
         #region Commands
 
+        public static readonly DependencyProperty StartedCommandProperty = DependencyProperty.Register(nameof(StartedCommand), typeof(ICommand), typeof(PendingConnection));
         public static readonly DependencyProperty CompletedCommandProperty = DependencyProperty.Register(nameof(CompletedCommand), typeof(ICommand), typeof(PendingConnection));
+
+        /// <summary>
+        /// Gets or sets the command to invoke when the pending connection is started.
+        /// Will not be invoked if <see cref="NodifyEditor.ConnectionStartedCommand"/> is used.
+        /// <see cref="Source"/> will be set to the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> that started this connection and will also be the command's parameter.
+        /// </summary>
+        public ICommand? StartedCommand
+        {
+            get => (ICommand?)GetValue(StartedCommandProperty);
+            set => SetValue(StartedCommandProperty, value);
+        }
 
         /// <summary>
         /// Gets or sets the command to invoke when the pending connection is completed.
@@ -221,7 +240,7 @@ namespace Nodify
             {
                 Editor.AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
                 Editor.AddHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
-                Editor.AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted), true);
+                Editor.AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
                 SetAllowOnlyConnectorsAttached(Editor, AllowOnlyConnectors);
             }
         }
@@ -230,18 +249,27 @@ namespace Nodify
 
         protected virtual void OnPendingConnectionStarted(object sender, PendingConnectionEventArgs e)
         {
-            Source = e.SourceConnector;
-            Target = null;
-            IsVisible = true;
-            SourceAnchor = e.Anchor;
-            TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
-            e.Handled = true;
+            if (!e.Handled && !e.Canceled)
+            {
+                e.Handled = true;
+                Target = null;
+                IsVisible = true;
+                SourceAnchor = e.Anchor;
+                TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
+                Source = e.SourceConnector;
+
+                if (StartedCommand?.CanExecute(Source) ?? false)
+                {
+                    StartedCommand?.Execute(Source);
+                }
+            }
         }
 
         protected virtual void OnPendingConnectionDrag(object sender, PendingConnectionEventArgs e)
         {
-            if (IsVisible)
+            if (!e.Handled && IsVisible)
             {
+                e.Handled = true;
                 TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
 
                 if (Editor != null && (EnablePreview || EnableSnapping))
@@ -284,8 +312,9 @@ namespace Nodify
 
         protected virtual void OnPendingConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
-            if (IsVisible)
+            if (!e.Handled && IsVisible)
             {
+                e.Handled = true;
                 IsVisible = false;
 
                 if (_previousConnector != null)
@@ -299,7 +328,7 @@ namespace Nodify
                     Target = e.TargetConnector;
 
                     // Invoke the CompletedCommand if event is not handled
-                    if (!e.Handled && (CompletedCommand?.CanExecute(Target) ?? false))
+                    if (CompletedCommand?.CanExecute(Target) ?? false)
                     {
                         CompletedCommand?.Execute(Target);
                     }

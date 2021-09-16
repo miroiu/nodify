@@ -410,14 +410,26 @@ namespace Nodify
         #region Command Dependency Properties
 
         public static readonly DependencyProperty ConnectionCompletedCommandProperty = DependencyProperty.Register(nameof(ConnectionCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
+        public static readonly DependencyProperty ConnectionStartedCommandProperty = DependencyProperty.Register(nameof(ConnectionStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
-        /// If you override the <see cref="Nodify.PendingConnection"/> style or <see cref="PendingConnectionTemplate"/>, please use the <see cref="Nodify.PendingConnection.CompletedCommand"/> instead. <br />
-        /// Parameters is <see cref="Tuple{object, object}"/> where <see cref="Tuple{object, object}.Item1"/> is the <see cref="Nodify.PendingConnection.Source"/> and <see cref="Tuple{object, object}.Item2"/> is <see cref="Nodify.PendingConnection.Target"/>.
+        /// Use <see cref="PendingConnection.StartedCommand"/> if you want to control the visibility of the connection from the viewmodel. <br />
+        /// Parameter is <see cref="PendingConnection.Source"/>.
+        /// </summary>
+        public ICommand? ConnectionStartedCommand
+        {
+            get => (ICommand?)GetValue(ConnectionStartedCommandProperty);
+            set => SetValue(ConnectionStartedCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
+        /// Use <see cref="PendingConnection.CompletedCommand"/> if you want to control the visibility of the connection from the viewmodel. <br />
+        /// Parameter is <see cref="Tuple{T, U}"/> where <see cref="Tuple{T, U}.Item1"/> is the <see cref="PendingConnection.Source"/> and <see cref="Tuple{T, U}.Item2"/> is <see cref="PendingConnection.Target"/>.
         /// </summary>
         public ICommand? ConnectionCompletedCommand
         {
@@ -577,6 +589,7 @@ namespace Nodify
         public NodifyEditor()
         {
             AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
+            AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
             AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
 
             AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
@@ -741,10 +754,18 @@ namespace Nodify
 
         private void OnConnectorDisconnected(object sender, ConnectorEventArgs e)
         {
-            if (DisconnectConnectorCommand?.CanExecute(e.Connector) ?? false)
+            if (!e.Handled && (DisconnectConnectorCommand?.CanExecute(e.Connector) ?? false))
             {
                 DisconnectConnectorCommand.Execute(e.Connector);
                 e.Handled = true;
+            }
+        }
+
+        private void OnConnectionStarted(object sender, PendingConnectionEventArgs e)
+        {
+            if (!e.Canceled && (ConnectionStartedCommand?.CanExecute(e.SourceConnector) ?? false))
+            {
+                ConnectionStartedCommand.Execute(e.SourceConnector);
             }
         }
 
@@ -756,7 +777,6 @@ namespace Nodify
                 if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
                 {
                     ConnectionCompletedCommand.Execute(result);
-                    e.Handled = true;
                 }
             }
         }
