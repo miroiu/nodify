@@ -86,6 +86,8 @@
                                        Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                             <ContentPresenter ContentSource="PendingConnection" />
+
+                            <local:NodifyCanvas x:Name="PART_DecoratorsHost" />
                         </Canvas>
                     </Border>
                 </ControlTemplate>

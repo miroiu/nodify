@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -16,10 +19,14 @@ namespace Nodify
     /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, scale and select.
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
+    [TemplatePart(Name = ElementDecoratorsHost, Type = typeof(Panel))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
+    [ContentProperty(nameof(Decorators))]
+    [DefaultProperty(nameof(Decorators))]
     public class NodifyEditor : MultiSelector
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
+        protected const string ElementDecoratorsHost = "PART_DecoratorsHost";
 
         #region Cosmetic Dependency Properties
 
@@ -332,6 +339,13 @@ namespace Nodify
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(Collection<UIElement>), typeof(NodifyEditor));
+
+        public Collection<UIElement> Decorators
+        {
+            get => (Collection<UIElement>)GetValue(DecoratorsProperty);
+            set => SetValue(DecoratorsProperty, value);
+        }
 
         /// <summary>
         /// Gets or sets the value of an invisible grid used to adjust locations (snapping) of <see cref="ItemContainer"/>s.
@@ -522,12 +536,12 @@ namespace Nodify
         /// Gets or sets if <see cref="NodifyEditor"/>s should enable optimizations based on <see cref="OptimizeRenderingMinimumContainers"/> and <see cref="OptimizeRenderingZoomOutPercent"/>.
         /// </summary>
         public static bool EnableRenderingContainersOptimizations { get; set; } = true;
-        
+
         /// <summary>
         /// Gets or sets the minimum selected <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
         /// </summary>
         public static uint OptimizeRenderingMinimumContainers { get; set; } = 700;
-        
+
         /// <summary>
         /// Gets or sets the minimum zoom out percent needed to start optimizing the rendering for <see cref="ItemContainer"/>s.
         /// </summary>
@@ -542,6 +556,11 @@ namespace Nodify
         /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
         protected internal Panel? ItemsHost { get; private set; }
+
+        /// <summary>
+        /// Gets the panel that holds decorator <see cref="UIElement"/>s.
+        /// </summary>
+        protected internal Panel? DecoratorsHost { get; private set; }
 
         /// <summary>
         /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectedArea"/> and <see cref="IsSelecting"/> properties.
@@ -597,6 +616,7 @@ namespace Nodify
             AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
 
             Selection = new SelectionHelper(this);
+            Decorators = new Collection<UIElement>();
 
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
@@ -610,8 +630,33 @@ namespace Nodify
             base.OnApplyTemplate();
 
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel;
+            DecoratorsHost = GetTemplateChild(ElementDecoratorsHost) as Panel;
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+            AddDecorators();
+        }
+
+        private void AddDecorators()
+        {
+            if (DecoratorsHost != null)
+            {
+                foreach (UIElement child in Decorators)
+                {
+                    if (child is ItemContainer)
+                    {
+                        DecoratorsHost.Children.Add(child);
+                    }
+                    else
+                    {
+                        var container = new ItemContainer
+                        {
+                            Content = child,
+                            RenderTransform = new TranslateTransform()
+                        };
+                        DecoratorsHost.Children.Add(container);
+                    }
+                }
+            }
         }
 
         protected override DependencyObject GetContainerForItemOverride()
