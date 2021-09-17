@@ -3,7 +3,6 @@
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Brushes.xaml" />
-        <ResourceDictionary Source="Controls.xaml" />
     </ResourceDictionary.MergedDictionaries>
     
     <Color x:Key="PanelBackgroundColor">#2A1B47</Color>
