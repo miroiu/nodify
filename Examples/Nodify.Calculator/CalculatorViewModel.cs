@@ -7,10 +7,10 @@ namespace Nodify.Calculator
     {
         public CalculatorViewModel()
         {
-            CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target =>
-                CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target),
-                target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
-            CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation);
+            CreateConnectionCommand = new DelegateCommand<ConnectorViewModel>(
+                _ => CreateConnection(PendingConnection.Source, PendingConnection.Target),
+                _ => CanCreateConnection(PendingConnection.Source, PendingConnection.Target));
+            StartConnectionCommand = new DelegateCommand<object>(_ => PendingConnection.IsVisible = true);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
             GroupSelectionCommand = new DelegateCommand(GroupSelectedOperations, () => SelectedOperations.Count > 0);
@@ -70,7 +70,7 @@ namespace Nodify.Calculator
                 }
             });
 
-            UpdateAvailableOperations();
+            OperationsMenu = new OperationsMenuViewModel(this);
         }
 
         private NodifyObservableCollection<OperationViewModel> _operations = new NodifyObservableCollection<OperationViewModel>();
@@ -88,35 +88,14 @@ namespace Nodify.Calculator
         }
 
         public NodifyObservableCollection<ConnectionViewModel> Connections { get; } = new NodifyObservableCollection<ConnectionViewModel>();
+        public PendingConnectionViewModel PendingConnection { get; set; } = new PendingConnectionViewModel();
+        public OperationsMenuViewModel OperationsMenu { get; set; }
 
-        public NodifyObservableCollection<OperationInfoViewModel> AvailableOperations { get; } = new NodifyObservableCollection<OperationInfoViewModel>();
-
+        public INodifyCommand StartConnectionCommand { get; }
         public INodifyCommand CreateConnectionCommand { get; }
-        public INodifyCommand CreateOperationCommand { get; }
         public INodifyCommand DisconnectConnectorCommand { get; }
         public INodifyCommand DeleteSelectionCommand { get; }
         public INodifyCommand GroupSelectionCommand { get; }
-
-        private void UpdateAvailableOperations()
-        {
-            AvailableOperations.Add(new OperationInfoViewModel
-            {
-                Type = OperationType.Graph,
-                Title = "(New) Operation Graph",
-            });
-            AvailableOperations.Add(new OperationInfoViewModel
-            {
-                Type = OperationType.Calculator,
-                Title = "Calculator"
-            });
-            AvailableOperations.Add(new OperationInfoViewModel
-            {
-                Type = OperationType.Expression,
-                Title = "Custom",
-            });
-            var operations = OperationFactory.GetOperationsInfo(typeof(OperationsContainer));
-            AvailableOperations.AddRange(operations);
-        }
 
         private void DisconnectConnector(ConnectorViewModel connector)
         {
@@ -124,13 +103,23 @@ namespace Nodify.Calculator
             connections.ForEach(c => Connections.Remove(c));
         }
 
-        private bool CanCreateConnection(ConnectorViewModel source, ConnectorViewModel? target)
-            => target != null && source != target && source.Operation != target.Operation && source.IsInput != target.IsInput;
+        internal bool CanCreateConnection(ConnectorViewModel source, ConnectorViewModel? target)
+            => target == null || (source != target && source.Operation != target.Operation && source.IsInput != target.IsInput);
 
-        private void CreateConnection(ConnectorViewModel source, ConnectorViewModel target)
+        internal void CreateConnection(ConnectorViewModel source, ConnectorViewModel? target)
         {
+            if (target == null)
+            {
+                PendingConnection.IsVisible = true;
+                OperationsMenu.OpenAt(PendingConnection.TargetLocation);
+                OperationsMenu.Closed += OnOperationsMenuClosed;
+                return;
+            }
+
             var input = source.IsInput ? source : target;
             var output = target.IsInput ? source : target;
+
+            PendingConnection.IsVisible = false;
 
             DisconnectConnector(input);
 
@@ -141,12 +130,10 @@ namespace Nodify.Calculator
             });
         }
 
-        private void CreateOperation(CreateOperationInfoViewModel arg)
+        private void OnOperationsMenuClosed()
         {
-            var op = OperationFactory.GetOperation(arg.Info);
-            op.Location = arg.Location;
-
-            Operations.Add(op);
+            PendingConnection.IsVisible = false;
+            OperationsMenu.Closed -= OnOperationsMenuClosed;
         }
 
         private void DeleteSelection()
@@ -164,7 +151,7 @@ namespace Nodify.Calculator
             {
                 Title = "Operations",
                 Location = bounding.Location,
-                Size = new Size(bounding.Width,  bounding.Height)
+                Size = new Size(bounding.Width, bounding.Height)
             });
         }
     }
