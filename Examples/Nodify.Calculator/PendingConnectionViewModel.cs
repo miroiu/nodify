@@ -34,4 +34,3 @@ namespace Nodify.Calculator
         }
     }
 }
-

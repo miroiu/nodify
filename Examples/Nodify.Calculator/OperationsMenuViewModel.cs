@@ -100,4 +100,3 @@ namespace Nodify.Calculator
         public ICommand CloseCommand { get; }
     }
 }
-
