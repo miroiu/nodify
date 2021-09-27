@@ -7,6 +7,18 @@
 [![C#](https://img.shields.io/static/v1?label=docs&message=WIP&color=orange&style=for-the-badge)](https://github.com/miroiu/nodify/wiki)
 
  A collection of high performance controls for node based editors designed for MVVM.
+ 
+ ## Sponsors 💖
+<table>
+  <tr>
+    <td align="center">
+      <div>
+        <img src="https://unavatar.io/github/daxpandhi" width="100"><br>
+        <strong>Dax Pandhi</strong>
+      </div>
+    </td>
+  </tr>
+</table>
 
 ## 🚀 Examples of different node-based applications
 
