@@ -12,10 +12,10 @@
 <table>
   <tr>
     <td align="center">
-      <div>
+      <a href="https://github.com/daxpandhi">
         <img src="https://unavatar.io/github/daxpandhi" width="100"><br>
         <strong>Dax Pandhi</strong>
-      </div>
+      </a>
     </td>
   </tr>
 </table>
