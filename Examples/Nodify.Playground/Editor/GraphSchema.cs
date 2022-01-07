@@ -15,6 +15,7 @@ namespace Nodify.Playground
                 return source != con
                     && source.Node != con.Node
                     && source.Node.Graph == con.Node.Graph
+                    && source.Shape == con.Shape
                     && source.AllowsNewConnections()
                     && con.AllowsNewConnections()
                     && (source.Flow != con.Flow || con.Node is KnotNodeViewModel)
@@ -86,7 +87,8 @@ namespace Nodify.Playground
                 Flow = connector.Flow,
                 Connector = new ConnectorViewModel
                 {
-                    MaxConnections = connection.Output.MaxConnections + connection.Input.MaxConnections
+                    MaxConnections = connection.Output.MaxConnections + connection.Input.MaxConnections,
+                    Shape = connection.Input.Shape
                 }
             };
             connection.Graph.Nodes.Add(knot);

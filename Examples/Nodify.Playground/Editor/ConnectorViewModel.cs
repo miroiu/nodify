@@ -9,6 +9,13 @@ namespace Nodify.Playground
         Output
     }
 
+    public enum ConnectorShape
+    {
+        Circle,
+        Triangle,
+        Square,
+    }
+
     public class ConnectorViewModel : ObservableObject
     {
         private string? _title;
@@ -43,6 +50,13 @@ namespace Nodify.Playground
                     OnNodeChanged();
                 }
             }
+        }
+
+        private ConnectorShape _shape;
+        public ConnectorShape Shape
+        {
+            get => _shape;
+            set => SetProperty(ref _shape, value);
         }
 
         public ConnectorFlow Flow { get; private set; }

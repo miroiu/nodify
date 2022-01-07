@@ -65,5 +65,12 @@
             get => _showGridLines;
             set => SetProperty(ref _showGridLines, value);
         }
+
+        private bool _customConnectors = true;
+        public bool UseCustomConnectors
+        {
+            get => _customConnectors;
+            set => SetProperty(ref _customConnectors, value);
+        }
     }
 }

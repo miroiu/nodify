@@ -42,39 +42,80 @@
                       Transform="{Binding AppliedTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
+        <SolidColorBrush x:Key="SquareConnectorColor" Color="MediumSlateBlue"></SolidColorBrush>
+        <SolidColorBrush x:Key="TriangleConnectorColor" Color="MediumVioletRed"></SolidColorBrush>
+
+        <Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Input.Shape}" 
+                             Value="{x:Static local:ConnectorShape.Square}">
+                    <Setter Property="Stroke" Value="{StaticResource SquareConnectorColor}"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Input.Shape}" 
+                             Value="{x:Static local:ConnectorShape.Triangle}">
+                    <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="ToolTip" Value="Double click to split"></Setter>
+        </Style>
+
         <DataTemplate x:Key="CircuitConnectionTemplate">
             <nodify:CircuitConnection Source="{Binding Output.Anchor}"
                                       Target="{Binding Input.Anchor}"
-                                      ToolTip="Double click to split"
                                       OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                       SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       Spacing="{Binding CircuitConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
                                       Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
-                                      Cursor="Hand" />
+                                      Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
 
         <DataTemplate x:Key="ConnectionTemplate">
             <nodify:Connection Source="{Binding Output.Anchor}"
                                Target="{Binding Input.Anchor}"
-                               ToolTip="Double click to split"
                                OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
-                               Cursor="Hand" />
+                               Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
 
         <DataTemplate x:Key="DirectionalConnectionTemplate">
             <nodify:DirectionalConnection Source="{Binding Output.Anchor}"
                                           Target="{Binding Input.Anchor}"
-                                          ToolTip="Double click to split"
                                           OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                           SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                           TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                           ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
-                                          Cursor="Hand" />
+                                          Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
+
+        <ControlTemplate x:Key="SquareConnector" TargetType="Control">
+            <Rectangle Width="14"
+                       Height="14"
+                       StrokeDashCap="Round"
+                       StrokeLineJoin="Round"
+                       StrokeStartLineCap="Round"
+                       StrokeEndLineCap="Round"
+                       Stroke="{TemplateBinding BorderBrush}"
+                       Fill="{TemplateBinding Background}"
+                       StrokeThickness="2" />
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="TriangleConnector" TargetType="Control">
+            <Polygon Width="14"
+                     Height="14"
+                     Points="1,13 13,13 7,1"
+                     StrokeDashCap="Round"
+                     StrokeLineJoin="Round"
+                     StrokeStartLineCap="Round"
+                     StrokeEndLineCap="Round"
+                     Stroke="{TemplateBinding BorderBrush}"
+                     Fill="{TemplateBinding Background}"
+                     StrokeThickness="2" />
+        </ControlTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -188,6 +229,18 @@
 
                 <Style TargetType="{x:Type nodify:NodeInput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Shape}" 
+                                     Value="{x:Static local:ConnectorShape.Square}">
+                            <Setter Property="ConnectorTemplate" Value="{StaticResource SquareConnector}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource SquareConnectorColor}"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Shape}" 
+                                     Value="{x:Static local:ConnectorShape.Triangle}">
+                            <Setter Property="ConnectorTemplate" Value="{StaticResource TriangleConnector}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource TriangleConnectorColor}"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
                     <Setter Property="Header"
                             Value="{Binding Title}" />
                     <Setter Property="Anchor"
@@ -198,6 +251,18 @@
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Shape}" 
+                                     Value="{x:Static local:ConnectorShape.Square}">
+                            <Setter Property="ConnectorTemplate" Value="{StaticResource SquareConnector}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource SquareConnectorColor}"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Shape}" 
+                                     Value="{x:Static local:ConnectorShape.Triangle}">
+                            <Setter Property="ConnectorTemplate" Value="{StaticResource TriangleConnector}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource TriangleConnectorColor}"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
                     <Setter Property="Header"
                             Value="{Binding Title}" />
                     <Setter Property="Anchor"
