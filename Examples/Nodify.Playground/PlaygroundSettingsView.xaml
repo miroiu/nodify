@@ -26,6 +26,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Show grid lines: "
@@ -90,6 +91,14 @@
                      IsEnabled="False"
                      Text="{Binding Settings.PerformanceTestNodes}"
                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="8"
+                       Text="Use custom shapes for connectors: "
+                       Margin="0 5 5 0" />
+            <CheckBox Grid.Row="8"
+                      Grid.Column="1"
+                      IsChecked="{Binding Settings.UseCustomConnectors}"
+                      Margin="0 5 5 0" />
         </Grid>
     </Border>
 </UserControl>

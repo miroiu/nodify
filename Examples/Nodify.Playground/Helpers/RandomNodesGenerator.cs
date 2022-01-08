@@ -170,9 +170,11 @@ namespace Nodify.Playground
 
             for (uint i = 0; i < count; i++)
             {
+                int shapeVal = _rand.Next() % 3;
                 var connector = new ConnectorViewModel
                 {
-                    Title = settings.ConnectorNameGenerator(settings, i)
+                    Title = settings.ConnectorNameGenerator(settings, i),
+                    Shape = PlaygroundSettings.Instance.UseCustomConnectors ? (ConnectorShape)shapeVal : ConnectorShape.Circle
                 };
 
                 list.Add(connector);
