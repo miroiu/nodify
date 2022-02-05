@@ -713,4 +713,12 @@
             </DrawingBrush>
         </Rectangle.Fill>
     </Rectangle>
+
+    <PathGeometry x:Key="CloseGeometry"
+                  x:Shared="False"
+                  Figures="M9.15625 6.3125L6.3125 9.15625L22.15625 25L6.21875 40.96875L9.03125 43.78125L25 27.84375L40.9375 43.78125L43.78125 40.9375L27.84375 25L43.6875 9.15625L40.84375 6.3125L25 22.15625Z"/>
+    
+    <PathGeometry x:Key="AddGeometry"
+                  x:Shared="False"
+                  Figures="M15 5L15 15L5 15L5 17L15 17L15 27L17 27L17 17L27 17L27 15L17 15L17 5Z"/>
 </ResourceDictionary>
