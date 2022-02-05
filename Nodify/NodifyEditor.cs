@@ -979,9 +979,12 @@ namespace Nodify
 
             BeginUpdateSelectedItems();
             selectedItems.Clear();
-            for (var i = 0; i < newValue.Count; i++)
+            if(newValue != null)
             {
-                selectedItems.Add(newValue[i]);
+                for (var i = 0; i < newValue.Count; i++)
+                {
+                    selectedItems.Add(newValue[i]);
+                }
             }
             EndUpdateSelectedItems();
         }
