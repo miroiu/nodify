@@ -1,35 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Nodify.Calculator
 {
     public class ApplicationViewModel : ObservableObject
     {
-        private readonly Stack<CalculatorViewModel> _calculators = new Stack<CalculatorViewModel>();
+        public ObservableCollection<EditorViewModel> Editors { get; } = new ObservableCollection<EditorViewModel>();
 
         public ApplicationViewModel()
         {
-            _calculators.Push(new CalculatorViewModel());
-
-            BackCommand = new RequeryCommand(() =>
+            AddEditorCommand = new DelegateCommand(() => 
             {
-                _calculators.Pop();
-                OnPropertyChanged(nameof(Current));
-                OnPropertyChanged(nameof(IsCalculatorOpen));
-            }, () => _calculators.Count > 1);
-
-            OpenCalculatorCommand = new DelegateCommand<CalculatorViewModel>(calculator =>
-            {
-                _calculators.Push(calculator);
-                OnPropertyChanged(nameof(Current));
-                OnPropertyChanged(nameof(IsCalculatorOpen));
+                Editors.Add(new EditorViewModel() { Name = $"Editor {Editors.Count + 1}"});
+                if (AutoSelectNewEditor || Editors.Count == 1)
+                {
+                    SelectedEditor = Editors.Last();
+                }
             });
+            CloseEditorCommand = new DelegateCommand<Guid>(
+                id => Editors.RemoveOne(app => app.Id == id),
+                _ => Editors.Count > 0 && SelectedEditor != null
+            );
+            AddEditorCommand.Execute(null);
+        }
+        public ICommand AddEditorCommand { get; }
+        public ICommand CloseEditorCommand { get; }
+
+        private EditorViewModel? _selectedEditor;
+        public EditorViewModel? SelectedEditor
+        {
+            get { return _selectedEditor; }
+            set { SetProperty(ref _selectedEditor , value); }
         }
 
-        public ICommand BackCommand { get; }
-        public INodifyCommand OpenCalculatorCommand { get; }
-
-        public CalculatorViewModel Current => _calculators.Peek();
-        public bool IsCalculatorOpen => _calculators.Count > 1;
+        private bool _autoSelectNewEditor = true;
+        public bool AutoSelectNewEditor
+        {
+            get { return _autoSelectNewEditor; }
+            set { _autoSelectNewEditor = value; }
+        }
     }
 }
