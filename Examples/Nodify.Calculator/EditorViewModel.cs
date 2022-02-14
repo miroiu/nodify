@@ -8,7 +8,6 @@ namespace Nodify.Calculator
     {
         public event Action<EditorViewModel, CalculatorViewModel>? OnOpenInnerCalculator;
 
-        public CalculatorViewModel Calculator { get; set; }
         public EditorViewModel? Parent { get; set; }
 
         public EditorViewModel()
@@ -24,11 +23,18 @@ namespace Nodify.Calculator
 
         public Guid Id { get; } = Guid.NewGuid();
 
+        private CalculatorViewModel _calculator = default!;
+        public CalculatorViewModel Calculator 
+        {
+            get => _calculator;
+            set => SetProperty(ref _calculator, value);
+        }
+
         private string? _name;
         public string? Name
         {
-            get { return _name; }
-            set { SetProperty(ref _name, value); }
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
     }
 }
