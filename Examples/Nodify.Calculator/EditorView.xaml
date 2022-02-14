@@ -10,9 +10,6 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <shared:BindingProxy x:Key="EditorProxy"
-                             DataContext="{Binding Current}" />
-
         <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="{DynamicResource GridLinesBrush}" />
@@ -67,7 +64,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <nodify:NodifyEditor DataContext="{Binding Current}"
+        <nodify:NodifyEditor DataContext="{Binding Calculator}"
                              ItemsSource="{Binding Operations}"
                              Connections="{Binding Connections}"
                              SelectedItems="{Binding SelectedOperations}"
@@ -327,19 +324,5 @@
 
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
-
-        <Button Content="⬅"
-                FontSize="36"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                BorderThickness="3"
-                BorderBrush="{DynamicResource NodeInput.BorderBrush}"
-                Foreground="{DynamicResource NodeInput.BorderBrush}"
-                Command="{Binding BackCommand}"
-                ToolTip="Back"
-                Margin="10"
-                Padding="10 0"
-                Style="{StaticResource HollowButton}"
-                Visibility="{Binding IsCalculatorOpen, Converter={shared:BooleanToVisibilityConverter FalseVisibility=Hidden}}" />
     </Grid>
 </UserControl>
