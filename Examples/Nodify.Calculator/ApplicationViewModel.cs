@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -7,39 +6,71 @@ namespace Nodify.Calculator
 {
     public class ApplicationViewModel : ObservableObject
     {
-        public ObservableCollection<EditorViewModel> Editors { get; } = new ObservableCollection<EditorViewModel>();
+        public NodifyObservableCollection<EditorViewModel> Editors { get; } = new NodifyObservableCollection<EditorViewModel>();
 
         public ApplicationViewModel()
         {
-            AddEditorCommand = new DelegateCommand(() => 
+            AddEditorCommand = new DelegateCommand(() => Editors.Add(new EditorViewModel
             {
-                Editors.Add(new EditorViewModel() { Name = $"Editor {Editors.Count + 1}"});
+                Name = $"Editor {Editors.Count + 1}"
+            }));
+            CloseEditorCommand = new DelegateCommand<Guid>(
+                id => Editors.RemoveOne(editor => editor.Id == id),
+                _ => Editors.Count > 0 && SelectedEditor != null);
+            Editors.WhenAdded((editor) =>
+            {
                 if (AutoSelectNewEditor || Editors.Count == 1)
                 {
-                    SelectedEditor = Editors.Last();
+                    SelectedEditor = editor;
                 }
+                editor.OnOpenInnerCalculator += OnOpenInnerCalculator;
+            })
+            .WhenRemoved((editor) =>
+            {
+                editor.OnOpenInnerCalculator -= OnOpenInnerCalculator;
+                var childEditors = Editors.Where(ed => ed.Parent == editor).ToList();
+                childEditors.ForEach(ed => Editors.Remove(ed));
             });
-            CloseEditorCommand = new DelegateCommand<Guid>(
-                id => Editors.RemoveOne(app => app.Id == id),
-                _ => Editors.Count > 0 && SelectedEditor != null
-            );
-            AddEditorCommand.Execute(null);
+            Editors.Add(new EditorViewModel
+            {
+                Name = $"Editor {Editors.Count + 1}"
+            });
         }
+
+        private void OnOpenInnerCalculator(EditorViewModel parentEditor, CalculatorViewModel calculator)
+        {
+            var editor = Editors.FirstOrDefault(e => e.Calculator == calculator);
+            if (editor != null)
+            {
+                SelectedEditor = editor;
+            }
+            else
+            {
+                var childEditor = new EditorViewModel
+                {
+                    Parent = parentEditor,
+                    Calculator = calculator,
+                    Name = $"[Inner] Editor {Editors.Count + 1}"
+                };
+                Editors.Add(childEditor);
+            }
+        }
+
         public ICommand AddEditorCommand { get; }
         public ICommand CloseEditorCommand { get; }
 
         private EditorViewModel? _selectedEditor;
         public EditorViewModel? SelectedEditor
         {
-            get { return _selectedEditor; }
-            set { SetProperty(ref _selectedEditor , value); }
+            get => _selectedEditor;
+            set => SetProperty(ref _selectedEditor, value);
         }
 
         private bool _autoSelectNewEditor = true;
         public bool AutoSelectNewEditor
         {
-            get { return _autoSelectNewEditor; }
-            set { _autoSelectNewEditor = value; }
+            get => _autoSelectNewEditor;
+            set => SetProperty(ref _autoSelectNewEditor , value); 
         }
     }
 }

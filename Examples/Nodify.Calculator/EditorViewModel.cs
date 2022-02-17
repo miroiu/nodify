@@ -6,39 +6,35 @@ namespace Nodify.Calculator
 {
     public class EditorViewModel : ObservableObject
     {
-        private readonly Stack<CalculatorViewModel> _calculators = new Stack<CalculatorViewModel>();
+        public event Action<EditorViewModel, CalculatorViewModel>? OnOpenInnerCalculator;
+
+        public EditorViewModel? Parent { get; set; }
 
         public EditorViewModel()
         {
-            _calculators.Push(new CalculatorViewModel());
-
-            BackCommand = new RequeryCommand(() =>
-            {
-                _calculators.Pop();
-                OnPropertyChanged(nameof(Current));
-                OnPropertyChanged(nameof(IsCalculatorOpen));
-            }, () => _calculators.Count > 1);
-
+            Calculator = new CalculatorViewModel();
             OpenCalculatorCommand = new DelegateCommand<CalculatorViewModel>(calculator =>
             {
-                _calculators.Push(calculator);
-                OnPropertyChanged(nameof(Current));
-                OnPropertyChanged(nameof(IsCalculatorOpen));
+                OnOpenInnerCalculator?.Invoke(this, calculator);
             });
         }
 
-        public ICommand BackCommand { get; }
         public INodifyCommand OpenCalculatorCommand { get; }
 
-        public CalculatorViewModel Current => _calculators.Peek();
-        public bool IsCalculatorOpen => _calculators.Count > 1;
         public Guid Id { get; } = Guid.NewGuid();
+
+        private CalculatorViewModel _calculator = default!;
+        public CalculatorViewModel Calculator 
+        {
+            get => _calculator;
+            set => SetProperty(ref _calculator, value);
+        }
 
         private string? _name;
         public string? Name
         {
-            get { return _name; }
-            set { SetProperty(ref _name,value); }
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
     }
 }

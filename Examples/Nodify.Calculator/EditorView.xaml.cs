@@ -12,7 +12,6 @@ namespace Nodify.Calculator
 
             EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseLeftButtonDownEvent, new MouseButtonEventHandler(CloseOperationsMenu));
             EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseRightButtonUpEvent, new MouseButtonEventHandler(OpenOperationsMenu));
-
         }
 
         private void OpenOperationsMenu(object sender, MouseButtonEventArgs e)
