@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
@@ -17,11 +17,9 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>1.7.0</Version>
-    <PackageReleaseNotes>Signed assembly;
-Improved selecting containers;
-Added an option to optimize rendering for a large number of containers.
-Added a resize completed event for GroupingNode</PackageReleaseNotes>
+    <Version>1.8.0</Version>
+    <PackageReleaseNotes>Added editor decorators (controls like actions panel that scale and move with the viewport)
+Allow PendingConnection's visbility to be controlled from the viewmodel.</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
