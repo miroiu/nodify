@@ -7,18 +7,6 @@
 [![C#](https://img.shields.io/static/v1?label=docs&message=WIP&color=orange&style=for-the-badge)](https://github.com/miroiu/nodify/wiki)
 
  A collection of high performance controls for node based editors designed for MVVM.
- 
- ## Sponsors 💖
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/daxpandhi">
-        <img src="https://unavatar.io/github/daxpandhi" width="100"><br>
-        <strong>Dax Pandhi</strong>
-      </a>
-    </td>
-  </tr>
-</table>
 
 ## 🚀 Examples of different node-based applications
 
@@ -61,11 +49,8 @@ Install-Package Nodify
  
 ## 📝 Documentation
 
-API Reference can be found [here](https://miroiu.github.io/nodify/docs/api/Alignment).
-
-Documentation is moving [here](https://miroiu.github.io/nodify). If you want to help, you can do so by creating a pull-request to the [docs branch](https://github.com/miroiu/nodify/tree/docs) (the easiest way is to click 'Edit this page' in the website).
-
-[Wiki](https://github.com/miroiu/nodify/wiki) - **check it out while it's there**
+API Reference & Documentation can be found [here](https://miroiu.github.io/nodify/docs/api/Alignment).
+Wiki can be found [here](https://github.com/miroiu/nodify/wiki)
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
