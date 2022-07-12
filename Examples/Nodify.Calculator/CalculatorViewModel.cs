@@ -151,7 +151,7 @@ namespace Nodify.Calculator
             {
                 Title = "Operations",
                 Location = bounding.Location,
-                Size = new Size(bounding.Width, bounding.Height)
+                GroupSize = new Size(bounding.Width, bounding.Height)
             });
         }
     }

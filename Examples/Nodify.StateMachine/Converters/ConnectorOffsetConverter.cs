@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Nodify.StateMachine
 {
-    public class HalfSizeWithOffsetConverter : IValueConverter
+    public class ConnectorOffsetConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

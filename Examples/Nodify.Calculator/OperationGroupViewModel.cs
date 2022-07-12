@@ -5,7 +5,7 @@ namespace Nodify.Calculator
     public class OperationGroupViewModel : OperationViewModel
     {
         private Size _size;
-        public Size Size
+        public Size GroupSize
         {
             get => _size;
             set => SetProperty(ref _size, value);

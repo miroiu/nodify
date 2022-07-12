@@ -26,6 +26,7 @@ namespace Nodify
         public static readonly DependencyPropertyKey IsPreviewingSelectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingSelection), typeof(bool?), typeof(ItemContainer), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty IsPreviewingSelectionProperty = IsPreviewingSelectionPropertyKey.DependencyProperty;
         public static readonly DependencyProperty LocationProperty = DependencyProperty.Register(nameof(Location), typeof(Point), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLocationChanged));
+        public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.Size));
         public static readonly DependencyProperty DesiredSizeForSelectionProperty = DependencyProperty.Register(nameof(DesiredSizeForSelection), typeof(Size?), typeof(ItemContainer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.NotDataBindable));
         public static readonly DependencyPropertyKey IsPreviewingLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingLocation), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPreviewingLocationProperty = IsPreviewingLocationPropertyKey.DependencyProperty;
@@ -93,6 +94,15 @@ namespace Nodify
         {
             get => (bool)GetValue(IsPreviewingLocationProperty);
             private set => SetValue(IsPreviewingLocationPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Gets the actual size of this <see cref="ItemContainer"/>.
+        /// </summary>
+        public Size ActualSize
+        {
+            get => (Size)GetValue(ActualSizeProperty);
+            set => SetValue(ActualSizeProperty, value);
         }
 
         /// <summary>
@@ -271,6 +281,12 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
+        /// <inheritdoc />
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            ActualSize = sizeInfo.NewSize;
+        }
+
         /// <summary>
         /// Checks if <paramref name="position"/> is selectable.
         /// </summary>
@@ -294,6 +310,7 @@ namespace Nodify
             return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
+        /// <inheritdoc />
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             // Handle right click if is previewing location so context menus don't open
@@ -327,6 +344,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (IsSelectableLocation(e.GetPosition(this)))
@@ -336,6 +354,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (IsSelectableLocation(e.GetPosition(this)))
@@ -351,6 +370,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             // If it's previewing location, then we're dragging the container
@@ -393,6 +413,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured && IsDraggable)
@@ -428,6 +449,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
             if (IsPreviewingLocation)

@@ -19,7 +19,6 @@ namespace Nodify
         public static readonly DependencyProperty ContentProperty = ContentPresenter.ContentProperty.AddOwner(typeof(StateNode));
         public static readonly DependencyProperty ContentTemplateProperty = ContentPresenter.ContentTemplateProperty.AddOwner(typeof(StateNode));
         public static readonly DependencyProperty CornerRadiusProperty = Border.CornerRadiusProperty.AddOwner(typeof(StateNode));
-        public static readonly DependencyProperty ActualSizeProperty = GroupingNode.ActualSizeProperty.AddOwner(typeof(StateNode));
 
         /// <summary>
         /// Gets or sets the brush used when the <see cref="PendingConnection.IsOverElementProperty"/> attached property is true for this <see cref="StateNode"/>.
@@ -55,15 +54,6 @@ namespace Nodify
         {
             get => (CornerRadius)GetValue(CornerRadiusProperty);
             set => SetValue(CornerRadiusProperty, value);
-        }
-        
-        /// <summary>
-        /// Gets or sets the actual size of this <see cref="StateNode"/>.
-        /// </summary>
-        public Size ActualSize
-        {
-            get => (Size)GetValue(ActualSizeProperty);
-            set => SetValue(ActualSizeProperty, value);
         }
 
         #endregion
@@ -101,13 +91,6 @@ namespace Nodify
             {
                 base.OnMouseLeftButtonUp(e);
             }
-        }
-
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            ActualSize = sizeInfo.NewSize;
         }
     }
 }

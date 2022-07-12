@@ -140,7 +140,7 @@ namespace Nodify.Calculator
                     return new OperationGraphViewModel
                     {
                         Title = info.Title,
-                        Size = new Size(420, 250)
+                        DesiredSize = new Size(420, 250)
                     };
 
                 default:

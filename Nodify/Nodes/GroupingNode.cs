@@ -39,15 +39,25 @@ namespace Nodify
 
         #region Routed Events
 
+        public static readonly RoutedEvent ResizeStartedEvent = EventManager.RegisterRoutedEvent(nameof(ResizeStarted), RoutingStrategy.Bubble, typeof(ResizeEventHandler), typeof(GroupingNode));
         public static readonly RoutedEvent ResizeCompletedEvent = EventManager.RegisterRoutedEvent(nameof(ResizeCompleted), RoutingStrategy.Bubble, typeof(ResizeEventHandler), typeof(GroupingNode));
 
         /// <summary>
-        /// Occurs when the node is resized and <see cref="ActualSize"/> is set.
+        /// Occurs when the node finished resizing.
         /// </summary>
         public event ResizeEventHandler ResizeCompleted
         {
             add => AddHandler(ResizeCompletedEvent, value);
             remove => RemoveHandler(ResizeCompletedEvent, value);
+        }
+        
+        /// <summary>
+        /// Occurs when the node started resizing.
+        /// </summary>
+        public event ResizeEventHandler ResizeStarted
+        {
+            add => AddHandler(ResizeStartedEvent, value);
+            remove => RemoveHandler(ResizeStartedEvent, value);
         }
 
         #endregion
@@ -59,7 +69,8 @@ namespace Nodify
         public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
         public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
         public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(GroupingNode));
-
+        public static readonly DependencyProperty ResizeStartedCommandProperty = DependencyProperty.Register(nameof(ResizeStartedCommand), typeof(ICommand), typeof(GroupingNode));
+        
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var node = (GroupingNode)d;
@@ -106,12 +117,22 @@ namespace Nodify
 
         /// <summary>
         /// Invoked when the <see cref="ResizeCompleted"/> event is not handled.
-        /// Parameter is the <see cref="ActualSize"/> of this control.
+        /// Parameter is the <see cref="ItemContainer.ActualSize"/> of the container.
         /// </summary>
         public ICommand? ResizeCompletedCommand
         {
             get => (ICommand?)GetValue(ResizeCompletedCommandProperty);
             set => SetValue(ResizeCompletedCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="ResizeStarted"/> event is not handled.
+        /// Parameter is the <see cref="ItemContainer.ActualSize"/> of the container.
+        /// </summary>
+        public ICommand? ResizeStartedCommand
+        {
+            get => (ICommand?)GetValue(ResizeStartedCommandProperty);
+            set => SetValue(ResizeStartedCommandProperty, value);
         }
 
         #endregion
@@ -175,6 +196,7 @@ namespace Nodify
         {
             AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnResize));
             AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnResizeCompleted));
+            AddHandler(Thumb.DragStartedEvent, new DragStartedEventHandler(OnResizeStarted));
 
             Loaded += OnNodeLoaded;
             Unloaded += OnNodeUnloaded;
@@ -269,12 +291,30 @@ namespace Nodify
             }
         }
 
+        private void OnResizeStarted(object sender, DragStartedEventArgs e)
+        {
+            ActualSize = new Size(ActualWidth, ActualHeight);
+            var args = new ResizeEventArgs(ActualSize, ActualSize)
+            {
+                RoutedEvent = ResizeStartedEvent,
+                Source = this
+            };
+
+            RaiseEvent(args);
+
+            // Raise ResizeStartedCommand if ResizeStartedEvent event is not handled
+            if (!args.Handled && (ResizeStartedCommand?.CanExecute(ActualSize) ?? false))
+            {
+                ResizeStartedCommand.Execute(ActualSize);
+            }
+        }
+
         private void OnResizeCompleted(object sender, DragCompletedEventArgs e)
         {
             Size previousSize = ActualSize;
             var newSize = new Size(ActualWidth, ActualHeight);
             ActualSize = newSize;
-
+                
             var args = new ResizeEventArgs(previousSize, newSize)
             {
                 RoutedEvent = ResizeCompletedEvent,

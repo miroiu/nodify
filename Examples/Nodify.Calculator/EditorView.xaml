@@ -61,6 +61,8 @@
                     Value="{Binding Location}" />
             <Setter Property="IsSelected"
                     Value="{Binding IsSelected}" />
+            <Setter Property="ActualSize"
+                    Value="{Binding Size, Mode=OneWayToSource}" />
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -212,13 +214,13 @@
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
                     <nodify:GroupingNode Header="{Binding Title}"
-                                         ActualSize="{Binding Size}" />
+                                         ActualSize="{Binding GroupSize, Mode=TwoWay}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                     <nodify:GroupingNode Header="{Binding}"
                                          CanResize="{Binding IsExpanded}"
-                                         ActualSize="{Binding Size, Mode=TwoWay}"
+                                         ActualSize="{Binding DesiredSize, Mode=TwoWay}"
                                          MovementMode="Self">
                         <nodify:GroupingNode.HeaderTemplate>
                             <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">

@@ -20,7 +20,7 @@
                              DataContext="{Binding}" />
         <shared:BindingProxy x:Key="BlackboardProxy"
                              DataContext="{Binding Blackboard}" />
-        <local:HalfSizeWithOffsetConverter x:Key="HalfSizeWithOffsetConverter" />
+        <local:ConnectorOffsetConverter x:Key="ConnectorOffsetConverter" />
     </Window.Resources>
 
     <Grid>
@@ -50,7 +50,7 @@
                                                               Target="{TemplateBinding TargetAnchor}"
                                                               StrokeThickness="{TemplateBinding StrokeThickness}"
                                                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                              SourceOffset="{Binding Source.Size}"
+                                                              SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                               OffsetMode="Edge" />
                             </ControlTemplate>
                         </nodify:PendingConnection.Template>
@@ -62,8 +62,8 @@
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                     <nodify:DirectionalConnection Source="{Binding Source.Anchor}"
                                                   Target="{Binding Target.Anchor}"
-                                                  SourceOffset="{Binding Source.Size}"
-                                                  TargetOffset="{Binding Target.Size}"
+                                                  SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                                  TargetOffset="{Binding Target.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                   OffsetMode="Edge"
                                                   Tag="{Binding}">
                         <nodify:DirectionalConnection.Style>
@@ -99,7 +99,6 @@
                     <!--If IsConnected is false, Anchor won't be updated-->
                     <nodify:StateNode Content="{Binding}"
                                       IsConnected="True"
-                                      ActualSize="{Binding Size, Mode=OneWayToSource, Converter={StaticResource HalfSizeWithOffsetConverter}, ConverterParameter=5}"
                                       Anchor="{Binding Anchor, Mode=OneWayToSource}">
                         <nodify:StateNode.ContentTemplate>
                             <DataTemplate DataType="{x:Type local:StateViewModel}">
@@ -137,6 +136,8 @@
                             Value="Transparent" />
                     <Setter Property="Location"
                             Value="{Binding Location}" />
+                    <Setter Property="ActualSize"
+                            Value="{Binding Size, Mode=OneWayToSource}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">

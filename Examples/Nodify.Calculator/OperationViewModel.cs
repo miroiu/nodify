@@ -35,6 +35,13 @@ namespace Nodify.Calculator
             set => SetProperty(ref _location, value);
         }
 
+        private Size _size;
+        public Size Size
+        {
+            get => _size;
+            set => SetProperty(ref _size, value);
+        }
+
         private string? _title;
         public string? Title
         {
