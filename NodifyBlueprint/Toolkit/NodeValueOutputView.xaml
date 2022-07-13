@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="NodifyBlueprint.Views.NodeValueOutputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NodifyBlueprint.Views"
+             xmlns:vm="clr-namespace:NodifyBlueprint"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:nodify="https://miroiu.github.io/nodify"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:IInputConnector, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <vm:TypeToColorConverter x:Key="ConnectorToColorConverter" />
+    </UserControl.Resources>
+
+    <nodify:NodeOutput Header="{Binding Title}"
+                       Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                       IsConnected="{Binding IsConnected}"
+                       DisconnectCommand="{s:Action Disconnect}"
+                       BorderBrush="{Binding ., Converter={StaticResource ConnectorToColorConverter}}" />
+</UserControl>

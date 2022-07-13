@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify", "Nodify\Nodify.csproj", "{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}"
 EndProject
@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.StateMachine", "Exam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Shared", "Examples\Nodify.Shared\Nodify.Shared.csproj", "{499C8539-9973-4102-B976-57DB3F3C7DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.MinimalExample", "Nodify.MinimalExample\Nodify.MinimalExample.csproj", "{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodifyBlueprint", "NodifyBlueprint\NodifyBlueprint.csproj", "{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ADD1DAF-B589-4742-8E72-872D2842E73D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +62,7 @@ Global
 		{48569CA8-81C1-4B47-963B-0FC9358C5F01} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 		{499C8539-9973-4102-B976-57DB3F3C7DF3} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 		{7ADD1DAF-B589-4742-8E72-872D2842E73D} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
+		{BDB8CF0E-2394-4B21-B5AF-89A33B05F782} = {E467F53A-3CCA-4EDB-BD33-FC89CA3C526B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B9E59DB6-FB93-48F3-A8E0-1E549009E043}
