@@ -230,6 +230,7 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PendingConnection), new FrameworkPropertyMetadata(typeof(PendingConnection)));
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -275,7 +276,7 @@ namespace Nodify
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
                     // Look for a potential connector
-                    FrameworkElement? connector = Editor.ItemsHost != null ? GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors) : GetPotentialConnector(Editor, AllowOnlyConnectors);
+                    FrameworkElement? connector = GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors);
 
                     // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)

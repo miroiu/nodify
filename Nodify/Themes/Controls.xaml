@@ -39,6 +39,11 @@
         <Setter Property="SelectedBrush"
                 Value="{StaticResource ItemContainer.SelectedBrush}" />
     </Style>
+    
+    <!--DECORATOR CONTAINER-->
+    
+    <Style TargetType="{x:Type local:DecoratorContainer}"
+           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}" />
 
     <!--NODE-->
 

@@ -155,6 +155,7 @@ namespace Nodify
 
         #endregion
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -215,6 +216,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             // Subscribe to events if not already subscribed 
@@ -307,6 +309,7 @@ namespace Nodify
 
         #region Event Handlers
 
+        /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
             if (IsPendingConnection)
@@ -315,6 +318,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             // Cancel pending connection
@@ -325,6 +329,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             Focus();
@@ -343,6 +348,7 @@ namespace Nodify
             e.Handled = true;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             Focus();
@@ -356,6 +362,7 @@ namespace Nodify
             e.Handled = true;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)

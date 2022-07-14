@@ -44,18 +44,7 @@ namespace Nodify
         /// <summary>
         /// Select all <see cref="ItemContainer"/>s in the <see cref="NodifyEditor"/>.
         /// </summary>
-        public static RoutedUICommand SelectAll { get; } = new RoutedUICommand("Select all", nameof(SelectAll), typeof(EditorCommands), new InputGestureCollection
-        {
-            new KeyGesture(Key.A, ModifierKeys.Control)
-        });
-
-        /// <summary>
-        /// Delete <see cref="NodifyEditor.SelectedItems"/> if the ItemsSource is not bound.
-        /// </summary>
-        public static RoutedUICommand Delete { get; } = new RoutedUICommand("Delete", nameof(Delete), typeof(EditorCommands), new InputGestureCollection
-        {
-            new KeyGesture(Key.Delete)
-        });
+        public static RoutedUICommand SelectAll { get; } = ApplicationCommands.SelectAll;
 
         /// <summary>
         /// Moves the <see cref="NodifyEditor.Viewport"/> to the specified location.
@@ -74,7 +63,6 @@ namespace Nodify
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Delete, OnDelete, OnQueryDeleteStatus));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
         }
@@ -189,26 +177,6 @@ namespace Nodify
                     default:
                         editor.BringIntoView(new Point());
                         break;
-                }
-            }
-        }
-
-        private static void OnQueryDeleteStatus(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (sender is NodifyEditor editor)
-            {
-                e.CanExecute = editor.ItemsSource == null && ((MultiSelector)editor).SelectedItems.Count > 0;
-            }
-        }
-
-        private static void OnDelete(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (sender is NodifyEditor editor)
-            {
-                var items = new ArrayList(((MultiSelector)editor).SelectedItems);
-                foreach (object? item in items)
-                {
-                    editor.Items.Remove(item!);
                 }
             }
         }

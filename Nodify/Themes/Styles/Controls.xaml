@@ -13,6 +13,7 @@
 
         <!--CORE-->
         <ResourceDictionary Source="ItemContainer.xaml" />
+        <ResourceDictionary Source="DecoratorContainer.xaml" />
         <ResourceDictionary Source="NodifyEditor.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -252,6 +252,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

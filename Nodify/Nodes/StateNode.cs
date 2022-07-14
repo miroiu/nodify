@@ -68,6 +68,7 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(StateNode), new FrameworkPropertyMetadata(typeof(StateNode)));
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -75,6 +76,7 @@ namespace Nodify
             ContentControl = Template.FindName(ElementContent, this) as UIElement;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content
@@ -84,6 +86,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content

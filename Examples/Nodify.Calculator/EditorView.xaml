@@ -264,18 +264,16 @@
                                                 Command="{Binding GroupSelectionCommand}" />
                                 </nodify:NodifyEditor.InputBindings>
 
-                                <nodify:ItemContainer DataContext="{Binding OperationsMenu}"
-                                                      Location="{Binding Location}"
-                                                      Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}"
-                                                      IsSelectable="False">
-                                    <nodify:ItemContainer.Effect>
-                                        <DropShadowEffect BlurRadius="3"
-                                                          ShadowDepth="7"
-                                                          Opacity="0.5" />
-                                    </nodify:ItemContainer.Effect>
+                                <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
+                                                           Location="{Binding Location}"
+                                                           Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
+                                        <nodify:DecoratorContainer.Effect>
+                                            <DropShadowEffect BlurRadius="3"
+                                                              ShadowDepth="7"
+                                                              Opacity="0.5" />
+                                        </nodify:DecoratorContainer.Effect>
                                     <local:OperationsMenuView />
-                                </nodify:ItemContainer>
-
+                                </nodify:DecoratorContainer>
                             </nodify:NodifyEditor>
 
                             <Grid>
@@ -310,18 +308,16 @@
                             Command="{Binding GroupSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
 
-            <nodify:ItemContainer DataContext="{Binding OperationsMenu}"
+            <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
                                   Location="{Binding Location}"
-                                  Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}"
-                                  IsSelectable="False">
-                <nodify:ItemContainer.Effect>
+                                  Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
+                <nodify:DecoratorContainer.Effect>
                     <DropShadowEffect BlurRadius="3"
                                       ShadowDepth="7"
                                       Opacity="0.5" />
-                </nodify:ItemContainer.Effect>
+                </nodify:DecoratorContainer.Effect>
                 <local:OperationsMenuView />
-            </nodify:ItemContainer>
-
+            </nodify:DecoratorContainer>
         </nodify:NodifyEditor>
 
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"

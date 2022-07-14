@@ -20,6 +20,8 @@ namespace Nodify
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
     [TemplatePart(Name = ElementDecoratorsHost, Type = typeof(Panel))]
+    [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(ItemContainer))]
+    [StyleTypedProperty(Property = nameof(DecoratorContainerStyle), StyleTargetType = typeof(DecoratorContainer))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     [ContentProperty(nameof(Decorators))]
     [DefaultProperty(nameof(Decorators))]
@@ -42,6 +44,7 @@ namespace Nodify
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
+        public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
 
         #region Callbacks
 
@@ -132,18 +135,15 @@ namespace Nodify
             ScaleTransform.ScaleX = newValue;
             ScaleTransform.ScaleY = newValue;
 
-            if (ItemsHost != null)
+            if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
             {
-                if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
-                {
-                    double availableZoomIn = 1.0 - MinScale;
-                    bool shouldCache = newValue / availableZoomIn <= OptimizeRenderingZoomOutPercent;
-                    ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / newValue) : null;
-                }
-                else
-                {
-                    ItemsHost.CacheMode = null;
-                }
+                double availableZoomIn = 1.0 - MinScale;
+                bool shouldCache = newValue / availableZoomIn <= OptimizeRenderingZoomOutPercent;
+                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / newValue) : null;
+            }
+            else
+            {
+                ItemsHost.CacheMode = null;
             }
         }
 
@@ -258,6 +258,15 @@ namespace Nodify
         {
             get => (Style)GetValue(SelectionRectangleStyleProperty);
             set => SetValue(SelectionRectangleStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style to use for the <see cref="DecoratorContainer"/>.
+        /// </summary>
+        public Style DecoratorContainerStyle
+        {
+            get => (Style)GetValue(DecoratorContainerStyleProperty);
+            set => SetValue(DecoratorContainerStyleProperty, value);
         }
 
         #endregion
@@ -555,7 +564,7 @@ namespace Nodify
         /// <summary>
         /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
-        protected internal Panel? ItemsHost { get; private set; }
+        protected internal Panel ItemsHost { get; private set; }
 
         /// <summary>
         /// Gets the panel that holds decorator <see cref="UIElement"/>s.
@@ -625,11 +634,12 @@ namespace Nodify
             SetValue(AppliedTransformPropertyKey, transform);
         }
 
+        /// <inheritdoc />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            ItemsHost = GetTemplateChild(ElementItemsHost) as Panel;
+            ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException("PART_ItemsHost is missing or is not of type Panel.");
             DecoratorsHost = GetTemplateChild(ElementDecoratorsHost) as Panel;
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
@@ -642,16 +652,16 @@ namespace Nodify
             {
                 foreach (UIElement child in Decorators)
                 {
-                    if (child is ItemContainer)
+                    if (child is DecoratorContainer)
                     {
                         DecoratorsHost.Children.Add(child);
                     }
                     else
                     {
-                        var container = new ItemContainer
+                        var container = new DecoratorContainer
                         {
                             Content = child,
-                            RenderTransform = new TranslateTransform()
+                            Style = DecoratorContainerStyle,
                         };
                         DecoratorsHost.Children.Add(container);
                     }
@@ -659,13 +669,14 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override DependencyObject GetContainerForItemOverride()
-            => new ItemContainer()
+            => new ItemContainer(this)
             {
-                // TODO: Make this a TransformGroup and add TranslateTransform to it
                 RenderTransform = new TranslateTransform()
             };
 
+        /// <inheritdoc />
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ItemContainer;
 
@@ -830,6 +841,7 @@ namespace Nodify
 
         #region Mouse Events Handlers
 
+        /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             double scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
@@ -837,6 +849,7 @@ namespace Nodify
             e.Handled = true;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             CurrentMousePosition = e.GetPosition(this);
@@ -869,6 +882,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
             // End selection if selecting
@@ -876,6 +890,7 @@ namespace Nodify
             IsPanning = false;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (Mouse.Captured == null)
@@ -889,6 +904,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             // End selection if selecting
@@ -902,6 +918,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (Mouse.Captured == null)
@@ -913,6 +930,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             // If right clicking without panning or selecting allow context menu
@@ -952,6 +970,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
@@ -1023,6 +1042,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
@@ -1231,7 +1251,7 @@ namespace Nodify
                     IsBulkUpdatingItems = false;
 
                     // Draw the containers at the new position.
-                    ItemsHost?.InvalidateArrange();
+                    ItemsHost.InvalidateArrange();
                 }
 
                 _dragInstigator = null;
