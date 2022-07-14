@@ -56,22 +56,12 @@
                             </Grid.RowDefinitions>
 
                             <!--Header-->
-                            <Border Background="{TemplateBinding HeaderBrush}"
+                            <Border Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Background="{TemplateBinding HeaderBrush}"
                                     CornerRadius="3 3 0 0"
-                                    Grid.ColumnSpan="3">
-                                <StackPanel Orientation="Horizontal"
-                                            Margin="6 0 6 0">
-                                    <ContentPresenter ContentSource="Icon"
-                                                      Width="16"
-                                                      Margin="0 3 6 5"
-                                                      Visibility="{TemplateBinding Icon, Converter={StaticResource NullToVisibilityConverter}}"
-                                                      VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center" />
-
-                                    <ContentPresenter ContentSource="Header"
-                                                      Margin="0 3 0 5"
-                                                      Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                </StackPanel>
+                                    Grid.ColumnSpan="3"
+                                    Padding="6 4 6 4">
+                                <ContentPresenter ContentSource="Header" />
                             </Border>
 
                             <!--Body-->
@@ -105,7 +95,8 @@
                                     Background="{TemplateBinding FooterBrush}"
                                     CornerRadius="0 0 3 3"
                                     Grid.Row="2"
-                                    Grid.ColumnSpan="3">
+                                    Grid.ColumnSpan="3"
+                                    Padding="6 4 6 4">
                                 <ContentPresenter ContentSource="Footer" />
                             </Border>
                         </Grid>

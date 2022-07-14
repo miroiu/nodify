@@ -22,7 +22,8 @@
 Added ActualSize - OneWayToSource to ItemContainer
 
 Breaking Changes: 
-Removed ActualSize from StateNode</PackageReleaseNotes>
+Removed ActualSize from StateNode
+Removed Icon from Node</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
