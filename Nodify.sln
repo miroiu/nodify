@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Shared", "Examples\N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.MinimalExample", "Nodify.MinimalExample\Nodify.MinimalExample.csproj", "{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.MinimalExample", "Examples\Nodify.MinimalExample\Nodify.MinimalExample.csproj", "{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodifier", "Nodifier\Nodifier.csproj", "{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}"
 EndProject

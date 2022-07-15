@@ -1,6 +1,7 @@
 ﻿using Stylet;
 using Stylet.Xaml;
 using StyletIoC;
+using System.Reflection;
 
 namespace Nodifier
 {
@@ -18,6 +19,7 @@ namespace Nodifier
         {
             base.ConfigureIoC(builder);
 
+            builder.Assemblies.Add(Assembly.GetEntryAssembly());
             builder.Bind<IViewManager>().To<NodifyViewManager>();
         }
 
