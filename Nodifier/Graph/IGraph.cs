@@ -21,7 +21,5 @@ namespace Nodifier
         void Disconnect(IConnector connector);
         void Disconnect(IConnection connection);
         void Split(IConnection connection, Point location);
-
-        void FocusLocation(double x, double y);
     }
 }

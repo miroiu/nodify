@@ -9,11 +9,15 @@ namespace NodifyMinimalExample
     ///  ALT + Click on a connector to disconnect
     ///  ALT + Click on a connection to disconnect
     ///  Double Click on a connection to split
+    ///  
+    ///  CTRL + Plus to zoom in
+    ///  CTRL + Minus to zoom out
+    ///  CTRL + A to select all
     /// 
 
     public class MinimalApp
     {
-        public IGraph Graph { get; } = new Graph();
+        public Graph Graph { get; } = new Graph();
         private static readonly Random _random = new Random();
 
         public MinimalApp()
@@ -44,6 +48,11 @@ namespace NodifyMinimalExample
                 IConnection con = Graph.Connections.First();
                 con.Split(new Point(200, 150));
             }
+        }
+
+        public void AlignSelection()
+        {
+            Graph.AlignSelection(Alignment.Top);
         }
 
         public void AddComment()

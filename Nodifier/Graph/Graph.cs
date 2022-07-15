@@ -1,6 +1,4 @@
-﻿using Nodify;
-using Nodifier.Views;
-using Stylet;
+﻿using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +6,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public class Graph : IGraph, IViewAware
+    public partial class Graph : IGraph
     {
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
@@ -20,21 +18,6 @@ namespace Nodifier
         public IReadOnlyCollection<IConnection> Connections => _connections;
 
         public virtual IPendingConnection PendingConnection { get; }
-
-        private NodifyEditor? _editor;
-        UIElement IViewAware.View => _editor!;
-
-        void IViewAware.AttachView(UIElement view)
-        {
-            if (view is INodifyEditorAware editorAware)
-            {
-                _editor = editorAware.Editor;
-            }
-            else
-            {
-                throw new InvalidOperationException($"The view of the {nameof(Graph)} should provide an editor instance by implementing {nameof(INodifyEditorAware)}.");
-            }
-        }
 
         public Graph()
         {
@@ -51,19 +34,14 @@ namespace Nodifier
             _elements.Remove(node);
         }
 
-        public void AddElements(IEnumerable<IGraphElement> nodes)
+        public virtual void AddElements(IEnumerable<IGraphElement> nodes)
         {
             _elements.AddRange(nodes);
         }
 
-        public void RemoveElements(IEnumerable<IGraphElement> nodes)
+        public virtual void RemoveElements(IEnumerable<IGraphElement> nodes)
         {
             _elements.RemoveRange(nodes);
-        }
-
-        public virtual void FocusLocation(double x, double y)
-        {
-            _editor?.BringIntoView(new Point(x, y));
         }
 
         public virtual bool TryConnect(IConnector source, IConnector target)

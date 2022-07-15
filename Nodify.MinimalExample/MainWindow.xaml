@@ -25,6 +25,11 @@
                 HorizontalAlignment="Center"
                 Margin="10"
                 VerticalAlignment="Top">Focus random node</Button>
+            <Button Command="{s:Action AlignSelection}"
+                s:View.ActionTarget="{Binding}"
+                HorizontalAlignment="Center"
+                Margin="10"
+                VerticalAlignment="Top">Align Selection</Button>
         </StackPanel>
     </Grid>
 </Window>
