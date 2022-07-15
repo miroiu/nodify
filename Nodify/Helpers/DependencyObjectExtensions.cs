@@ -6,7 +6,7 @@ using System.Windows.Media.Animation;
 
 namespace Nodify
 {
-    public static class DependencyObjectExtensions
+    internal static class DependencyObjectExtensions
     {
         public static T? GetParentOfType<T>(this DependencyObject child)
             where T : DependencyObject

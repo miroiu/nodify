@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,9 +16,11 @@ namespace Nodify
         public static readonly DependencyProperty ContentBrushProperty = DependencyProperty.Register(nameof(ContentBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register(nameof(HeaderBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty FooterBrushProperty = DependencyProperty.Register(nameof(FooterBrush), typeof(Brush), typeof(Node));
-        public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(nameof(Footer), typeof(object), typeof(Node));
+        public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(nameof(Footer), typeof(object), typeof(Node), new FrameworkPropertyMetadata(OnFooterChanged));
         public static readonly DependencyProperty FooterTemplateProperty = DependencyProperty.Register(nameof(FooterTemplate), typeof(DataTemplate), typeof(Node));
         public static readonly DependencyProperty InputConnectorTemplateProperty = DependencyProperty.Register(nameof(InputConnectorTemplate), typeof(DataTemplate), typeof(Node));
+        protected internal static readonly DependencyPropertyKey HasFooterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasFooter), typeof(bool), typeof(Node), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty HasFooterProperty = HasFooterPropertyKey.DependencyProperty;
         public static readonly DependencyProperty OutputConnectorTemplateProperty = DependencyProperty.Register(nameof(OutputConnectorTemplate), typeof(DataTemplate), typeof(Node));
         public static readonly DependencyProperty InputProperty = DependencyProperty.Register(nameof(Input), typeof(IEnumerable), typeof(Node));
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register(nameof(Output), typeof(IEnumerable), typeof(Node));
@@ -101,6 +104,17 @@ namespace Nodify
         {
             get => (IEnumerable)GetValue(OutputProperty);
             set => SetValue(OutputProperty, value);
+        }
+
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="Footer"/> is <see langword="null" />.
+        /// </summary>
+        public bool HasFooter => (bool)GetValue(HasFooterProperty);
+
+        private static void OnFooterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Node node = (Node)d;
+            node.SetValue(HasFooterPropertyKey, e.NewValue != null ? BoxValue.True : BoxValue.False);
         }
 
         #endregion

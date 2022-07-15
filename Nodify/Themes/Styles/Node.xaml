@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <DataTemplate x:Key="DefaultInputConnectorTemplate">
@@ -96,7 +95,7 @@
                             </Grid>
 
                             <!--Footer-->
-                            <Border Visibility="{TemplateBinding Footer, Converter={StaticResource NullToVisibilityConverter}}"
+                            <Border Visibility="{TemplateBinding HasFooter, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Background="{TemplateBinding FooterBrush}"
                                     CornerRadius="0 0 3 3"
                                     Grid.Row="2"

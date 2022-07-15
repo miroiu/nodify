@@ -23,12 +23,15 @@ Added DecoratorContainer and DecoratorContainerStyle to NodifyEditor
 Added RemoveConnectionCommand to NodifyEditor
 Added DisconnectCommand and SplitCommand to BaseConnection
 Added ContentBrush to NodifyEditor
+Added HasFooter to Node
 
 Breaking Changes: 
 Removed ActualSize from StateNode
 Removed Icon from Node as it can (and should) be added in a custom header template if necessary
 PART_ItemsHost is now mandatory for NodifyEditor
-ItemContainer cannot be used outside a NodifyEditor</PackageReleaseNotes>
+ItemContainer cannot be used outside a NodifyEditor
+Removed custom converters
+Made DependencyObjectExtensions internal</PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
