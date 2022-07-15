@@ -60,6 +60,8 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
+        public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
 
         /// <summary>
         /// Gets or sets the start point of this connection.
@@ -113,6 +115,51 @@ namespace Nodify
         {
             get => (ConnectionDirection)GetValue(DirectionProperty);
             set => SetValue(DirectionProperty, value);
+        }
+
+        /// <summary>
+        /// Splits the connection. Triggered on double click.
+        /// Parameter is the location where this was clicked.
+        /// </summary>
+        public ICommand? SplitCommand
+        {
+            get => (ICommand)GetValue(SplitCommandProperty);
+            set => SetValue(SplitCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Removes this connection. Triggered with ALT+Click.
+        /// Parameter is the location where this was clicked.
+        /// </summary>
+        public ICommand? DisconnectCommand
+        {
+            get => (ICommand?)GetValue(DisconnectCommandProperty);
+            set => SetValue(DisconnectCommandProperty, value);
+        }
+
+        #endregion
+
+        #region Routed Events
+
+        public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
+        public static readonly RoutedEvent SplitEvent = EventManager.RegisterRoutedEvent(nameof(Split), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
+
+        /// <summary>
+        /// Occurs when the <see cref="ModifierKeys.Alt"/> key is held and the <see cref="BaseConnection"/> is clicked.
+        /// </summary>
+        public event ConnectionEventHandler Disconnect
+        {
+            add => AddHandler(DisconnectEvent, value);
+            remove => RemoveHandler(DisconnectEvent, value);
+        }
+        
+        /// <summary>
+        /// Occurs when the <see cref="BaseConnection"/> is double clicked.
+        /// </summary>
+        public event ConnectionEventHandler Split
+        {
+            add => AddHandler(SplitEvent, value);
+            remove => RemoveHandler(SplitEvent, value);
         }
 
         #endregion
@@ -188,6 +235,45 @@ namespace Nodify
             if (Mouse.Captured == null)
             {
                 CaptureMouse();
+
+                if (e.ClickCount == 2 && (SplitCommand?.CanExecute(this) ?? false))
+                {
+                    Point splitLocation = e.GetPosition(this);
+                    object? connection = DataContext;
+                    var args = new ConnectionEventArgs(connection)
+                    {
+                        RoutedEvent = SplitEvent,
+                        SplitLocation = splitLocation,
+                        Source = this
+                    };
+
+                    RaiseEvent(args);
+
+                    // Raise SplitCommand if SplitEvent is not handled
+                    if (!args.Handled && (SplitCommand?.CanExecute(splitLocation) ?? false))
+                    {
+                        SplitCommand.Execute(splitLocation);
+                    }
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Alt && (DisconnectCommand?.CanExecute(this) ?? false))
+                {
+                    Point splitLocation = e.GetPosition(this);
+                    object? connection = DataContext;
+                    var args = new ConnectionEventArgs(connection)
+                    {
+                        RoutedEvent = DisconnectEvent,
+                        SplitLocation = splitLocation,
+                        Source = this
+                    };
+
+                    RaiseEvent(args);
+
+                    // Raise DisconnectCommand if DisconnectEvent is not handled
+                    if (!args.Handled && (DisconnectCommand?.CanExecute(splitLocation) ?? false))
+                    {
+                        DisconnectCommand.Execute(splitLocation);
+                    }
+                }
             }
         }
 

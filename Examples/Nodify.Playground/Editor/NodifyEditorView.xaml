@@ -64,6 +64,8 @@
         <DataTemplate x:Key="CircuitConnectionTemplate">
             <nodify:CircuitConnection Source="{Binding Output.Anchor}"
                                       Target="{Binding Input.Anchor}"
+                                      SplitCommand="{Binding SplitCommand}"
+                                      DisconnectCommand="{Binding DisconnectCommand}"
                                       OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                       SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -76,6 +78,8 @@
         <DataTemplate x:Key="ConnectionTemplate">
             <nodify:Connection Source="{Binding Output.Anchor}"
                                Target="{Binding Input.Anchor}"
+                               SplitCommand="{Binding SplitCommand}"
+                               DisconnectCommand="{Binding DisconnectCommand}"
                                OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -85,6 +89,8 @@
         <DataTemplate x:Key="DirectionalConnectionTemplate">
             <nodify:DirectionalConnection Source="{Binding Output.Anchor}"
                                           Target="{Binding Input.Anchor}"
+                                          SplitCommand="{Binding SplitCommand}"
+                                          DisconnectCommand="{Binding DisconnectCommand}"
                                           OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                           SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                           TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"

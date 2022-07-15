@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Nodify.Playground
 {
@@ -30,5 +31,14 @@ namespace Nodify.Playground
 
         public void Remove()
             => Graph.Connections.Remove(this);
+
+        public ICommand SplitCommand { get; }
+        public ICommand DisconnectCommand { get; }
+
+        public ConnectionViewModel()
+        {
+            SplitCommand = new DelegateCommand<Point>(Split);
+            DisconnectCommand = new DelegateCommand(Remove);
+        }
     }
 }

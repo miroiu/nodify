@@ -4,7 +4,6 @@
     <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>miroiu</Authors>
     <Company />
@@ -21,18 +20,23 @@
     <PackageReleaseNotes>Added ResizeStartedEvent to GroupingNode
 Added ActualSize - OneWayToSource to ItemContainer
 Added DecoratorContainer and DecoratorContainerStyle to NodifyEditor
+Added RemoveConnectionCommand to NodifyEditor
+Added DisconnectCommand and SplitCommand to BaseConnection
 
 Breaking Changes: 
 Removed ActualSize from StateNode
 Removed Icon from Node as it can (and should) be added in a custom header template if necessary
 PART_ItemsHost is now mandatory for NodifyEditor
 ItemContainer cannot be used outside a NodifyEditor</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
     <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\icon.png">

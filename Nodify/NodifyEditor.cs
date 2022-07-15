@@ -435,6 +435,7 @@ namespace Nodify
         public static readonly DependencyProperty ConnectionCompletedCommandProperty = DependencyProperty.Register(nameof(ConnectionCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ConnectionStartedCommandProperty = DependencyProperty.Register(nameof(ConnectionStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
+        public static readonly DependencyProperty RemoveConnectionCommandProperty = DependencyProperty.Register(nameof(RemoveConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
@@ -469,6 +470,17 @@ namespace Nodify
         {
             get => (ICommand?)GetValue(DisconnectConnectorCommandProperty);
             set => SetValue(DisconnectConnectorCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="BaseConnection.RemoveConnection"/> event is raised. <br />
+        /// Can also be handled at the <see cref="BaseConnection"/> level using the <see cref="BaseConnection.RemoveConnectionCommand"/> command. <br />
+        /// Parameter is the <see cref="BaseConnection"/>'s <see cref="FrameworkElement.DataContext"/>.
+        /// </summary>
+        public ICommand? RemoveConnectionCommand
+        {
+            get => (ICommand?)GetValue(RemoveConnectionCommandProperty);
+            set => SetValue(RemoveConnectionCommandProperty, value);
         }
 
         /// <summary>
@@ -619,6 +631,8 @@ namespace Nodify
             AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
             AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
             AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
+            
+            AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
 
             AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
             AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
@@ -834,6 +848,14 @@ namespace Nodify
                 {
                     ConnectionCompletedCommand.Execute(result);
                 }
+            }
+        }
+
+        private void OnRemoveConnection(object sender, ConnectionEventArgs e)
+        {
+            if (RemoveConnectionCommand?.CanExecute(e.Connection) ?? false)
+            {
+                RemoveConnectionCommand.Execute(e.Connection);
             }
         }
 
