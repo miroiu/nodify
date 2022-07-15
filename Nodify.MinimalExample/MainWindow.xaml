@@ -14,13 +14,17 @@
 
     <Grid>
         <blueprint:NodeGraph DataContext="{Binding Graph}" />
-        <Button Command="{s:Action AddComment}"
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Command="{s:Action AddComment}"
                 s:View.ActionTarget="{Binding}"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top">Add comment</Button>
-        <Button Command="{s:Action FocusRandomNode}"
+                VerticalAlignment="Top"
+                Margin="10">Add comment</Button>
+            <Button Command="{s:Action FocusRandomNode}"
                 s:View.ActionTarget="{Binding}"
                 HorizontalAlignment="Center"
+                Margin="10"
                 VerticalAlignment="Top">Focus random node</Button>
+        </StackPanel>
     </Grid>
 </Window>

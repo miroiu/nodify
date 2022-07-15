@@ -13,7 +13,8 @@
     <nodify:NodifyEditor ItemsSource="{Binding Elements}"
                          SelectedItems="{Binding SelectedElements}"
                          Connections="{Binding Connections}"
-                         PendingConnection="{Binding PendingConnection}">
+                         PendingConnection="{Binding PendingConnection}"
+                         x:Name="EditorInstance">
         <nodify:NodifyEditor.ItemContainerStyle>
             <Style TargetType="nodify:ItemContainer">
                 <Setter Property="Location" Value="{Binding Location, Mode=TwoWay}" />

@@ -1,4 +1,6 @@
-﻿using Stylet;
+﻿using Nodify;
+using NodifyBlueprint.Views;
+using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Windows;
 
 namespace NodifyBlueprint
 {
-    public class Graph : IGraph
+    public class Graph : IGraph, IViewAware
     {
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
@@ -18,6 +20,21 @@ namespace NodifyBlueprint
         public IReadOnlyCollection<IConnection> Connections => _connections;
 
         public virtual IPendingConnection PendingConnection { get; }
+
+        private NodifyEditor? _editor;
+        UIElement IViewAware.View => _editor!;
+
+        void IViewAware.AttachView(UIElement view)
+        {
+            if (view is INodifyEditorAware editorAware)
+            {
+                _editor = editorAware.Editor;
+            }
+            else
+            {
+                throw new InvalidOperationException($"The view of the {nameof(Graph)} should provide an editor instance by implementing {nameof(INodifyEditorAware)}.");
+            }
+        }
 
         public Graph()
         {
@@ -46,7 +63,7 @@ namespace NodifyBlueprint
 
         public virtual void FocusLocation(double x, double y)
         {
-            // Need access to the editor control instance (could attach it in code behind or use the IViewAware interface)
+            _editor?.BringIntoView(new Point(x, y));
         }
 
         public virtual bool TryConnect(IConnector source, IConnector target)
@@ -55,7 +72,7 @@ namespace NodifyBlueprint
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (target == null)
             {
                 throw new ArgumentNullException(nameof(target));
@@ -67,7 +84,7 @@ namespace NodifyBlueprint
                 IConnection connection = CreateConnection(source, target);
                 _connections.Add(connection);
             }
-            
+
             return canConnect;
         }
 
