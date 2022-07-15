@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using System;
 using System.Collections.Generic;
 
 namespace NodifyBlueprint
@@ -44,7 +45,7 @@ namespace NodifyBlueprint
             }
             else
             {
-                throw new System.InvalidOperationException("Input already exists");
+                throw new InvalidOperationException("Input already exists");
             }
         }
 
@@ -56,7 +57,7 @@ namespace NodifyBlueprint
             }
             else
             {
-                throw new System.InvalidOperationException("Output already exists");
+                throw new InvalidOperationException("Output already exists");
             }
         }
     }

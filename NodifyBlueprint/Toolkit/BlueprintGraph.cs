@@ -27,13 +27,13 @@ namespace NodifyBlueprint
         {
             bool result = base.CanConnect(source, target);
 
-            if (result)
-            {
-                var srcType = GetValueType(source);
-                var targetType = GetValueType(target);
+            //if (result)
+            //{
+            //    var srcType = GetValueType(source);
+            //    var targetType = GetValueType(target);
 
-                result = source is IOutputConnector && IsAssignable(srcType, targetType) || target is IOutputConnector && IsAssignable(targetType, srcType);
-            }
+            //    result = source is IOutputConnector && IsAssignable(srcType, targetType) || target is IOutputConnector && IsAssignable(targetType, srcType);
+            //}
 
             result |= source is IRelayConnector || target is IRelayConnector;
             return result;

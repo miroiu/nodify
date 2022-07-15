@@ -3,11 +3,11 @@
 namespace NodifyBlueprint.Views
 {
     /// <summary>
-    /// Interaction logic for RelayConnectorView.xaml
+    /// Interaction logic for ConnectorView.xaml
     /// </summary>
-    public partial class RelayConnectorView : UserControl
+    public partial class ConnectorView : UserControl
     {
-        public RelayConnectorView()
+        public ConnectorView()
         {
             InitializeComponent();
         }

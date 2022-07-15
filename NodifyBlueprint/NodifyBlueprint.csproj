@@ -40,14 +40,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Nodify\Nodify.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Update="Connector\RelayConnectorView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Node\RelayNodeView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
 </Project>

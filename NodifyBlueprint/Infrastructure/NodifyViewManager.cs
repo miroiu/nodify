@@ -26,9 +26,8 @@ namespace NodifyBlueprint
             RegisterView<IBlueprintPendingConnection, Views.BlueprintPendingConnectionView>();
             RegisterView<IPendingConnection, Views.PendingConnectionView>();
             RegisterView<IConnection, Views.ConnectionView>();
-            RegisterView<IInputConnector, Views.NodeInputView>();
-            RegisterView<IOutputConnector, Views.NodeOutputView>();
-            RegisterView<IRelayConnector, Views.RelayConnectorView>();
+            RegisterView<IRelayConnector, Views.ConnectorView>();
+            RegisterView<IConnector, Views.ConnectorView>();
         }
 
         protected override Type LocateViewForModel(Type modelType)

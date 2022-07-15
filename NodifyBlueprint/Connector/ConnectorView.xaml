@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="NodifyBlueprint.Views.RelayConnectorView"
+﻿<UserControl x:Class="NodifyBlueprint.Views.ConnectorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -13,5 +13,6 @@
     <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}"
                       IsConnected="{Binding IsConnected}"
                       DisconnectCommand="{s:Action Disconnect}"
+                      Margin="4 2"
                       Cursor="Arrow" />
 </UserControl>

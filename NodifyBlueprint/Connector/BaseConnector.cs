@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace NodifyBlueprint
 {
-    public abstract class BaseConnector : PropertyChangedBase, IConnector
+    public class BaseConnector : PropertyChangedBase, IConnector
     {
         public BaseConnector(IGraphElement node)
         {
@@ -12,13 +12,6 @@ namespace NodifyBlueprint
         }
 
         public IGraphElement Node { get; }
-
-        private string? _displayName;
-        public string? Title
-        {
-            get => _displayName;
-            set => SetAndNotify(ref _displayName, value);
-        }
 
         private Point _anchor;
         public Point Anchor
@@ -31,7 +24,7 @@ namespace NodifyBlueprint
         public bool IsConnected
         {
             get => _isConnected;
-            set => SetAndNotify(ref _isConnected, value);
+            protected set => SetAndNotify(ref _isConnected, value);
         }
 
         private readonly HashSet<IConnection> _connections = new HashSet<IConnection>();
@@ -55,23 +48,22 @@ namespace NodifyBlueprint
                 IsConnected = _connections.Count > 0;
             }
         }
+
+        public virtual bool TryConnectTo(IGraphElement element)
+        {
+            return Node.Graph.TryConnect(this, element);
+        }
+
+        public virtual bool TryConnectTo(IConnector other)
+        {
+            return Node.Graph.TryConnect(this, other);
+        }
     }
 
-    // Marker interface
-    public interface IInputConnector : IConnector
-    {
-    }
-
-    // Marker interface
     public interface IRelayConnector : IConnector
     {
         IConnector Source { get; }
         IConnector Target { get; }
-    }
-
-    // Marker interface
-    public interface IOutputConnector : IConnector
-    {
     }
 
     public class RelayConnector : BaseConnector, IRelayConnector
@@ -88,20 +80,6 @@ namespace NodifyBlueprint
         }
 
         public RelayConnector(IRelayNode node) : base(node)
-        {
-        }
-    }
-
-    public class InputConnector : BaseConnector, IInputConnector
-    {
-        public InputConnector(IGraphNode node) : base(node)
-        {
-        }
-    }
-
-    public class OutputConnector : BaseConnector, IOutputConnector
-    {
-        public OutputConnector(IGraphNode node) : base(node)
         {
         }
     }

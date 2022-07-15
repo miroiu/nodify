@@ -16,8 +16,8 @@ namespace NodifyBlueprint
         void RemoveElement(IGraphElement node);
         void RemoveElements(IEnumerable<IGraphElement> nodes);
 
-        void TryConnect(IConnector source, IConnector target);
-        void TryConnect(IConnector source, IGraphElement target);
+        bool TryConnect(IConnector source, IConnector target);
+        bool TryConnect(IConnector source, IGraphElement target);
         void Disconnect(IConnector connector);
         void Disconnect(IConnection connection);
         void Split(IConnection connection, Point location);

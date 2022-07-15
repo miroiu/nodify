@@ -12,6 +12,7 @@
              d:DataContext="{d:DesignInstance Type=vm:IConnector, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <vm:TypeToColorConverter x:Key="ConnectorToColorConverter" />
+        <vm:BooleanExpressionToVisibilityConverter x:Key="BooleanExpressionToVisibilityConverter" Operator="Or" Negate="True" />
     </UserControl.Resources>
     
     <nodify:NodeInput Header="{Binding}"
@@ -23,9 +24,15 @@
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Title}" />
-                    <ContentControl s:View.Model="{Binding ValueEditor}"
-                                    Margin="5 0 0 0"
-                                    Visibility="{Binding IsConnected, Converter={vm:BooleanToVisibilityConverter Negate=True}}" />
+                    <ContentControl s:View.Model="{Binding Editor}"
+                                    Margin="5 0 0 0">
+                        <ContentControl.Visibility>
+                            <MultiBinding Converter="{StaticResource BooleanExpressionToVisibilityConverter}">
+                                <Binding Path="IsConnected" />
+                                <Binding Path="HideEditor" />
+                            </MultiBinding>
+                        </ContentControl.Visibility>
+                    </ContentControl>
                 </StackPanel>
             </DataTemplate>
         </nodify:NodeInput.HeaderTemplate>

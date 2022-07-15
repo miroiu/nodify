@@ -18,5 +18,9 @@
                 s:View.ActionTarget="{Binding}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top">Add comment</Button>
+        <Button Command="{s:Action FocusRandomNode}"
+                s:View.ActionTarget="{Binding}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top">Focus random node</Button>
     </Grid>
 </Window>

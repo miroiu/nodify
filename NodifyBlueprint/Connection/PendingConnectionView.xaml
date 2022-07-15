@@ -12,5 +12,8 @@
              d:DataContext="{d:DesignInstance Type=vm:IPendingConnection, IsDesignTimeCreatable=False}">
     <nodify:PendingConnection StartedCommand="{s:Action Start}"
                               CompletedCommand="{s:Action Complete}" 
+                              IsVisible="{Binding IsVisible}"
+                              PreviewTarget="{Binding PreviewTarget, Mode=OneWayToSource}"
+                              TargetAnchor="{Binding TargetLocation, Mode=OneWayToSource}"
                               AllowOnlyConnectors="False" />
 </UserControl>

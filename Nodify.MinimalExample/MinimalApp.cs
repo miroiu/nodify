@@ -1,4 +1,6 @@
 ﻿using NodifyBlueprint;
+using System;
+using System.Linq;
 using System.Windows;
 
 namespace NodifyMinimalExample
@@ -40,7 +42,9 @@ namespace NodifyMinimalExample
 
     public class MinimalApp
     {
-        public IBlueprintGraph Graph { get; } = new BlueprintGraph();
+
+        public IGraph Graph { get; } = new Graph();
+        private static Random _random = new Random();
 
         public MinimalApp()
         {
@@ -51,7 +55,8 @@ namespace NodifyMinimalExample
                 Location = new Point(100, 250),
                 Content = "True"
             };
-            primeNode.AddValueOutput<bool>();
+            primeNode.AddInput(new BaseConnector(primeNode));
+            primeNode.AddOutput(new BaseConnector(primeNode));
 
             var subtractNode = new SubtractNode(Graph) { Location = new Point(100, 100) };
             var stringNode = new ToStringNode(Graph) { Location = new Point(250, 100) };
@@ -70,6 +75,14 @@ namespace NodifyMinimalExample
         public void AddComment()
         {
             Graph.AddComment("Well, this is a comment sorounding all nodes", Graph.Elements);
+        }
+
+        public void FocusRandomNode()
+        {
+            int nodeIndex = _random.Next(Graph.Elements.Count);
+            IGraphElement elem = Graph.Elements.ElementAt(nodeIndex);
+
+            Graph.FocusNode(elem);
         }
     }
 }

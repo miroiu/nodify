@@ -12,18 +12,32 @@ namespace NodifyBlueprint
         }
     }
 
-    public class ValueInput<T> : BaseConnector, IInputConnector
+    public class ValueInput<T> : BaseConnector
     {
         public ValueInput(IGraphNode node) : base(node)
         {
         }
 
-        public ValueEditor<T> ValueEditor { get; } = new ValueEditor<T>();
+        public ValueEditor<T> Editor { get; } = new ValueEditor<T>();
+
+        private string? _title;
+        public string? Title
+        {
+            get => _title;
+            set => SetAndNotify(ref _title, value);
+        }
+
+        private bool _hideEditor;
+        public bool HideEditor
+        {
+            get => _hideEditor;
+            set => SetAndNotify(ref _hideEditor, value);
+        }
 
         public T Value
         {
-            get => ValueEditor.Value;
-            set => ValueEditor.Value = value;
+            get => Editor.Value;
+            set => Editor.Value = value;
         }
     }
 }

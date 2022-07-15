@@ -7,12 +7,14 @@ namespace NodifyBlueprint
     {
         IGraphElement Node { get; }
         Point Anchor { get; }
-        string? Title { get; set; }
         bool IsConnected { get; }
         IReadOnlyCollection<IConnection> Connections { get; }
 
         void Disconnect();
         void AddConnection(IConnection connection);
         void RemoveConnection(IConnection connection);
+
+        bool TryConnectTo(IGraphElement element);
+        bool TryConnectTo(IConnector other);
     }
 }

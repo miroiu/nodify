@@ -1,4 +1,5 @@
 ﻿using Stylet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -48,13 +49,26 @@ namespace NodifyBlueprint
             // Need access to the editor control instance (could attach it in code behind or use the IViewAware interface)
         }
 
-        public virtual void TryConnect(IConnector source, IConnector target)
+        public virtual bool TryConnect(IConnector source, IConnector target)
         {
-            if (CanConnect(source, target))
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            bool canConnect = CanConnect(source, target);
+            if (canConnect)
             {
                 IConnection connection = CreateConnection(source, target);
                 _connections.Add(connection);
             }
+            
+            return canConnect;
         }
 
         protected virtual IConnection CreateConnection(IConnector source, IConnector target)
@@ -64,35 +78,34 @@ namespace NodifyBlueprint
 
         protected virtual bool CanConnect(IConnector source, IConnector target)
         {
-            if (source is IRelayConnector || target is IRelayConnector)
-            {
-                return true;
-            }
-
-            IConnector? input = source is IInputConnector ? source : target is IInputConnector ? target : null;
-            IConnector? output = source is IOutputConnector ? source : target is IOutputConnector ? target : null;
             bool canConnect = source != target
                 && source.Node != target.Node
-                && source.Node.Graph == target.Node.Graph
-                && input != null && output != null;
+                && source.Node.Graph == target.Node.Graph;
 
             return canConnect;
         }
 
-        public virtual void TryConnect(IConnector source, IGraphElement target)
+        public virtual bool TryConnect(IConnector source, IGraphElement target)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             if (target is IGraphNode node)
             {
                 IConnector? connector = node.Input.FirstOrDefault(x => CanConnect(source, x)) ?? node.Output.FirstOrDefault(x => CanConnect(source, x));
                 if (connector != null)
                 {
-                    TryConnect(source, connector);
+                    return TryConnect(source, connector);
                 }
             }
             else if (target is IRelayNode relay)
             {
-                TryConnect(source, relay.Connector);
+                return TryConnect(source, relay.Connector);
             }
+
+            return false;
         }
 
         public virtual void Disconnect(IConnector connector)
