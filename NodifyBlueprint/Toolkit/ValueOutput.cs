@@ -1,6 +1,6 @@
 ﻿namespace NodifyBlueprint
 {
-    public class ValueOutput<T> : BlueprintConnector, IOutputConnector
+    public class ValueOutput<T> : BaseConnector, IOutputConnector
     {
         public ValueOutput(IGraphNode node) : base(node)
         {

@@ -19,6 +19,8 @@ namespace NodifyBlueprint
         void TryConnect(IConnector source, IConnector target);
         void TryConnect(IConnector source, IGraphElement target);
         void Disconnect(IConnector connector);
+        void Disconnect(IConnection connection);
+        void Split(IConnection connection, Point location);
 
         void FocusLocation(double x, double y);
     }

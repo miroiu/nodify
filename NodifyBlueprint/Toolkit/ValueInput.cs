@@ -12,7 +12,7 @@ namespace NodifyBlueprint
         }
     }
 
-    public class ValueInput<T> : BlueprintConnector, IInputConnector
+    public class ValueInput<T> : BaseConnector, IInputConnector
     {
         public ValueInput(IGraphNode node) : base(node)
         {

@@ -1,32 +1,26 @@
 ﻿using Stylet;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace NodifyBlueprint
 {
     public class Graph : IGraph
     {
-        private readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
+        protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
 
-        private readonly BindableCollection<IGraphElement> _selectedElements = new BindableCollection<IGraphElement>();
+        protected readonly BindableCollection<IGraphElement> _selectedElements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> SelectedElements => _selectedElements;
 
-        private readonly BindableCollection<IConnection> _connections = new BindableCollection<IConnection>();
+        protected readonly BindableCollection<IConnection> _connections = new BindableCollection<IConnection>();
         public IReadOnlyCollection<IConnection> Connections => _connections;
 
         public virtual IPendingConnection PendingConnection { get; }
 
-        public IGraphSchema Schema { get; }
-
-        public Graph(IGraphSchema schema)
+        public Graph()
         {
             PendingConnection = new PendingConnection(this);
-            Schema = schema;
-        }
-
-        public Graph() : this(GraphSchema.Default)
-        {
         }
 
         public virtual void AddElement(IGraphElement node)
@@ -54,19 +48,13 @@ namespace NodifyBlueprint
             // Need access to the editor control instance (could attach it in code behind or use the IViewAware interface)
         }
 
-        public void TryConnect(IConnector source, IConnector target)
+        public virtual void TryConnect(IConnector source, IConnector target)
         {
-            bool canConnect = Schema.CanConnect(source, target);
-
-            if (canConnect)
+            if (CanConnect(source, target))
             {
-                var connection = CreateConnection(source, target);
+                IConnection connection = CreateConnection(source, target);
                 _connections.Add(connection);
             }
-        }
-
-        public virtual void TryConnect(IConnector source, IGraphElement target)
-        {
         }
 
         protected virtual IConnection CreateConnection(IConnector source, IConnector target)
@@ -74,33 +62,78 @@ namespace NodifyBlueprint
             return new NodeConnection(source, target);
         }
 
+        protected virtual bool CanConnect(IConnector source, IConnector target)
+        {
+            if (source is IRelayConnector || target is IRelayConnector)
+            {
+                return true;
+            }
+
+            IConnector? input = source is IInputConnector ? source : target is IInputConnector ? target : null;
+            IConnector? output = source is IOutputConnector ? source : target is IOutputConnector ? target : null;
+            bool canConnect = source != target
+                && source.Node != target.Node
+                && source.Node.Graph == target.Node.Graph
+                && input != null && output != null;
+
+            return canConnect;
+        }
+
+        public virtual void TryConnect(IConnector source, IGraphElement target)
+        {
+            if (target is IGraphNode node)
+            {
+                IConnector? connector = node.Input.FirstOrDefault(x => CanConnect(source, x)) ?? node.Output.FirstOrDefault(x => CanConnect(source, x));
+                if (connector != null)
+                {
+                    TryConnect(source, connector);
+                }
+            }
+            else if (target is IRelayNode relay)
+            {
+                TryConnect(source, relay.Connector);
+            }
+        }
+
         public virtual void Disconnect(IConnector connector)
         {
-            connector.IsConnected = false;
-
             var connections = _connections.Where(c => c.Source == connector || c.Target == connector).ToList();
             connections.ForEach(c =>
             {
-                c.Source.IsConnected = false;
-                c.Target.IsConnected = false;
+                c.Source.RemoveConnection(c);
+                c.Target.RemoveConnection(c);
             });
             _connections.RemoveRange(connections);
         }
 
         public virtual void Disconnect(IConnection connection)
         {
-            connection.Source.IsConnected = false;
-            connection.Target.IsConnected = false;
-            _connections.Remove(connection);
+            RemoveConnection(connection);
         }
 
-        public void Disconnect(IGraphNode node)
+        public virtual void Split(IConnection connection, Point location)
         {
-            var inputConnections = node.Input.SelectMany(c => c.Connections);
-            var outputConnections = node.Output.SelectMany(c => c.Connections);
+            var node = new RelayNode(this)
+            {
+                Location = location
+            };
 
-            _connections.RemoveRange(inputConnections);
-            _connections.RemoveRange(outputConnections);
+            var sourceCon = CreateConnection(node.Connector, connection.Source);
+            var targetCon = CreateConnection(connection.Target, node.Connector);
+
+            _connections.Add(sourceCon);
+            _connections.Add(targetCon);
+
+            AddElement(node);
+
+            connection.Disconnect();
+        }
+
+        protected virtual void RemoveConnection(IConnection connection)
+        {
+            connection.Source.RemoveConnection(connection);
+            connection.Target.RemoveConnection(connection);
+            _connections.Remove(connection);
         }
     }
 }

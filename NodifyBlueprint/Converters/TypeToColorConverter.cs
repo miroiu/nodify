@@ -18,10 +18,22 @@ namespace NodifyBlueprint
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Type? type = value?.GetType().GetGenericArguments()[0];
-            if (type != null && _mappings.TryGetValue(type, out var color))
+            if (value is IRelayConnector connector)
             {
-                return new SolidColorBrush(color);
+                return Convert(connector.Source, targetType, parameter, culture);
+            }
+            else
+            {
+                Type[]? args = value?.GetType().GetGenericArguments();
+
+                if (args?.Length > 0)
+                {
+                    Type? type = args[0];
+                    if (type != null && _mappings.TryGetValue(type, out var color))
+                    {
+                        return new SolidColorBrush(color);
+                    }
+                }
             }
 
             return Brushes.LightSlateGray;

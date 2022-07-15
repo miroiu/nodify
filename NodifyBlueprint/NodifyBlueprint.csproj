@@ -4,7 +4,6 @@
     <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>miroiu</Authors>
     <Company />
@@ -19,9 +18,12 @@
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
     <Version>1.8.0</Version>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
     <LangVersion>8.0</LangVersion>
@@ -37,5 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nodify\Nodify.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Connector\RelayConnectorView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Node\RelayNodeView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>

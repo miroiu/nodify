@@ -1,6 +1,6 @@
 ﻿namespace NodifyBlueprint
 {
-    public interface IBlueprintConnection
+    public interface IBlueprintConnection : IConnection
     {
     }
 

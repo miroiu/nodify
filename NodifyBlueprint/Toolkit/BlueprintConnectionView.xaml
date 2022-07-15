@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NodifyBlueprint.Views"
              xmlns:vm="clr-namespace:NodifyBlueprint"
              xmlns:nodify="https://miroiu.github.io/nodify"
+             xmlns:s="https://github.com/canton7/Stylet"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -16,5 +17,8 @@
 
     <nodify:Connection Source="{Binding Source.Anchor}" 
                        Target="{Binding Target.Anchor}"
-                       Stroke="{Binding Source, Converter={StaticResource ConnectorToColorConverter}}" />
+                       Stroke="{Binding Source, Converter={StaticResource ConnectorToColorConverter}}"
+                       SplitCommand="{s:Action Split}"
+                       DisconnectCommand="{s:Action Disconnect}"
+                       Cursor="Hand" />
 </UserControl>

@@ -5,13 +5,14 @@ namespace NodifyBlueprint
 {
     public interface IConnector
     {
-        IGraphNode Node { get; }
+        IGraphElement Node { get; }
         Point Anchor { get; }
         string? Title { get; set; }
-        bool IsConnected { get; set; }
+        bool IsConnected { get; }
         IReadOnlyCollection<IConnection> Connections { get; }
 
         void Disconnect();
         void AddConnection(IConnection connection);
+        void RemoveConnection(IConnection connection);
     }
 }

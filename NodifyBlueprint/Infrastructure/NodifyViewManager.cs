@@ -20,6 +20,7 @@ namespace NodifyBlueprint
             RegisterView<ValueEditor<bool>, Views.BooleanValueEditorView>();
             RegisterView<IGraph, Views.GraphView>();
             RegisterView<IGraphNode, Views.GraphNodeView>();
+            RegisterView<IRelayNode, Views.RelayNodeView>();
             RegisterView<ICommentNode, Views.CommentNodeView>();
             RegisterView<IBlueprintConnection, Views.BlueprintConnectionView>();
             RegisterView<IBlueprintPendingConnection, Views.BlueprintPendingConnectionView>();
@@ -27,6 +28,7 @@ namespace NodifyBlueprint
             RegisterView<IConnection, Views.ConnectionView>();
             RegisterView<IInputConnector, Views.NodeInputView>();
             RegisterView<IOutputConnector, Views.NodeOutputView>();
+            RegisterView<IRelayConnector, Views.RelayConnectorView>();
         }
 
         protected override Type LocateViewForModel(Type modelType)

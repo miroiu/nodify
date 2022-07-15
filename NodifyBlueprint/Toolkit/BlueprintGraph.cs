@@ -1,38 +1,67 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace NodifyBlueprint
 {
     public interface IBlueprintGraph : IGraph
     {
-        void Disconnect(IConnection connection);
         void Disconnect(IGraphNode node);
     }
 
     public class BlueprintGraph : Graph, IBlueprintGraph
     {
+        private readonly IPendingConnection _pendingConnection;
+        public override IPendingConnection PendingConnection => _pendingConnection;
+
+        public BlueprintGraph() : base()
+        {
+            _pendingConnection = new BlueprintPendingConnection(this);
+        }
+
         protected override IConnection CreateConnection(IConnector source, IConnector target)
         {
             return new BlueprintConnection(source, target);
         }
 
-        private readonly IPendingConnection _pendingConnection;
-        public override IPendingConnection PendingConnection => _pendingConnection;
-
-        public BlueprintGraph() : base(BlueprintSchema.Default)
+        protected override bool CanConnect(IConnector source, IConnector target)
         {
-            _pendingConnection = new BlueprintPendingConnection(this);
+            bool result = base.CanConnect(source, target);
+
+            if (result)
+            {
+                var srcType = GetValueType(source);
+                var targetType = GetValueType(target);
+
+                result = source is IOutputConnector && IsAssignable(srcType, targetType) || target is IOutputConnector && IsAssignable(targetType, srcType);
+            }
+
+            result |= source is IRelayConnector || target is IRelayConnector;
+            return result;
         }
 
-        public override void TryConnect(IConnector source, IGraphElement target)
+        private static bool IsAssignable(Type? srcType, Type? targetType)
         {
-            if (target is IGraphNode node)
+            return targetType != null && targetType.IsAssignableFrom(srcType);
+        }
+
+        private static Type? GetValueType(IConnector conn)
+        {
+            var type = conn.GetType();
+            if (type.IsGenericType)
             {
-                IConnector? connector = node.Input.FirstOrDefault(x => Schema.CanConnect(source, x)) ?? node.Output.FirstOrDefault(x => Schema.CanConnect(source, x));
-                if (connector != null)
-                {
-                    TryConnect(source, connector);
-                }
+                type = type.GetGenericArguments()[0];
             }
+
+            return type;
+        }
+
+        public virtual void Disconnect(IGraphNode node)
+        {
+            var inputConnections = node.Input.SelectMany(c => c.Connections);
+            var outputConnections = node.Output.SelectMany(c => c.Connections);
+
+            _connections.RemoveRange(inputConnections);
+            _connections.RemoveRange(outputConnections);
         }
     }
 }
