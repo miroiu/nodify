@@ -22,6 +22,7 @@ Added ActualSize - OneWayToSource to ItemContainer
 Added DecoratorContainer and DecoratorContainerStyle to NodifyEditor
 Added RemoveConnectionCommand to NodifyEditor
 Added DisconnectCommand and SplitCommand to BaseConnection
+Added ContentBrush to NodifyEditor
 
 Breaking Changes: 
 Removed ActualSize from StateNode

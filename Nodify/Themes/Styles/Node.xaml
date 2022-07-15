@@ -16,6 +16,8 @@
     <Style TargetType="{x:Type local:Node}">
         <Setter Property="Background"
                 Value="#2D2D30" />
+        <Setter Property="ContentBrush"
+                Value="#2D2D30" />
         <Setter Property="HeaderBrush"
                 Value="#1E1E1E" />
         <Setter Property="FooterBrush"
@@ -78,9 +80,12 @@
                                               Focusable="False" />
 
                                 <!--Content-->
-                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  Grid.Column="1" />
+                                <Border Grid.Column="1" 
+                                        Padding="16 0 16 0"
+                                        Background="{TemplateBinding ContentBrush}">
+                                    <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                </Border>
 
                                 <!--Data OUT-->
                                 <ItemsControl ItemsSource="{TemplateBinding Output}"

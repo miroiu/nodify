@@ -12,6 +12,7 @@ namespace Nodify
     {
         #region Dependency Properties
 
+        public static readonly DependencyProperty ContentBrushProperty = DependencyProperty.Register(nameof(ContentBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register(nameof(HeaderBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty FooterBrushProperty = DependencyProperty.Register(nameof(FooterBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(nameof(Footer), typeof(object), typeof(Node));
@@ -20,18 +21,27 @@ namespace Nodify
         public static readonly DependencyProperty OutputConnectorTemplateProperty = DependencyProperty.Register(nameof(OutputConnectorTemplate), typeof(DataTemplate), typeof(Node));
         public static readonly DependencyProperty InputProperty = DependencyProperty.Register(nameof(Input), typeof(IEnumerable), typeof(Node));
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register(nameof(Output), typeof(IEnumerable), typeof(Node));
-        
+
         /// <summary>
-        /// Gets or sets the brush used for the background of the <see cref="HeaderedContentControl.Header"/> of this <see cref="GroupingNode"/>.
+        /// Gets or sets the brush used for the background of the <see cref="ContentControl.Content"/> of this <see cref="Node"/>.
+        /// </summary>
+        public Brush ContentBrush
+        {
+            get => (Brush)GetValue(ContentBrushProperty);
+            set => SetValue(ContentBrushProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the brush used for the background of the <see cref="HeaderedContentControl.Header"/> of this <see cref="Node"/>.
         /// </summary>
         public Brush HeaderBrush
         {
             get => (Brush)GetValue(HeaderBrushProperty);
             set => SetValue(HeaderBrushProperty, value);
         }
-        
+
         /// <summary>
-        /// Gets or sets the brush used for the background of the <see cref="Node.Footer"/> of this <see cref="GroupingNode"/>.
+        /// Gets or sets the brush used for the background of the <see cref="Node.Footer"/> of this <see cref="Node"/>.
         /// </summary>
         public Brush FooterBrush
         {

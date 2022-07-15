@@ -56,6 +56,10 @@
                      o:Freeze="True"
                      Color="{DynamicResource Node.BackgroundColor}" />
 
+    <SolidColorBrush x:Key="Node.ContentBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Node.ContentColor}" />
+
     <SolidColorBrush x:Key="Node.ForegroundBrush"
                      o:Freeze="True"
                      Color="{DynamicResource Node.ForegroundColor}" />

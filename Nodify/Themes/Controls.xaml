@@ -53,6 +53,8 @@
                 Value="{StaticResource Node.BackgroundBrush}" />
         <Setter Property="Foreground"
                 Value="{StaticResource Node.ForegroundBrush}" />
+        <Setter Property="ContentBrush"
+                Value="{StaticResource Node.ContentBrush}" />
         <Setter Property="HeaderBrush"
                 Value="{StaticResource Node.HeaderBrush}" />
         <Setter Property="FooterBrush"

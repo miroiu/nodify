@@ -33,8 +33,6 @@
                 Value="White" />
         <Setter Property="Padding"
                 Value="4 2" />
-        <Setter Property="Margin"
-                Value="16 0 0 0" />
         <Setter Property="ConnectorTemplate"
                 Value="{StaticResource ConnectorThumbTemplate}" />
         <Setter Property="Template">

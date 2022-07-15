@@ -18,6 +18,7 @@
 
     <!--NODE-->
     <Color x:Key="Node.BackgroundColor">#2D2D30</Color>
+    <Color x:Key="Node.ContentColor">#2D2D30</Color>
     <Color x:Key="Node.ForegroundColor">White</Color>
     <Color x:Key="Node.HeaderForegroundColor">White</Color>
     <Color x:Key="Node.HeaderColor">#1E1E1E</Color>
