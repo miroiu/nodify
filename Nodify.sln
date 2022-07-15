@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Calculator", "Exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.MinimalExample", "Nodify.MinimalExample\Nodify.MinimalExample.csproj", "{BDB8CF0E-2394-4B21-B5AF-89A33B05F782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodifyBlueprint", "NodifyBlueprint\NodifyBlueprint.csproj", "{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodifier", "Nodifier\Nodifier.csproj", "{A14F9187-3BBC-4DEC-974B-A565A5CE78E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

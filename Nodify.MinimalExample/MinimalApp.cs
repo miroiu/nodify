@@ -1,75 +1,49 @@
-﻿using NodifyBlueprint;
+﻿using Nodifier;
 using System;
 using System.Linq;
 using System.Windows;
 
 namespace NodifyMinimalExample
 {
-    public class SubtractNode : GraphNode
-        .WithContent<string>
-        .WithFooter<string>
-    {
-        public ValueInput<int> A { get; }
-        public ValueInput<int> B { get; }
-        public ValueOutput<int> Out { get; }
-
-        public SubtractNode(IGraph graph) : base(graph)
-        {
-            Content = "This is the content";
-            Footer = "This is the footer";
-            
-            A = this.AddValueInput<int>("A");
-            B = this.AddValueInput<int>("B");
-
-            Out = this.AddValueOutput<int>();
-        }
-    }
-
-    public class ToStringNode : GraphNode
-        .WithHeader<string>
-    {
-        public ValueInput<object> In { get; }
-        public ValueOutput<string> Out { get; }
-
-        public ToStringNode(IGraph graph) : base(graph)
-        {
-            Header = "This is the header";
-
-            In = this.AddValueInput<object>();
-            Out = this.AddValueOutput<string>();
-        }
-    }
+    /// 
+    ///  ALT + Click on a connector to disconnect
+    ///  ALT + Click on a connection to disconnect
+    ///  Double Click on a connection to split
+    /// 
 
     public class MinimalApp
     {
-
         public IGraph Graph { get; } = new Graph();
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         public MinimalApp()
         {
-            // ALT + Click on a connector to disconnect
-
-            var primeNode = new GraphNode.WithContent<string>(Graph)
+            var toString = new GraphNode.WithHeader<string>(Graph)
             {
                 Location = new Point(100, 250),
-                Content = "True"
+                Header = "To String"
             };
-            primeNode.AddInput(new BaseConnector(primeNode));
-            primeNode.AddOutput(new BaseConnector(primeNode));
+            toString.AddInput(new BaseConnector(toString));
+            toString.AddOutput(new BaseConnector(toString));
+            
+            var add = new GraphNode.WithContent<string>(Graph)
+            {
+                Location = new Point(300, 250),
+                Content = "ADD"
+            };
 
-            var subtractNode = new SubtractNode(Graph) { Location = new Point(100, 100) };
-            var stringNode = new ToStringNode(Graph) { Location = new Point(250, 100) };
+            add.AddInput(new BaseConnector(add));
+            add.AddInput(new BaseConnector(add));
+            add.AddOutput(new BaseConnector(add));
+            
+            Graph.AddElement(toString);
+            Graph.AddElement(add);
 
-            var R = subtractNode.AddValueInput<bool>("R");
-            subtractNode.AddValueInput(value: 15.3);
-
-            Graph.AddElement(primeNode);
-            Graph.AddElement(stringNode);
-            Graph.AddElement(subtractNode);
-
-            Graph.TryConnect(subtractNode.Out, stringNode.In);
-            Graph.TryConnect(R, primeNode);
+            if (toString.TryConnect(add))
+            {
+                IConnection con = Graph.Connections.First();
+                con.Split(new Point(200, 150));
+            }
         }
 
         public void AddComment()
@@ -82,7 +56,7 @@ namespace NodifyMinimalExample
             int nodeIndex = _random.Next(Graph.Elements.Count);
             IGraphElement elem = Graph.Elements.ElementAt(nodeIndex);
 
-            Graph.FocusNode(elem);
+            Graph.FocusElement(elem);
         }
     }
 }

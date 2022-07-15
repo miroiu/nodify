@@ -1,12 +1,12 @@
 ﻿<Application x:Class="Nodify.MinimalExample.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:blueprint="https://miroiu.github.io/nodify-blueprint"
+             xmlns:nodifier="https://miroiu.github.io/nodifier"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <blueprint:NodifyLoader />
+                <nodifier:NodifyLoader />
                 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Dark.xaml" />
                 <ResourceDictionary>
                     <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NodifyMinimalExample" 
-        xmlns:blueprint="https://miroiu.github.io/nodify-blueprint" 
+        xmlns:nodifier="https://miroiu.github.io/nodifier" 
         xmlns:s="https://github.com/canton7/Stylet"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -13,7 +13,7 @@
     </Window.DataContext>
 
     <Grid>
-        <blueprint:NodeGraph DataContext="{Binding Graph}" />
+        <nodifier:NodeGraph DataContext="{Binding Graph}" />
         <StackPanel Orientation="Horizontal" Margin="10">
             <Button Command="{s:Action AddComment}"
                 s:View.ActionTarget="{Binding}"
