@@ -368,9 +368,23 @@ namespace Nodify
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisablePanningChanged));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(Collection<UIElement>), typeof(NodifyEditor));
+
+        private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
+
+        private static object OnCoerceGridCellSize(DependencyObject d, object value)
+            => (uint)value > 0u ? value : BoxValue.UInt1;
+
+        private static void OnGridCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
+
+        private static void OnDisablePanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = (NodifyEditor)d;
+            editor.OnDisableAutoPanningChanged(editor.DisableAutoPanning);
+        }
 
         public Collection<UIElement> Decorators
         {
@@ -441,14 +455,6 @@ namespace Nodify
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
         }
-
-        private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
-
-        private static object OnCoerceGridCellSize(DependencyObject d, object value)
-            => (uint)value > 0u ? value : BoxValue.UInt1;
-
-        private static void OnGridCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
         #endregion
 
