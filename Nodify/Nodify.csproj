@@ -29,6 +29,9 @@ Auto panning speed now scales with the zoom factor.
 
 Breaking Changes: 
 Renamed NodifyEditor.Offset to ViewportLocation
+Renamed NodifyEditor.Scale to ViewportZoom
+Renamed NodifyEditor.MinScale to MinViewportZoom
+Renamed NodifyEditor.MaxScale to MaxViewportZoom
 Renamed NodifyEditor.AppliedTransform to ViewportTransform
 Removed NodifyEditor.Viewport dependency property
 Removed ActualSize from StateNode
@@ -36,7 +39,7 @@ Removed Icon from Node as it can (and should) be added in a custom header templa
 PART_ItemsHost is now mandatory for NodifyEditor
 ItemContainer cannot be used outside a NodifyEditor
 Removed custom converters
-NodifyEditor.ZoomAtPosition requires now graph space coordinates instead of screen space coordinates
+NodifyEditor.ZoomAtPosition now requires graph space coordinates instead of screen space coordinates
 Made DependencyObjectExtensions internal</PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

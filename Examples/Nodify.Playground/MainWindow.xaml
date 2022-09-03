@@ -207,7 +207,7 @@
                                  Text="{Binding GraphViewModel.ViewportSize, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The viewport's scale. Not accurate when trying to zoom outside the MinScale and MaxScale because of dependency property coercion not updating the binding with the final result.">
+                    <TextBlock ToolTip="The viewport's zoom. Not accurate when trying to zoom outside the MinViewportZoom and MaxViewportZoom because of dependency property coercion not updating the binding with the final result.">
                         <TextBlock.Inlines>
                             <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"

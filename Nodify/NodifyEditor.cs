@@ -16,7 +16,7 @@ using System.Windows.Threading;
 namespace Nodify
 {
     /// <summary>
-    /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, scale and select.
+    /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, zoom and select.
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
     [TemplatePart(Name = ElementDecoratorsHost, Type = typeof(Panel))]
@@ -32,9 +32,9 @@ namespace Nodify
 
         #region Viewport
 
-        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnScaleChanged, ConstrainScaleToRange));
-        public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
-        public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
+        public static readonly DependencyProperty ViewportZoomProperty = DependencyProperty.Register(nameof(ViewportZoom), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnViewportZoomChanged, ConstrainViewportZoomToRange));
+        public static readonly DependencyProperty MinViewportZoomProperty = DependencyProperty.Register(nameof(MinViewportZoom), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinViewportZoomChanged, CoerceMinViewportZoom));
+        public static readonly DependencyProperty MaxViewportZoomProperty = DependencyProperty.Register(nameof(MaxViewportZoom), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaxViewportZoomChanged, CoerceMaxViewportZoom));
         public static readonly DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnViewportLocationChanged));
         public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Size));
 
@@ -48,62 +48,62 @@ namespace Nodify
             var editor = (NodifyEditor)d;
             var translate = (Point)e.NewValue;
 
-            editor.TranslateTransform.X = -translate.X * editor.Scale;
-            editor.TranslateTransform.Y = -translate.Y * editor.Scale;
+            editor.TranslateTransform.X = -translate.X * editor.ViewportZoom;
+            editor.TranslateTransform.Y = -translate.Y * editor.ViewportZoom;
 
             editor.OnViewportUpdated();
         }
 
-        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var editor = (NodifyEditor)d;
-            double scale = (double)e.NewValue;
+            double zoom = (double)e.NewValue;
 
-            editor.ScaleTransform.ScaleX = scale;
-            editor.ScaleTransform.ScaleY = scale;
+            editor.ScaleTransform.ScaleX = zoom;
+            editor.ScaleTransform.ScaleY = zoom;
 
-            editor.ViewportSize = new Size(editor.ActualWidth / scale, editor.ActualHeight / scale);
+            editor.ViewportSize = new Size(editor.ActualWidth / zoom, editor.ActualHeight / zoom);
 
             editor.ApplyRenderingOptimizations();
             editor.OnViewportUpdated();
         }
 
-        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnMinViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
-            zoom.CoerceValue(MaxScaleProperty);
-            zoom.CoerceValue(ScaleProperty);
+            zoom.CoerceValue(MaxViewportZoomProperty);
+            zoom.CoerceValue(ViewportZoomProperty);
         }
 
-        private static object CoerceMinimumScale(DependencyObject d, object value)
+        private static object CoerceMinViewportZoom(DependencyObject d, object value)
             => (double)value > 0 ? value : 0.01;
 
-        private static void OnMaximumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnMaxViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (NodifyEditor)d;
-            zoom.CoerceValue(ScaleProperty);
+            zoom.CoerceValue(ViewportZoomProperty);
         }
 
-        private static object CoerceMaximumScale(DependencyObject d, object value)
+        private static object CoerceMaxViewportZoom(DependencyObject d, object value)
         {
             var editor = (NodifyEditor)d;
-            double min = editor.MinScale;
+            double min = editor.MinViewportZoom;
 
             return (double)value < min ? min : value;
         }
 
-        private static object ConstrainScaleToRange(DependencyObject d, object value)
+        private static object ConstrainViewportZoomToRange(DependencyObject d, object value)
         {
             var editor = (NodifyEditor)d;
 
             var num = (double)value;
-            double minimum = editor.MinScale;
+            double minimum = editor.MinViewportZoom;
             if (num < minimum)
             {
                 return minimum;
             }
 
-            double maximum = editor.MaxScale;
+            double maximum = editor.MaxViewportZoom;
             return num > maximum ? maximum : value;
         }
         #endregion
@@ -123,7 +123,7 @@ namespace Nodify
 
         /// <summary>
         /// Updates the <see cref="ViewportSize"/> and raises the <see cref="ViewportUpdatedEvent"/>.
-        /// Called when the <see cref="UIElement.RenderSize"/> or <see cref="Scale"/> is changed.
+        /// Called when the <see cref="UIElement.RenderSize"/> or <see cref="ViewportZoom"/> is changed.
         /// </summary>
         protected void OnViewportUpdated() => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
 
@@ -168,28 +168,28 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the zoom factor of the viewport.
         /// </summary>
-        public double Scale
+        public double ViewportZoom
         {
-            get => (double)GetValue(ScaleProperty);
-            set => SetValue(ScaleProperty, value);
+            get => (double)GetValue(ViewportZoomProperty);
+            set => SetValue(ViewportZoomProperty, value);
         }
 
         /// <summary>
         /// Gets or sets the minimum zoom factor of the viewport
         /// </summary>
-        public double MinScale
+        public double MinViewportZoom
         {
-            get => (double)GetValue(MinScaleProperty);
-            set => SetValue(MinScaleProperty, value);
+            get => (double)GetValue(MinViewportZoomProperty);
+            set => SetValue(MinViewportZoomProperty, value);
         }
 
         /// <summary>
         /// Gets or sets the maximum zoom factor of the viewport
         /// </summary>
-        public double MaxScale
+        public double MaxViewportZoom
         {
-            get => (double)GetValue(MaxScaleProperty);
-            set => SetValue(MaxScaleProperty, value);
+            get => (double)GetValue(MaxViewportZoomProperty);
+            set => SetValue(MaxViewportZoomProperty, value);
         }
 
         #endregion
@@ -198,10 +198,10 @@ namespace Nodify
         {
             if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
             {
-                double scale = Scale;
-                double availableZoomIn = 1.0 - MinScale;
-                bool shouldCache = scale / availableZoomIn <= OptimizeRenderingZoomOutPercent;
-                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / scale) : null;
+                double zoom = ViewportZoom;
+                double availableZoomIn = 1.0 - MinViewportZoom;
+                bool shouldCache = zoom / availableZoomIn <= OptimizeRenderingZoomOutPercent;
+                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / zoom) : null;
             }
             else
             {
@@ -708,18 +708,18 @@ namespace Nodify
         {
             if (!DisableZooming)
             {
-                double prevScale = Scale;
-                Scale *= zoom;
+                double prevZoom = ViewportZoom;
+                ViewportZoom *= zoom;
 
-                if (Math.Abs(prevScale - Scale) > 0.001)
+                if (Math.Abs(prevZoom - ViewportZoom) > 0.001)
                 {
-                    // get the actual zoom value because Scale might have been coerced
-                    zoom = Scale / prevScale;
+                    // get the actual zoom value because Zoom might have been coerced
+                    zoom = ViewportZoom / prevZoom;
                     Vector position = (Vector)location;
 
                     var dist = position - (Vector)ViewportLocation;
-                    var scaledDist = dist * zoom;
-                    var diff = scaledDist - dist;
+                    var zoomedDist = dist * zoom;
+                    var diff = zoomedDist - dist;
                     ViewportLocation += diff / zoom;
                 }
             }
@@ -734,7 +734,7 @@ namespace Nodify
         {
             Focus();
 
-            Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * Scale) / Scale);
+            Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * ViewportZoom) / ViewportZoom);
 
             if (animated && point != ViewportLocation)
             {
@@ -763,7 +763,7 @@ namespace Nodify
             {
                 Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
-                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate) / (Scale * 2);
+                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate) / (ViewportZoom * 2);
                 double x = ViewportLocation.X;
                 double y = ViewportLocation.Y;
 
@@ -866,8 +866,8 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            double scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(scale, e.GetPosition(ItemsHost));
+            double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
             e.Handled = true;
         }
 
@@ -885,7 +885,7 @@ namespace Nodify
                     // Panning
                     if (e.RightButton == MouseButtonState.Pressed && !DisablePanning)
                     {
-                        ViewportLocation -= (CurrentMousePosition - PreviousMousePosition) / Scale;
+                        ViewportLocation -= (CurrentMousePosition - PreviousMousePosition) / ViewportZoom;
                         IsPanning = true;
                         e.Handled = true;
                     }
@@ -996,8 +996,8 @@ namespace Nodify
         {
             base.OnRenderSizeChanged(sizeInfo);
 
-            double scale = Scale;
-            ViewportSize = new Size(ActualWidth / scale, ActualHeight / scale);
+            double zoom = ViewportZoom;
+            ViewportSize = new Size(ActualWidth / zoom, ActualHeight / zoom);
 
             OnViewportUpdated();
         }

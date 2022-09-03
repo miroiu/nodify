@@ -201,7 +201,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                e.CanExecute = editor.Scale < editor.MaxScale;
+                e.CanExecute = editor.ViewportZoom < editor.MaxViewportZoom;
             }
         }
 
@@ -217,7 +217,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                e.CanExecute = editor.Scale > editor.MinScale;
+                e.CanExecute = editor.ViewportZoom > editor.MinViewportZoom;
             }
         }
 

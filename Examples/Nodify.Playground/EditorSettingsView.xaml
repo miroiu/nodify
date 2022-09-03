@@ -123,7 +123,7 @@
 
             <TextBlock Grid.Row="9"
                        Text="Zoom: "
-                       ToolTip="The viewport's scale. Not accurate when trying to zoom outside the MinScale and MaxScale because of dependency property coercion not updating the binding with the final result."
+                       ToolTip="The viewport's zoom. Not accurate when trying to zoom outside the MinViewportZoom and MaxViewportZoom because of dependency property coercion not updating the binding with the final result."
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="9"
                      Grid.Column="1"
@@ -376,7 +376,7 @@
 
                         <TextBlock Grid.Row="10"
                                    Text="Rendering optimization zoom out percent: "
-                                   ToolTip="The zoom out percent that triggers the optimization. (percent of x = 1 - MinScale)"
+                                   ToolTip="The zoom out percent that triggers the optimization. (percent of x = 1 - MinViewportZoom)"
                                    Margin="0 5 5 0" />
                         <TextBox Grid.Row="10"
                                  Grid.Column="1"
