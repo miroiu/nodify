@@ -31,7 +31,7 @@
                       TileMode="Tile"
                       ViewportUnits="Absolute"
                       Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={local:UIntToRectConverter}}"
-                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource SmallGridGeometry}" />
 
         <DrawingBrush x:Key="LargeGridLinesDrawingBrush"
@@ -39,7 +39,7 @@
                       ViewportUnits="Absolute"
                       Opacity="0.5"
                       Viewport="{Binding GridSpacing, Source={x:Static local:EditorSettings.Instance}, Converter={local:UIntToRectConverter  Multiplier=10}}"
-                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
         <SolidColorBrush x:Key="SquareConnectorColor" Color="MediumSlateBlue"></SolidColorBrush>
@@ -131,7 +131,8 @@
                              PendingConnection="{Binding PendingConnection}"
                              SelectedItems="{Binding SelectedNodes}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
-                             Offset="{Binding Location.Value, Source={x:Static local:EditorSettings.Instance}}"
+                             ViewportLocation="{Binding Location.Value, Source={x:Static local:EditorSettings.Instance}}"
+                             ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
                              Scale="{Binding Zoom, Source={x:Static local:EditorSettings.Instance}}"
                              MinScale="{Binding MinZoom, Source={x:Static local:EditorSettings.Instance}}"
                              MaxScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}"

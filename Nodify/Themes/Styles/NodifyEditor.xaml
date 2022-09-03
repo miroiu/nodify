@@ -51,7 +51,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
+                        <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True" />
 

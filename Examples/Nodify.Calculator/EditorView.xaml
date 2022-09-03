@@ -22,7 +22,7 @@
                       TileMode="Tile"
                       ViewportUnits="Absolute"
                       Viewport="0 0 15 15"
-                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource SmallGridGeometry}" />
 
         <DrawingBrush x:Key="LargeGridLinesDrawingBrush"
@@ -30,7 +30,7 @@
                       ViewportUnits="Absolute"
                       Opacity="0.5"
                       Viewport="0 0 150 150"
-                      Transform="{Binding AppliedTransform, ElementName=Editor}"
+                      Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
         <local:ItemToListConverter x:Key="ItemToListConverter" />

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Playground
@@ -67,6 +68,13 @@ namespace Nodify.Playground
         {
             get => _connections;
             set => SetProperty(ref _connections, value);
+        }
+
+        private Size _viewportSize;
+        public Size ViewportSize
+        {
+            get => _viewportSize;
+            set => SetProperty(ref _viewportSize, value);
         }
 
         public PendingConnectionViewModel PendingConnection { get; }

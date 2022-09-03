@@ -51,7 +51,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the location of this <see cref="ItemContainer"/> inside the <see cref="NodifyEditor.ItemsHost"/>.
+        /// Gets or sets the location of this <see cref="ItemContainer"/> inside the <see cref="NodifyEditor"/> in graph space coordinates.
         /// </summary>
         public Point Location
         {

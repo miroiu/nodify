@@ -11,7 +11,12 @@ namespace Nodify
         {
             if (value is Point p)
             {
-                return $"{p.X:0.00}, {p.Y:0.00}";
+                return $"{p.X:0.0}, {p.Y:0.0}";
+            }
+
+            if (value is Size s)
+            {
+                return $"{s.Width:0.0}, {s.Height:0.0}";
             }
 
             if(value is double d)

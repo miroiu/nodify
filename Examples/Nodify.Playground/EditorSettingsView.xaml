@@ -114,7 +114,7 @@
 
             <TextBlock Grid.Row="8"
                        Text="Location: "
-                       ToolTip="The viewport's Offset."
+                       ToolTip="The viewport's location."
                        Margin="0 5 5 0" />
             <local:PointEditorView  Grid.Row="8"
                                     Grid.Column="1"

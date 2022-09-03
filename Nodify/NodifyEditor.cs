@@ -30,54 +30,42 @@ namespace Nodify
         protected const string ElementItemsHost = "PART_ItemsHost";
         protected const string ElementDecoratorsHost = "PART_DecoratorsHost";
 
-        #region Cosmetic Dependency Properties
+        #region Viewport
 
         public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnScaleChanged, ConstrainScaleToRange));
         public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
         public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
-        public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
-        public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
-        public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
-        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
-        public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
-        public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
-        public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
-        public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
-        public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
+        public static readonly DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnViewportLocationChanged));
+        public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Size));
+
+        protected internal static readonly DependencyPropertyKey ViewportTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
+        public static readonly DependencyProperty ViewportTransformProperty = ViewportTransformPropertyKey.DependencyProperty;
 
         #region Callbacks
 
-        private static void OnViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((NodifyEditor)d).OnViewportUpdated();
-
-        private static object OnCoerceViewport(DependencyObject d, object value)
+        private static void OnViewportLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var editor = (NodifyEditor)d;
-            Point offset = editor.Offset;
-            double scale = editor.Scale;
+            var translate = (Point)e.NewValue;
 
-            return new Rect(new Point(offset.X / scale, offset.Y / scale), new Size(editor.ActualWidth / scale, editor.ActualHeight / scale));
-        }
+            editor.TranslateTransform.X = -translate.X * editor.Scale;
+            editor.TranslateTransform.Y = -translate.Y * editor.Scale;
 
-        private static object OnCoerceOffset(DependencyObject d, object value)
-        {
-            var editor = (NodifyEditor)d;
-            return editor.DisablePanning ? editor.Offset : value;
-        }
-
-        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = (NodifyEditor)d;
-            editor.OffsetOverride((Point)e.NewValue);
-            editor.CoerceValue(ViewportProperty);
+            editor.OnViewportUpdated();
         }
 
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var editor = (NodifyEditor)d;
-            editor.ScaleOverride((double)e.NewValue);
-            editor.CoerceValue(ViewportProperty);
+            double scale = (double)e.NewValue;
+
+            editor.ScaleTransform.ScaleX = scale;
+            editor.ScaleTransform.ScaleY = scale;
+
+            editor.ViewportSize = new Size(editor.ActualWidth / scale, editor.ActualHeight / scale);
+
+            editor.ApplyRenderingOptimizations();
+            editor.OnViewportUpdated();
         }
 
         private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -108,11 +96,6 @@ namespace Nodify
         {
             var editor = (NodifyEditor)d;
 
-            if (editor.DisableZooming)
-            {
-                return editor.Scale;
-            }
-
             var num = (double)value;
             double minimum = editor.MinScale;
             if (num < minimum)
@@ -123,23 +106,102 @@ namespace Nodify
             double maximum = editor.MaxScale;
             return num > maximum ? maximum : value;
         }
+        #endregion
 
-        private void OffsetOverride(Point newValue)
+        #region Routed Events
+
+        public static readonly RoutedEvent ViewportUpdatedEvent = EventManager.RegisterRoutedEvent(nameof(ViewportUpdated), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NodifyEditor));
+
+        /// <summary>
+        /// Occurs whenever the viewport updates.
+        /// </summary>
+        public event RoutedEventHandler ViewportUpdated
         {
-            TranslateTransform.X = -newValue.X;
-            TranslateTransform.Y = -newValue.Y;
+            add => AddHandler(ViewportUpdatedEvent, value);
+            remove => RemoveHandler(ViewportUpdatedEvent, value);
         }
 
-        private void ScaleOverride(double newValue)
-        {
-            ScaleTransform.ScaleX = newValue;
-            ScaleTransform.ScaleY = newValue;
+        /// <summary>
+        /// Updates the <see cref="ViewportSize"/> and raises the <see cref="ViewportUpdatedEvent"/>.
+        /// Called when the <see cref="UIElement.RenderSize"/> or <see cref="Scale"/> is changed.
+        /// </summary>
+        protected void OnViewportUpdated() => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the transform used to offset the viewport.
+        /// </summary>
+        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
+
+        /// <summary>
+        /// Gets the transform used to zoom on the viewport.
+        /// </summary>
+        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
+
+        /// <summary>
+        /// Gets the transform that is applied to all child controls.
+        /// </summary>
+        public Transform ViewportTransform => (Transform)GetValue(ViewportTransformProperty);
+
+        /// <summary>
+        /// Gets the size of the viewport.
+        /// </summary>
+        public Size ViewportSize
+        {
+            get => (Size)GetValue(ViewportSizeProperty);
+            set => SetValue(ViewportSizeProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the viewport's top-left coordinates in graph space coordinates.
+        /// </summary>
+        public Point ViewportLocation
+        {
+            get => (Point)GetValue(ViewportLocationProperty);
+            set => SetValue(ViewportLocationProperty, value);
+        }
+
+
+        /// <summary>
+        /// Gets or sets the zoom factor of the viewport.
+        /// </summary>
+        public double Scale
+        {
+            get => (double)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum zoom factor of the viewport
+        /// </summary>
+        public double MinScale
+        {
+            get => (double)GetValue(MinScaleProperty);
+            set => SetValue(MinScaleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum zoom factor of the viewport
+        /// </summary>
+        public double MaxScale
+        {
+            get => (double)GetValue(MaxScaleProperty);
+            set => SetValue(MaxScaleProperty, value);
+        }
+
+        #endregion
+
+        private void ApplyRenderingOptimizations()
+        {
             if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
             {
+                double scale = Scale;
                 double availableZoomIn = 1.0 - MinScale;
-                bool shouldCache = newValue / availableZoomIn <= OptimizeRenderingZoomOutPercent;
-                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / newValue) : null;
+                bool shouldCache = scale / availableZoomIn <= OptimizeRenderingZoomOutPercent;
+                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / scale) : null;
             }
             else
             {
@@ -147,19 +209,22 @@ namespace Nodify
             }
         }
 
-        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
-
         #endregion
 
-        /// <summary>
-        /// Gets or sets the <see cref="Viewport"/>'s top and left coordinates.
-        /// </summary>
-        public Point Offset
-        {
-            get => (Point)GetValue(OffsetProperty);
-            set => SetValue(OffsetProperty, value);
-        }
+        #region Cosmetic Dependency Properties
+
+        public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
+        public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
+        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
+        public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
+        public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
+        public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
+
+        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
         /// <summary>
         /// Gets or sets the animation duration in seconds when bringing a location into view.
@@ -207,33 +272,6 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the zoom factor of the <see cref="Viewport"/>.
-        /// </summary>
-        public double Scale
-        {
-            get => (double)GetValue(ScaleProperty);
-            set => SetValue(ScaleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum zoom factor of the <see cref="Viewport"/>
-        /// </summary>
-        public double MinScale
-        {
-            get => (double)GetValue(MinScaleProperty);
-            set => SetValue(MinScaleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum zoom factor of the <see cref="Viewport"/>
-        /// </summary>
-        public double MaxScale
-        {
-            get => (double)GetValue(MaxScaleProperty);
-            set => SetValue(MaxScaleProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="BaseConnection"/>.
         /// </summary>
         public DataTemplate ConnectionTemplate
@@ -273,12 +311,6 @@ namespace Nodify
 
         #region Readonly Dependency Properties
 
-        protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
-        public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
-
-        protected internal static readonly DependencyPropertyKey ViewportPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Viewport), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnViewportChanged, OnCoerceViewport));
-        public static readonly DependencyProperty ViewportProperty = ViewportPropertyKey.DependencyProperty;
-
         protected static readonly DependencyPropertyKey SelectedAreaPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectedArea), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
         public static readonly DependencyProperty SelectedAreaProperty = SelectedAreaPropertyKey.DependencyProperty;
 
@@ -290,16 +322,6 @@ namespace Nodify
 
         protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
-
-        /// <summary>
-        /// Gets the area of the <see cref="NodifyEditor"/> that is seen on the screen. (<see cref="Offset"/> and <see cref="Scale"/> applied)
-        /// </summary>
-        public Rect Viewport => (Rect)GetValue(ViewportProperty);
-
-        /// <summary>
-        /// Gets the transform that is applied to all child controls.
-        /// </summary>
-        public Transform AppliedTransform => (Transform)GetValue(AppliedTransformProperty);
 
         /// <summary>
         /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
@@ -329,7 +351,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets the current transformed mouse location using the <see cref="AppliedTransform"/>.
+        /// Gets the current mouse location in graph space coordinates.
         /// </summary>
         public Point MouseLocation
         {
@@ -503,39 +525,7 @@ namespace Nodify
 
         #endregion
 
-        #region Routed Events
-
-        public static readonly RoutedEvent ViewportUpdatedEvent = EventManager.RegisterRoutedEvent(nameof(ViewportUpdated), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NodifyEditor));
-
-        /// <summary>
-        /// Occurs whenever the <see cref="Viewport"/> changes.
-        /// </summary>
-        public event RoutedEventHandler ViewportUpdated
-        {
-            add => AddHandler(ViewportUpdatedEvent, value);
-            remove => RemoveHandler(ViewportUpdatedEvent, value);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="ViewportUpdatedEvent"/>.
-        /// Called when the <see cref="Offset"/> or <see cref="Scale"/> is changed.
-        /// </summary>
-        protected void OnViewportUpdated()
-            => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
-
-        #endregion
-
         #region Fields
-
-        /// <summary>
-        /// Gets the transform used to offset the <see cref="Viewport"/>.
-        /// </summary>
-        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
-
-        /// <summary>
-        /// Gets the transform used to scale the <see cref="Viewport"/>.
-        /// </summary>
-        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
 
         /// <summary>
         /// Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
@@ -549,7 +539,7 @@ namespace Nodify
         public static bool EnableSnappingCorrection { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets how often the new <see cref="Offset"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
+        /// Gets or sets how often the new <see cref="ViewportLocation"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
         /// </summary>
         public static double AutoPanningTickRate { get; set; } = 1;
 
@@ -565,6 +555,7 @@ namespace Nodify
 
         /// <summary>
         /// Gets or sets the minimum zoom out percent needed to start optimizing the rendering for <see cref="ItemContainer"/>s.
+        /// Value is between 0 and 1.
         /// </summary>
         public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.3;
 
@@ -601,7 +592,7 @@ namespace Nodify
         protected Point CurrentMousePosition;
 
         /// <summary>
-        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occurred.
+        /// Gets where the mouse cursor was in graph space coordinates when a mouse button event occurred.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point InitialMousePosition;
@@ -631,7 +622,7 @@ namespace Nodify
             AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
             AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
             AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
-            
+
             AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
 
             AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
@@ -645,7 +636,7 @@ namespace Nodify
             transform.Children.Add(ScaleTransform);
             transform.Children.Add(TranslateTransform);
 
-            SetValue(AppliedTransformPropertyKey, transform);
+            SetValue(ViewportTransformPropertyKey, transform);
         }
 
         /// <inheritdoc />
@@ -701,28 +692,56 @@ namespace Nodify
         /// <summary>
         /// Zoom in at the viewports center
         /// </summary>
-        public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
+        public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), (Point)((Vector)ViewportLocation + (Vector)ViewportSize / 2));
 
         /// <summary>
         /// Zoom out at the viewports center
         /// </summary>
-        public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
+        public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), (Point)((Vector)ViewportLocation + (Vector)ViewportSize / 2));
 
         /// <summary>
-        /// Moves the <see cref="Viewport"/> at the specified location.
+        /// Zoom at the specified location in graph space coordinates.
         /// </summary>
-        /// <param name="point">The location where to move the <see cref="Viewport"/>.</param>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="location">The location to focus when zooming.</param>
+        public void ZoomAtPosition(double zoom, Point location)
+        {
+            if (!DisableZooming)
+            {
+                double prevScale = Scale;
+                Scale *= zoom;
+
+                if (Math.Abs(prevScale - Scale) > 0.001)
+                {
+                    // get the actual zoom value because Scale might have been coerced
+                    zoom = Scale / prevScale;
+                    Vector position = (Vector)location;
+
+                    var dist = position - (Vector)ViewportLocation;
+                    var scaledDist = dist * zoom;
+                    var diff = scaledDist - dist;
+                    ViewportLocation += diff / zoom;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves the viewport center at the specified location.
+        /// </summary>
+        /// <param name="point">The location in graph space coordinates.</param>
         /// <param name="animated">True to animate the movement.</param>
         public void BringIntoView(Point point, bool animated = true)
         {
             Focus();
 
-            if (animated && point != Offset)
+            Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * Scale) / Scale);
+
+            if (animated && point != ViewportLocation)
             {
                 IsPanning = true;
                 DisableZooming = true;
 
-                this.StartAnimation(OffsetProperty, TransformToViewportCenter(point), BringIntoViewAnimationDuration, (s, e) =>
+                this.StartAnimation(ViewportLocationProperty, newLocation, BringIntoViewAnimationDuration, (s, e) =>
                 {
                     IsPanning = false;
                     DisableZooming = false;
@@ -730,27 +749,7 @@ namespace Nodify
             }
             else
             {
-                Offset = TransformToViewportCenter(point);
-            }
-        }
-
-        /// <summary>
-        /// Zoom at the specified location.
-        /// </summary>
-        /// <param name="zoom">The zoom factor.</param>
-        /// <param name="pos">The location to focus when zooming.</param>
-        public void ZoomAtPosition(double zoom, Point pos)
-        {
-            var position = (Vector)pos;
-            double prevScale = Scale;
-
-            Scale *= zoom;
-
-            if (Math.Abs(prevScale - Scale) > 0.001)
-            {
-                // get the actual zoom value because Scale might have been coerced
-                zoom = Scale / prevScale;
-                Offset = (Point)((Vector)(Offset + position) * zoom - position);
+                ViewportLocation = newLocation;
             }
         }
 
@@ -764,9 +763,9 @@ namespace Nodify
             {
                 Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
-                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate);
-                double x = Offset.X;
-                double y = Offset.Y;
+                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate) / (Scale * 2);
+                double x = ViewportLocation.X;
+                double y = ViewportLocation.Y;
 
                 if (mousePosition.X <= edgeDistance)
                 {
@@ -786,12 +785,13 @@ namespace Nodify
                     y += autoPanSpeed;
                 }
 
-                Offset = new Point(x, y);
+                ViewportLocation = new Point(x, y);
 
                 // Update the selecting area because the mouse might not move to update it.
                 if (IsSelecting)
                 {
-                    Selection.Update(TransformPosition(mousePosition));
+                    Point spaceCoords = Mouse.GetPosition(ItemsHost);
+                    Selection.Update(spaceCoords);
                 }
             }
         }
@@ -867,7 +867,7 @@ namespace Nodify
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             double scale = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(scale, e.GetPosition(this));
+            ZoomAtPosition(scale, e.GetPosition(ItemsHost));
             e.Handled = true;
         }
 
@@ -878,14 +878,14 @@ namespace Nodify
 
             if (CurrentMousePosition != PreviousMousePosition)
             {
-                MouseLocation = TransformPosition(CurrentMousePosition);
+                MouseLocation = e.GetPosition(ItemsHost);
 
                 if (IsMouseCaptured)
                 {
                     // Panning
-                    if (e.RightButton == MouseButtonState.Pressed)
+                    if (e.RightButton == MouseButtonState.Pressed && !DisablePanning)
                     {
-                        Offset -= CurrentMousePosition - PreviousMousePosition;
+                        ViewportLocation -= (CurrentMousePosition - PreviousMousePosition) / Scale;
                         IsPanning = true;
                         e.Handled = true;
                     }
@@ -895,7 +895,6 @@ namespace Nodify
                     }
                     else
                     {
-                        // Should not reach this
                         ReleaseMouseCapture();
                     }
                 }
@@ -920,7 +919,7 @@ namespace Nodify
                 Focus();
                 CaptureMouse();
 
-                InitialMousePosition = e.GetPosition(this);
+                InitialMousePosition = e.GetPosition(ItemsHost);
                 Selection.Start(MouseLocation);
                 e.Handled = true;
             }
@@ -948,7 +947,7 @@ namespace Nodify
                 Focus();
                 CaptureMouse();
 
-                InitialMousePosition = e.GetPosition(this);
+                InitialMousePosition = e.GetPosition(ItemsHost);
             }
         }
 
@@ -997,7 +996,10 @@ namespace Nodify
         {
             base.OnRenderSizeChanged(sizeInfo);
 
-            CoerceValue(ViewportProperty);
+            double scale = Scale;
+            ViewportSize = new Size(ActualWidth / scale, ActualHeight / scale);
+
+            OnViewportUpdated();
         }
 
         #endregion
@@ -1020,7 +1022,7 @@ namespace Nodify
 
             BeginUpdateSelectedItems();
             selectedItems.Clear();
-            if(newValue != null)
+            if (newValue != null)
             {
                 for (var i = 0; i < newValue.Count; i++)
                 {
@@ -1334,26 +1336,6 @@ namespace Nodify
                 e.Handled = true;
             }
         }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Transforms the <paramref name="point"/> to a location relative to the <see cref="ItemsHost"/> panel.
-        /// </summary>
-        /// <param name="point">The location to transform.</param>
-        /// <returns>The relative location.</returns>
-        protected Point TransformPosition(Point point)
-            => new Point((Offset.X + point.X) / Scale, (Offset.Y + point.Y) / Scale);
-
-        /// <summary>
-        /// Transforms the <paramref name="point"/> to a location relative to the <see cref="Viewport"/>'s center.
-        /// </summary>
-        /// <param name="point">The point to transform.</param>
-        /// <returns>The center location.</returns>
-        protected Point TransformToViewportCenter(Point point)
-            => (Point)((Vector)point * Scale - new Vector(ActualWidth / 2, ActualHeight / 2));
 
         #endregion
     }

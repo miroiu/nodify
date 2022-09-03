@@ -265,7 +265,7 @@ namespace Nodify
 
         private void UpdateAnchorBasedOnLocation(NodifyEditor editor, Point location)
         {
-            Rect viewport = editor.Viewport;
+            var viewport = new Rect(editor.ViewportLocation, editor.ViewportSize);
             double offset = OptimizeSafeZone / editor.Scale;
 
             Rect area = Rect.Inflate(viewport, offset, offset);
