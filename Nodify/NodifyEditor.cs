@@ -76,7 +76,7 @@ namespace Nodify
         }
 
         private static object CoerceMinViewportZoom(DependencyObject d, object value)
-            => (double)value > 0 ? value : 0.01;
+            => (double)value > 0.1d ? value : 0.1d;
 
         private static void OnMaxViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -196,16 +196,19 @@ namespace Nodify
 
         private void ApplyRenderingOptimizations()
         {
-            if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
+            if (ItemsHost != null)
             {
-                double zoom = ViewportZoom;
-                double availableZoomIn = 1.0 - MinViewportZoom;
-                bool shouldCache = zoom / availableZoomIn <= OptimizeRenderingZoomOutPercent;
-                ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / zoom) : null;
-            }
-            else
-            {
-                ItemsHost.CacheMode = null;
+                if (EnableRenderingContainersOptimizations && Items.Count >= OptimizeRenderingMinimumContainers)
+                {
+                    double zoom = ViewportZoom;
+                    double availableZoomIn = 1.0 - MinViewportZoom;
+                    bool shouldCache = zoom / availableZoomIn <= OptimizeRenderingZoomOutPercent;
+                    ItemsHost.CacheMode = shouldCache ? new BitmapCache(1.0 / zoom) : null;
+                }
+                else
+                {
+                    ItemsHost.CacheMode = null;
+                }
             }
         }
 
