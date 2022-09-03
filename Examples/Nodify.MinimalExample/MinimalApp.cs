@@ -54,13 +54,13 @@ namespace NodifyMinimalExample
 
             var add = new GraphNode.WithContent<string>(Graph)
             {
-                Location = new Point(300, 250),
+                Location = new Point(500, 250),
                 Content = "ADD"
             };
 
             var sub = new GraphNode.WithContent<string>.WithFooter<string>(Graph)
             {
-                Location = new Point(400, 250),
+                Location = new Point(500, 150),
                 Content = "SUB",
                 Footer = "Sub footer"
             };
@@ -71,7 +71,7 @@ namespace NodifyMinimalExample
 
             var custom = new CustomGraphNode(Graph)
             {
-                Location = new Point(100, 300)
+                Location = new Point(200, 200)
             };
 
             Graph.AddElement(toString);
@@ -82,7 +82,7 @@ namespace NodifyMinimalExample
             toString.TryConnect(add);
             custom.Out.TryConnectTo(add);
 
-            Graph.AddComment("Generated comment", new List<IGraphElement> { add, sub });
+            Graph.Initialized += (s, e) => Graph.AddComment("Generated comment", new List<IGraphElement> { add, sub });
         }
 
         private void SetupBaseNodes()
@@ -122,7 +122,7 @@ namespace NodifyMinimalExample
 
         public void AddComment()
         {
-            Graph.AddComment("Well, this is a comment sorounding all nodes", Graph.Elements);
+            Graph.AddComment("This is a comment sorounding all nodes", Graph.Elements);
         }
 
         public void FocusRandomNode()

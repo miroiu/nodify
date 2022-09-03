@@ -5,14 +5,14 @@ namespace Nodifier
 {
     public static class GraphExtensions
     {
-        public static void FocusElement(this IEditorControls graph, IGraphElement node)
+        public static void FocusElement(this IEditor graph, IGraphElement node)
         {
             double midX = (node.Location.X + node.Size.Width / 2);
             double midY = (node.Location.Y + node.Size.Height / 2);
             graph.FocusLocation(midX, midY);
         }
         
-        public static void FocusLocation(this IEditorControls graph, double x, double y)
+        public static void FocusLocation(this IEditor graph, double x, double y)
         {
             graph.FocusLocation(new Point(x, y));
         }
