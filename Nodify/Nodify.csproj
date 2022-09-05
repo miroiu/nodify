@@ -25,6 +25,10 @@ Added RemoveConnectionCommand to NodifyEditor
 Added DisconnectCommand and SplitCommand to BaseConnection
 Added ContentBrush to NodifyEditor
 Added HasFooter to Node
+Added FitToScreen to NodifyEditor and EditorCommands
+Added onFinish callback to NodifyEditor.BringIntoView
+Removed http://miroiu.github.io/winfx/xaml/nodify xaml prefix
+
 Auto panning speed now scales with the zoom factor.
 
 Breaking Changes: 

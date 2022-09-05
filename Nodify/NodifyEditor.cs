@@ -739,27 +739,103 @@ namespace Nodify
         /// </summary>
         /// <param name="point">The location in graph space coordinates.</param>
         /// <param name="animated">True to animate the movement.</param>
-        public void BringIntoView(Point point, bool animated = true)
+        /// <param name="onFinish">The callback invoked when movement is finished.</param>
+        /// <remarks>Temporarily disables editor controls when animated.</remarks>
+        public void BringIntoView(Point point, bool animated = true, Action? onFinish = null)
         {
-            Focus();
-
             Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * ViewportZoom) / ViewportZoom);
 
             if (animated && point != ViewportLocation)
             {
                 IsPanning = true;
+                DisableAutoPanning = true;
+                DisablePanning = true;
                 DisableZooming = true;
 
                 this.StartAnimation(ViewportLocationProperty, newLocation, BringIntoViewAnimationDuration, (s, e) =>
                 {
                     IsPanning = false;
+                    DisableAutoPanning = false;
+                    DisablePanning = false;
                     DisableZooming = false;
+
+                    onFinish?.Invoke();
                 });
             }
             else
             {
                 ViewportLocation = newLocation;
+                onFinish?.Invoke();
             }
+        }
+
+        /// <summary>
+        /// Scales the viewport to fit all the containers if that's possible.
+        /// </summary>
+        /// <remarks>Does nothing if <paramref name="area"/> is null and there's no items.</remarks>
+        public void FitToScreen(Rect? area = null)
+        {
+            Rect itemsBounds = area ?? GetItemsBounds(padding: 30);
+
+            if (itemsBounds.Width > 0 && itemsBounds.Height > 0)
+            {
+                double widthRatio = ViewportSize.Width / itemsBounds.Width;
+                double heightRatio = ViewportSize.Height / itemsBounds.Height;
+
+                double zoom = Math.Min(widthRatio, heightRatio);
+                var center = new Point(itemsBounds.X + itemsBounds.Width / 2, itemsBounds.Y + itemsBounds.Height / 2);
+
+                ZoomAtPosition(zoom, center);
+                BringIntoView(center, animated: false);
+            }
+        }
+
+        protected Rect GetItemsBounds(double padding = 0)
+        {
+            double minX = double.MaxValue;
+            double minY = double.MaxValue;
+
+            double maxX = double.MinValue;
+            double maxY = double.MinValue;
+
+            ItemCollection items = Items;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+
+                double width = container.ActualSize.Width;
+                double height = container.ActualSize.Height;
+
+                if (container.Location.X < minX)
+                {
+                    minX = container.Location.X;
+                }
+
+                if (container.Location.Y < minY)
+                {
+                    minY = container.Location.Y;
+                }
+
+                double sizeX = container.Location.X + width;
+                if (sizeX > maxX)
+                {
+                    maxX = sizeX;
+                }
+
+                double sizeY = container.Location.Y + height;
+                if (sizeY > maxY)
+                {
+                    maxY = sizeY;
+                }
+            }
+
+            if (minX == double.MaxValue)
+            {
+                return new Rect(0, 0, 0, 0);
+            }
+
+            var result = new Rect(new Point(minX - padding, minY - padding), new Size(maxX - minX + padding * 2, maxY - minY + padding * 2));
+            return result;
         }
 
         #endregion

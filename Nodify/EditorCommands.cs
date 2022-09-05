@@ -53,6 +53,11 @@ namespace Nodify
         public static RoutedUICommand BringIntoView { get; } = new RoutedUICommand("Bring location into view", nameof(BringIntoView), typeof(EditorCommands));
 
         /// <summary>
+        /// Scales the <see cref="NodifyEditor.Viewport"/> to fit all the <see cref="ItemContainer"/>s if that's possible.
+        /// </summary>
+        public static RoutedUICommand FitToScreen { get; } = new RoutedUICommand("Fit to screen", nameof(FitToScreen), typeof(EditorCommands));
+
+        /// <summary>
         /// Aligns <see cref="NodifyEditor.SelectedItems"/> using the specified alignment method.
         /// Parameter is of type <see cref="Alignment"/> or a string that can be converted to an alignment.
         /// </summary>
@@ -64,6 +69,7 @@ namespace Nodify
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(FitToScreen, OnFitToScreen, OnQueryFitToScreenStatus));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
         }
 
@@ -178,6 +184,22 @@ namespace Nodify
                         editor.BringIntoView(new Point());
                         break;
                 }
+            }
+        }
+
+        private static void OnQueryFitToScreenStatus(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                e.CanExecute = editor.HasItems;
+            }
+        }
+
+        private static void OnFitToScreen(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                editor.FitToScreen();
             }
         }
 

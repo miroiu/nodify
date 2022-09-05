@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.Playground"
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
+        xmlns:nodify="https://miroiu.github.io/nodify"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="600"
@@ -59,6 +60,11 @@
                     <Button Click="BringIntoView_Click"
                             Content="BRING INTO VIEW"
                             ToolTip="Bring a random node into view."
+                            Style="{StaticResource HollowButton}" />
+                    <Button Command="{x:Static nodify:EditorCommands.FitToScreen}"
+                            Content="FIT TO SCREEN"
+                            ToolTip="Scales the viewport to fit all nodes if that's possible."
+                            CommandTarget="{Binding EditorInstance, ElementName=EditorView}"
                             Style="{StaticResource HollowButton}" />
                 </StackPanel>
 
