@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public partial class Graph : IGraph
+    public partial class GraphEditor : IGraph
     {
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
@@ -19,7 +19,7 @@ namespace Nodifier
 
         public virtual IPendingConnection PendingConnection { get; }
 
-        public Graph()
+        public GraphEditor()
         {
             PendingConnection = new PendingConnection(this);
         }

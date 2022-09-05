@@ -17,7 +17,7 @@ namespace Nodifier
         Center
     }
 
-    public partial class Graph : PropertyChangedBase, IEditor, IViewAware
+    public partial class GraphEditor : PropertyChangedBase, IEditor, IViewAware
     {
         private NodifyEditor? _editor;
         protected NodifyEditor Editor => _editor ?? throw new InvalidOperationException($"No editor attached. Please implement {nameof(INodifyEditorAware)} in the view and wait for initialization.");
@@ -33,7 +33,8 @@ namespace Nodifier
             { Alignment.Center, EditorCommands.Alignment.Center }
         };
 
-        public event EventHandler Initialized;
+        public event EventHandler? Initialized;
+        public IEditorSettings Settings { get; } = new EditorSettings();
 
         private Point _viewportLocation;
         public Point ViewportLocation
@@ -54,55 +55,6 @@ namespace Nodifier
         {
             get => _viewportZoom;
             set => SetAndNotify(ref _viewportZoom, value);
-        }
-
-        private double _minViewportZoom = 0.1d;
-        public double MinViewportZoom
-        {
-            get => _minViewportZoom;
-            set => SetAndNotify(ref _minViewportZoom, value);
-        }
-
-        private double _maxViewportZoom = 2d;
-        public double MaxViewportZoom
-        {
-            get => _maxViewportZoom;
-            set => SetAndNotify(ref _maxViewportZoom, value);
-        }
-
-        private double _gridSnapSize;
-        public double GridSnapSize
-        {
-            get => _gridSnapSize;
-            set => SetAndNotify(ref _gridSnapSize, value);
-        }
-
-        private bool _disableZooming;
-        public bool DisableZooming
-        {
-            get => _disableZooming;
-            set => SetAndNotify(ref _disableZooming, value);
-        }
-
-        private bool _disablePanning;
-        public bool DisablePanning
-        {
-            get => _disablePanning;
-            set => SetAndNotify(ref _disablePanning, value);
-        }
-
-        private bool _disableAutoPanning;
-        public bool DisableAutoPanning
-        {
-            get => _disableAutoPanning;
-            set => SetAndNotify(ref _disableAutoPanning, value);
-        }
-
-        private bool _enableRealtimeSelection = true;
-        public bool EnableRealtimeSelection
-        {
-            get => _enableRealtimeSelection;
-            set => SetAndNotify(ref _enableRealtimeSelection, value);
         }
 
         void IViewAware.AttachView(UIElement view)

@@ -33,7 +33,7 @@ namespace NodifyMinimalExample
 
     public class MinimalApp
     {
-        public Graph Graph { get; } = new Graph();
+        public GraphEditor Graph { get; } = new GraphEditor();
         private static readonly Random _random = new Random();
 
         public MinimalApp()
@@ -122,7 +122,14 @@ namespace NodifyMinimalExample
 
         public void AddComment()
         {
-            Graph.AddComment("This is a comment sorounding all nodes", Graph.Elements);
+            if (Graph.SelectedElements.Count > 0)
+            {
+                Graph.AddComment(string.Empty, Graph.SelectedElements);
+            }
+            else
+            {
+                Graph.AddComment("This is a comment sorounding all nodes", Graph.Elements);
+            }
         }
 
         public void FocusRandomNode()

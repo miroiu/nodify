@@ -17,15 +17,17 @@ namespace Nodifier
             graph.FocusLocation(new Point(x, y));
         }
 
-        public static void AddComment(this IGraph graph, string text, IEnumerable<IGraphElement> nodes)
+        public static CommentNode AddComment(this IGraph graph, string text, IEnumerable<IGraphElement> nodes)
         {
             var bounds = nodes.GetBoundingBox();
-            graph.AddElement(new CommentNode(graph)
+            var comment = new CommentNode(graph)
             {
                 Location = bounds.Location,
                 CommentSize = bounds.Size,
                 Title = text
-            });
+            };
+            graph.AddElement(comment);
+            return comment;
         }
 
         private static (Point Location, Size Size) GetBoundingBox(this IEnumerable<IGraphElement> nodes)

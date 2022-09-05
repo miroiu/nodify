@@ -1,12 +1,15 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Nodifier
 {
     public interface ICommentNode : IGraphElement
     {
-        public string? Title { get; set; }
-        public bool CanResize { get; set; }
-        public Size CommentSize { get; set; }
+        string? Title { get; set; }
+        bool CanResize { get; set; }
+        Size CommentSize { get; set; }
+
+        IReadOnlyList<IGraphElement> GetElements();
     }
 
     public class CommentNode : GraphElement, ICommentNode
@@ -34,6 +37,23 @@ namespace Nodifier
         {
             get => _commentSize;
             set => SetAndNotify(ref _commentSize, value);
+        }
+
+        public IReadOnlyList<IGraphElement> GetElements()
+        {
+            var elements = new List<IGraphElement>(4);
+            var commentRect = new Rect(Location, CommentSize);
+
+            foreach (var element in Graph.Elements)
+            {
+                var elemRect = new Rect(element.Location, element.Size);
+                if (element != this && commentRect.Contains(elemRect))
+                {
+                    elements.Add(element);
+                }
+            }
+
+            return elements;
         }
     }
 }

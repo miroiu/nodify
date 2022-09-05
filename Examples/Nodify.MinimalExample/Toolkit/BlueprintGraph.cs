@@ -8,7 +8,7 @@ namespace Nodifier
         void Disconnect(IGraphNode node);
     }
 
-    public class BlueprintGraph : Graph, IBlueprintGraph
+    public class BlueprintGraph : GraphEditor, IBlueprintGraph
     {
         private readonly IPendingConnection _pendingConnection;
         public override IPendingConnection PendingConnection => _pendingConnection;

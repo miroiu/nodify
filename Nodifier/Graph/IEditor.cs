@@ -8,15 +8,8 @@ namespace Nodifier
         Point ViewportLocation { get; set; }
         Size ViewportSize { get; }
         double ViewportZoom { get; set; }
-        double MinViewportZoom { get; set; }
-        double MaxViewportZoom { get; set; }
 
-        double GridSnapSize { get; set; }
-
-        bool DisableZooming { get; set; }
-        bool DisablePanning { get; set; }
-        bool DisableAutoPanning { get; set; }
-        bool EnableRealtimeSelection { get; set; }
+        IEditorSettings Settings { get; }
 
         void FocusLocation(Point location);
         void ZoomIn();
