@@ -77,7 +77,9 @@ namespace Nodifier
             }
         }
 
-        public virtual void FocusLocation(Point location) => Editor.BringIntoView(location);
+        public virtual void FocusLocation(Point location) => Editor.BringIntoView(location, animated: true);
+
+        public virtual void FitToScreen(Rect? area = null) => Editor.FitToScreen(area);
 
         public virtual void SelectAll() => Editor.SelectAll();
 

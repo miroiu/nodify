@@ -12,6 +12,7 @@ namespace Nodifier
         IEditorSettings Settings { get; }
 
         void FocusLocation(Point location);
+        void FitToScreen(Rect? area = null);
         void ZoomIn();
         void ZoomOut();
 
