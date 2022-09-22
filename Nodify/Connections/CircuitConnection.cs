@@ -7,15 +7,14 @@ namespace Nodify
     /// <summary>
     /// Represents a line that is controlled by an angle.
     /// </summary>
-    public class CircuitConnection : DirectionalConnection
+    public class CircuitConnection : LineConnection
     {
         protected const double Degrees = Math.PI / 180.0d;
 
-        public static readonly DependencyProperty AngleProperty = DependencyProperty.Register(nameof(Angle), typeof(double), typeof(DirectionalConnection), new FrameworkPropertyMetadata(45d, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(DirectionalConnection), new FrameworkPropertyMetadata(30d, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty AngleProperty = DependencyProperty.Register(nameof(Angle), typeof(double), typeof(LineConnection), new FrameworkPropertyMetadata(BoxValue.Double45, FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// The angle of the connection.
+        /// The angle of the connection in degrees.
         /// </summary>
         public double Angle
         {
@@ -23,24 +22,20 @@ namespace Nodify
             set => SetValue(AngleProperty, value);
         }
 
-        /// <summary>
-        /// The distance between the start point and the where the angle breaks.
-        /// </summary>
-        public double Spacing
-        {
-            get => (double)GetValue(SpacingProperty);
-            set => SetValue(SpacingProperty, value);
-        }
-
         static CircuitConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CircuitConnection), new FrameworkPropertyMetadata(typeof(CircuitConnection)));
         }
 
-        protected override void DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+        protected override (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var p1 = new Point(source.X + Spacing, source.Y);
-            var p3 = new Point(target.X - Spacing, target.Y);
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            var spacing = new Vector(Spacing * direction, 0d);
+            var arrowOffset = new Vector(ArrowSize.Width * direction, 0d);
+            Point endPoint = Spacing > 0 ? target - arrowOffset : target;
+
+            Point p1 = source + spacing;
+            Point p3 = endPoint - spacing;
             Point p2 = GetControlPoint(p1, p3);
 
             context.BeginFigure(source, false, false);
@@ -49,14 +44,7 @@ namespace Nodify
             context.LineTo(p3, true, true);
             context.LineTo(target, true, true);
 
-            if (Direction == ConnectionDirection.Forward)
-            {
-                DrawArrowGeometry(context, source, target);
-            }
-            else
-            {
-                DrawArrowGeometry(context, target, source);
-            }
+            return (p2, target);
         }
 
         private Point GetControlPoint(Point source, Point target)
@@ -70,39 +58,26 @@ namespace Nodify
             double slopeWidth = dy / tangent;
             if (dx > slopeWidth)
             {
-                return delta.X > 0 ? new Point(target.X - slopeWidth, source.Y) : new Point(source.X - slopeWidth, target.Y);
+                return delta.X > 0d ? new Point(target.X - slopeWidth, source.Y) : new Point(source.X - slopeWidth, target.Y);
             }
 
             double slopeHeight = dx * tangent;
             if (dy > slopeHeight)
             {
-                if (delta.Y > 0)
+                if (delta.Y > 0d)
                 {
                     // handle top left
-                    return delta.X < 0 ? new Point(source.X, target.Y - slopeHeight) : new Point(target.X, source.Y + slopeHeight);
+                    return delta.X < 0d ? new Point(source.X, target.Y - slopeHeight) : new Point(target.X, source.Y + slopeHeight);
                 }
 
                 // handle bottom left
-                if (delta.X < 0)
+                if (delta.X < 0d)
                 {
                     return new Point(source.X, target.Y + slopeHeight);
                 }
             }
 
             return new Point(target.X, source.Y - slopeHeight);
-        }
-
-        protected override void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
-        {
-            double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height / 2.0;
-
-            var from = new Point(target.X - headWidth, target.Y + headHeight);
-            var to = new Point(target.X - headWidth, target.Y - headHeight);
-
-            context.BeginFigure(target, true, true);
-            context.LineTo(from, true, false);
-            context.LineTo(to, true, false);
         }
     }
 }

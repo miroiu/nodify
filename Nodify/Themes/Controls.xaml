@@ -152,16 +152,18 @@
            BasedOn="{StaticResource {x:Type local:Connection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource Connection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource Connection.StrokeBrush}" />
     </Style>
 
-    <!--DIRECTIONAL CONNECTION-->
+    <!--LINE CONNECTION-->
 
-    <Style TargetType="{x:Type local:DirectionalConnection}"
-           BasedOn="{StaticResource {x:Type local:DirectionalConnection}}">
+    <Style TargetType="{x:Type local:LineConnection}"
+           BasedOn="{StaticResource {x:Type local:LineConnection}}">
         <Setter Property="Stroke"
-                Value="{StaticResource DirectionalConnection.StrokeBrush}" />
+                Value="{StaticResource LineConnection.StrokeBrush}" />
         <Setter Property="Fill"
-                Value="{StaticResource DirectionalConnection.StrokeBrush}" />
+                Value="{StaticResource LineConnection.StrokeBrush}" />
     </Style>
 
     <!--CIRCUIT CONNECTION-->

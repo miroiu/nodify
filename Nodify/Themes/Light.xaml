@@ -60,8 +60,8 @@
     <!--CONNECTION-->
     <Color x:Key="Connection.StrokeColor">#5CA2C9</Color>
 
-    <!--DIRECTIONAL CONNECTION-->
-    <Color x:Key="DirectionalConnection.StrokeColor">#5CA2C9</Color>
+    <!--LINE CONNECTION-->
+    <Color x:Key="LineConnection.StrokeColor">#5CA2C9</Color>
 
     <!--CIRCUIT CONNECTION-->
     <Color x:Key="CircuitConnection.StrokeColor">#5CA2C9</Color>

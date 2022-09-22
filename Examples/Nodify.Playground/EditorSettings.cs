@@ -3,7 +3,7 @@
     public enum ConnectionStyle
     {
         Default,
-        Directional,
+        Line,
         Circuit
     }
 
@@ -127,11 +127,11 @@
             set => SetProperty(ref _circuitConnectionAngle, value);
         }
 
-        private double _circuitConnectionSpacing = 30;
-        public double CircuitConnectionSpacing
+        private double _connectionSpacing = 20;
+        public double ConnectionSpacing
         {
-            get => _circuitConnectionSpacing;
-            set => SetProperty(ref _circuitConnectionSpacing, value);
+            get => _connectionSpacing;
+            set => SetProperty(ref _connectionSpacing, value);
         }
 
         private ConnectionOffsetMode _connectionOffsetMode = ConnectionOffsetMode.None;

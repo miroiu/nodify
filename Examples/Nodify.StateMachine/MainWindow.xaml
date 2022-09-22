@@ -46,11 +46,12 @@
                                               EnablePreview="True">
                         <nodify:PendingConnection.Template>
                             <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
-                                <nodify:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
+                                <nodify:LineConnection Source="{TemplateBinding SourceAnchor}"
                                                               Target="{TemplateBinding TargetAnchor}"
                                                               StrokeThickness="{TemplateBinding StrokeThickness}"
                                                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
                                                               SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                                              Spacing="0"
                                                               OffsetMode="Edge" />
                             </ControlTemplate>
                         </nodify:PendingConnection.Template>
@@ -60,15 +61,16 @@
 
             <nodify:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                    <nodify:DirectionalConnection Source="{Binding Source.Anchor}"
+                    <nodify:LineConnection Source="{Binding Source.Anchor}"
                                                   Target="{Binding Target.Anchor}"
                                                   SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                   TargetOffset="{Binding Target.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                                  Spacing="0"
                                                   OffsetMode="Edge"
                                                   Tag="{Binding}">
-                        <nodify:DirectionalConnection.Style>
-                            <Style TargetType="{x:Type nodify:DirectionalConnection}"
-                                   BasedOn="{StaticResource {x:Type nodify:DirectionalConnection}}">
+                        <nodify:LineConnection.Style>
+                            <Style TargetType="{x:Type nodify:LineConnection}"
+                                   BasedOn="{StaticResource {x:Type nodify:LineConnection}}">
                                 <Setter Property="StrokeThickness"
                                         Value="3" />
                                 <Style.Triggers>
@@ -81,16 +83,16 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </nodify:DirectionalConnection.Style>
-                        <nodify:DirectionalConnection.ContextMenu>
+                        </nodify:LineConnection.Style>
+                        <nodify:LineConnection.ContextMenu>
                             <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
                                 <MenuItem Header="_Delete"
                                           Icon="{StaticResource DeleteIcon}"
                                           Command="{Binding DeleteTransitionCommand}"
                                           CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
                             </ContextMenu>
-                        </nodify:DirectionalConnection.ContextMenu>
-                    </nodify:DirectionalConnection>
+                        </nodify:LineConnection.ContextMenu>
+                    </nodify:LineConnection>
                 </DataTemplate>
             </nodify:NodifyEditor.ConnectionTemplate>
 

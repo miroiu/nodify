@@ -186,16 +186,16 @@
 
             <TextBlock Grid.Row="16"
                        Text="Connection spacing: "
-                       ToolTip="Applies to circuit connection style"
+                       ToolTip="The distance between the start point and the where the angle breaks"
                        Margin="0 5 5 0" />
             <TextBox Grid.Row="16"
                      Grid.Column="1"
-                     Text="{Binding CircuitConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Text="{Binding ConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="17"
                        Text="Connection arrow size: "
-                       ToolTip="Applies to circuit and directional connection style"
+                       ToolTip="Adds an arrow at the end of the connection"
                        Margin="0 5 5 0" />
             <local:PointEditorView  Grid.Row="17"
                                     Grid.Column="1"

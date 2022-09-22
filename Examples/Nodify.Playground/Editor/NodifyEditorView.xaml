@@ -50,13 +50,16 @@
                 <DataTrigger Binding="{Binding Input.Shape}" 
                              Value="{x:Static local:ConnectorShape.Square}">
                     <Setter Property="Stroke" Value="{StaticResource SquareConnectorColor}"></Setter>
+                    <Setter Property="Fill" Value="{StaticResource SquareConnectorColor}"></Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Input.Shape}" 
                              Value="{x:Static local:ConnectorShape.Triangle}">
                     <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"></Setter>
+                    <Setter Property="Fill" Value="{StaticResource TriangleConnectorColor}"></Setter>
                 </DataTrigger>
             </Style.Triggers>
             <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"></Setter>
+            <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"></Setter>
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="ToolTip" Value="Double click to split"></Setter>
         </Style>
@@ -70,7 +73,7 @@
                                       SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                       ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
-                                      Spacing="{Binding CircuitConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
+                                      Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
                                       Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
                                       Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
@@ -83,11 +86,12 @@
                                OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
                                SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                               Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
                                Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
 
-        <DataTemplate x:Key="DirectionalConnectionTemplate">
-            <nodify:DirectionalConnection Source="{Binding Output.Anchor}"
+        <DataTemplate x:Key="LineConnectionTemplate">
+            <nodify:LineConnection Source="{Binding Output.Anchor}"
                                           Target="{Binding Input.Anchor}"
                                           SplitCommand="{Binding SplitCommand}"
                                           DisconnectCommand="{Binding DisconnectCommand}"
@@ -95,6 +99,7 @@
                                           SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                           TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                           ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                          Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}"
                                           Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
 
@@ -157,9 +162,9 @@
                                     Value="{StaticResource SmallGridLinesDrawingBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                                     Value="Directional">
+                                     Value="Line">
                             <Setter Property="ConnectionTemplate"
-                                    Value="{StaticResource DirectionalConnectionTemplate}" />
+                                    Value="{StaticResource LineConnectionTemplate}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                      Value="Circuit">
@@ -202,13 +207,16 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
                                 <Canvas>
-                                    <nodify:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
-                                                                  Target="{TemplateBinding TargetAnchor}"
-                                                                  Stroke="{TemplateBinding Stroke}"
-                                                                  StrokeThickness="{TemplateBinding StrokeThickness}"
-                                                                  StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                                  Direction="{TemplateBinding Direction}"
-                                                                  ArrowSize="0 0" />
+                                    <nodify:Connection Source="{TemplateBinding SourceAnchor}"
+                                                       Target="{TemplateBinding TargetAnchor}"
+                                                       Direction="{TemplateBinding Direction}"
+                                                       Stroke="{TemplateBinding Stroke}"
+                                                       StrokeThickness="{TemplateBinding StrokeThickness}"
+                                                       OffsetMode="{Binding ConnectionOffsetMode, Source={x:Static local:EditorSettings.Instance}}"
+                                                       SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                                       TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                                       ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
+                                                       Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
                                     <Border Background="{TemplateBinding Background}"
                                             Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                             Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"

@@ -33,13 +33,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PendingConnection}">
                     <Canvas>
-                        <local:DirectionalConnection Source="{TemplateBinding SourceAnchor}"
+                        <local:LineConnection Source="{TemplateBinding SourceAnchor}"
                                                      Target="{TemplateBinding TargetAnchor}"
                                                      Stroke="{TemplateBinding Stroke}"
                                                      StrokeThickness="{TemplateBinding StrokeThickness}"
                                                      StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                     Direction="{TemplateBinding Direction}"
-                                                     ArrowSize="0 0" />
+                                                     Direction="{TemplateBinding Direction}" />
                         <Border Background="{TemplateBinding Background}"
                                 Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"

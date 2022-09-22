@@ -222,7 +222,7 @@ namespace Nodify
             // Subscribe to events if not already subscribed 
             // Useful for advanced connectors that start collapsed because the loaded event is not called
             Size newSize = sizeInfo.NewSize;
-            if (newSize.Width > 0 || newSize.Height > 0)
+            if (newSize.Width > 0d || newSize.Height > 0d)
             {
                 TrySetAnchorUpdateEvents(true);
 

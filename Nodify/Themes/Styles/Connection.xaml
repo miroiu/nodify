@@ -7,15 +7,21 @@
                 Value="3" />
         <Setter Property="Stroke"
                 Value="DodgerBlue" />
+        <Setter Property="Fill"
+                Value="DodgerBlue" />
+        <Setter Property="Spacing"
+                Value="20" />
     </Style>
 
-    <Style TargetType="{x:Type local:DirectionalConnection}">
+    <Style TargetType="{x:Type local:LineConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
                 Value="DodgerBlue" />
         <Setter Property="Fill"
                 Value="DodgerBlue" />
+        <Setter Property="Spacing"
+                Value="30" />
     </Style>
 
     <Style TargetType="{x:Type local:CircuitConnection}">
@@ -25,6 +31,10 @@
                 Value="DodgerBlue" />
         <Setter Property="Fill"
                 Value="DodgerBlue" />
+        <Setter Property="Spacing"
+                Value="30" />
+        <Setter Property="ArrowSize"
+                Value="7 3" />
     </Style>
 
 </ResourceDictionary>

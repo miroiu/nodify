@@ -180,11 +180,11 @@
                      o:Freeze="True"
                      Color="{DynamicResource Connection.StrokeColor}" />
 
-    <!--DIRECTIONAL CONNECTION-->
+    <!--LINE CONNECTION-->
 
-    <SolidColorBrush x:Key="DirectionalConnection.StrokeBrush"
+    <SolidColorBrush x:Key="LineConnection.StrokeBrush"
                      o:Freeze="True"
-                     Color="{DynamicResource DirectionalConnection.StrokeColor}" />
+                     Color="{DynamicResource LineConnection.StrokeColor}" />
 
     <!--CIRCUIT CONNECTION-->
 
