@@ -41,7 +41,7 @@ Install-Package Nodify
  - **No dependencies** other than WPF
  - **Optimized** for interactions with hundreds of nodes at once
  - Built-in dark and light **themes**
- - **Area selection**, **zoom**, **pan** with **auto panning** when close to edge
+ - **Selecting**, **zooming**, **panning** with **auto panning** when close to edge
  - **Select**, **move** and **connect** nodes
  - Lots of **configurable** dependency properties
  - Ready for undo/redo
@@ -57,4 +57,4 @@ Helping with documentation, bug reports, pull requests or anything else is very 
 
 ## 📃 Changelog
 
-THe changelog can be found [here](CHANGELOG.md)
+The changelog can be found [here](CHANGELOG.md)
