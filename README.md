@@ -49,7 +49,7 @@ Install-Package Nodify
  
 ## 📝 Documentation
 
-Check out the [wiki](/wiki) in github.
+Check out the [wiki](https://github.com/miroiu/nodify/wiki) in github.
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
