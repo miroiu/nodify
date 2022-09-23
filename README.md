@@ -49,13 +49,12 @@ Install-Package Nodify
  
 ## 📝 Documentation
 
-API Reference & Documentation can be found [here](https://miroiu.github.io/nodify/docs/api/Alignment).
-Wiki can be found [here](https://github.com/miroiu/nodify/wiki)
+Check out the [wiki](/wiki) in github.
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
 Helping with documentation, bug reports, pull requests or anything else is very welcome. 
 
-## 🎉 Showcase
+## 📃 Changelog
 
-Consider showing off your project to the rest of the world by using [this link](https://miroiu.github.io/nodify).
+THe changelog can be found [here](CHANGELOG.md)
