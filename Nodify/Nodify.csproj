@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
+    <TargetFrameworks>net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -30,11 +30,10 @@ Added onFinish callback to NodifyEditor.BringIntoView
 Added ArrowSize and Spacing to all connections (BaseConnection)
 Added BringIntoViewMaxDuration to NodifyEditor
 Added BringIntoViewSpeed to NodifyEditor
-Removed http://miroiu.github.io/winfx/xaml/nodify xaml prefix
-
 Auto panning speed now scales with the zoom factor.
 
 Breaking Changes: 
+Removed http://miroiu.github.io/winfx/xaml/nodify xaml prefix
 Renamed NodifyEditor.Offset to ViewportLocation
 Renamed NodifyEditor.Scale to ViewportZoom
 Renamed NodifyEditor.MinScale to MinViewportZoom
