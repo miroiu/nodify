@@ -28,6 +28,8 @@ Added HasFooter to Node
 Added FitToScreen to NodifyEditor and EditorCommands
 Added onFinish callback to NodifyEditor.BringIntoView
 Added ArrowSize and Spacing to all connections (BaseConnection)
+Added BringIntoViewMaxDuration to NodifyEditor
+Added BringIntoViewSpeed to NodifyEditor
 Removed http://miroiu.github.io/winfx/xaml/nodify xaml prefix
 
 Auto panning speed now scales with the zoom factor.
@@ -39,6 +41,7 @@ Renamed NodifyEditor.MinScale to MinViewportZoom
 Renamed NodifyEditor.MaxScale to MaxViewportZoom
 Renamed NodifyEditor.AppliedTransform to ViewportTransform
 Renamed DirectionalConnection to LineConnection
+Removed NodifyEditor.BringIntoViewAnimationDuration
 Removed NodifyEditor.Viewport dependency property
 Removed ActualSize from StateNode
 Removed Icon from Node as it can (and should) be added in a custom header template if necessary

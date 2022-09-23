@@ -216,7 +216,8 @@ namespace Nodify
 
         #region Cosmetic Dependency Properties
 
-        public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
+        public static readonly DependencyProperty BringIntoViewSpeedProperty = DependencyProperty.Register(nameof(BringIntoViewSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1000));
+        public static readonly DependencyProperty BringIntoViewMaxDurationProperty = DependencyProperty.Register(nameof(BringIntoViewMaxDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1));
         public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
@@ -230,12 +231,22 @@ namespace Nodify
             => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
         /// <summary>
-        /// Gets or sets the animation duration in seconds when bringing a location into view.
+        /// Gets or sets the maximum animation duration in seconds for bringing a location into view.
         /// </summary>
-        public double BringIntoViewAnimationDuration
+        public double BringIntoViewMaxDuration
         {
-            get => (double)GetValue(BringIntoViewAnimationDurationProperty);
-            set => SetValue(BringIntoViewAnimationDurationProperty, value);
+            get => (double)GetValue(BringIntoViewMaxDurationProperty);
+            set => SetValue(BringIntoViewMaxDurationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the animation speed in pixels per second for bringing a location into view.
+        /// </summary>
+        /// <remarks>Total animation duration is calculated based on distance and clamped between 0.1 and <see cref="BringIntoViewMaxDuration"/>.</remarks>
+        public double BringIntoViewSpeed
+        {
+            get => (double)GetValue(BringIntoViewSpeedProperty);
+            set => SetValue(BringIntoViewSpeedProperty, value);
         }
 
         /// <summary>
@@ -745,14 +756,18 @@ namespace Nodify
         {
             Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * ViewportZoom) / ViewportZoom);
 
-            if (animated && point != ViewportLocation)
+            if (animated && newLocation != ViewportLocation)
             {
                 IsPanning = true;
                 DisableAutoPanning = true;
                 DisablePanning = true;
                 DisableZooming = true;
 
-                this.StartAnimation(ViewportLocationProperty, newLocation, BringIntoViewAnimationDuration, (s, e) =>
+                double distance = (newLocation - ViewportLocation).Length;
+                double duration = distance / (BringIntoViewSpeed + (distance / 10)) * ViewportZoom;
+                duration = Math.Max(0.1, Math.Min(duration, BringIntoViewMaxDuration));
+
+                this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
                     IsPanning = false;
                     DisableAutoPanning = false;

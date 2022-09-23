@@ -169,11 +169,18 @@
             set => SetProperty(ref _displayConnectionsOnTop, value);
         }
 
-        private double _bringIntoViewAnimationDuration = 0.5;
-        public double BringIntoViewAnimationDuration
+        private double _bringIntoViewSpeed = 1000;
+        public double BringIntoViewSpeed
         {
-            get => _bringIntoViewAnimationDuration;
-            set => SetProperty(ref _bringIntoViewAnimationDuration, value);
+            get => _bringIntoViewSpeed;
+            set => SetProperty(ref _bringIntoViewSpeed, value);
+        }
+
+        private double _bringIntoViewMaxDuration = 1;
+        public double BringIntoViewMaxDuration
+        {
+            get => _bringIntoViewMaxDuration;
+            set => SetProperty(ref _bringIntoViewMaxDuration, value);
         }
 
         #endregion

@@ -149,7 +149,8 @@
                              DisablePanning="{Binding DisablePanning, Source={x:Static local:EditorSettings.Instance}}"
                              DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}"
                              DisplayConnectionsOnTop="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
-                             BringIntoViewAnimationDuration="{Binding BringIntoViewAnimationDuration, Source={x:Static local:EditorSettings.Instance}}">
+                             BringIntoViewSpeed="{Binding BringIntoViewSpeed, Source={x:Static local:EditorSettings.Instance}}"
+                             BringIntoViewMaxDuration="{Binding BringIntoViewMaxDuration, Source={x:Static local:EditorSettings.Instance}}">
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
