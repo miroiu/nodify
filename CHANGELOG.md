@@ -1,5 +1,11 @@
 ## Changelog
 
+#### **In development**
+> - Breaking Changes:
+> - Features:
+> - Bugfixes:
+>   - Fixed pending connection default style
+
 #### **Version 2.0.0**
 > - Breaking Changes:
 >   - Renamed Offset to ViewportLocation in NodifyEditor
