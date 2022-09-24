@@ -24,7 +24,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Zoom in relative to the <see cref="NodifyEditor.Viewport"/>'s center.
+        /// Zoom in relative to the editor's viewport center.
         /// </summary>
         public static RoutedUICommand ZoomIn { get; } = new RoutedUICommand("Zoom in", nameof(ZoomIn), typeof(EditorCommands), new InputGestureCollection
         {
@@ -33,7 +33,7 @@ namespace Nodify
         });
 
         /// <summary>
-        /// Zoom out relative to the <see cref="NodifyEditor.Viewport"/>'s center.
+        /// Zoom out relative to the editor's viewport center.
         /// </summary>
         public static RoutedUICommand ZoomOut { get; } = new RoutedUICommand("Zoom out", nameof(ZoomOut), typeof(EditorCommands), new InputGestureCollection
         {
@@ -47,13 +47,13 @@ namespace Nodify
         public static RoutedUICommand SelectAll { get; } = ApplicationCommands.SelectAll;
 
         /// <summary>
-        /// Moves the <see cref="NodifyEditor.Viewport"/> to the specified location.
+        /// Moves the <see cref="NodifyEditor.ViewportLocation"/> to the specified location.
         /// Parameter is a <see cref="Point"/> or a string that can be converted to a point.
         /// </summary>
         public static RoutedUICommand BringIntoView { get; } = new RoutedUICommand("Bring location into view", nameof(BringIntoView), typeof(EditorCommands));
 
         /// <summary>
-        /// Scales the <see cref="NodifyEditor.Viewport"/> to fit all the <see cref="ItemContainer"/>s if that's possible.
+        /// Scales the editor's viewport to fit all the <see cref="ItemContainer"/>s if that's possible.
         /// </summary>
         public static RoutedUICommand FitToScreen { get; } = new RoutedUICommand("Fit to screen", nameof(FitToScreen), typeof(EditorCommands));
 

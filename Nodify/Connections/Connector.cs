@@ -130,7 +130,7 @@ namespace Nodify
         protected NodifyEditor? Editor { get; private set; }
 
         /// <summary>
-        /// Gets or sets the safe zone outside the <see cref="NodifyEditor.Viewport"/> that will not trigger optimizations.
+        /// Gets or sets the safe zone outside the editor's viewport that will not trigger optimizations.
         /// </summary>
         public static double OptimizeSafeZone = 1000d;
 
@@ -142,7 +142,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets if <see cref="Connector"/>s should enable optimizations based on <see cref="OptimizeSafeZone"/> and <see cref="OptimizeMinimumSelectedItems"/>.
         /// </summary>
-        public static bool EnableOptimizations = true;
+        public static bool EnableOptimizations = false;
 
         /// <summary>
         /// Gets or sets whether cancelling a pending connection is allowed.

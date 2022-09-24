@@ -805,6 +805,11 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Calculates the bounding box of all the <see cref="ItemContainer"/>s.
+        /// </summary>
+        /// <param name="padding">The padding to add to the final result.</param>
+        /// <returns>The bounding box.</returns>
         protected Rect GetItemsBounds(double padding = 0)
         {
             double minX = double.MaxValue;
