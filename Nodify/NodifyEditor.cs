@@ -400,6 +400,9 @@ namespace Nodify
             editor.OnDisableAutoPanningChanged(editor.DisableAutoPanning);
         }
 
+        /// <summary>
+        /// Gets or sets the items that will be rendered in the decorators layer via <see cref="DecoratorContainer"/>s.
+        /// </summary>
         public Collection<UIElement> Decorators
         {
             get => (Collection<UIElement>)GetValue(DecoratorsProperty);
@@ -515,8 +518,8 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Invoked when the <see cref="BaseConnection.RemoveConnection"/> event is raised. <br />
-        /// Can also be handled at the <see cref="BaseConnection"/> level using the <see cref="BaseConnection.RemoveConnectionCommand"/> command. <br />
+        /// Invoked when the <see cref="BaseConnection.Disconnect"/> event is raised. <br />
+        /// Can also be handled at the <see cref="BaseConnection"/> level using the <see cref="BaseConnection.DisconnectCommand"/> command. <br />
         /// Parameter is the <see cref="BaseConnection"/>'s <see cref="FrameworkElement.DataContext"/>.
         /// </summary>
         public ICommand? RemoveConnectionCommand
