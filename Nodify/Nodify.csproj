@@ -16,39 +16,8 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>2.0.0</Version>
-    <PackageReleaseNotes>Added ResizeStartedEvent to GroupingNode
-Added ViewportSize dependency property
-Added ActualSize - OneWayToSource to ItemContainer
-Added DecoratorContainer and DecoratorContainerStyle to NodifyEditor
-Added RemoveConnectionCommand to NodifyEditor
-Added DisconnectCommand and SplitCommand to BaseConnection
-Added ContentBrush to NodifyEditor
-Added HasFooter to Node
-Added FitToScreen to NodifyEditor and EditorCommands
-Added onFinish callback to NodifyEditor.BringIntoView
-Added ArrowSize and Spacing to all connections (BaseConnection)
-Added BringIntoViewMaxDuration to NodifyEditor
-Added BringIntoViewSpeed to NodifyEditor
-Auto panning speed now scales with the zoom factor.
-
-Breaking Changes: 
-Removed http://miroiu.github.io/winfx/xaml/nodify xaml prefix
-Renamed NodifyEditor.Offset to ViewportLocation
-Renamed NodifyEditor.Scale to ViewportZoom
-Renamed NodifyEditor.MinScale to MinViewportZoom
-Renamed NodifyEditor.MaxScale to MaxViewportZoom
-Renamed NodifyEditor.AppliedTransform to ViewportTransform
-Renamed DirectionalConnection to LineConnection
-Removed NodifyEditor.BringIntoViewAnimationDuration
-Removed NodifyEditor.Viewport dependency property
-Removed ActualSize from StateNode
-Removed Icon from Node as it can (and should) be added in a custom header template if necessary
-PART_ItemsHost is now mandatory for NodifyEditor
-ItemContainer cannot be used outside a NodifyEditor
-Removed custom converters
-NodifyEditor.ZoomAtPosition now requires graph space coordinates instead of screen space coordinates
-Made DependencyObjectExtensions internal</PackageReleaseNotes>
+    <Version>2.0.1</Version>
+    <PackageReleaseNotes>Fixed pending connection spacing</PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
