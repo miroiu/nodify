@@ -4,6 +4,9 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+
+#### **Version 2.0.1**
+> - Bugfixes:
 >   - Fixed pending connection default style
 
 #### **Version 2.0.0**
