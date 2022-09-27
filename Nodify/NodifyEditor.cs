@@ -757,7 +757,7 @@ namespace Nodify
         /// <remarks>Temporarily disables editor controls when animated.</remarks>
         public void BringIntoView(Point point, bool animated = true, Action? onFinish = null)
         {
-            Point newLocation = (Point)((((Vector)point - (Vector)ViewportSize / 2) * ViewportZoom) / ViewportZoom);
+            Point newLocation = (Point)((Vector)point - (Vector)ViewportSize / 2);
 
             if (animated && newLocation != ViewportLocation)
             {
