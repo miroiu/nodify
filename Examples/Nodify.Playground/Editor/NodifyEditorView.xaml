@@ -127,6 +127,25 @@
                      Fill="{TemplateBinding Background}"
                      StrokeThickness="2" />
         </ControlTemplate>
+
+        <Storyboard x:Key="MarchingAnts">
+            <DoubleAnimation RepeatBehavior="Forever"
+                             Storyboard.TargetProperty="StrokeDashOffset" 
+                             BeginTime="00:00:00"
+                             Duration="0:3:0"
+                             From="1000"
+                             To="0"/>
+        </Storyboard>
+
+        <Style x:Key="SelectionRectangleStyle" TargetType="Rectangle" BasedOn="{StaticResource NodifyEditor.SelectionRectangleStyle}">
+            <Setter Property="StrokeDashArray" Value="4 4" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource MarchingAnts}" />
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -150,7 +169,8 @@
                              DisableZooming="{Binding DisableZooming, Source={x:Static local:EditorSettings.Instance}}"
                              DisplayConnectionsOnTop="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                              BringIntoViewSpeed="{Binding BringIntoViewSpeed, Source={x:Static local:EditorSettings.Instance}}"
-                             BringIntoViewMaxDuration="{Binding BringIntoViewMaxDuration, Source={x:Static local:EditorSettings.Instance}}">
+                             BringIntoViewMaxDuration="{Binding BringIntoViewMaxDuration, Source={x:Static local:EditorSettings.Instance}}"
+                             SelectionRectangleStyle="{StaticResource SelectionRectangleStyle}">
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
