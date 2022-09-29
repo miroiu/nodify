@@ -2,7 +2,12 @@
 
 #### **In development**
 > - Breaking Changes:
+>   - Changed Decorators from UIElement collection to IEnumerable
 > - Features:
+>   - Added ItemsExtent and DecoratorsExtent dependency properties to NodifyEditor
+>   - Added DecoratorTemplate dependency property to NodifyEditor
+>   - Added FitToScreenExtentMargin static field to NodifyEditor
+>   - Added Extent dependency property to NodifyCanvas
 > - Bugfixes:
 
 #### **Version 2.0.1**
