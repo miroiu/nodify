@@ -226,7 +226,10 @@ namespace Nodify
             {
                 TrySetAnchorUpdateEvents(true);
 
-                UpdateAnchorOptimized(Container!.Location);
+                if (Container != null)
+                {
+                    UpdateAnchorOptimized(Container!.Location);
+                }
             }
         }
 

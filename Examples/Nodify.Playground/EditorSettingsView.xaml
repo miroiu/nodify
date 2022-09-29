@@ -299,6 +299,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="Disable context menu after panning: "
@@ -400,6 +401,15 @@
                         <TextBox Grid.Row="11"
                                  Grid.Column="1"
                                  Text="{Binding OptimizeRenderingMinimumNodes, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="12"
+                                   Text="Fit to screen extent margin: "
+                                   ToolTip="Adds some margin to the nodes extent when fit to screen"
+                                   Margin="0 5 5 0" />
+                        <TextBox Grid.Row="12"
+                                 Grid.Column="1"
+                                 Text="{Binding FitToScreenExtentMargin, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />
                     </Grid>
                 </Border>

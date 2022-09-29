@@ -253,6 +253,12 @@
             set => NodifyEditor.OptimizeRenderingZoomOutPercent = value;
         }
 
+        public double FitToScreenExtentMargin
+        {
+            get => NodifyEditor.FitToScreenExtentMargin;
+            set => NodifyEditor.FitToScreenExtentMargin = value;
+        }
+
         #endregion
     }
 }

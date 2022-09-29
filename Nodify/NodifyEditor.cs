@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
@@ -19,7 +18,6 @@ namespace Nodify
     /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, zoom and select.
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
-    [TemplatePart(Name = ElementDecoratorsHost, Type = typeof(Panel))]
     [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(ItemContainer))]
     [StyleTypedProperty(Property = nameof(DecoratorContainerStyle), StyleTargetType = typeof(DecoratorContainer))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
@@ -28,7 +26,6 @@ namespace Nodify
     public class NodifyEditor : MultiSelector
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
-        protected const string ElementDecoratorsHost = "PART_DecoratorsHost";
 
         #region Viewport
 
@@ -37,6 +34,8 @@ namespace Nodify
         public static readonly DependencyProperty MaxViewportZoomProperty = DependencyProperty.Register(nameof(MaxViewportZoom), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaxViewportZoomChanged, CoerceMaxViewportZoom));
         public static readonly DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnViewportLocationChanged));
         public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Size));
+        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
+        public static readonly DependencyProperty DecoratorsExtentProperty = DependencyProperty.Register(nameof(DecoratorsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
 
         protected internal static readonly DependencyPropertyKey ViewportTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty ViewportTransformProperty = ViewportTransformPropertyKey.DependencyProperty;
@@ -192,6 +191,24 @@ namespace Nodify
             set => SetValue(MaxViewportZoomProperty, value);
         }
 
+        /// <summary>
+        /// The area covered by the <see cref="ItemContainer"/>s.
+        /// </summary>
+        public Rect ItemsExtent
+        {
+            get => (Rect)GetValue(ItemsExtentProperty);
+            set => SetValue(ItemsExtentProperty, value);
+        }
+
+        /// <summary>
+        /// The area covered by the <see cref="DecoratorContainer"/>s.
+        /// </summary>
+        public Rect DecoratorsExtent
+        {
+            get => (Rect)GetValue(DecoratorsExtentProperty);
+            set => SetValue(DecoratorsExtentProperty, value);
+        }
+
         #endregion
 
         private void ApplyRenderingOptimizations()
@@ -223,6 +240,7 @@ namespace Nodify
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty DecoratorTemplateProperty = DependencyProperty.Register(nameof(DecoratorTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
@@ -292,6 +310,15 @@ namespace Nodify
         {
             get => (DataTemplate)GetValue(ConnectionTemplateProperty);
             set => SetValue(ConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="DecoratorContainer"/>.
+        /// </summary>
+        public DataTemplate DecoratorTemplate
+        {
+            get => (DataTemplate)GetValue(DecoratorTemplateProperty);
+            set => SetValue(DecoratorTemplateProperty, value);
         }
 
         /// <summary>
@@ -384,7 +411,7 @@ namespace Nodify
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisablePanningChanged));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(Collection<UIElement>), typeof(NodifyEditor));
+        public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
@@ -403,9 +430,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the items that will be rendered in the decorators layer via <see cref="DecoratorContainer"/>s.
         /// </summary>
-        public Collection<UIElement> Decorators
+        public IEnumerable Decorators
         {
-            get => (Collection<UIElement>)GetValue(DecoratorsProperty);
+            get => (IEnumerable)GetValue(DecoratorsProperty);
             set => SetValue(DecoratorsProperty, value);
         }
 
@@ -583,6 +610,11 @@ namespace Nodify
         public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.3;
 
         /// <summary>
+        /// Gets or sets the margin to add in all directions to the <see cref="ItemsExtent"/> or area parameter when using <see cref="FitToScreen(Rect?)"/>.
+        /// </summary>
+        public static double FitToScreenExtentMargin { get; set; } = 30;
+
+        /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
         /// </summary>
         public bool IsBulkUpdatingItems { get; protected set; }
@@ -591,11 +623,6 @@ namespace Nodify
         /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
         protected internal Panel ItemsHost { get; private set; }
-
-        /// <summary>
-        /// Gets the panel that holds decorator <see cref="UIElement"/>s.
-        /// </summary>
-        protected internal Panel? DecoratorsHost { get; private set; }
 
         /// <summary>
         /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectedArea"/> and <see cref="IsSelecting"/> properties.
@@ -653,7 +680,6 @@ namespace Nodify
             AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
 
             Selection = new SelectionHelper(this);
-            Decorators = new Collection<UIElement>();
 
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
@@ -668,33 +694,8 @@ namespace Nodify
             base.OnApplyTemplate();
 
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException("PART_ItemsHost is missing or is not of type Panel.");
-            DecoratorsHost = GetTemplateChild(ElementDecoratorsHost) as Panel;
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
-            AddDecorators();
-        }
-
-        private void AddDecorators()
-        {
-            if (DecoratorsHost != null)
-            {
-                foreach (UIElement child in Decorators)
-                {
-                    if (child is DecoratorContainer)
-                    {
-                        DecoratorsHost.Children.Add(child);
-                    }
-                    else
-                    {
-                        var container = new DecoratorContainer
-                        {
-                            Content = child,
-                            Style = DecoratorContainerStyle,
-                        };
-                        DecoratorsHost.Children.Add(container);
-                    }
-                }
-            }
         }
 
         /// <inheritdoc />
@@ -788,77 +789,25 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Scales the viewport to fit all the containers if that's possible.
+        /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.
         /// </summary>
         /// <remarks>Does nothing if <paramref name="area"/> is null and there's no items.</remarks>
         public void FitToScreen(Rect? area = null)
         {
-            Rect itemsBounds = area ?? GetItemsBounds(padding: 30);
+            Rect extent = area ?? ItemsExtent;
+            extent.Inflate(FitToScreenExtentMargin, FitToScreenExtentMargin);
 
-            if (itemsBounds.Width > 0 && itemsBounds.Height > 0)
+            if (extent.Width > 0 && extent.Height > 0)
             {
-                double widthRatio = ViewportSize.Width / itemsBounds.Width;
-                double heightRatio = ViewportSize.Height / itemsBounds.Height;
+                double widthRatio = ViewportSize.Width / extent.Width;
+                double heightRatio = ViewportSize.Height / extent.Height;
 
                 double zoom = Math.Min(widthRatio, heightRatio);
-                var center = new Point(itemsBounds.X + itemsBounds.Width / 2, itemsBounds.Y + itemsBounds.Height / 2);
+                var center = new Point(extent.X + extent.Width / 2, extent.Y + extent.Height / 2);
 
                 ZoomAtPosition(zoom, center);
                 BringIntoView(center, animated: false);
             }
-        }
-
-        /// <summary>
-        /// Calculates the bounding box of all the <see cref="ItemContainer"/>s.
-        /// </summary>
-        /// <param name="padding">The padding to add to the final result.</param>
-        /// <returns>The bounding box.</returns>
-        protected Rect GetItemsBounds(double padding = 0)
-        {
-            double minX = double.MaxValue;
-            double minY = double.MaxValue;
-
-            double maxX = double.MinValue;
-            double maxY = double.MinValue;
-
-            ItemCollection items = Items;
-            for (int i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-
-                double width = container.ActualSize.Width;
-                double height = container.ActualSize.Height;
-
-                if (container.Location.X < minX)
-                {
-                    minX = container.Location.X;
-                }
-
-                if (container.Location.Y < minY)
-                {
-                    minY = container.Location.Y;
-                }
-
-                double sizeX = container.Location.X + width;
-                if (sizeX > maxX)
-                {
-                    maxX = sizeX;
-                }
-
-                double sizeY = container.Location.Y + height;
-                if (sizeY > maxY)
-                {
-                    maxY = sizeY;
-                }
-            }
-
-            if (minX == double.MaxValue)
-            {
-                return new Rect(0, 0, 0, 0);
-            }
-
-            var result = new Rect(new Point(minX - padding, minY - padding), new Size(maxX - minX + padding * 2, maxY - minY + padding * 2));
-            return result;
         }
 
         #endregion

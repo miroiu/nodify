@@ -53,7 +53,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
-                                                IsItemsHost="True" />
+                                                IsItemsHost="True"
+                                                Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
                             <ItemsControl ItemsSource="{TemplateBinding Connections}"
                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
@@ -87,7 +88,16 @@
 
                             <ContentPresenter ContentSource="PendingConnection" />
 
-                            <local:NodifyCanvas x:Name="PART_DecoratorsHost" />
+                            <local:DecoratorsControl ItemsSource="{TemplateBinding Decorators}"
+                                                     ItemContainerStyle="{TemplateBinding DecoratorContainerStyle}"
+                                                     ItemTemplate="{TemplateBinding DecoratorTemplate}"
+                                                     IsTabStop="False">
+                                <local:DecoratorsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <local:NodifyCanvas Extent="{Binding DecoratorsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}}"/>
+                                    </ItemsPanelTemplate>
+                                </local:DecoratorsControl.ItemsPanel>
+                            </local:DecoratorsControl>
                         </Canvas>
                     </Border>
                 </ControlTemplate>
