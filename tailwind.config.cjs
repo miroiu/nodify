@@ -6,6 +6,8 @@ module.exports = {
 			colors: {
 				primary: '#fd5618',
 				'primary-darker': '#e94102',
+				secondary: '#662d91',
+				card: '#24283788',
 			},
 			backgroundImage: {
 				'grid-pattern':
