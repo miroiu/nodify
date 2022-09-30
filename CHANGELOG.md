@@ -9,6 +9,7 @@
 >   - Added FitToScreenExtentMargin static field to NodifyEditor
 >   - Added Extent dependency property to NodifyCanvas
 > - Bugfixes:
+>   - Selection rectangle and Decorators are no longer scaled with the viewport zoom
 
 #### **Version 2.0.1**
 > - Bugfixes:
