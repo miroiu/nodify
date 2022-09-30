@@ -266,13 +266,7 @@
 
                                 <CompositeCollection>
                                     <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
-                                                               Location="{Binding Location}"
-                                                               Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
-                                        <nodify:DecoratorContainer.Effect>
-                                            <DropShadowEffect BlurRadius="3"
-                                                                  ShadowDepth="7"
-                                                                  Opacity="0.5" />
-                                        </nodify:DecoratorContainer.Effect>
+                                                               Location="{Binding Location}">
                                         <local:OperationsMenuView />
                                     </nodify:DecoratorContainer>
                                 </CompositeCollection>
@@ -312,18 +306,12 @@
 
             <CompositeCollection>
                 <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
-                                      Location="{Binding Location}"
-                                      Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
-                    <nodify:DecoratorContainer.Effect>
-                        <DropShadowEffect BlurRadius="3"
-                                          ShadowDepth="7"
-                                          Opacity="0.5" />
-                    </nodify:DecoratorContainer.Effect>
+                                           Location="{Binding Location}">
                     <local:OperationsMenuView />
                 </nodify:DecoratorContainer>
             </CompositeCollection>
         </nodify:NodifyEditor>
-
+        
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
     </Grid>
