@@ -8,6 +8,9 @@ namespace Nodifier
 {
     public partial class GraphEditor : IGraph
     {
+        protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
+        public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
+
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
 
@@ -22,6 +25,16 @@ namespace Nodifier
         public GraphEditor()
         {
             PendingConnection = new PendingConnection(this);
+        }
+
+        public virtual void AddDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Add(decorator);
+        }
+
+        public virtual void RemoveDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Remove(decorator);
         }
 
         public virtual void AddElement(IGraphElement node)

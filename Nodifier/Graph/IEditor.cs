@@ -6,8 +6,10 @@ namespace Nodifier
     public interface IEditor
     {
         Point ViewportLocation { get; set; }
-        Size ViewportSize { get; }
         double ViewportZoom { get; set; }
+        Size ViewportSize { get; }
+        Rect ElementsExtent { get; }
+        Rect DecoratorsExtent { get; }
 
         IEditorSettings Settings { get; }
 

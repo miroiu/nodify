@@ -57,6 +57,20 @@ namespace Nodifier
             set => SetAndNotify(ref _viewportZoom, value);
         }
 
+        private Rect _elementsExtent;
+        public Rect ElementsExtent
+        {
+            get => _elementsExtent;
+            set => SetAndNotify(ref _elementsExtent, value);
+        }
+
+        private Rect _decoratorsExtent;
+        public Rect DecoratorsExtent
+        {
+            get => _decoratorsExtent;
+            set => SetAndNotify(ref _decoratorsExtent, value);
+        }
+
         void IViewAware.AttachView(UIElement view)
         {
             if (view is INodifyEditorAware editorAware)

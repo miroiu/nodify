@@ -37,12 +37,15 @@
 
     <Grid Background="{StaticResource NodifyEditor.BackgroundBrush}">
         <nodify:NodifyEditor ItemsSource="{Binding Elements}"
+                         Decorators="{Binding Decorators}"
                          SelectedItems="{Binding SelectedElements}"
                          Connections="{Binding Connections}"
                          PendingConnection="{Binding PendingConnection}"
                          ViewportLocation="{Binding ViewportLocation}"
                          ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
                          ViewportZoom="{Binding ViewportZoom}"
+                         ItemsExtent="{Binding ElementsExtent, Mode=OneWayToSource}"
+                         DecoratorsExtent="{Binding DecoratorsExtent, Mode=OneWayToSource}"
                          DisablePanning="{Binding Settings.DisablePanning}"
                          DisableZooming="{Binding Settings.DisableZooming}"
                          DisableAutoPanning="{Binding Settings.DisableAutoPanning}"
@@ -69,6 +72,18 @@
                     <Setter Property="IsDraggable" Value="{Binding IsDraggable}" />
                 </Style>
             </nodify:NodifyEditor.ItemContainerStyle>
+            <nodify:NodifyEditor.DecoratorContainerStyle>
+                <Style TargetType="nodify:DecoratorContainer"
+                       BasedOn="{StaticResource {x:Type nodify:DecoratorContainer}}">
+                    <Setter Property="Location" Value="{Binding Location, Mode=TwoWay}" />
+                    <Setter Property="ActualSize" Value="{Binding Size, Mode=OneWayToSource}" />
+                </Style>
+            </nodify:NodifyEditor.DecoratorContainerStyle>
+            <nodify:NodifyEditor.DecoratorTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.DecoratorTemplate>
             <nodify:NodifyEditor.ItemTemplate>
                 <DataTemplate>
                     <ContentControl s:View.Model="{Binding}" />
