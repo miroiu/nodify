@@ -3,6 +3,8 @@
                     xmlns:local="clr-namespace:Nodify">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
+    <local:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
 
     <DataTemplate x:Key="ConnectionTemplate">
         <local:Connection />
@@ -79,14 +81,26 @@
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
 
+                            <ContentPresenter ContentSource="PendingConnection" />
+
                             <Rectangle Style="{TemplateBinding SelectionRectangleStyle}"
+                                       RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
                                        Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                        Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Width="{Binding SelectedArea.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Height="{Binding SelectedArea.Height, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                            <ContentPresenter ContentSource="PendingConnection" />
+                                       Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Rectangle.Width>
+                                    <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
+                                        <Binding Path="SelectedArea.Width" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Rectangle.Width>
+                                <Rectangle.Height>
+                                    <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
+                                        <Binding Path="SelectedArea.Height" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Rectangle.Height>
+                            </Rectangle>
 
                             <local:DecoratorsControl ItemsSource="{TemplateBinding Decorators}"
                                                      ItemContainerStyle="{TemplateBinding DecoratorContainerStyle}"

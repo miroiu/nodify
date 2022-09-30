@@ -42,8 +42,13 @@
     
     <!--DECORATOR CONTAINER-->
     
+    <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
+
     <Style TargetType="{x:Type local:DecoratorContainer}"
-           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}" />
+           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
+        <Setter Property="RenderTransform"
+                Value="{Binding ViewportTransform, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}, Converter={StaticResource UnscaleTransformConverter}}" />
+    </Style>
 
     <!--NODE-->
 

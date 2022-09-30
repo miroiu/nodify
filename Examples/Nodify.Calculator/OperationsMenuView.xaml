@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Nodify.Calculator"
+             xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              mc:Ignorable="d"
              MinWidth="250"
              d:DesignHeight="400"
@@ -19,42 +20,15 @@
 
     <Border Padding="7"
             CornerRadius="3"
-            Background="{DynamicResource Node.BackgroundBrush}">
+            Background="{DynamicResource Node.BackgroundBrush}"
+            BorderBrush="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}"
+            BorderThickness="2"
+            Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-
-            <Border BorderThickness="0 0 0 1"
-                    Margin="0 0 0 10">
-                <Border.BorderBrush>
-                    <DrawingBrush Viewport="0,0,8,8"
-                                  ViewportUnits="Absolute"
-                                  TileMode="Tile">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="{DynamicResource NodeInput.BorderBrush}">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0,50,50" />
-                                            <RectangleGeometry Rect="50,50,50,50" />
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Border.BorderBrush>
-                <DockPanel>
-                    <TextBlock FontSize="14" Margin="3 0 0 0">Operations menu</TextBlock>
-                    <Button Command="{Binding CloseCommand}"
-                            HorizontalAlignment="Right"
-                            Style="{StaticResource IconButton}"
-                            Content="{StaticResource DeleteIcon}"
-                            Cursor="Hand" />
-                </DockPanel>
-            </Border>
 
             <ItemsControl Grid.Row="1"
                           ItemsSource="{Binding AvailableOperations}">

@@ -26,6 +26,9 @@
       Added DecoratorTemplate dependency property to NodifyEditor
       Added FitToScreenExtentMargin static field to NodifyEditor
       Added Extent dependency property to NodifyCanvas
+
+      Bugfixes:
+      Selection rectangle and Decorators are no longer scaled with the viewport zoom
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
