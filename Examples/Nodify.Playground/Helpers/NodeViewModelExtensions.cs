@@ -16,8 +16,8 @@ namespace Nodify.Playground
             for (int i = 0; i < nodes.Count; i++)
             {
                 var node = nodes[i];
-                var width = 200;    //node.Width
-                var height = 200;   //node.Height
+                var width = node.Size.Width;
+                var height = node.Size.Height;
 
                 if (node.Location.X < minX)
                 {

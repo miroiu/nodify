@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Nodify.Playground
+﻿namespace Nodify.Playground
 {
     public class CommentNodeViewModel : NodeViewModel
     {
@@ -11,11 +9,9 @@ namespace Nodify.Playground
             set => SetProperty(ref _title, value);
         }
 
-        private Size _size;
-        public Size Size
+        public CommentNodeViewModel()
         {
-            get => _size;
-            set => SetProperty(ref _size, value);
+            IsResizable = true;
         }
     }
 }

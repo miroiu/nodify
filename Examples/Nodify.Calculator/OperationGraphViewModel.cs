@@ -4,13 +4,6 @@ namespace Nodify.Calculator
 {
     public class OperationGraphViewModel : CalculatorOperationViewModel
     {
-        private Size _size;
-        public Size DesiredSize
-        {
-            get => _size;
-            set => SetProperty(ref _size, value);
-        }
-        
         private Size _prevSize;
 
         private bool _isExpanded = true;
@@ -23,13 +16,13 @@ namespace Nodify.Calculator
                 {
                     if (_isExpanded)
                     {
-                        DesiredSize = _prevSize;
+                        Size = _prevSize;
                     }
                     else
                     {
                         _prevSize = Size;
                         // Fit content
-                        DesiredSize = new Size(double.NaN, double.NaN);
+                        Size = new Size(double.NaN, double.NaN);
                     }
                 }
             }

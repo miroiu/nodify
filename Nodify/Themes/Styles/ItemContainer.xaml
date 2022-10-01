@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
+    
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <SolidColorBrush x:Key="ItemContainer.HighlightColor"
                      Color="DodgerBlue" />
@@ -23,6 +25,12 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
+    <ControlTemplate x:Key="ResizeThumbTemplate" TargetType="Thumb">
+        <TextBlock Text="p"
+                   FontFamily="Marlett"
+                   FontSize="18" />
+    </ControlTemplate>
+
     <Style TargetType="{x:Type local:ItemContainer}">
         <Setter Property="BorderThickness"
                 Value="1" />
@@ -34,6 +42,10 @@
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
         <Setter Property="KeyboardNavigation.IsTabStop"
                 Value="False" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ItemContainer}">
@@ -41,9 +53,19 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
-                            x:Name="Border"
                             CornerRadius="3">
-                        <ContentPresenter />
+                        <Grid>
+                            <ContentPresenter />
+                            <Thumb x:Name="PART_ResizeThumb"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   Margin="0 0 2 2"
+                                   MinHeight="20"
+                                   Cursor="SizeNWSE"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   Template="{StaticResource ResizeThumbTemplate}"
+                                   Visibility="{Binding IsResizable, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

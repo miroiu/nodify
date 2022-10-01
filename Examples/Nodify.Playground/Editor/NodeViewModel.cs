@@ -17,5 +17,19 @@ namespace Nodify.Playground
             get => _location;
             set => SetProperty(ref _location, value);
         }
+
+        private Size _size;
+        public Size Size
+        {
+            get => _size;
+            set => SetProperty(ref _size, value);
+        }
+
+        private bool _isResizable = true;
+        public bool IsResizable
+        {
+            get => _isResizable;
+            set => SetProperty(ref _isResizable, value);
+        }
     }
 }

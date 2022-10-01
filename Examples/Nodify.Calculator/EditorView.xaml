@@ -213,14 +213,11 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
-                    <nodify:GroupingNode Header="{Binding Title}"
-                                         ActualSize="{Binding GroupSize, Mode=TwoWay}" />
+                    <nodify:GroupingNode Header="{Binding Title}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
                     <nodify:GroupingNode Header="{Binding}"
-                                         CanResize="{Binding IsExpanded}"
-                                         ActualSize="{Binding DesiredSize, Mode=TwoWay}"
                                          MovementMode="Self">
                         <nodify:GroupingNode.HeaderTemplate>
                             <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
@@ -263,7 +260,7 @@
                                     <KeyBinding Key="C"
                                                 Command="{Binding GroupSelectionCommand}" />
                                 </nodify:NodifyEditor.InputBindings>
-
+                                
                                 <CompositeCollection>
                                     <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
                                                                Location="{Binding Location}">
@@ -311,7 +308,7 @@
                 </nodify:DecoratorContainer>
             </CompositeCollection>
         </nodify:NodifyEditor>
-        
+
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
     </Grid>

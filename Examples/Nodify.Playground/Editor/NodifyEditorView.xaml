@@ -308,8 +308,7 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
-                    <nodify:GroupingNode ActualSize="{Binding Size}"
-                                         Header="{Binding Title}" />
+                    <nodify:GroupingNode Header="{Binding Title}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
@@ -324,6 +323,10 @@
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                     <Setter Property="Location"
                             Value="{Binding Location}" />
+                    <Setter Property="ActualSize"
+                            Value="{Binding Size, Mode=TwoWay}" />
+                    <Setter Property="IsResizable"
+                            Value="{Binding IsResizable}" />
                 </Style>
             </nodify:NodifyEditor.ItemContainerStyle>
         </nodify:NodifyEditor>

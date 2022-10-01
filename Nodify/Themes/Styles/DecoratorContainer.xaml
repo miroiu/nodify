@@ -12,7 +12,6 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
-                            x:Name="Border"
                             CornerRadius="3">
                         <ContentPresenter />
                     </Border>

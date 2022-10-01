@@ -20,9 +20,9 @@
         <Setter Property="Padding"
                 Value="7 3" />
         <Setter Property="VerticalAlignment"
-                Value="Center" />
+                Value="Stretch" />
         <Setter Property="HorizontalAlignment"
-                Value="Center" />
+                Value="Stretch" />
         <Setter Property="MinHeight"
                 Value="30" />
         <Setter Property="MinWidth"
@@ -52,22 +52,6 @@
                                   Background="{TemplateBinding Background}">
                                 <ContentPresenter x:Name="PART_Content"
                                                   ContentSource="Content" />
-                                <Thumb x:Name="PART_ResizeThumb"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Bottom"
-                                       Margin="0 0 2 2"
-                                       MinHeight="20"
-                                       Cursor="SizeNWSE"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       Visibility="{TemplateBinding CanResize, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Thumb.Template>
-                                        <ControlTemplate>
-                                            <TextBlock Text="p"
-                                                       FontFamily="Marlett"
-                                                       FontSize="18" />
-                                        </ControlTemplate>
-                                    </Thumb.Template>
-                                </Thumb>
                             </Grid>
                         </Grid>
                     </Border>
