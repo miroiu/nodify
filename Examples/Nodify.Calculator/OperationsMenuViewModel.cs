@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Nodify.Calculator
 {
@@ -40,10 +39,7 @@ namespace Nodify.Calculator
 
         public void Close()
         {
-            if (IsVisible)
-            {
-                IsVisible = false;
-            }
+            IsVisible = false;
         }
 
         public NodifyObservableCollection<OperationInfoViewModel> AvailableOperations { get; }
@@ -75,7 +71,6 @@ namespace Nodify.Calculator
 
             AvailableOperations = new NodifyObservableCollection<OperationInfoViewModel>(operations);
             CreateOperationCommand = new DelegateCommand<OperationInfoViewModel>(CreateOperation);
-            CloseCommand = new DelegateCommand(Close);
         }
 
         private void CreateOperation(OperationInfoViewModel operationInfo)
@@ -96,7 +91,5 @@ namespace Nodify.Calculator
             }
             Close();
         }
-
-        public ICommand CloseCommand { get; }
     }
 }
