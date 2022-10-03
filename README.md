@@ -47,7 +47,7 @@ Install-Package Nodify
  - Ready for undo/redo
  - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator)
  
-## 📝 Documentation & 📃 Changelog
+## 📝 Documentation & Changelog
 
 Check out the [wiki](https://github.com/miroiu/nodify/wiki) and the [changelog](CHANGELOG.md) in github.
 
