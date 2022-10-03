@@ -22,7 +22,7 @@ export const GithubButton: FC<GithubButtonProps> = ({ owner, repo }) => {
       className="flex bg-white hover:bg-slate-100 transition-colors duration-200 ease-in-out w-fit text-black px-3 py-2 rounded-full gap-2 cursor-pointer font-medium"
       href="https://github.com/miroiu/nodify"
     >
-      <img src="img/github_logo.svg" className="w-6 h-6" />
+      <img src="img/github_logo.svg" className="w-6 h-6" alt="Github" />
       Star
       <span className="border-l min-w-[45px] px-2">{stars}</span>
     </a>

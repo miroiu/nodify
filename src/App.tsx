@@ -44,7 +44,7 @@ function App() {
 
               <div className="flex gap-6 items-center flex-col sm:flex-row">
                 <a
-                  className="bg-primary hover:bg-primary-darker transition-colors duration-200 ease-in-out py-4 px-6 font-bold text-3xl uppercase rounded-lg shadow-sm"
+                  className="hover:bg-primary bg-primary-darker transition-colors duration-200 ease-in-out py-4 px-6 font-bold text-3xl uppercase rounded-lg shadow-sm"
                   href="https://github.com/miroiu/nodify/wiki/Getting-Started"
                 >
                   Get started
@@ -55,6 +55,7 @@ function App() {
 
             <img
               src="logo.svg"
+              alt="Nodify logo"
               className="w-64 h-64 hover:scale-105 transition-all duration-200 ease-in-out hidden sm:block"
             />
             <div className="absolute bottom-0 w-full flex flex-col justify-center items-center sm:py-6">
@@ -67,7 +68,7 @@ function App() {
                 </p>
                 <img
                   src="img/carret.svg"
-                  alt="scroll"
+                  alt="Scroll to featured projects"
                   className="h-12 w-12 animate-bounce"
                 />
               </a>
@@ -81,17 +82,17 @@ function App() {
         >
           <main className="relative flex flex-col gap-4 sm:grid sm:grid-cols-4 sm:gap-6">
             {features.map((feature, index) => (
-              <div
+              <section
                 key={index}
                 className="px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center group cursor-feature hover:via-secondary"
               >
-                <h4 className="text-xl font-semibold uppercase">
+                <h1 className="text-xl font-semibold uppercase">
                   {feature.title}
-                </h4>
+                </h1>
                 <p className="bg-secondary absolute top-full mt-2 rounded-lg w-full left-0 flex items-center text-center p-4 [clip-path:polygon(0_0,_100%_0,_100%_0,_0_0)] group-hover:[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)] transition-all duration-200">
                   {feature.description}
                 </p>
-              </div>
+              </section>
             ))}
           </main>
 
@@ -120,6 +121,7 @@ function App() {
                       >
                         <img
                           src="img/external-link.svg"
+                          alt="Go to project website"
                           className="w-12 h-12"
                         />
                       </a>
@@ -127,7 +129,7 @@ function App() {
                   )}
                 </div>
                 <div className="bg-card backdrop-blur flex flex-col p-4 rounded-tr-md rounded-br-md grow">
-                  <h3 className="text-xl font-extrabold mb-2">{app.title}</h3>
+                  <p className="text-xl font-extrabold mb-2">{app.title}</p>
                   {app.description && <p>{app.description}</p>}
                 </div>
               </div>
@@ -140,6 +142,7 @@ function App() {
               >
                 <img
                   src="img/plus.svg"
+                  alt="Add your own project"
                   className="w-16 h-16 my-6 sm:group-hover:w-20 sm:group-hover:h-20 transition-all"
                 />
               </a>
@@ -172,7 +175,7 @@ function App() {
           </a>
         </div>
         <p className="text-primary">Copyright © 2022 Emanuel Miroiu</p>
-        <h6 className="text-sm">
+        <p className="text-sm">
           Designed with ❤️ by{' '}
           <a
             className="text-primary hover:text-primary-darker"
@@ -181,7 +184,7 @@ function App() {
           >
             MiroiuGabriel
           </a>
-        </h6>
+        </p>
       </footer>
     </div>
   );

@@ -9,7 +9,7 @@ export type ApplicationInfo = {
 export const apps: ApplicationInfo[] = [
   {
     title: 'State Machine',
-    preview: 'img/example-state-machine.png',
+    preview: 'img/example-state-machine.webp',
     description:
       'A state machine application example demonstrating the usage of StateNode and Connection.OffsetMode',
     website:
@@ -18,7 +18,7 @@ export const apps: ApplicationInfo[] = [
   },
   {
     title: 'Calculator',
-    preview: 'img/example-calculator.png',
+    preview: 'img/example-calculator.webp',
     description:
       'A calculator application example showcasing customized nodes and nested graph editors',
     website:
@@ -27,7 +27,7 @@ export const apps: ApplicationInfo[] = [
   },
   {
     title: 'Playground',
-    preview: 'img/example-playground.png',
+    preview: 'img/example-playground.webp',
     description:
       'A playground application where you can test all the available settings',
     website:
