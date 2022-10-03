@@ -3,20 +3,20 @@ import { GithubButton } from './components';
 
 const features = [
   {
-    title: 'Built for MVMM',
+    title: '⭐ Built for MVMM',
     description: 'Designed from the ground up to work with MVVM',
   },
   {
-    title: 'High performance',
+    title: '⭐ Performant',
     description: 'Optimized for interaction with hundreds of nodes at once',
   },
   {
-    title: 'Customizable',
+    title: '⭐ Customizable',
     description:
       'Use the built-in themes or create your own with the power of XAML',
   },
   {
-    title: 'Featureful',
+    title: '⭐ Featureful',
     description: 'Fully featured navigation, zoom and area selection system',
   },
 ];
@@ -68,19 +68,17 @@ function App() {
         </section>
         <section
           id="showcase"
-          className="scroll-m-4 pt-28 flex flex-col gap-16"
+          className="scroll-m-4 pt-28 flex flex-col gap-28"
         >
-          <main className="grid grid-cols-4 gap-6">
+          <main className="relative grid grid-cols-4 gap-6">
             {features.map(feature => (
-              <div className="relative px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center items-center group">
-                <h4 className="text-xl font-semibold uppercase group-hover:opacity-0">
+              <div className="px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center group cursor-feature hover:via-secondary">
+                <h4 className="text-xl font-semibold uppercase">
                   {feature.title}
                 </h4>
-                <div className="absolute inset-0 flex items-center text-center">
-                  <p className="text-sm font-semibold opacity-0 group-hover:opacity-100">
-                    {feature.description}
-                  </p>
-                </div>
+                <p className="bg-secondary absolute top-full mt-2 rounded-lg w-full left-0 flex items-center text-center p-4 [clip-path:polygon(0_0,_100%_0,_100%_0,_0_0)] group-hover:[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)] transition-all duration-200">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </main>
@@ -102,6 +100,7 @@ function App() {
                       </span>
                       <a
                         href={app.website}
+                        target="_blank"
                         className="absolute top-0 right-0 w-full h-full [clip-path:circle(0%_at_100%_0)] group-hover:[clip-path:circle(150%_at_100%_0)] motion-safe:transition-all duration-200 bg-secondary opacity-90 flex justify-center items-center"
                       >
                         <img
@@ -121,6 +120,7 @@ function App() {
             <div className="rounded-lg bg-gradient-to-t from-secondary via-secondary to-primary p-1 shadow-2xl overflow-hidden flex flex-col">
               <a
                 href="https://github.com/miroiu/nodify/edit/docs/src/apps.ts"
+                target="_blank"
                 className="h-full bg-secondary opacity-90 flex justify-center items-center group"
               >
                 <img
