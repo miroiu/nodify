@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/github/license/miroiu/nodify?style=for-the-badge)](https://github.com/miroiu/nodify/blob/master/LICENSE)
 [![C#](https://img.shields.io/static/v1?label=docs&message=WIP&color=orange&style=for-the-badge)](https://github.com/miroiu/nodify/wiki)
 
- A collection of high performance controls for node based editors designed for MVVM.
+ A collection of highly performant controls for node based editors designed for MVVM.
 
 ## 🚀 Examples of different node-based applications
 
@@ -47,14 +47,10 @@ Install-Package Nodify
  - Ready for undo/redo
  - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator)
  
-## 📝 Documentation
+## 📝 Documentation & Changelog
 
-Check out the [wiki](https://github.com/miroiu/nodify/wiki) in github.
+Check out the [wiki](https://github.com/miroiu/nodify/wiki) and the [changelog](CHANGELOG.md) in github.
 
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
 Helping with documentation, bug reports, pull requests or anything else is very welcome. 
-
-## 📃 Changelog
-
-The changelog can be found [here](CHANGELOG.md)
