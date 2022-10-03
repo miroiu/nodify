@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://miroiu.github.io/nodify",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
