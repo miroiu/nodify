@@ -28,11 +28,19 @@ function App() {
         <section className="h-screen flex flex-col items-center justify-center gap-8 relative">
           <div className="flex gap-20">
             <div className="flex flex-col gap-16 text-center sm:text-left">
-              <h1 className="text-5xl sm:text-6xl tracking-tight font-extrabold">
-                Build <span className="text-primary">node-based</span> editors
-                quickly, focus on your business{' '}
-                <span className="text-primary">logic</span>.
-              </h1>
+              <div className="flex flex-col gap-4">
+                <h2 className="relative uppercase text-4xl text-secondary font-extrabold mx-auto sm:mx-0">
+                  Nodify
+                  <span className="absolute top-1 left-1 uppercase text-4xl text-card font-extrabold -z-10">
+                    Nodify
+                  </span>
+                </h2>
+                <h1 className="text-5xl sm:text-6xl tracking-tight font-extrabold">
+                  Build <span className="text-primary">node-based</span> editors
+                  quickly, focus on your business{' '}
+                  <span className="text-primary">logic</span>.
+                </h1>
+              </div>
 
               <div className="flex gap-6 items-center flex-col sm:flex-row">
                 <a
