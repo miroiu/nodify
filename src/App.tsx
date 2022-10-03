@@ -24,17 +24,17 @@ const features = [
 function App() {
   return (
     <div>
-      <div className="max-w-screen-lg mx-auto">
+      <div className="max-w-screen-lg mx-auto px-4">
         <section className="h-screen flex flex-col items-center justify-center gap-8 relative">
           <div className="flex gap-20">
-            <div className="flex flex-col gap-16">
-              <h1 className="text-6xl tracking-tight font-extrabold">
+            <div className="flex flex-col gap-16 text-center sm:text-left">
+              <h1 className="text-5xl sm:text-6xl tracking-tight font-extrabold">
                 Build <span className="text-primary">node-based</span> editors
                 quickly, focus on your business{' '}
                 <span className="text-primary">logic</span>.
               </h1>
 
-              <div className="flex gap-6 items-center">
+              <div className="flex gap-6 items-center flex-col sm:flex-row">
                 <a
                   className="bg-primary hover:bg-primary-darker transition-colors duration-200 ease-in-out py-4 px-6 font-bold text-3xl uppercase rounded-lg shadow-sm"
                   href="https://github.com/miroiu/nodify/wiki/Getting-Started"
@@ -47,9 +47,9 @@ function App() {
 
             <img
               src="logo.svg"
-              className="w-64 h-64 hover:scale-105 transition-all duration-200 ease-in-out"
+              className="w-64 h-64 hover:scale-105 transition-all duration-200 ease-in-out hidden sm:block"
             />
-            <div className="absolute bottom-0 w-full flex flex-col justify-center items-center py-6">
+            <div className="absolute bottom-0 w-full flex flex-col justify-center items-center sm:py-6">
               <a
                 href="#showcase"
                 className="flex flex-col items-center justify-center group"
@@ -66,13 +66,17 @@ function App() {
             </div>
           </div>
         </section>
+
         <section
           id="showcase"
-          className="scroll-m-4 pt-28 flex flex-col gap-28"
+          className="scroll-m-4 pt-10 sm:pt-28 flex flex-col gap-28"
         >
-          <main className="relative grid grid-cols-4 gap-6">
-            {features.map(feature => (
-              <div className="px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center group cursor-feature hover:via-secondary">
+          <main className="relative flex flex-col gap-4 sm:grid sm:grid-cols-4 sm:gap-6">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center group cursor-feature hover:via-secondary"
+              >
                 <h4 className="text-xl font-semibold uppercase">
                   {feature.title}
                 </h4>
@@ -83,9 +87,12 @@ function App() {
             ))}
           </main>
 
-          <div className="grid grid-cols-2 gap-8">
-            {apps.map(app => (
-              <div className="rounded-lg bg-gradient-to-t from-secondary via-secondary to-primary p-1 shadow-2xl overflow-hidden flex flex-col">
+          <div className="sm:grid sm:grid-cols-2 flex flex-col gap-8">
+            {apps.map((app, index) => (
+              <div
+                key={index}
+                className="rounded-lg bg-gradient-to-t from-secondary via-secondary to-primary p-1 shadow-2xl overflow-hidden flex flex-col"
+              >
                 <div className="relative group">
                   <img
                     src={app.preview}
@@ -125,7 +132,7 @@ function App() {
               >
                 <img
                   src="img/plus.svg"
-                  className="w-16 h-16 group-hover:w-20 group-hover:h-20 transition-all"
+                  className="w-16 h-16 my-6 sm:group-hover:w-20 sm:group-hover:h-20 transition-all"
                 />
               </a>
             </div>
@@ -160,7 +167,7 @@ function App() {
         <h6 className="text-sm">
           Designed with ❤️ by{' '}
           <a
-            className="text-primary"
+            className="text-primary hover:text-primary-darker"
             href="https://github.com/MiroiuGabriel"
             target="_blank"
           >
