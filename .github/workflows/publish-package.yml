@@ -15,13 +15,12 @@ jobs:
       uses: actions/setup-dotnet@v3.0.1
       with:
         dotnet-version: '6.0.x'
-        source-url: https://api.nuget.org/v3/index.json   
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Publish the package
-      run: dotnet nuget push */bin/Release/*.nupkg
+      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN */bin/Release/*.nupkg
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
       
