@@ -29,6 +29,7 @@
 
       Bugfixes:
       Selection rectangle and Decorators are no longer scaled with the viewport zoom
+      Fixed connector anchor not updating when container size changed
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

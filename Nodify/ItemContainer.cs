@@ -292,6 +292,7 @@ namespace Nodify
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             ActualSize = sizeInfo.NewSize;
+            base.OnRenderSizeChanged(sizeInfo);
         }
 
         /// <summary>
