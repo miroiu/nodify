@@ -2,6 +2,11 @@
 
 #### **In development**
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 3.0.1**
+> - Breaking Changes:
 >   - Changed Decorators from UIElement collection to IEnumerable
 > - Features:
 >   - Added ItemsExtent and DecoratorsExtent dependency properties to NodifyEditor
@@ -10,6 +15,7 @@
 >   - Added Extent dependency property to NodifyCanvas
 > - Bugfixes:
 >   - Selection rectangle and Decorators are no longer scaled with the viewport zoom
+>   - Fixed connector anchor not updating when container size changed
 
 #### **Version 2.0.1**
 > - Bugfixes:
