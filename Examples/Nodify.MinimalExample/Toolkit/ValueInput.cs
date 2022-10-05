@@ -1,6 +1,4 @@
-﻿using Stylet;
-
-namespace Nodifier
+﻿namespace Nodifier
 {
     public class ValueEditor<T> : PropertyChangedBase
     {

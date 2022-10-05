@@ -3,13 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NodifyMinimalExample" 
+        xmlns:local="clr-namespace:Nodify.MinimalExample" 
         xmlns:nodifier="https://miroiu.github.io/nodifier" 
-        xmlns:s="https://github.com/canton7/Stylet"
+        xmlns:s="clr-namespace:Nodifier.XAML;assembly=Nodifier"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:Bootstrapper x:Key="Bootstrapper" />
+    </Window.Resources>
+
     <Window.DataContext>
-        <local:MinimalApp />
+        <Binding Path="Application" Source="{StaticResource Bootstrapper}" />
     </Window.DataContext>
 
     <Grid>

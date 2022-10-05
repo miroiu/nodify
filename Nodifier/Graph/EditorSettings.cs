@@ -1,5 +1,4 @@
 ﻿using Nodify;
-using Stylet;
 
 namespace Nodifier
 {

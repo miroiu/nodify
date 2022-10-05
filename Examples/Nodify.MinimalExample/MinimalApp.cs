@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace NodifyMinimalExample
+namespace Nodify.MinimalExample
 {
     public class CustomGraphNode : GraphNode.WithFooter<string>
     {

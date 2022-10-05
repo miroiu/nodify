@@ -1,4 +1,5 @@
-﻿using Nodify;
+﻿using Nodifier.XAML;
+using Nodify;
 using System.Windows.Controls;
 
 namespace Nodifier.Views
@@ -11,7 +12,7 @@ namespace Nodifier.Views
     /// <summary>
     /// Interaction logic for GraphView.xaml
     /// </summary>
-    public partial class GraphView : UserControl, INodifyEditorAware
+    public partial class GraphView : UserControl, INodifyEditorAware, IViewFor<IGraph>
     {
         public GraphView()
         {

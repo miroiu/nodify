@@ -7,7 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Dark.xaml" />
-                <nodifier:NodifyLoader />
+                <!--<nodifier:NodifyLoader />-->
                 <ResourceDictionary>
                     <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
                         <Style.Setters>

@@ -1,5 +1,4 @@
-﻿using Stylet;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 
 namespace Nodifier

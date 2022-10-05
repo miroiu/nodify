@@ -1,6 +1,4 @@
-﻿using Nodifier;
-using Nodifier.Views;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Nodify.MinimalExample
 {
@@ -11,16 +9,6 @@ namespace Nodify.MinimalExample
     {
         public MainWindow()
         {
-            NodifyViewManager.RegisterView(typeof(ValueInput<>), typeof(NodeValueInputView));
-            NodifyViewManager.RegisterView(typeof(ValueOutput<>), typeof(NodeValueOutputView));
-            NodifyViewManager.RegisterView(typeof(ValueEditor<>), typeof(EmptyValueEditorView));
-            NodifyViewManager.RegisterView<ValueEditor<string>, StringValueEditorView>();
-            NodifyViewManager.RegisterView<ValueEditor<int>, StringValueEditorView>();
-            NodifyViewManager.RegisterView<ValueEditor<double>, StringValueEditorView>();
-            NodifyViewManager.RegisterView<ValueEditor<bool>, BooleanValueEditorView>();
-            NodifyViewManager.RegisterView<IBlueprintConnection, BlueprintConnectionView>();
-            NodifyViewManager.RegisterView<IBlueprintPendingConnection, BlueprintPendingConnectionView>();
-
             InitializeComponent();
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Nodify;
 using Nodifier.Views;
-using Stylet;
 using System;
 using System.Windows;
 using System.Collections.Generic;
+using Nodifier.XAML;
 
 namespace Nodifier
 {

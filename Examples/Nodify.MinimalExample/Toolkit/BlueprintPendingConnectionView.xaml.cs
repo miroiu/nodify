@@ -1,11 +1,12 @@
-﻿using System.Windows.Controls;
+﻿using Nodifier.XAML;
+using System.Windows.Controls;
 
 namespace Nodifier.Views
 {
     /// <summary>
     /// Interaction logic for BlueprintPendingConnectionView.xaml
     /// </summary>
-    public partial class BlueprintPendingConnectionView : UserControl
+    public partial class BlueprintPendingConnectionView : UserControl, IViewFor<IBlueprintPendingConnection>
     {
         public BlueprintPendingConnectionView()
         {
