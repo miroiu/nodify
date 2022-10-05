@@ -5,7 +5,7 @@
 > - Features:
 > - Bugfixes:
 
-#### **Version 3.0.1**
+#### **Version 3.0.0**
 > - Breaking Changes:
 >   - Changed Decorators from UIElement collection to IEnumerable
 > - Features:
