@@ -21,7 +21,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Publish the package
-      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN */bin/Release/*.nupkg
+      run: dotnet nuget push "*/bin/Release/*.nupkg" --api-key $NUGET_AUTH_TOKEN --source https://api.nuget.org/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
       
