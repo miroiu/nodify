@@ -4,22 +4,33 @@ using System.Windows.Markup;
 
 namespace Nodifier.XAML
 {
+    public interface IViewFor<T>
+    {
+    }
+
+    public interface IViewAware
+    {
+        void AttachView(UIElement view);
+        UIElement? View { get; }
+    }
+
     public interface IViewManager
     {
         void OnModelChanged(DependencyObject targetLocation, object oldValue, object? newValue);
     }
 
+    /// Source: https://github.com/canton7/Stylet
     public class ViewManager : IViewManager
     {
-        private readonly IViewResolver _viewResolver;
+        private readonly IViewFactory _viewResolver;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="ViewManager"/> class, with the given viewFactory
         /// </summary>
-        /// <param name="config">Configuration object</param>
-        public ViewManager(IViewResolver resolver)
+        /// <param name="factory">The view factory.</param>
+        public ViewManager(IViewFactory factory)
         {
-            _viewResolver = resolver;
+            _viewResolver = factory;
         }
 
         /// <summary>
@@ -92,16 +103,5 @@ namespace Nodifier.XAML
                 viewModelAsViewAware.AttachView(view);
             }
         }
-    }
-
-    public interface IViewFor<T>
-    {
-    }
-
-    // TODO: Make it generic
-    public interface IViewAware
-    {
-        void AttachView(UIElement view);
-        UIElement? View { get; }
     }
 }

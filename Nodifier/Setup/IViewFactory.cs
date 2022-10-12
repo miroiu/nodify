@@ -4,17 +4,17 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public interface IViewResolver
+    public interface IViewFactory
     {
         UIElement GetView(Type modelType);
     }
 
-    public class DefaultViewResolver : IViewResolver
+    public class DefaultViewFactory : IViewFactory
     {
         private readonly IViewCollection _views;
         private readonly IServiceProvider _serviceProvider;
 
-        public DefaultViewResolver(IServiceProvider provider, IViewCollection views)
+        public DefaultViewFactory(IServiceProvider provider, IViewCollection views)
         {
             _serviceProvider = provider;
             _views = views;

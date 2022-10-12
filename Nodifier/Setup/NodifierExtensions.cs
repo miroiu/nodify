@@ -15,7 +15,7 @@ namespace Nodifier
 
             services.AddSingleton(options);
             services.AddSingleton<XAML.IViewManager, XAML.ViewManager>();
-            services.AddSingleton<IViewResolver, DefaultViewResolver>();
+            services.AddSingleton<IViewFactory, DefaultViewFactory>();
             services.AddSingleton<IViewCollection, ViewCollection>();
         }
 

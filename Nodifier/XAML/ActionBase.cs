@@ -9,6 +9,7 @@ using System.Windows.Data;
 
 namespace Nodifier.XAML
 {
+    /// Source: https://github.com/canton7/Stylet
     /// <summary>
     /// Common base class for CommandAction and EventAction
     /// </summary>

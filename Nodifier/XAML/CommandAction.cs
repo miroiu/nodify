@@ -7,6 +7,7 @@ using Expressions = System.Linq.Expressions;
 
 namespace Nodifier.XAML
 {
+    /// Source: https://github.com/canton7/Stylet
     /// <summary>
     /// ICommand returned by ActionExtension for binding buttons, etc, to methods on a ViewModel.
     /// If the method has a parameter, CommandParameter is passed

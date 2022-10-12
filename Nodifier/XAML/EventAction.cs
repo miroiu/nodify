@@ -4,6 +4,7 @@ using System.Windows;
 
 namespace Nodifier.XAML
 {
+    /// Source: https://github.com/canton7/Stylet
     /// <summary>
     /// Created by ActionExtension, this can return a delegate suitable adding binding to an event, and can call a method on the View.ActionTarget
     /// </summary>

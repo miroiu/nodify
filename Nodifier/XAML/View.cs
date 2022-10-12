@@ -6,6 +6,7 @@ using System.Windows.Markup;
 
 namespace Nodifier.XAML
 {
+    /// Source: https://github.com/canton7/Stylet
     /// <summary>
     /// Holds attached properties relating to various bits of the View
     /// </summary>

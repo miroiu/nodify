@@ -7,6 +7,7 @@ using System.Xaml;
 
 namespace Nodifier.XAML
 {
+    /// Source: https://github.com/canton7/Stylet
     /// <summary>
     /// What to do if the given target is null, or if the given action doesn't exist on the target
     /// </summary>
