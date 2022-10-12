@@ -1,5 +1,6 @@
 
-# Nodify
+# Nodify <img src="https://user-images.githubusercontent.com/12727904/195416464-cbe7e3be-a372-4a17-a4be-a868059b9d7e.png" width="120px" alt="Nodify" align="right">
+
 [![NuGet](https://img.shields.io/nuget/v/Nodify?style=for-the-badge&logo=nuget&label=release)](https://www.nuget.org/packages/Nodify/)
 [![NuGet](https://img.shields.io/nuget/dt/Nodify?label=downloads&style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/Nodify)
 [![Build](https://img.shields.io/github/workflow/status/miroiu/nodify/Build?style=for-the-badge&logo=.net)](https://github.com/miroiu/nodify/actions)
@@ -8,7 +9,14 @@
 
  A collection of highly performant controls for node based editors designed for MVVM.
 
-## 🚀 Examples of different node-based applications
+## 🚀 Examples of node-based applications
+
+🎨 A playground application where you can try all the available settings.
+
+> [Examples/Nodify.Playground](Examples/Nodify.Playground)
+
+![Playground](https://i.imgur.com/aqrUpuP.gif)
+
 
 🌓 A state machine where each state represents an executable action, and each transition represents a condition for the next action to execute.
 
@@ -21,12 +29,6 @@
 > [Examples/Nodify.Calculator](Examples/Nodify.Calculator)
 
 ![Calculator](https://i.imgur.com/jonrZAq.gif)
-
-🎨 A playground application where you can try all the available settings.
-
-> [Examples/Nodify.Playground](Examples/Nodify.Playground)
-
-![Playground](https://i.imgur.com/aqrUpuP.gif)
 
 ## 📥 Installation
 Use the nuget package manager to install Nodify.
@@ -47,7 +49,7 @@ Install-Package Nodify
  - Ready for undo/redo
  - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator)
  
-## 📝 Documentation & Changelog
+## 📝 Documentation
 
 Check out the [wiki](https://github.com/miroiu/nodify/wiki) and the [changelog](CHANGELOG.md) in github.
 
