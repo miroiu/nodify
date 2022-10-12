@@ -6,8 +6,7 @@ namespace Nodify.Calculator
 {
     public class ExpressionOperationViewModel : OperationViewModel
     {
-        private readonly ICalculator _calculator = new StringMath.Calculator();
-
+        private MathExpr? _expr;
         private string? _expression;
         public string? Expression
         {
@@ -20,12 +19,12 @@ namespace Nodify.Calculator
         {
             try
             {
-                OperationInfo? operation = _calculator.CreateOperation(Expression);
-                ConnectorViewModel[]? toRemove = Input.Where(i => !operation.Variables.Contains(i.Title)).ToArray();
+                _expr = Expression!.ToMathExpr();
+                ConnectorViewModel[]? toRemove = Input.Where(i => !_expr.LocalVariables.Contains(i.Title)).ToArray();
                 toRemove.ForEach(i => Input.Remove(i));
-                HashSet<string?> left = Input.Select(s => s.Title).ToHashSet();
+                HashSet<string> existingVars = Input.Select(s => s.Title).Where(s => s != null).ToHashSet()!;
 
-                foreach (string variable in operation.Variables.Where(s => !left.Contains(s)))
+                foreach (string variable in _expr.LocalVariables.Except(existingVars))
                 {
                     Input.Add(new ConnectorViewModel
                     {
@@ -43,12 +42,12 @@ namespace Nodify.Calculator
 
         protected override void OnInputValueChanged()
         {
-            if (Output != null)
+            if (Output != null && _expr != null)
             {
                 try
                 {
-                    Input.ForEach(i => _calculator.SetValue(i.Title, i.Value));
-                    Output.Value = _calculator.Evaluate(Expression);
+                    Input.ForEach(i => _expr.Substitute(i.Title!, i.Value));
+                    Output.Value = _expr.Result;
                 }
                 catch
                 {
