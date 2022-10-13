@@ -2,19 +2,6 @@
 
 namespace Nodify
 {
-    /// <summary>Gestures used by the <see cref="NodifyEditor"/>.</summary>
-    public static class EditorGestures
-    {
-        /// <summary>The trigger used to start selecting.</summary>
-        public static InputGesture Select { get; set; } = new MouseGesture(MouseAction.LeftClick);
-
-        /// <summary>The trigger used to start panning.</summary>
-        public static InputGesture Pan { get; set; } = new MouseGesture(MouseAction.RightClick);
-
-        /// <summary>The key modifier required to start zooming.</summary>
-        public static ModifierKeys Zoom { get; set; } = ModifierKeys.None;
-    }
-
     /// <summary>The base class for editor states.</summary>
     public abstract class EditorState
     {

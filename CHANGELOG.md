@@ -6,10 +6,27 @@
 >   - Removed Selection field from NodifyEditor
 >   - Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
 > - Features:
+>   - Added Connector.EnableStickyConnections to allow completing pending connections in two steps.
 >   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetDefaultState().
->     - EditorState, EditorDefaultState, EditorSelectingState, EditorPanningState
->   - Added configurable key/mouse bindings
->     - EditorGestures.Selecting, EditorGestures.Panning, EditorGestures.Zooming
+>     - EditorState - base class for all editor states
+>     - EditorDefaultState
+>     - EditorSelectingState
+>     - EditorPanningState
+>   - Added SmartInputGesture utility that can combine multiple gestures into one
+>   - Added smart input gesture EditorGestures.Select for selection that is any of:
+>     - EditorGestures.Selection.Replace
+>     - EditorGestures.Selection.Remove
+>     - EditorGestures.Selection.Append
+>     - EditorGestures.Selection.Invert
+>   - Added input gesture EditorGestures.Pan for panning
+>   - Added key modifier EditorGestures.Zoom for zooming
+>   - Added input gestures for BaseConnection:
+>     - EditorGestures.Connection.Split for splitting a connection
+>     - EditorGestures.Connection.Disconnect for breaking a connection
+>   - Added input gestures for Connector:
+>     - EditorGestures.Connector.Connect for starting a pending connection
+>     - EditorGestures.Connector.Disconnect for disconnecting a connector
+>     - EditorGestures.Connector.Cancel for cancelling the pending connection
 >   - Added PushState, PopState and PopAllStates to NodifyEditor
 > - Bugfixes:
 >   - Fixed HandleRightClickAfterPanningThreshold not working as expected

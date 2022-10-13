@@ -392,7 +392,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost")/>.
+        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
         /// </summary>
         public Point MouseLocation
         {
@@ -926,11 +926,8 @@ namespace Nodify
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == null)
-            {
-                Focus();
-                CaptureMouse();
-            }
+            Focus();
+            CaptureMouse();
 
             MouseLocation = e.GetPosition(ItemsHost);
             State.HandleMouseDown(e);
@@ -944,7 +941,6 @@ namespace Nodify
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
-                Focus();
                 ReleaseMouseCapture();
             }
 

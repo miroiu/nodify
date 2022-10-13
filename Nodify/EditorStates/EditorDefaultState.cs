@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using static Nodify.SelectionHelper;
 
 namespace Nodify
 {
@@ -31,13 +32,34 @@ namespace Nodify
         {
             if (EditorGestures.Select.Matches(e.Source, e))
             {
-                var selecting = new EditorSelectingState(Editor);
+                SelectionType selectionType = GetSelectionType(e);
+                var selecting = new EditorSelectingState(Editor, selectionType);
                 Editor.PushState(selecting);
             }
             else if (EditorGestures.Pan.Matches(e.Source, e) && !Editor.DisablePanning)
             {
                 Editor.PushState(new EditorPanningState(Editor));
             }
+        }
+
+        private static SelectionType GetSelectionType(MouseButtonEventArgs e)
+        {
+            if (EditorGestures.Selection.Append.Matches(e.Source, e))
+            {
+                return SelectionType.Append;
+            }
+
+            if (EditorGestures.Selection.Invert.Matches(e.Source, e))
+            {
+                return SelectionType.Invert;
+            }
+
+            if (EditorGestures.Selection.Remove.Matches(e.Source, e))
+            {
+                return SelectionType.Remove;
+            }
+
+            return SelectionType.Replace;
         }
     }
 }

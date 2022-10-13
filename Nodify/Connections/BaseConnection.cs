@@ -173,7 +173,7 @@ namespace Nodify
             add => AddHandler(DisconnectEvent, value);
             remove => RemoveHandler(DisconnectEvent, value);
         }
-        
+
         /// <summary>
         /// Occurs when the <see cref="BaseConnection"/> is double clicked.
         /// </summary>
@@ -300,54 +300,56 @@ namespace Nodify
             return result;
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == null)
+            Focus();
+            CaptureMouse();
+
+            if (EditorGestures.Connection.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
             {
-                CaptureMouse();
-
-                if (e.ClickCount == 2 && (SplitCommand?.CanExecute(this) ?? false))
+                Point splitLocation = e.GetPosition(this);
+                object? connection = DataContext;
+                var args = new ConnectionEventArgs(connection)
                 {
-                    Point splitLocation = e.GetPosition(this);
-                    object? connection = DataContext;
-                    var args = new ConnectionEventArgs(connection)
-                    {
-                        RoutedEvent = SplitEvent,
-                        SplitLocation = splitLocation,
-                        Source = this
-                    };
+                    RoutedEvent = SplitEvent,
+                    SplitLocation = splitLocation,
+                    Source = this
+                };
 
-                    RaiseEvent(args);
+                RaiseEvent(args);
 
-                    // Raise SplitCommand if SplitEvent is not handled
-                    if (!args.Handled && (SplitCommand?.CanExecute(splitLocation) ?? false))
-                    {
-                        SplitCommand.Execute(splitLocation);
-                    }
-                }
-                else if (Keyboard.Modifiers == ModifierKeys.Alt && (DisconnectCommand?.CanExecute(this) ?? false))
+                // Raise SplitCommand if SplitEvent is not handled
+                if (!args.Handled && (SplitCommand?.CanExecute(splitLocation) ?? false))
                 {
-                    Point splitLocation = e.GetPosition(this);
-                    object? connection = DataContext;
-                    var args = new ConnectionEventArgs(connection)
-                    {
-                        RoutedEvent = DisconnectEvent,
-                        SplitLocation = splitLocation,
-                        Source = this
-                    };
-
-                    RaiseEvent(args);
-
-                    // Raise DisconnectCommand if DisconnectEvent is not handled
-                    if (!args.Handled && (DisconnectCommand?.CanExecute(splitLocation) ?? false))
-                    {
-                        DisconnectCommand.Execute(splitLocation);
-                    }
+                    SplitCommand.Execute(splitLocation);
                 }
+
+                e.Handled = true;
+            }
+            else if (EditorGestures.Connection.Disconnect.Matches(e.Source, e) && (DisconnectCommand?.CanExecute(this) ?? false))
+            {
+                Point splitLocation = e.GetPosition(this);
+                object? connection = DataContext;
+                var args = new ConnectionEventArgs(connection)
+                {
+                    RoutedEvent = DisconnectEvent,
+                    SplitLocation = splitLocation,
+                    Source = this
+                };
+
+                RaiseEvent(args);
+
+                // Raise DisconnectCommand if DisconnectEvent is not handled
+                if (!args.Handled && (DisconnectCommand?.CanExecute(splitLocation) ?? false))
+                {
+                    DisconnectCommand.Execute(splitLocation);
+                }
+
+                e.Handled = true;
             }
         }
 
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             if (IsMouseCaptured)
             {

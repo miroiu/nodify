@@ -48,7 +48,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Occurs when the <see cref="ModifierKeys.Alt"/> key is held and the <see cref="Connector"/> is clicked.
+        /// Occurs when the <see cref="EditorGestures.Connector.Disconnect"/> is triggered.
         /// </summary>
         public event ConnectorEventHandler Disconnect
         {
@@ -148,6 +148,11 @@ namespace Nodify
         /// Gets or sets whether cancelling a pending connection is allowed.
         /// </summary>
         public static bool AllowPendingConnectionCancellation { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets whether the connection should be completed in two steps.
+        /// </summary>
+        public static bool EnableStickyConnections { get; set; }
 
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
@@ -315,65 +320,74 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
-            if (IsPendingConnection)
+            if (!EnableStickyConnections)
             {
                 OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-        {
-            // Cancel pending connection
-            if (AllowPendingConnectionCancellation && IsMouseCaptured && IsPendingConnection)
-            {
-                OnConnectorDragCompleted(cancel: true);
-                ReleaseMouseCapture();
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
-            if (Keyboard.Modifiers == ModifierKeys.Alt)
+            CaptureMouse();
+            e.Handled = true;
+
+            if (EditorGestures.Connector.Disconnect.Matches(e.Source, e))
             {
                 OnDisconnect();
             }
-            else
+            else if (EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
-                UpdateAnchor();
-                OnConnectorDragStarted();
-
-                CaptureMouse();
+                if (EnableStickyConnections && IsPendingConnection)
+                {
+                    OnConnectorDragCompleted();
+                    ReleaseMouseCapture();
+                }
+                else
+                {
+                    UpdateAnchor();
+                    OnConnectorDragStarted();
+                }
             }
-
-            e.Handled = true;
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            Focus();
-
-            if (IsMouseCaptured)
+            if (!EnableStickyConnections && EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
                 OnConnectorDragCompleted();
+            }
+            else if (AllowPendingConnectionCancellation && EditorGestures.Connector.Cancel.Matches(e.Source, e))
+            {
+                // Cancel pending connection
+                OnConnectorDragCompleted(cancel: true);
                 ReleaseMouseCapture();
             }
 
-            e.Handled = true;
+            if (!EnableStickyConnections && IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (AllowPendingConnectionCancellation && EditorGestures.Connector.Cancel.Matches(e.Source, e))
+            {
+                // Cancel pending connection
+                OnConnectorDragCompleted(cancel: true);
+            }
         }
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            if (IsPendingConnection)
             {
                 Vector offset = e.GetPosition(Thumb) - _thumbCenter;
                 OnConnectorDrag(offset);
-
-                e.Handled = true;
             }
         }
 
@@ -411,25 +425,28 @@ namespace Nodify
 
         protected virtual void OnConnectorDragCompleted(bool cancel = false)
         {
-            FrameworkElement? elem = null;
-            if (Editor != null)
+            if (IsPendingConnection)
             {
-                elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
+                FrameworkElement? elem = null;
+                if (Editor != null)
+                {
+                    elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
+                }
+
+                object? target = elem?.DataContext;
+
+                var args = new PendingConnectionEventArgs(DataContext)
+                {
+                    TargetConnector = target,
+                    RoutedEvent = PendingConnectionCompletedEvent,
+                    Anchor = Anchor,
+                    Source = this,
+                    Canceled = cancel
+                };
+
+                IsPendingConnection = false;
+                RaiseEvent(args);
             }
-
-            object? target = elem?.DataContext;
-
-            var args = new PendingConnectionEventArgs(DataContext)
-            {
-                TargetConnector = target,
-                RoutedEvent = PendingConnectionCompletedEvent,
-                Anchor = Anchor,
-                Source = this,
-                Canceled = cancel
-            };
-
-            IsPendingConnection = false;
-            RaiseEvent(args);
         }
 
         protected virtual void OnDisconnect()

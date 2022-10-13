@@ -1,21 +1,27 @@
 ﻿using System.Windows.Input;
+using static Nodify.SelectionHelper;
 
 namespace Nodify
 {
     /// <summary>The selecting state of the editor.</summary>
     public class EditorSelectingState : EditorState
     {
+        private readonly SelectionType _type;
+
         /// <summary>The selection helper.</summary>
         protected SelectionHelper Selection { get; }
 
         /// <summary>Constructs an instance of the <see cref="EditorSelectingState"/> state.</summary>
         /// <param name="editor">The owner of the state.</param>
-        public EditorSelectingState(NodifyEditor editor) : base(editor)
-            => Selection = new SelectionHelper(editor);
+        public EditorSelectingState(NodifyEditor editor, SelectionType type) : base(editor)
+        {
+            Selection = new SelectionHelper(editor);
+            _type = type;
+        }
 
         /// <inheritdoc />
         public override void Enter()
-            => Selection.Start(Editor.MouseLocation);
+            => Selection.Start(Editor.MouseLocation, _type);
 
         /// <inheritdoc />
         public override void Exit()
