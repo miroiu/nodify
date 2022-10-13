@@ -16,7 +16,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <PackageReleaseNotes>
       Breaking Changes:
       Changed Decorators from UIElement collection to IEnumerable

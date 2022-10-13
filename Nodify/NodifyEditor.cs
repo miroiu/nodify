@@ -392,7 +392,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets the current mouse location in graph space coordinates.
+        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost")/>.
         /// </summary>
         public Point MouseLocation
         {
@@ -642,7 +642,7 @@ namespace Nodify
         protected Point CurrentMousePosition;
 
         /// <summary>
-        /// Gets where the mouse cursor was in graph space coordinates when a mouse button event occurred.
+        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occurred.
         /// Check <see cref="MouseLocation"/> for a transformed position.
         /// </summary>
         protected Point InitialMousePosition;
@@ -976,7 +976,7 @@ namespace Nodify
                 Focus();
                 CaptureMouse();
 
-                InitialMousePosition = e.GetPosition(ItemsHost);
+                InitialMousePosition = e.GetPosition(this);
                 Selection.Start(MouseLocation);
                 e.Handled = true;
             }
@@ -1004,7 +1004,7 @@ namespace Nodify
                 Focus();
                 CaptureMouse();
 
-                InitialMousePosition = e.GetPosition(ItemsHost);
+                InitialMousePosition = e.GetPosition(this);
             }
         }
 
