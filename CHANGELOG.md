@@ -8,6 +8,8 @@
 > - Features:
 >   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetDefaultState().
 >     - EditorState, EditorDefaultState, EditorSelectingState, EditorPanningState
+>   - Added configurable key/mouse bindings
+>     - EditorGestures.Selecting, EditorGestures.Panning, EditorGestures.Zooming
 >   - Added PushState, PopState and PopAllStates to NodifyEditor
 > - Bugfixes:
 >   - Fixed HandleRightClickAfterPanningThreshold not working as expected

@@ -27,7 +27,7 @@ namespace Nodify
 
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Right)
+            if (EditorGestures.Pan.Matches(e.Source, e))
             {
                 Editor.PushState(new EditorPanningState(Editor));
             }
@@ -36,7 +36,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (EditorGestures.Select.Matches(e.Source, e))
             {
                 Editor.PopState();
             }

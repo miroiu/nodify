@@ -2,7 +2,22 @@
 
 namespace Nodify
 {
-    /// <summary>The default state of the editor.</summary>
+    /// <summary>
+    /// The default state of the editor.
+    /// <br />
+    /// <br />  Default State
+    /// <br />  	- mouse left down  	-> Selecting State
+    /// <br />  	- mouse right down  -> Panning State
+    /// <br /> 	
+    /// <br />  Selecting State
+    /// <br />  	- mouse left up 	-> Default State
+    /// <br />  	- mouse right down 	-> Panning State
+    /// <br /> 
+    /// <br />  Panning State
+    /// <br />  	- mouse right up	-> previous state (Selecting State or Default State)
+    /// <br />  	- mouse left up		-> Panning State
+    /// <br />	
+    /// </summary>
     public class EditorDefaultState : EditorState
     {
         /// <summary>Constructs an instance of the <see cref="EditorDefaultState"/> state.</summary>
@@ -11,16 +26,15 @@ namespace Nodify
         {
         }
 
-        // TODO: Take key combinations into account like CTRL+CLICK (maybe using MouseGesture)
         /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (EditorGestures.Select.Matches(e.Source, e))
             {
                 var selecting = new EditorSelectingState(Editor);
                 Editor.PushState(selecting);
             }
-            else if (e.ChangedButton == MouseButton.Right && !Editor.DisablePanning)
+            else if (EditorGestures.Pan.Matches(e.Source, e) && !Editor.DisablePanning)
             {
                 Editor.PushState(new EditorPanningState(Editor));
             }

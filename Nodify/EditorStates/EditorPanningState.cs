@@ -3,7 +3,6 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    // TODO: Space (trigger) + Click Drag (action)?
     /// <summary>The panning state of the editor.</summary>
     public class EditorPanningState : EditorState
     {
@@ -41,18 +40,21 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Right)
+            if (EditorGestures.Pan.Matches(e.Source, e))
             {
                 // Handle right click if panning and moved the mouse more than threshold so context menus don't open
-                double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                if (e.ChangedButton == MouseButton.Right)
                 {
-                    e.Handled = true;
+                    double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
+                    if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    {
+                        e.Handled = true;
+                    }
                 }
 
                 Editor.PopState();
             }
-            else if (e.ChangedButton == MouseButton.Left && Editor.IsSelecting)
+            else if (EditorGestures.Select.Matches(e.Source, e) && Editor.IsSelecting)
             {
                 // Cancel selection and continue panning
                 Editor.PopState();
