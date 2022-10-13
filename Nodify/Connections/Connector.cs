@@ -320,10 +320,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
-            if (!EnableStickyConnections)
-            {
-                OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
-            }
+            OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
         }
 
         /// <inheritdoc />
@@ -364,9 +361,12 @@ namespace Nodify
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);
                 ReleaseMouseCapture();
+
+                // Don't show context menu
+                e.Handled = true;
             }
 
-            if (!EnableStickyConnections && IsMouseCaptured)
+            if ((!IsPendingConnection || !EnableStickyConnections) && IsMouseCaptured)
             {
                 ReleaseMouseCapture();
             }
@@ -451,7 +451,7 @@ namespace Nodify
 
         protected virtual void OnDisconnect()
         {
-            if (IsConnected)
+            if (IsConnected && !IsPendingConnection)
             {
                 object? connector = DataContext;
                 var args = new ConnectorEventArgs(connector)
