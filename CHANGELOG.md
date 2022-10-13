@@ -3,9 +3,17 @@
 #### **In development**
 
 > - Breaking Changes:
+>   - Removed Selection field from NodifyEditor
+>   - Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
 > - Features:
+>   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetDefaultState().
+>     - EditorState, EditorDefaultState, EditorSelectingState, EditorPanningState
+>   - Added PushState, PopState and PopAllStates to NodifyEditor
 > - Bugfixes:
 >   - Fixed HandleRightClickAfterPanningThreshold not working as expected
+>   - Fixed DisablePanning not disabling auto panning in certain situations
+> - Others:
+>   - Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
 
 #### **Version 3.0.0**
 

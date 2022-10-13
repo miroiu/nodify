@@ -8,6 +8,9 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="NodifyEditor.SelectedArea"/> and <see cref="NodifyEditor.IsSelecting"/> properties.
+    /// </summary>
     public sealed class SelectionHelper
     {
         private readonly NodifyEditor _host;
@@ -16,37 +19,53 @@ namespace Nodify
         private bool _isRealtime;
         private IList<ItemContainer> _initialSelection = new List<ItemContainer>();
 
+        /// <summary>Constructs a new instance of a <see cref="SelectionHelper"/>.</summary>
+        /// <param name="host">The editor to select items from.</param>
         public SelectionHelper(NodifyEditor host)
             => _host = host;
 
+        /// <summary>Available selection logic.</summary>
         public enum SelectionType
         {
+            /// <summary>Replaces the old selection.</summary>
             Replace,
+            /// <summary>Removes items from existing selection.</summary>
             Remove,
+            /// <summary>Adds items to the current selection.</summary>
             Append,
+            /// <summary>Inverts the selection.</summary>
             Invert
         }
 
+        /// <summary>Attempts to start a new selection.</summary>
+        /// <param name="location">The location inside the graph.</param>
+        /// <param name="selectionType">The type of selection.</param>
+        /// <remarks>Will not do anything if selection is in progress.</remarks>
         public void Start(Point location, SelectionType? selectionType = default)
         {
-            ModifierKeys modifiers = Keyboard.Modifiers;
-            _selectionType = selectionType ?? modifiers switch
+            if (!_host.IsSelecting)
             {
-                ModifierKeys.Control => SelectionType.Invert,
-                ModifierKeys.Alt => SelectionType.Remove,
-                ModifierKeys.Shift => SelectionType.Append,
-                _ => SelectionType.Replace
-            };
+                ModifierKeys modifiers = Keyboard.Modifiers;
+                _selectionType = selectionType ?? modifiers switch
+                {
+                    ModifierKeys.Control => SelectionType.Invert,
+                    ModifierKeys.Alt => SelectionType.Remove,
+                    ModifierKeys.Shift => SelectionType.Append,
+                    _ => SelectionType.Replace
+                };
 
-            _initialSelection = GetSelectedContainers();
+                _initialSelection = GetSelectedContainers();
 
-            _isRealtime = _host.EnableRealtimeSelection;
-            _startLocation = location;
+                _isRealtime = _host.EnableRealtimeSelection;
+                _startLocation = location;
 
-            _host.SelectedArea = new Rect();
-            _host.IsSelecting = true;
+                _host.SelectedArea = new Rect();
+                _host.IsSelecting = true;
+            }
         }
 
+        /// <summary>Update the end location for the selection.</summary>
+        /// <param name="endLocation">An absolute location.</param>
         public void Update(Point endLocation)
         {
             double left = endLocation.X < _startLocation.X ? endLocation.X : _startLocation.X;
@@ -61,7 +80,8 @@ namespace Nodify
                 PreviewSelection(_host.SelectedArea);
             }
         }
-
+        
+        /// <summary>Commits the current selection to the editor.</summary>
         public void End()
         {
             if (_host.IsSelecting)

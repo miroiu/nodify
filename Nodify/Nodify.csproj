@@ -16,20 +16,21 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>3.0.1</Version>
+    <Version>4.0.0</Version>
     <PackageReleaseNotes>
       Breaking Changes:
-      Changed Decorators from UIElement collection to IEnumerable
-
+      Removed Selection field from NodifyEditor
+      Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
+      
       Features:
-      Added ItemsExtent and DecoratorsExtent dependency properties to NodifyEditor
-      Added DecoratorTemplate dependency property to NodifyEditor
-      Added FitToScreenExtentMargin static field to NodifyEditor
-      Added Extent dependency property to NodifyCanvas
-
+      Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetDefaultState().
+      EditorState, EditorDefaultState, EditorSelectingState, EditorPanningState
+      Added PushState, PopState and PopAllStates to NodifyEditor
+      
       Bugfixes:
-      Selection rectangle and Decorators are no longer scaled with the viewport zoom
-      Fixed connector anchor not updating when container size changed
+      Fixed HandleRightClickAfterPanningThreshold not working as expected
+      Fixed DisablePanning not disabling auto panning in certain situations
+      Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
