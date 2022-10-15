@@ -314,7 +314,8 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
-            OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
+            // Always cancel if lost capture
+            OnConnectorDragCompleted(cancel: true);
         }
 
         /// <inheritdoc />
@@ -365,7 +366,7 @@ namespace Nodify
                 e.Handled = true;
             }
 
-            if (IsMouseCaptured && (!IsPendingConnection || !EnableStickyConnections))
+            if (IsMouseCaptured && !IsPendingConnection && !(IsPendingConnection && EnableStickyConnections))
             {
                 ReleaseMouseCapture();
             }
