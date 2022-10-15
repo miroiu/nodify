@@ -276,7 +276,7 @@ namespace Nodify
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
                     // Look for a potential connector
-                    FrameworkElement? connector = GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors);
+                    FrameworkElement? connector = GetPotentialConnector(Editor, AllowOnlyConnectors);
 
                     // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)
@@ -341,22 +341,24 @@ namespace Nodify
 
         #region Helpers
 
-        /// <summary>
-        /// Searches for a potential connector prioritizing <see cref="Connector"/>s
-        /// </summary>
-        /// <param name="container">The container to scan</param>
-        /// <param name="allowOnlyConnectors">Will also look for <see cref="ItemContainer"/>s if false then for <see cref="FrameworkElement"/>s</param>
-        /// <returns>The connector if found</returns>
-        internal static FrameworkElement? GetPotentialConnector(FrameworkElement container, bool allowOnlyConnectors)
+        /// <summary>Searches for a potential connector prioritizing <see cref="Connector"/>s</summary>
+        /// <param name="editor">The editor to scan for connectors or item containers.</param>
+        /// <param name="allowOnlyConnectors">Will also look for <see cref="ItemContainer"/>s if false.</param>
+        /// <returns>A connector, an item container, the editor or null.</returns>
+        internal static FrameworkElement? GetPotentialConnector(NodifyEditor editor, bool allowOnlyConnectors)
         {
-            FrameworkElement? connector = container.GetElementUnderMouse<Connector>();
+            Connector? connector = editor.ItemsHost.GetElementUnderMouse<Connector>();
+            if (connector != null && connector.Editor == editor)
+                return connector;
 
-            if (connector == null && !allowOnlyConnectors)
-            {
-                connector = container.GetElementUnderMouse<ItemContainer>() ?? container.GetElementUnderMouse<FrameworkElement>();
-            }
+            if (allowOnlyConnectors)
+                return null;
 
-            return connector;
+            var itemContainer = editor.ItemsHost.GetElementUnderMouse<ItemContainer>();
+            if (itemContainer != null && itemContainer.Editor == editor)
+                return itemContainer;
+
+            return editor;
         }
 
         #endregion

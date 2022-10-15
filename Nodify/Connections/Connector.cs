@@ -121,7 +121,7 @@ namespace Nodify
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
         /// </summary>
-        protected NodifyEditor? Editor { get; private set; }
+        protected internal NodifyEditor? Editor { get; private set; }
 
         /// <summary>
         /// Gets or sets the safe zone outside the editor's viewport that will not trigger optimizations.
@@ -428,17 +428,11 @@ namespace Nodify
         {
             if (IsPendingConnection)
             {
-                FrameworkElement? elem = null;
-                if (Editor != null)
-                {
-                    elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
-                }
-
-                object? target = elem?.DataContext;
+                FrameworkElement? elem = Editor != null ? PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor)) : null;
 
                 var args = new PendingConnectionEventArgs(DataContext)
                 {
-                    TargetConnector = target,
+                    TargetConnector = elem?.DataContext,
                     RoutedEvent = PendingConnectionCompletedEvent,
                     Anchor = Anchor,
                     Source = this,

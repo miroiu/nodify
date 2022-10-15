@@ -3,11 +3,18 @@
 #### **In development**
 
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 4.0.0**
+
+> - Breaking Changes:
 >   - Removed Selection field from NodifyEditor
 >   - Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
 >   - Removed ItemContainer.DraggableHost (use Editor.ItemsHost instead)
 >   - Made SelectionType required in SelectionHelper
 >   - Moved GroupingNode.SwitchMovementModeModifierKey to EditorGestures.GroupingNode
+>   - Pending connections are now restricted to connect only to Connectors or to NodifyEditors and ItemContainers if PendingConnection.AllowOnlyConnectors is false
 > - Features:
 >   - Added Connector.EnableStickyConnections to allow completing pending connections in two steps.
 >   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetInitialState().
@@ -28,6 +35,7 @@
 >   - Fixed HandleRightClickAfterPanningThreshold not working as expected
 >   - Fixed DisablePanning not disabling auto panning in certain situations
 >   - Fixed GroupingNode selection not working with multiple selection modes
+>   - Fixed PendingConnection connecting cross editors
 
 #### **Version 3.0.0**
 
