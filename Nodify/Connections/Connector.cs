@@ -321,7 +321,9 @@ namespace Nodify
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
-            CaptureMouse();
+
+            this.CaptureMouseSafe();
+
             e.Handled = true;
 
             if (EditorGestures.Connector.Disconnect.Matches(e.Source, e))
@@ -363,7 +365,7 @@ namespace Nodify
                 e.Handled = true;
             }
 
-            if ((!IsPendingConnection || !EnableStickyConnections) && IsMouseCaptured)
+            if (IsMouseCaptured && (!IsPendingConnection || !EnableStickyConnections))
             {
                 ReleaseMouseCapture();
             }

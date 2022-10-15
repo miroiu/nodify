@@ -371,7 +371,8 @@ namespace Nodify
             if (IsSelectableLocation(e.GetPosition(this)))
             {
                 Focus();
-                CaptureMouse();
+
+                this.CaptureMouseSafe();
 
                 State.HandleMouseDown(e);
             }
@@ -380,7 +381,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (IsSelectableLocation(e.GetPosition(this)))
+            if (IsSelectableLocation(e.GetPosition(this)) || IsMouseCaptured)
             {
                 State.HandleMouseUp(e);
             }

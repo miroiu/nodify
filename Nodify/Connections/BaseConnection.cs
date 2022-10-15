@@ -299,7 +299,8 @@ namespace Nodify
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
-            CaptureMouse();
+
+            this.CaptureMouseSafe();
 
             if (EditorGestures.Connection.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
             {
