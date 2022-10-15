@@ -366,7 +366,7 @@ namespace Nodify
                 e.Handled = true;
             }
 
-            if (IsMouseCaptured && !IsPendingConnection && !(IsPendingConnection && EnableStickyConnections))
+            if (IsMouseCaptured && !IsPendingConnection)
             {
                 ReleaseMouseCapture();
             }
