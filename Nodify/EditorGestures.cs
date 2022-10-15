@@ -29,8 +29,8 @@ namespace Nodify
         public static InputGesture Select { get; } = new MultiGesture(MultiGesture.Match.Any, Selection.Replace, Selection.Remove, Selection.Append, Selection.Invert);
 
         /// <summary>Gesture used to start panning.</summary>
-        /// <remarks>Defaults to <see cref="MouseAction.RightClick"/>.</remarks>
-        public static InputGesture Pan { get; set; } = new MouseGesture(MouseAction.RightClick);
+        /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
+        public static InputGesture Pan { get; set; } = new MultiGesture(MultiGesture.Match.Any, new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
 
         /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
         /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>

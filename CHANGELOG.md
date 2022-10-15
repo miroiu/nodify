@@ -19,8 +19,8 @@
 >     - ContainerState - base class for all container states
 >     - ContainerDefaultState
 >     - ContainerDraggingState
->   - Added MultiGesture utility that can combine multiple gestures into one gesture
->   - Added gestures for NodifyEditor, ItemContainer, Connector, BaseConnection and GroupingNode to EditorGestures.
+>   - Added MultiGesture utility that can combine multiple input gestures into one gesture
+>   - Added configurable input gestures for NodifyEditor, ItemContainer, Connector, BaseConnection and GroupingNode to EditorGestures.
 >   - Added State, PushState, PopState and PopAllStates to NodifyEditor and ItemContainer
 >   - Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
 >   - Allow setting ItemContainer.IsPreviewingLocation from derived classes
