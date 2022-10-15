@@ -57,7 +57,7 @@
             set => SetProperty(ref _disableAutoPanning, value);
         }
 
-        private double _autoPanningSpeed = 10d;
+        private double _autoPanningSpeed = 15d;
         public double AutoPanningSpeed
         {
             get => _autoPanningSpeed;

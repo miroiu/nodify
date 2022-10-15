@@ -1,11 +1,36 @@
 ## Changelog
 
 #### **In development**
+
 > - Breaking Changes:
+>   - Removed Selection field from NodifyEditor
+>   - Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
+>   - Removed ItemContainer.DraggableHost (use Editor.ItemsHost instead)
+>   - Made SelectionType required in SelectionHelper
+>   - Moved GroupingNode.SwitchMovementModeModifierKey to EditorGestures.GroupingNode
 > - Features:
+>   - Added Connector.EnableStickyConnections to allow completing pending connections in two steps.
+>   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetInitialState().
+>     - EditorState - base class for all editor states
+>     - EditorDefaultState
+>     - EditorSelectingState
+>     - EditorPanningState
+>   - Added container states which can be overriden by inheriting from ItemContainer and implementing ItemContainer.GetInitialState().
+>     - ContainerState - base class for all container states
+>     - ContainerDefaultState
+>     - ContainerDraggingState
+>   - Added MultiGesture utility that can combine multiple input gestures into one gesture
+>   - Added configurable input gestures for NodifyEditor, ItemContainer, Connector, BaseConnection and GroupingNode to EditorGestures.
+>   - Added State, PushState, PopState and PopAllStates to NodifyEditor and ItemContainer
+>   - Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
+>   - Allow setting ItemContainer.IsPreviewingLocation from derived classes
 > - Bugfixes:
+>   - Fixed HandleRightClickAfterPanningThreshold not working as expected
+>   - Fixed DisablePanning not disabling auto panning in certain situations
+>   - Fixed GroupingNode selection not working with multiple selection modes
 
 #### **Version 3.0.0**
+
 > - Breaking Changes:
 >   - Changed Decorators from UIElement collection to IEnumerable
 > - Features:
@@ -18,10 +43,12 @@
 >   - Fixed connector anchor not updating when container size changed
 
 #### **Version 2.0.1**
+
 > - Bugfixes:
 >   - Fixed pending connection default style
 
 #### **Version 2.0.0**
+
 > - Breaking Changes:
 >   - Renamed Offset to ViewportLocation in NodifyEditor
 >   - Renamed Scale to ViewportZoom in NodifyEditor
@@ -32,13 +59,13 @@
 >   - Removed BringIntoViewAnimationDuration from NodifyEditor
 >   - Removed Viewport dependency property from NodifyEditor
 >   - Removed ActualSize dependency property from StateNode
->   - Removed Icon dependency property from Node as the icon can *(and should)* be added in the HeaderTemplate if necessary
+>   - Removed Icon dependency property from Node as the icon can _(and should)_ be added in the HeaderTemplate if necessary
 >   - PART_ItemsHost is now required for NodifyEditor to work
 >   - ItemContainers cannot be used outside a NodifyEditor anymore
 >   - ZoomAtPosition now requires graph space coordinates instead of screen space coordinates
 >   - Removed custom value converters
 >   - Made DependencyObjectExtensions internal
->   - Removed the http://miroiu.github.io/winfx/xaml/nodify xaml prefix
+>   - Removed the <http://miroiu.github.io/winfx/xaml/nodify> xaml prefix
 > - Features:
 >   - Added ResizeStartedEvent routed event to GroupingNode
 >   - Added ViewportSize - **OneWayToSource** dependency property to NodifyEditor

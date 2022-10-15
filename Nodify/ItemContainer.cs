@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -93,7 +94,7 @@ namespace Nodify
         public bool IsPreviewingLocation
         {
             get => (bool)GetValue(IsPreviewingLocationProperty);
-            private set => SetValue(IsPreviewingLocationPropertyKey, value);
+            protected internal set => SetValue(IsPreviewingLocationPropertyKey, value);
         }
 
         /// <summary>
@@ -246,15 +247,6 @@ namespace Nodify
         /// </summary>
         public NodifyEditor Editor { get; }
 
-        /// <summary>
-        /// Gets or sets the ancestor of this container used to calculate the relative position when dragging.
-        /// Prioritizes the NodifyEditor and defaults to this ItemContainer if not found.
-        /// </summary>
-        protected UIElement DraggableHost { get; set; }
-
-        private Point _previousDragPosition;
-        private Point _initialDragPosition;
-
         #endregion
 
         /// <summary>
@@ -285,7 +277,14 @@ namespace Nodify
         public ItemContainer(NodifyEditor editor)
         {
             Editor = editor;
-            DraggableHost = editor.ItemsHost;
+            _states.Push(GetInitialState());
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            State.Enter(null);
         }
 
         /// <inheritdoc />
@@ -318,103 +317,77 @@ namespace Nodify
             return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
-        /// <inheritdoc />
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        #region State Handling
+
+        private readonly Stack<ContainerState> _states = new Stack<ContainerState>();
+
+        /// <summary>The current state of the container.</summary>
+        public ContainerState State => _states.Peek();
+
+        /// <summary>Creates the initial state of the container.</summary>
+        /// <returns>The initial state.</returns>
+        protected virtual ContainerState GetInitialState()
+            => new ContainerDefaultState(this);
+
+        /// <summary>Pushes the given state to the stack.</summary>
+        /// <param name="state">The new state of the container.</param>
+        /// <remarks>Calls <see cref="ContainerState.Enter"/> on the new state.</remarks>
+        public void PushState(ContainerState state)
         {
-            // Handle right click if is previewing location so context menus don't open
-            if (IsPreviewingLocation)
+            var prev = State;
+            _states.Push(state);
+            state.Enter(prev);
+        }
+
+        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
+        /// <br />Calls <see cref="ContainerState.Exit"/> on the current state.
+        /// <br />Calls <see cref="ContainerState.ReEnter"/> on the previous state.
+        /// </remarks>
+        public void PopState()
+        {
+            // Never remove the default state
+            if (_states.Count > 1)
             {
-                e.Handled = true;
+                ContainerState prev = _states.Pop();
+                prev.Exit();
+                State.ReEnter(prev);
             }
-            // Select with right click
-            else if (!IsSelected && IsSelectableLocation(e.GetPosition(this)))
+        }
+
+        /// <summary>Pops all states from the container.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
+        public void PopAllStates()
+        {
+            while (_states.Count > 1)
             {
-                Editor.UnselectAll();
-                IsSelected = true;
-                Focus();
-            }
-
-            // Cancel dragging
-            if (AllowDraggingCancellation && IsPreviewingLocation)
-            {
-                IsPreviewingLocation = false;
-                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
-
-                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
-                {
-                    RoutedEvent = DragCompletedEvent
-                });
-
-                if (IsMouseCaptured)
-                {
-                    ReleaseMouseCapture();
-                }
+                PopState();
             }
         }
 
         /// <inheritdoc />
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if (IsSelectableLocation(e.GetPosition(this)))
             {
                 Focus();
-                e.Handled = true;
+
+                this.CaptureMouseSafe();
+
+                State.HandleMouseDown(e);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (IsSelectableLocation(e.GetPosition(this)))
+            if (IsSelectableLocation(e.GetPosition(this)) || IsMouseCaptured)
             {
-                // Prepare for dragging
-                _initialDragPosition = e.GetPosition(DraggableHost);
-                _previousDragPosition = _initialDragPosition;
-
-                Focus();
-                CaptureMouse();
-                e.Handled = true;
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-        {
-            // If it's previewing location, then we're dragging the container
-            if (IsPreviewingLocation)
-            {
-                // Do not rely on OnLocationChanged setting this to false
-                IsPreviewingLocation = false;
-                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
-
-                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, false)
-                {
-                    RoutedEvent = DragCompletedEvent
-                });
-
-                e.Handled = true;
-            }
-            else if (IsSelectableLocation(e.GetPosition(this)))
-            {
-                switch (Keyboard.Modifiers)
-                {
-                    case ModifierKeys.Control:
-                        IsSelected = !IsSelected;
-                        break;
-                    case ModifierKeys.Shift:
-                        IsSelected = true;
-                        break;
-                    default:
-                        Editor.UnselectAll();
-                        IsSelected = true;
-                        break;
-                }
-
-                Focus();
-                e.Handled = true;
+                State.HandleMouseUp(e);
             }
 
-            if (IsMouseCaptured)
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
@@ -423,52 +396,25 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured && IsDraggable)
-            {
-                // Needs host for snapping and to apply transform 
-                Point position = e.GetPosition(DraggableHost);
+            State.HandleMouseMove(e);
+        }
 
-                if (_previousDragPosition != position)
-                {
-                    // Start dragging
-                    if (!IsPreviewingLocation)
-                    {
-                        RaiseEvent(new DragStartedEventArgs(_initialDragPosition.X, _initialDragPosition.Y)
-                        {
-                            RoutedEvent = DragStartedEvent
-                        });
-
-                        IsPreviewingLocation = true;
-                    }
-                    else
-                    {
-                        Vector delta = position - _previousDragPosition;
-                        _previousDragPosition = position;
-
-                        RaiseEvent(new DragDeltaEventArgs(delta.X, delta.Y)
-                        {
-                            RoutedEvent = DragDeltaEvent
-                        });
-
-                        e.Handled = true;
-                    }
-                }
-            }
+        /// <inheritdoc />
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            State.HandleMouseWheel(e);
         }
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-        {
-            if (IsPreviewingLocation)
-            {
-                IsPreviewingLocation = false;
-                Vector position = e.GetPosition(DraggableHost) - _initialDragPosition;
+            => PopAllStates();
 
-                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, AllowDraggingCancellation)
-                {
-                    RoutedEvent = DragCompletedEvent
-                });
-            }
-        }
+        protected override void OnKeyUp(KeyEventArgs e)
+            => State.HandleKeyUp(e);
+
+        protected override void OnKeyDown(KeyEventArgs e)
+            => State.HandleKeyDown(e);
+
+        #endregion
     }
 }

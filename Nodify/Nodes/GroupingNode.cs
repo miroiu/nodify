@@ -50,7 +50,7 @@ namespace Nodify
             add => AddHandler(ResizeCompletedEvent, value);
             remove => RemoveHandler(ResizeCompletedEvent, value);
         }
-        
+
         /// <summary>
         /// Occurs when the node started resizing.
         /// </summary>
@@ -70,7 +70,7 @@ namespace Nodify
         public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
         public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(GroupingNode));
         public static readonly DependencyProperty ResizeStartedCommandProperty = DependencyProperty.Register(nameof(ResizeStartedCommand), typeof(ICommand), typeof(GroupingNode));
-        
+
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var node = (GroupingNode)d;
@@ -164,11 +164,6 @@ namespace Nodify
         /// </summary>
         protected FrameworkElement? ContentControl;
 
-        /// <summary>
-        /// Gets or sets the key that will toggle between <see cref="GroupingMovementMode"/>s.
-        /// </summary>
-        public static ModifierKeys SwitchMovementModeModifierKey { get; set; } = ModifierKeys.Shift;
-
         private double _minHeight = 30;
         private double _minWidth = 30;
 
@@ -206,7 +201,7 @@ namespace Nodify
         {
             if (HeaderControl != null)
             {
-                HeaderControl.MouseLeftButtonDown += OnHeaderMouseLeftButtonDown;
+                HeaderControl.MouseDown += OnHeaderMouseDown;
                 HeaderControl.SizeChanged += OnHeaderSizeChanged;
                 CalculateDesiredHeaderSize();
             }
@@ -216,39 +211,57 @@ namespace Nodify
         {
             if (HeaderControl != null)
             {
-                HeaderControl.MouseLeftButtonDown -= OnHeaderMouseLeftButtonDown;
+                HeaderControl.MouseDown -= OnHeaderMouseDown;
                 HeaderControl.SizeChanged -= OnHeaderSizeChanged;
             }
         }
 
-        private void OnHeaderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnHeaderMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Container != null && Editor != null)
+            if (Container != null && Editor != null && EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
             {
                 // Switch the default movement mode if necessary
-                if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
+                var prevMovementMode = MovementMode;
+                if (Keyboard.Modifiers == EditorGestures.GroupingNode.SwitchMovementMode)
                 {
                     MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
 
-                // Deselect all so we can move without the content
-                if (MovementMode == GroupingMovementMode.Self)
-                {
-                    Editor.UnselectAll();
-                    Container.IsSelected = true;
-                }
                 // Select the content and move with it
-                else if (Keyboard.Modifiers != ModifierKeys.Control)
+                if (EditorGestures.Selection.Append.Matches(e.Source, e))
+                {
+                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                }
+                else if (EditorGestures.Selection.Remove.Matches(e.Source, e))
+                {
+                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                }
+                else if (EditorGestures.Selection.Invert.Matches(e.Source, e))
+                {
+                    if (Container.IsSelected)
+                    {
+                        Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                        Container.IsSelected = true;
+                    }
+                    else
+                    {
+                        Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                    }
+                }
+                else if (EditorGestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
                 {
                     Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
+                }
+
+                // Deselect content
+                if (MovementMode == GroupingMovementMode.Self)
+                {
+                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
                     Container.IsSelected = true;
                 }
 
                 // Switch the default movement mode back
-                if (Keyboard.Modifiers == SwitchMovementModeModifierKey)
-                {
-                    MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
-                }
+                MovementMode = prevMovementMode;
             }
         }
 
@@ -315,7 +328,7 @@ namespace Nodify
             Size previousSize = ActualSize;
             var newSize = new Size(ActualWidth, ActualHeight);
             ActualSize = newSize;
-                
+
             var args = new ResizeEventArgs(previousSize, newSize)
             {
                 RoutedEvent = ResizeCompletedEvent,
