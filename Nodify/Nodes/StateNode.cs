@@ -77,22 +77,22 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content
             if (e.OriginalSource is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
             {
-                base.OnMouseLeftButtonDown(e);
+                base.OnMouseDown(e);
             }
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content
             if (e.OriginalSource is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
             {
-                base.OnMouseLeftButtonUp(e);
+                base.OnMouseUp(e);
             }
         }
     }

@@ -57,6 +57,16 @@ namespace Nodify
             return result;
         }
 
+        public static bool CaptureMouseSafe(this UIElement elem)
+        {
+            if (Mouse.Captured == null || elem.IsMouseCaptured)
+            {
+                return elem.CaptureMouse();
+            }
+
+            return false;
+        }
+
         #region Animation
 
         public static void StartAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, Point toValue, double animationDurationSeconds, EventHandler? completedEvent = null)

@@ -237,7 +237,7 @@ namespace Nodify
         public static readonly DependencyProperty BringIntoViewMaxDurationProperty = DependencyProperty.Register(nameof(BringIntoViewMaxDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1));
         public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
-        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
+        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorTemplateProperty = DependencyProperty.Register(nameof(DecoratorTemplate), typeof(DataTemplate), typeof(NodifyEditor));
@@ -388,11 +388,11 @@ namespace Nodify
         public bool IsPanning
         {
             get => (bool)GetValue(IsPanningProperty);
-            protected set => SetValue(IsPanningPropertyKey, value);
+            protected internal set => SetValue(IsPanningPropertyKey, value);
         }
 
         /// <summary>
-        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost")/>.
+        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
         /// </summary>
         public Point MouseLocation
         {
@@ -424,7 +424,7 @@ namespace Nodify
         private static void OnDisablePanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var editor = (NodifyEditor)d;
-            editor.OnDisableAutoPanningChanged(editor.DisableAutoPanning);
+            editor.OnDisableAutoPanningChanged(editor.DisableAutoPanning || editor.DisablePanning);
         }
 
         /// <summary>
@@ -624,30 +624,6 @@ namespace Nodify
         /// </summary>
         protected internal Panel ItemsHost { get; private set; }
 
-        /// <summary>
-        /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="SelectedArea"/> and <see cref="IsSelecting"/> properties.
-        /// </summary>
-        protected SelectionHelper Selection { get; private set; }
-
-        /// <summary>
-        /// Gets where the mouse cursor was the previous time it moved relative to the <see cref="NodifyEditor"/>.
-        /// Check <see cref="MouseLocation"/> for a transformed position.
-        /// </summary>
-        protected Point PreviousMousePosition;
-
-        /// <summary>
-        /// Gets where the mouse cursor is right now relative to the <see cref="NodifyEditor"/>.
-        /// Check <see cref="MouseLocation"/> for a transformed position.
-        /// </summary>
-        protected Point CurrentMousePosition;
-
-        /// <summary>
-        /// Gets where the mouse cursor was relative to the <see cref="NodifyEditor"/> when a mouse button event occurred.
-        /// Check <see cref="MouseLocation"/> for a transformed position.
-        /// </summary>
-        protected Point InitialMousePosition;
-
-        private ItemContainer? _dragInstigator;
         private Vector _dragAccumulator;
         private readonly List<ItemContainer> _selectedContainers = new List<ItemContainer>(16);
         private DispatcherTimer? _autoPanningTimer;
@@ -679,13 +655,13 @@ namespace Nodify
             AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
             AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
 
-            Selection = new SelectionHelper(this);
-
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
             transform.Children.Add(TranslateTransform);
 
             SetValue(ViewportTransformPropertyKey, transform);
+
+            _states.Push(GetInitialState());
         }
 
         /// <inheritdoc />
@@ -696,6 +672,8 @@ namespace Nodify
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException("PART_ItemsHost is missing or is not of type Panel.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+
+            State.Enter(null);
         }
 
         /// <inheritdoc />
@@ -763,7 +741,6 @@ namespace Nodify
             if (animated && newLocation != ViewportLocation)
             {
                 IsPanning = true;
-                DisableAutoPanning = true;
                 DisablePanning = true;
                 DisableZooming = true;
 
@@ -774,7 +751,6 @@ namespace Nodify
                 this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
                     IsPanning = false;
-                    DisableAutoPanning = false;
                     DisablePanning = false;
                     DisableZooming = false;
 
@@ -816,7 +792,7 @@ namespace Nodify
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
+            if (!IsPanning && IsMouseCaptureWithin)
             {
                 Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
@@ -843,13 +819,9 @@ namespace Nodify
                 }
 
                 ViewportLocation = new Point(x, y);
+                MouseLocation = Mouse.GetPosition(ItemsHost);
 
-                // Update the selecting area because the mouse might not move to update it.
-                if (IsSelecting)
-                {
-                    Point spaceCoords = Mouse.GetPosition(ItemsHost);
-                    Selection.Update(spaceCoords);
-                }
+                State.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
             }
         }
 
@@ -918,146 +890,121 @@ namespace Nodify
 
         #endregion
 
-        #region Mouse Events Handlers
+        #region State Handling
 
-        /// <inheritdoc />
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        private readonly Stack<EditorState> _states = new Stack<EditorState>();
+
+        /// <summary>The current state of the editor.</summary>
+        public EditorState State => _states.Peek();
+
+        /// <summary>Creates the initial state of the editor.</summary>
+        /// <returns>The initial state.</returns>
+        protected virtual EditorState GetInitialState()
+            => new EditorDefaultState(this);
+
+        /// <summary>Pushes the given state to the stack.</summary>
+        /// <param name="state">The new state of the editor.</param>
+        /// <remarks>Calls <see cref="EditorState.Enter"/> on the new state.</remarks>
+        public void PushState(EditorState state)
         {
-            double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
-            e.Handled = true;
+            var prev = State;
+            _states.Push(state);
+            state.Enter(prev);
         }
 
-        /// <inheritdoc />
-        protected override void OnMouseMove(MouseEventArgs e)
+        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
+        /// <br />Calls <see cref="EditorState.Exit"/> on the current state.
+        /// <br />Calls <see cref="EditorState.ReEnter"/> on the previous state.
+        /// </remarks>
+        public void PopState()
         {
-            CurrentMousePosition = e.GetPosition(this);
-
-            if (CurrentMousePosition != PreviousMousePosition)
+            // Never remove the default state
+            if (_states.Count > 1)
             {
-                MouseLocation = e.GetPosition(ItemsHost);
+                EditorState prev = _states.Pop();
+                prev.Exit();
+                State.ReEnter(prev);
+            }
+        }
 
-                if (IsMouseCaptured)
-                {
-                    // Panning
-                    if (e.RightButton == MouseButtonState.Pressed && !DisablePanning)
-                    {
-                        ViewportLocation -= (CurrentMousePosition - PreviousMousePosition) / ViewportZoom;
-                        IsPanning = true;
-                        e.Handled = true;
-                    }
-                    else if (IsSelecting)
-                    {
-                        Selection.Update(MouseLocation);
-                    }
-                    else
-                    {
-                        ReleaseMouseCapture();
-                    }
-                }
-
-                PreviousMousePosition = CurrentMousePosition;
+        /// <summary>Pops all states from the editor.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
+        public void PopAllStates()
+        {
+            while (_states.Count > 1)
+            {
+                PopState();
             }
         }
 
         /// <inheritdoc />
-        protected override void OnLostMouseCapture(MouseEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            // End selection if selecting
-            Selection.End();
-            IsPanning = false;
-        }
-
-        /// <inheritdoc />
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            if (Mouse.Captured == null)
+            // Needed to not steal mouse capture from children
+            if (Mouse.Captured == null || IsMouseCaptured)
             {
                 Focus();
                 CaptureMouse();
 
-                InitialMousePosition = e.GetPosition(this);
-                Selection.Start(MouseLocation);
+                MouseLocation = e.GetPosition(ItemsHost);
+                State.HandleMouseDown(e);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            MouseLocation = e.GetPosition(ItemsHost);
+            State.HandleMouseUp(e);
+
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            {
+                ReleaseMouseCapture();
+            }
+
+            // Disable context menu if selecting
+            if (IsSelecting)
+            {
                 e.Handled = true;
             }
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            // End selection if selecting
-            Selection.End();
-
-            // If panning, don't interrupt
-            if (!IsPanning && IsMouseCaptured)
-            {
-                Focus();
-                ReleaseMouseCapture();
-            }
+            MouseLocation = e.GetPosition(ItemsHost);
+            State.HandleMouseMove(e);
         }
 
         /// <inheritdoc />
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-        {
-            if (Mouse.Captured == null)
-            {
-                Focus();
-                CaptureMouse();
-
-                InitialMousePosition = e.GetPosition(this);
-            }
-        }
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => PopAllStates();
 
         /// <inheritdoc />
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            // If right clicking without panning or selecting allow context menu
-            if (IsMouseCaptured && !IsPanning && !IsSelecting)
-            {
-                Focus();
-                ReleaseMouseCapture();
-            }
-            // If is selecting but not panning, end selection and show context menu
-            else if (IsSelecting && !IsPanning)
-            {
-                Selection.End();
-            }
-            else if (IsPanning)
-            {
-                IsPanning = false;
+            State.HandleMouseWheel(e);
 
-                // Allow selecting and panning at the same time and disable context menu
-                if (IsSelecting)
+            if (!e.Handled && EditorGestures.Zoom == Keyboard.Modifiers)
+            {
+                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+                ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
+
+                // Handle it for nested editors
+                if (e.Source is NodifyEditor)
                 {
                     e.Handled = true;
                 }
-                // If is panning but not selecting, release mouse capture and show context menu if necessary
-                else
-                {
-                    // Handle right click if is panning and moved the mouse more than threshold so context menus don't open
-                    if ((CurrentMousePosition - InitialMousePosition).LengthSquared > HandleRightClickAfterPanningThreshold * HandleRightClickAfterPanningThreshold)
-                    {
-                        e.Handled = true;
-                    }
-
-                    if (IsMouseCaptured)
-                    {
-                        ReleaseMouseCapture();
-                    }
-                }
             }
         }
 
-        /// <inheritdoc />
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
+        protected override void OnKeyUp(KeyEventArgs e)
+            => State.HandleKeyUp(e);
 
-            double zoom = ViewportZoom;
-            ViewportSize = new Size(ActualWidth / zoom, ActualHeight / zoom);
-
-            OnViewportUpdated();
-        }
+        protected override void OnKeyDown(KeyEventArgs e)
+            => State.HandleKeyDown(e);
 
         #endregion
 
@@ -1214,7 +1161,7 @@ namespace Nodify
         /// Selects the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
-        /// <param name="append">If true, it will add to the existing </param>
+        /// <param name="append">If true, it will add to the existing selection.</param>
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
@@ -1266,7 +1213,7 @@ namespace Nodify
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             // Move selection only if a selected item is being dragged
-            if (_dragInstigator != null && _selectedContainers.Count > 0)
+            if (_selectedContainers.Count > 0)
             {
                 _dragAccumulator += new Vector(e.HorizontalChange, e.VerticalChange);
                 var delta = new Vector((int)_dragAccumulator.X / GridCellSize * GridCellSize, (int)_dragAccumulator.Y / GridCellSize * GridCellSize);
@@ -1335,7 +1282,6 @@ namespace Nodify
                     ItemsHost.InvalidateArrange();
                 }
 
-                _dragInstigator = null;
                 _selectedContainers.Clear();
 
                 if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
@@ -1347,19 +1293,7 @@ namespace Nodify
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
-            _dragInstigator = e.OriginalSource as ItemContainer ?? (e.OriginalSource as UIElement)?.GetParentOfType<ItemContainer>();
             IList selectedItems = base.SelectedItems;
-
-            if (_dragInstigator != null)
-            {
-                // Clear the selection if the dragged item is not part of the selection and Control or Shift is not held
-                if (!(Keyboard.Modifiers == ModifierKeys.Control || Keyboard.Modifiers == ModifierKeys.Shift || _dragInstigator.IsSelected))
-                {
-                    selectedItems.Clear();
-                }
-
-                _dragInstigator.IsSelected = true;
-            }
 
             if (selectedItems.Count > 0)
             {
@@ -1395,5 +1329,16 @@ namespace Nodify
         }
 
         #endregion
+
+        /// <inheritdoc />
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            double zoom = ViewportZoom;
+            ViewportSize = new Size(ActualWidth / zoom, ActualHeight / zoom);
+
+            OnViewportUpdated();
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>
-    /// Represents a connector control which starts a <see cref="PendingConnection"/> when being dragged and completes it when released.
+    /// Represents a connector control that can start and complete a <see cref="PendingConnection"/>.
     /// Has a <see cref="ElementConnector"/> that the <see cref="Anchor"/> is calculated from for the <see cref="PendingConnection"/>. Center of this control is used if missing.
     /// </summary>
     [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
@@ -20,18 +20,14 @@ namespace Nodify
         public static readonly RoutedEvent PendingConnectionDragEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionDrag), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectorEventHandler), typeof(Connector));
 
-        /// <summary>
-        /// Occurs when the <see cref="Connector"/> is clicked.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionStarted
         {
             add => AddHandler(PendingConnectionStartedEvent, value);
             remove => RemoveHandler(PendingConnectionStartedEvent, value);
         }
 
-        /// <summary>
-        /// Occurs when the <see cref="Connector"/> loses mouse capture.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionCompleted
         {
             add => AddHandler(PendingConnectionCompletedEvent, value);
@@ -47,9 +43,7 @@ namespace Nodify
             remove => RemoveHandler(PendingConnectionDragEvent, value);
         }
 
-        /// <summary>
-        /// Occurs when the <see cref="ModifierKeys.Alt"/> key is held and the <see cref="Connector"/> is clicked.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Disconnect"/> gesture.</summary>
         public event ConnectorEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
@@ -148,6 +142,11 @@ namespace Nodify
         /// Gets or sets whether cancelling a pending connection is allowed.
         /// </summary>
         public static bool AllowPendingConnectionCancellation { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets whether the connection should be completed in two steps.
+        /// </summary>
+        public static bool EnableStickyConnections { get; set; }
 
         private Point _lastUpdatedContainerPosition;
         private Point _thumbCenter;
@@ -315,65 +314,81 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
         {
-            if (IsPendingConnection)
-            {
-                OnConnectorDragCompleted(cancel: AllowPendingConnectionCancellation);
-            }
+            // Always cancel if lost capture
+            OnConnectorDragCompleted(cancel: true);
         }
 
         /// <inheritdoc />
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-        {
-            // Cancel pending connection
-            if (AllowPendingConnectionCancellation && IsMouseCaptured && IsPendingConnection)
-            {
-                OnConnectorDragCompleted(cancel: true);
-                ReleaseMouseCapture();
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
-            if (Keyboard.Modifiers == ModifierKeys.Alt)
+
+            this.CaptureMouseSafe();
+
+            e.Handled = true;
+
+            if (EditorGestures.Connector.Disconnect.Matches(e.Source, e))
             {
                 OnDisconnect();
             }
-            else
+            else if (EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
-                UpdateAnchor();
-                OnConnectorDragStarted();
-
-                CaptureMouse();
+                if (EnableStickyConnections && IsPendingConnection)
+                {
+                    OnConnectorDragCompleted();
+                }
+                else
+                {
+                    UpdateAnchor();
+                    OnConnectorDragStarted();
+                }
             }
-
-            e.Handled = true;
         }
 
         /// <inheritdoc />
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            Focus();
+            // Don't give the ItemContainer the chance to handle selection
+            e.Handled = EnableStickyConnections;
 
-            if (IsMouseCaptured)
+            if (!EnableStickyConnections && EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
                 OnConnectorDragCompleted();
+                e.Handled = true;
+            }
+            else if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
+            {
+                // Cancel pending connection
+                OnConnectorDragCompleted(cancel: true);
                 ReleaseMouseCapture();
+
+                // Don't show context menu
+                e.Handled = true;
             }
 
-            e.Handled = true;
+            if (IsMouseCaptured && !IsPendingConnection)
+            {
+                ReleaseMouseCapture();
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
+            {
+                // Cancel pending connection
+                OnConnectorDragCompleted(cancel: true);
+            }
         }
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            if (IsPendingConnection)
             {
                 Vector offset = e.GetPosition(Thumb) - _thumbCenter;
                 OnConnectorDrag(offset);
-
-                e.Handled = true;
             }
         }
 
@@ -411,30 +426,33 @@ namespace Nodify
 
         protected virtual void OnConnectorDragCompleted(bool cancel = false)
         {
-            FrameworkElement? elem = null;
-            if (Editor != null)
+            if (IsPendingConnection)
             {
-                elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
+                FrameworkElement? elem = null;
+                if (Editor != null)
+                {
+                    elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
+                }
+
+                object? target = elem?.DataContext;
+
+                var args = new PendingConnectionEventArgs(DataContext)
+                {
+                    TargetConnector = target,
+                    RoutedEvent = PendingConnectionCompletedEvent,
+                    Anchor = Anchor,
+                    Source = this,
+                    Canceled = cancel
+                };
+
+                IsPendingConnection = false;
+                RaiseEvent(args);
             }
-
-            object? target = elem?.DataContext;
-
-            var args = new PendingConnectionEventArgs(DataContext)
-            {
-                TargetConnector = target,
-                RoutedEvent = PendingConnectionCompletedEvent,
-                Anchor = Anchor,
-                Source = this,
-                Canceled = cancel
-            };
-
-            IsPendingConnection = false;
-            RaiseEvent(args);
         }
 
         protected virtual void OnDisconnect()
         {
-            if (IsConnected)
+            if (IsConnected && !IsPendingConnection)
             {
                 object? connector = DataContext;
                 var args = new ConnectorEventArgs(connector)

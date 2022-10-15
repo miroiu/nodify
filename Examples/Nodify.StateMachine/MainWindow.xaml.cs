@@ -7,6 +7,8 @@ namespace Nodify.StateMachine
         public MainWindow()
         {
             InitializeComponent();
+
+            Connector.EnableStickyConnections = true;
         }
     }
 }
