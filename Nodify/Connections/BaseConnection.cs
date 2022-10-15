@@ -139,8 +139,8 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Splits the connection. Triggered on double click.
-        /// Parameter is the location where this was clicked.
+        /// Splits the connection. Triggered by <see cref="EditorGestures.Connection.Split"/> gesture.
+        /// Parameter is the location where the splitting ocurred.
         /// </summary>
         public ICommand? SplitCommand
         {
@@ -149,8 +149,8 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Removes this connection. Triggered with ALT+Click.
-        /// Parameter is the location where this was clicked.
+        /// Removes this connection. Triggered by <see cref="EditorGestures.Connection.Disconnect"/> gesture.
+        /// Parameter is the location where the disconnect ocurred.
         /// </summary>
         public ICommand? DisconnectCommand
         {

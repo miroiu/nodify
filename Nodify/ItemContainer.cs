@@ -368,16 +368,22 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            Focus();
-            CaptureMouse();
+            if (IsSelectableLocation(e.GetPosition(this)))
+            {
+                Focus();
+                CaptureMouse();
 
-            State.HandleMouseDown(e);
+                State.HandleMouseDown(e);
+            }
         }
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            State.HandleMouseUp(e);
+            if (IsSelectableLocation(e.GetPosition(this)))
+            {
+                State.HandleMouseUp(e);
+            }
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)

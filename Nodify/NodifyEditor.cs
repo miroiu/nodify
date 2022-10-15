@@ -991,6 +991,12 @@ namespace Nodify
             {
                 double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                 ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
+
+                // Handle it for nested editors
+                if (e.Source is NodifyEditor)
+                {
+                    e.Handled = true;
+                }
             }
         }
 

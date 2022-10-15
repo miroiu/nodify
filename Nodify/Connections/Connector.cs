@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>
-    /// Represents a connector control which starts a <see cref="PendingConnection"/> when being dragged and completes it when released.
+    /// Represents a connector control that can start and complete a <see cref="PendingConnection"/>.
     /// Has a <see cref="ElementConnector"/> that the <see cref="Anchor"/> is calculated from for the <see cref="PendingConnection"/>. Center of this control is used if missing.
     /// </summary>
     [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
@@ -20,18 +20,14 @@ namespace Nodify
         public static readonly RoutedEvent PendingConnectionDragEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionDrag), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectorEventHandler), typeof(Connector));
 
-        /// <summary>
-        /// Occurs when the <see cref="Connector"/> is clicked.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionStarted
         {
             add => AddHandler(PendingConnectionStartedEvent, value);
             remove => RemoveHandler(PendingConnectionStartedEvent, value);
         }
 
-        /// <summary>
-        /// Occurs when the <see cref="Connector"/> loses mouse capture.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionCompleted
         {
             add => AddHandler(PendingConnectionCompletedEvent, value);
@@ -47,9 +43,7 @@ namespace Nodify
             remove => RemoveHandler(PendingConnectionDragEvent, value);
         }
 
-        /// <summary>
-        /// Occurs when the <see cref="EditorGestures.Connector.Disconnect"/> is triggered.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Disconnect"/> gesture.</summary>
         public event ConnectorEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
