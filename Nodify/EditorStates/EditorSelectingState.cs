@@ -20,7 +20,7 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void Enter()
+        public override void Enter(EditorState? from)
             => Selection.Start(Editor.MouseLocation, _type);
 
         /// <inheritdoc />
@@ -31,11 +31,12 @@ namespace Nodify
         public override void HandleMouseMove(MouseEventArgs e)
             => Selection.Update(Editor.MouseLocation);
 
+        /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             if (EditorGestures.Pan.Matches(e.Source, e))
             {
-                Editor.PushState(new EditorPanningState(Editor));
+                PushState(new EditorPanningState(Editor));
             }
         }
 
@@ -44,11 +45,12 @@ namespace Nodify
         {
             if (EditorGestures.Select.Matches(e.Source, e))
             {
-                Editor.PopState();
+                PopState();
             }
         }
 
-        public override void HandleAutoPanning(MouseEventArgs e) 
+        /// <inheritdoc />
+        public override void HandleAutoPanning(MouseEventArgs e)
             => HandleMouseMove(e);
     }
 }

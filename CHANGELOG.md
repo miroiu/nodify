@@ -5,34 +5,29 @@
 > - Breaking Changes:
 >   - Removed Selection field from NodifyEditor
 >   - Removed InitialMousePosition, CurrentMousePosition, PreviousMousePosition fields from NodifyEditor
+>   - Removed ItemContainer.DraggableHost (use Editor.ItemsHost instead)
+>   - Made SelectionType required in SelectionHelper
+>   - Moved GroupingNode.SwitchMovementModeModifierKey to EditorGestures.GroupingNode
 > - Features:
 >   - Added Connector.EnableStickyConnections to allow completing pending connections in two steps.
->   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetDefaultState().
+>   - Added editor states which can be overriden by inheriting from NodifyEditor and implementing NodifyEditor.GetInitialState().
 >     - EditorState - base class for all editor states
 >     - EditorDefaultState
 >     - EditorSelectingState
 >     - EditorPanningState
->   - Added SmartInputGesture utility that can combine multiple gestures into one
->   - Added smart input gesture EditorGestures.Select for selection that is any of:
->     - EditorGestures.Selection.Replace
->     - EditorGestures.Selection.Remove
->     - EditorGestures.Selection.Append
->     - EditorGestures.Selection.Invert
->   - Added input gesture EditorGestures.Pan for panning
->   - Added key modifier EditorGestures.Zoom for zooming
->   - Added input gestures for BaseConnection:
->     - EditorGestures.Connection.Split for splitting a connection
->     - EditorGestures.Connection.Disconnect for breaking a connection
->   - Added input gestures for Connector:
->     - EditorGestures.Connector.Connect for starting a pending connection
->     - EditorGestures.Connector.Disconnect for disconnecting a connector
->     - EditorGestures.Connector.Cancel for cancelling the pending connection
->   - Added PushState, PopState and PopAllStates to NodifyEditor
+>   - Added container states which can be overriden by inheriting from ItemContainer and implementing ItemContainer.GetInitialState().
+>     - ContainerState - base class for all container states
+>     - ContainerDefaultState
+>     - ContainerDraggingState
+>   - Added MultiGesture utility that can combine multiple gestures into one gesture
+>   - Added gestures for NodifyEditor, ItemContainer, Connector, BaseConnection and GroupingNode to EditorGestures.
+>   - Added State, PushState, PopState and PopAllStates to NodifyEditor and ItemContainer
+>   - Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
+>   - Allow setting ItemContainer.IsPreviewingLocation from derived classes
 > - Bugfixes:
 >   - Fixed HandleRightClickAfterPanningThreshold not working as expected
 >   - Fixed DisablePanning not disabling auto panning in certain situations
-> - Others:
->   - Changed the default AutoPanSpeed to 15 from 10 pixels per tick.
+>   - Fixed GroupingNode selection not working with multiple selection modes
 
 #### **Version 3.0.0**
 

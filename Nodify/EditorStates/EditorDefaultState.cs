@@ -34,11 +34,11 @@ namespace Nodify
             {
                 SelectionType selectionType = GetSelectionType(e);
                 var selecting = new EditorSelectingState(Editor, selectionType);
-                Editor.PushState(selecting);
+                PushState(selecting);
             }
             else if (EditorGestures.Pan.Matches(e.Source, e) && !Editor.DisablePanning)
             {
-                Editor.PushState(new EditorPanningState(Editor));
+                PushState(new EditorPanningState(Editor));
             }
         }
 

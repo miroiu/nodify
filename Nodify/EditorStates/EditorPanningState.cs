@@ -21,7 +21,7 @@ namespace Nodify
             => Editor.IsPanning = false;
 
         /// <inheritdoc />
-        public override void Enter()
+        public override void Enter(EditorState? from)
         {
             _initialMousePosition = Mouse.GetPosition(Editor);
             _previousMousePosition = _initialMousePosition;
@@ -42,7 +42,7 @@ namespace Nodify
         {
             if (EditorGestures.Pan.Matches(e.Source, e))
             {
-                // Handle right click if panning and moved the mouse more than threshold so context menus don't open
+                // Handle right click if panning and moved the mouse more than threshold so context menu doesn't open
                 if (e.ChangedButton == MouseButton.Right)
                 {
                     double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
@@ -52,14 +52,17 @@ namespace Nodify
                     }
                 }
 
-                Editor.PopState();
+                PopState();
             }
             else if (EditorGestures.Select.Matches(e.Source, e) && Editor.IsSelecting)
             {
+                PopState();
                 // Cancel selection and continue panning
-                Editor.PopState();
-                Editor.PopState();
-                Editor.PushState(new EditorPanningState(Editor));
+                if (Editor.State is EditorSelectingState)
+                {
+                    PopState();
+                    PushState(new EditorPanningState(Editor));
+                }
             }
         }
     }

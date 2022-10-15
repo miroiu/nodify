@@ -41,19 +41,11 @@ namespace Nodify
         /// <param name="location">The location inside the graph.</param>
         /// <param name="selectionType">The type of selection.</param>
         /// <remarks>Will not do anything if selection is in progress.</remarks>
-        public void Start(Point location, SelectionType? selectionType = default)
+        public void Start(Point location, SelectionType selectionType)
         {
             if (!_host.IsSelecting)
             {
-                ModifierKeys modifiers = Keyboard.Modifiers;
-                _selectionType = selectionType ?? modifiers switch
-                {
-                    ModifierKeys.Control => SelectionType.Invert,
-                    ModifierKeys.Alt => SelectionType.Remove,
-                    ModifierKeys.Shift => SelectionType.Append,
-                    _ => SelectionType.Replace
-                };
-
+                _selectionType = selectionType;
                 _initialSelection = GetSelectedContainers();
 
                 _isRealtime = _host.EnableRealtimeSelection;

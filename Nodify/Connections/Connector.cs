@@ -339,7 +339,6 @@ namespace Nodify
                 if (EnableStickyConnections && IsPendingConnection)
                 {
                     OnConnectorDragCompleted();
-                    ReleaseMouseCapture();
                 }
                 else
                 {
@@ -352,11 +351,15 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
+            // Don't give the ItemContainer the chance to handle selection
+            e.Handled = EnableStickyConnections;
+
             if (!EnableStickyConnections && EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
                 OnConnectorDragCompleted();
+                e.Handled = true;
             }
-            else if (AllowPendingConnectionCancellation && EditorGestures.Connector.Cancel.Matches(e.Source, e))
+            else if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);
@@ -372,9 +375,10 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (AllowPendingConnectionCancellation && EditorGestures.Connector.Cancel.Matches(e.Source, e))
+            if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);

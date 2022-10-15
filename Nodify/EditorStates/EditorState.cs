@@ -31,10 +31,28 @@ namespace Nodify
         /// <param name="e">The <see cref="MouseEventArgs"/> that contains the event data.</param>
         public virtual void HandleAutoPanning(MouseEventArgs e) { }
 
-        /// <summary>Called when <see cref="NodifyEditor.PushState(EditorState)"/> or <see cref="NodifyEditor.PopState"/> is called.</summary>
-        public virtual void Enter() { }
+        /// <inheritdoc cref="NodifyEditor.OnKeyUp(KeyEventArgs)"/>
+        public virtual void HandleKeyUp(KeyEventArgs e) { }
+
+        /// <inheritdoc cref="NodifyEditor.OnKeyDown(KeyEventArgs)"/>
+        public virtual void HandleKeyDown(KeyEventArgs e) { }
+
+        /// <summary>Called when <see cref="NodifyEditor.PushState(EditorState)"/> is called.</summary>
+        /// <param name="from">The state we enter from (is null for root state).</param>
+        public virtual void Enter(EditorState? from) { }
 
         /// <summary>Called when <see cref="NodifyEditor.PopState"/> is called.</summary>
         public virtual void Exit() { }
+
+        /// <summary>Called when <see cref="NodifyEditor.PopState"/> is called.</summary>
+        /// <param name="from">The state we re-enter from.</param>
+        public virtual void ReEnter(EditorState from) { }
+
+        /// <summary>Pushes a new state into the stack.</summary>
+        /// <param name="newState">The new state.</param>
+        public virtual void PushState(EditorState newState) => Editor.PushState(newState);
+
+        /// <summary>Pops the current state from the stack.</summary>
+        public virtual void PopState() => Editor.PopState();
     }
 }

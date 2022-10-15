@@ -624,7 +624,6 @@ namespace Nodify
         /// </summary>
         protected internal Panel ItemsHost { get; private set; }
 
-        private ItemContainer? _dragInstigator;
         private Vector _dragAccumulator;
         private readonly List<ItemContainer> _selectedContainers = new List<ItemContainer>(16);
         private DispatcherTimer? _autoPanningTimer;
@@ -662,11 +661,8 @@ namespace Nodify
 
             SetValue(ViewportTransformPropertyKey, transform);
 
-            _states.Push(GetDefaultState());
+            _states.Push(GetInitialState());
         }
-
-        protected virtual EditorState GetDefaultState()
-            => new EditorDefaultState(this);
 
         /// <inheritdoc />
         public override void OnApplyTemplate()
@@ -677,7 +673,7 @@ namespace Nodify
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
 
-            State.Enter();
+            State.Enter(null);
         }
 
         /// <inheritdoc />
@@ -897,14 +893,30 @@ namespace Nodify
         #region State Handling
 
         private readonly Stack<EditorState> _states = new Stack<EditorState>();
+
+        /// <summary>The current state of the editor.</summary>
         public EditorState State => _states.Peek();
 
+        /// <summary>Creates the initial state of the editor.</summary>
+        /// <returns>The initial state.</returns>
+        protected virtual EditorState GetInitialState()
+            => new EditorDefaultState(this);
+
+        /// <summary>Pushes the given state to the stack.</summary>
+        /// <param name="state">The new state of the editor.</param>
+        /// <remarks>Calls <see cref="EditorState.Enter"/> on the new state.</remarks>
         public void PushState(EditorState state)
         {
+            var prev = State;
             _states.Push(state);
-            state.Enter();
+            state.Enter(prev);
         }
 
+        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
+        /// <br />Calls <see cref="EditorState.Exit"/> on the current state.
+        /// <br />Calls <see cref="EditorState.ReEnter"/> on the previous state.
+        /// </remarks>
         public void PopState()
         {
             // Never remove the default state
@@ -912,10 +924,12 @@ namespace Nodify
             {
                 EditorState prev = _states.Pop();
                 prev.Exit();
-                State.Enter();
+                State.ReEnter(prev);
             }
         }
 
+        /// <summary>Pops all states from the editor.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
         public void PopAllStates()
         {
             while (_states.Count > 1)
@@ -924,15 +938,21 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            Focus();
-            CaptureMouse();
+            // Needed to not steal mouse capture from children
+            if (Mouse.Captured == null || IsMouseCaptured)
+            {
+                Focus();
+                CaptureMouse();
 
-            MouseLocation = e.GetPosition(ItemsHost);
-            State.HandleMouseDown(e);
+                MouseLocation = e.GetPosition(ItemsHost);
+                State.HandleMouseDown(e);
+            }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             MouseLocation = e.GetPosition(ItemsHost);
@@ -951,6 +971,7 @@ namespace Nodify
             }
         }
 
+        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             MouseLocation = e.GetPosition(ItemsHost);
@@ -972,6 +993,12 @@ namespace Nodify
                 ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
             }
         }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+            => State.HandleKeyUp(e);
+
+        protected override void OnKeyDown(KeyEventArgs e)
+            => State.HandleKeyDown(e);
 
         #endregion
 
@@ -1128,7 +1155,7 @@ namespace Nodify
         /// Selects the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
-        /// <param name="append">If true, it will add to the existing </param>
+        /// <param name="append">If true, it will add to the existing selection.</param>
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
@@ -1180,7 +1207,7 @@ namespace Nodify
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             // Move selection only if a selected item is being dragged
-            if (_dragInstigator != null && _selectedContainers.Count > 0)
+            if (_selectedContainers.Count > 0)
             {
                 _dragAccumulator += new Vector(e.HorizontalChange, e.VerticalChange);
                 var delta = new Vector((int)_dragAccumulator.X / GridCellSize * GridCellSize, (int)_dragAccumulator.Y / GridCellSize * GridCellSize);
@@ -1249,7 +1276,6 @@ namespace Nodify
                     ItemsHost.InvalidateArrange();
                 }
 
-                _dragInstigator = null;
                 _selectedContainers.Clear();
 
                 if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
@@ -1261,19 +1287,7 @@ namespace Nodify
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
-            _dragInstigator = e.OriginalSource as ItemContainer ?? (e.OriginalSource as UIElement)?.GetParentOfType<ItemContainer>();
             IList selectedItems = base.SelectedItems;
-
-            if (_dragInstigator != null)
-            {
-                // Clear the selection if the dragged item is not part of the selection and Control or Shift is not held
-                if (!(Keyboard.Modifiers == ModifierKeys.Control || Keyboard.Modifiers == ModifierKeys.Shift || _dragInstigator.IsSelected))
-                {
-                    selectedItems.Clear();
-                }
-
-                _dragInstigator.IsSelected = true;
-            }
 
             if (selectedItems.Count > 0)
             {

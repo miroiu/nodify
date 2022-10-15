@@ -165,18 +165,14 @@ namespace Nodify
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
         public static readonly RoutedEvent SplitEvent = EventManager.RegisterRoutedEvent(nameof(Split), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
 
-        /// <summary>
-        /// Occurs when the <see cref="ModifierKeys.Alt"/> key is held and the <see cref="BaseConnection"/> is clicked.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Disconnect"/> gesture.</summary>
         public event ConnectionEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
             remove => RemoveHandler(DisconnectEvent, value);
         }
 
-        /// <summary>
-        /// Occurs when the <see cref="BaseConnection"/> is double clicked.
-        /// </summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Split"/> gesture.</summary>
         public event ConnectionEventHandler Split
         {
             add => AddHandler(SplitEvent, value);

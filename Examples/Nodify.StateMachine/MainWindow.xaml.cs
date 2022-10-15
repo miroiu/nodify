@@ -8,7 +8,7 @@ namespace Nodify.StateMachine
         {
             InitializeComponent();
 
-            Connector.EnableStickyConnections = false;
+            Connector.EnableStickyConnections = true;
         }
     }
 }
