@@ -77,12 +77,11 @@ namespace Nodify
         {
             if (_host.IsSelecting)
             {
-                _host.IsSelecting = false;
-
                 PreviewSelection(_host.SelectedArea);
 
                 _host.ApplyPreviewingSelection();
                 _initialSelection.Clear();
+                _host.IsSelecting = false;
             }
         }
 
