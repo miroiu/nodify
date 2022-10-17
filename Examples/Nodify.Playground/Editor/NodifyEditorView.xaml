@@ -309,7 +309,8 @@
 
                 <DataTemplate DataType="{x:Type local:CommentNodeViewModel}">
                     <nodify:GroupingNode ActualSize="{Binding Size}"
-                                         Header="{Binding Title}" />
+                                         Header="{Binding Title}"
+                                         MovementMode="{Binding GroupingNodeMovement, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"/>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">

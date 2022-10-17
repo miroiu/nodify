@@ -64,7 +64,7 @@
             set => SetProperty(ref _autoPanningSpeed, value);
         }
 
-        public double _autoPanningEdgeDistance = 15d;
+        private double _autoPanningEdgeDistance = 15d;
         public double AutoPanningEdgeDistance
         {
             get => _autoPanningEdgeDistance;
@@ -183,6 +183,13 @@
             set => SetProperty(ref _bringIntoViewMaxDuration, value);
         }
 
+        private GroupingMovementMode _groupingNodeMovement;
+        public GroupingMovementMode GroupingNodeMovement
+        {
+            get => _groupingNodeMovement;
+            set => SetProperty(ref _groupingNodeMovement, value);
+        }
+
         #endregion
 
         #region Advanced settings
@@ -257,6 +264,12 @@
         {
             get => NodifyEditor.FitToScreenExtentMargin;
             set => NodifyEditor.FitToScreenExtentMargin = value;
+        }
+
+        public bool EnableStickyConnectors
+        {
+            get => Connector.EnableStickyConnections;
+            set => Connector.EnableStickyConnections = value;
         }
 
         #endregion

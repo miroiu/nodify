@@ -34,7 +34,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (EditorGestures.Pan.Matches(e.Source, e))
+            if (!Editor.DisablePanning && EditorGestures.Pan.Matches(e.Source, e))
             {
                 PushState(new EditorPanningState(Editor));
             }

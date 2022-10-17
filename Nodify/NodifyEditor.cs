@@ -662,6 +662,8 @@ namespace Nodify
             SetValue(ViewportTransformPropertyKey, transform);
 
             _states.Push(GetInitialState());
+
+            CanSelectMultipleItems = true;
         }
 
         /// <inheritdoc />
