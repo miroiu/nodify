@@ -2,7 +2,7 @@
 
 namespace Nodifier
 {
-    public abstract class GraphElement : PropertyChangedBase, IGraphElement
+    public abstract class GraphElement : Undoable, IGraphElement
     {
         public IGraph Graph { get; }
 
@@ -41,9 +41,14 @@ namespace Nodifier
             set => SetAndNotify(ref _isDraggable, value);
         }
 
-        public GraphElement(IGraph graph)
+        public GraphElement(IGraph graph) : base(graph.History)
         {
             Graph = graph;
+
+            ConfigurePoperty(nameof(Location), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(IsSelected), PropertyFlags.TrackHistory);
+            ConfigurePoperty(nameof(IsDraggable), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(IsSelectable), PropertyFlags.Serialize);
         }
     }
 }

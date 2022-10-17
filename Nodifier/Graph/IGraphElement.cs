@@ -5,6 +5,7 @@ namespace Nodifier
     public interface IGraphElement
     {
         IGraph Graph { get; }
+
         Point Location { get; set; }
         Size Size { get; }
         bool IsDraggable { get; set; }

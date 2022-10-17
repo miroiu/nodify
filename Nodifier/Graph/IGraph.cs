@@ -5,7 +5,8 @@ namespace Nodifier
 {
     public interface IGraph
     {
-        IReadOnlyCollection<IGraphDecorator> Decorators { get; }
+        IActionsHistory History { get; }
+
         IReadOnlyCollection<IGraphElement> Elements { get; }
         IReadOnlyCollection<IGraphElement> SelectedElements { get; }
         IReadOnlyCollection<IConnection> Connections { get; }

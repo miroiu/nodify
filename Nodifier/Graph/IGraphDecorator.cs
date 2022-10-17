@@ -4,7 +4,7 @@ namespace Nodifier
 {
     public interface IGraphDecorator
     {
-        IGraph Graph { get; }
+        IEditor Editor { get; }
         Point Location { get; set; }
         Size Size { get; }
     }

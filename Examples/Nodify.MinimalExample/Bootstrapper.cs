@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nodifier;
+using System;
 
 namespace Nodify.MinimalExample
 {
@@ -22,6 +24,10 @@ namespace Nodify.MinimalExample
         {
             services.AddNodifier();
             services.AddSingleton<MinimalApp>();
+            services.AddLogging(x => x.SetMinimumLevel(LogLevel.Debug));
+            services.AddTransient<IGraph, GraphEditor>();
+            services.AddTransient<IEditor, GraphEditor>();
+            services.AddSingleton<Func<IGraph>>(x => () => x.GetRequiredService<IGraph>()); // TODO: Create scope for IActionsHistory
         }
     }
 }

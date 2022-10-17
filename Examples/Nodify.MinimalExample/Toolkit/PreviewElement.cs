@@ -7,7 +7,7 @@
 
     public class PreviewElement : GraphDecorator, IPreviewElement
     {
-        public PreviewElement(IGraph graph, IGraphElement element) : base(graph)
+        public PreviewElement(IEditor editor, IGraphElement element) : base(editor)
         {
             Element = element;
         }

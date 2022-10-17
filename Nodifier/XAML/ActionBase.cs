@@ -45,11 +45,11 @@ namespace Nodifier.XAML
         /// </summary>
         public object Target
         {
-            get => GetValue(targetProperty);
-            private set => SetValue(targetProperty, value);
+            get => GetValue(_targetProperty);
+            private set => SetValue(_targetProperty, value);
         }
 
-        private static readonly DependencyProperty targetProperty =
+        private static readonly DependencyProperty _targetProperty =
             DependencyProperty.Register("target", typeof(object), typeof(ActionBase), new PropertyMetadata(null, (d, e) =>
             {
                 ((ActionBase)d).UpdateActionTarget(e.OldValue, e.NewValue);
@@ -80,7 +80,7 @@ namespace Nodifier.XAML
 
             if (backupSubject == null)
             {
-                BindingOperations.SetBinding(this, targetProperty, actionTargetBinding);
+                BindingOperations.SetBinding(this, _targetProperty, actionTargetBinding);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace Nodifier.XAML
                     Mode = BindingMode.OneWay,
                     Source = backupSubject,
                 });
-                BindingOperations.SetBinding(this, targetProperty, multiBinding);
+                BindingOperations.SetBinding(this, _targetProperty, multiBinding);
             }
         }
 
@@ -142,12 +142,12 @@ namespace Nodifier.XAML
                 BindingFlags bindingFlags;
                 if (newTarget is Type newTargetType)
                 {
-                    bindingFlags = BindingFlags.Public | BindingFlags.Static;
+                    bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic;
                 }
                 else
                 {
                     newTargetType = newTarget.GetType();
-                    bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                    bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
                 }
                 try
                 {

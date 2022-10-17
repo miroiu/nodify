@@ -1,7 +1,6 @@
-﻿using Nodifier;
+﻿using Microsoft.Extensions.Logging;
+using Nodifier;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 
 namespace Nodify.MinimalExample
@@ -21,123 +20,29 @@ namespace Nodify.MinimalExample
         }
     }
 
-    /// 
-    ///  ALT + Click on a connector to disconnect
-    ///  ALT + Click on a connection to disconnect
-    ///  Double Click on a connection to split
-    ///  
-    ///  CTRL + Plus to zoom in
-    ///  CTRL + Minus to zoom out
-    ///  CTRL + A to select all
-    /// 
-
     public class MinimalApp
     {
-        public GraphEditor Graph { get; } = new GraphEditor();
-        private static readonly Random _random = new Random();
+        private readonly ILogger<MinimalApp> _logger;
 
-        public MinimalApp()
+        public IGraph Editor { get; }
+
+        public MinimalApp(ILogger<MinimalApp> logger, Func<IGraph> createEditor)
         {
-            SetupBaseNodes();
-            SetupAdvancedNodes();
+            Editor = createEditor();
+            _logger = logger;
+
+
+            Editor.History.IsEnabled = false;
+            
+            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 50) });
+            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(200, 150) });
+            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 250) });
+            Editor.AddComment("Generated comment", Editor.Elements);
+
+            Editor.History.IsEnabled = true;
         }
 
-        private void SetupAdvancedNodes()
-        {
-            var toString = new GraphNode.WithHeader<string>(Graph)
-            {
-                Location = new Point(100, 200),
-                Header = "To String"
-            };
-            toString.AddValueInput<object>();
-            toString.AddValueOutput<string>();
-
-            var add = new GraphNode.WithContent<string>(Graph)
-            {
-                Location = new Point(500, 250),
-                Content = "ADD"
-            };
-
-            var sub = new GraphNode.WithContent<string>.WithFooter<string>(Graph)
-            {
-                Location = new Point(500, 150),
-                Content = "SUB",
-                Footer = "Sub footer"
-            };
-
-            add.AddValueInput<int>("A");
-            add.AddValueInput<int>("B", 9999);
-            add.AddValueOutput<int>();
-
-            var custom = new CustomGraphNode(Graph)
-            {
-                Location = new Point(200, 200)
-            };
-
-            Graph.AddElement(toString);
-            Graph.AddElement(add);
-            Graph.AddElement(custom);
-            Graph.AddElement(sub);
-
-            toString.TryConnect(add);
-            custom.Out.TryConnectTo(add);
-
-            Graph.Initialized += (s, e) => Graph.AddComment("Generated comment", new List<IGraphElement> { add, sub });
-        }
-
-        private void SetupBaseNodes()
-        {
-            var toString = new GraphNode.WithHeader<string>(Graph)
-            {
-                Location = new Point(100, 100),
-                Header = "To String"
-            };
-            toString.AddInput(new BaseConnector(toString));
-            toString.AddOutput(new BaseConnector(toString));
-
-            var add = new GraphNode.WithContent<string>(Graph)
-            {
-                Location = new Point(300, 100),
-                Content = "ADD"
-            };
-
-            add.AddInput(new BaseConnector(add));
-            add.AddInput(new BaseConnector(add));
-            add.AddOutput(new BaseConnector(add));
-
-            Graph.AddElement(toString);
-            Graph.AddElement(add);
-
-            if (toString.TryConnect(add))
-            {
-                IConnection con = Graph.Connections.First();
-                con.Split(new Point(200, 150));
-            }
-        }
-
-        public void AlignSelection()
-        {
-            Graph.AlignSelection(Alignment.Top);
-        }
-
-        public void AddComment()
-        {
-            if (Graph.SelectedElements.Count > 0)
-            {
-                Graph.AddComment(string.Empty, Graph.SelectedElements);
-            }
-            else
-            {
-                Graph.AddComment("This is a comment sorounding all nodes", Graph.Elements);
-            }
-        }
-
-        public void FocusRandomNode()
-        {
-            int nodeIndex = _random.Next(Graph.Elements.Count);
-            IGraphElement elem = Graph.Elements.ElementAt(nodeIndex);
-
-            Graph.FocusElement(elem);
-        }
+        public void Undo() => Editor.History.Undo();
+        public void Redo() => Editor.History.Redo();
     }
 }

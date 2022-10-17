@@ -5,11 +5,8 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public partial class GraphEditor : IGraph
+    public partial class GraphEditor : Undoable, IGraph
     {
-        protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
-        public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
-
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
 
@@ -20,20 +17,15 @@ namespace Nodifier
         public IReadOnlyCollection<IConnection> Connections => _connections;
 
         public virtual IPendingConnection PendingConnection { get; }
-
-        public GraphEditor()
+        
+        public GraphEditor(IActionsHistory history) : base(history)
         {
             PendingConnection = new PendingConnection(this);
         }
 
-        public virtual void AddDecorator(IGraphDecorator decorator)
+        public GraphEditor() : this(new ActionsHistory())
         {
-            _decorators.Add(decorator);
-        }
 
-        public virtual void RemoveDecorator(IGraphDecorator decorator)
-        {
-            _decorators.Remove(decorator);
         }
 
         public virtual void AddElement(IGraphElement node)

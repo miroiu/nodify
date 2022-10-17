@@ -17,6 +17,7 @@ namespace Nodifier
             services.AddSingleton<XAML.IViewManager, XAML.ViewManager>();
             services.AddSingleton<IViewFactory, DefaultViewFactory>();
             services.AddSingleton<IViewCollection, ViewCollection>();
+            services.AddScoped<IActionsHistory, ActionsHistory>();
         }
 
         public static void UseNodifier(this IServiceProvider provider)
@@ -33,5 +34,8 @@ namespace Nodifier
         {
             views.Add(typeof(TViewModel), typeof(TView));
         }
+
+        public static void Record(this IActionsHistory history, Action execute, Action unexecute, string? label = default)
+            => history.Record(new DelegateAction(execute, unexecute, label));
     }
 }

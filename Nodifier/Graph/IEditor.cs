@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Nodifier
 {
     public interface IEditor
     {
+        IActionsHistory History { get; }
+
+        IReadOnlyCollection<IGraphDecorator> Decorators { get; }
+
         Point ViewportLocation { get; set; }
         double ViewportZoom { get; set; }
         Size ViewportSize { get; }

@@ -17,7 +17,7 @@ namespace Nodifier
         Center
     }
 
-    public partial class GraphEditor : PropertyChangedBase, IEditor, IViewAware
+    public partial class GraphEditor : IEditor, IViewAware
     {
         private NodifyEditor? _editor;
         protected NodifyEditor Editor => _editor ?? throw new InvalidOperationException($"No editor attached. Please implement {nameof(INodifyEditorAware)} in the view and wait for initialization.");
@@ -71,6 +71,19 @@ namespace Nodifier
             set => SetAndNotify(ref _decoratorsExtent, value);
         }
 
+        public virtual void AddDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Add(decorator);
+        }
+
+        public virtual void RemoveDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Remove(decorator);
+        }
+
+        protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
+        public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
+
         void IViewAware.AttachView(UIElement view)
         {
             if (view is INodifyEditorAware editorAware)
@@ -114,6 +127,26 @@ namespace Nodifier
             {
                 EditorCommands.Align.Execute(editorAlignment, Editor);
             }
+        }
+
+        protected virtual void OnDragStarted()
+        {
+            History.Pause("Dragging");
+        }
+
+        protected virtual void OnDragCompleted()
+        {
+            History.Resume();
+        }
+
+        protected virtual void OnSelectStarted()
+        {
+            History.Pause("Selecting");
+        }
+
+        protected virtual void OnSelectCompleted()
+        {
+            History.Resume();
         }
     }
 }
