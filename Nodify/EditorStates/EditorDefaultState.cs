@@ -36,7 +36,7 @@ namespace Nodify
                 var selecting = new EditorSelectingState(Editor, selectionType);
                 PushState(selecting);
             }
-            else if (EditorGestures.Pan.Matches(e.Source, e) && !Editor.DisablePanning)
+            else if (!Editor.DisablePanning && EditorGestures.Pan.Matches(e.Source, e))
             {
                 PushState(new EditorPanningState(Editor));
             }

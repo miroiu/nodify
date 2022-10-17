@@ -58,7 +58,7 @@ namespace Nodify
             {
                 PopState();
                 // Cancel selection and continue panning
-                if (Editor.State is EditorSelectingState)
+                if (Editor.State is EditorSelectingState && !Editor.DisablePanning)
                 {
                     PopState();
                     PushState(new EditorPanningState(Editor));
