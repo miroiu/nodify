@@ -6,6 +6,13 @@
 > - Features:
 > - Bugfixes:
 
+#### **Version 4.0.1**
+
+> - Breaking Changes:
+> - Features:
+> - Bugfixes:
+>   - Fixed DisablePanning not working anymore
+
 #### **Version 4.0.0**
 
 > - Breaking Changes:
