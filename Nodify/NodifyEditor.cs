@@ -355,7 +355,7 @@ namespace Nodify
         protected static readonly DependencyPropertyKey SelectedAreaPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectedArea), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
         public static readonly DependencyProperty SelectedAreaProperty = SelectedAreaPropertyKey.DependencyProperty;
 
-        protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsSelectingChanged));
         public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
 
         public static readonly DependencyPropertyKey IsPanningPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
@@ -363,6 +363,27 @@ namespace Nodify
 
         protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
+
+        private static void OnIsSelectingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = (NodifyEditor)d;
+            if ((bool)e.NewValue == true)
+                editor.OnItemsSelectStarted();
+            else
+                editor.OnItemSelectCompleted();
+        }
+
+        private void OnItemSelectCompleted()
+        {
+            if (ItemsSelectCompletedCommand?.CanExecute(null) ?? false)
+                ItemsSelectCompletedCommand.Execute(null);
+        }
+
+        private void OnItemsSelectStarted()
+        {
+            if (ItemsSelectStartedCommand?.CanExecute(null) ?? false)
+                ItemsSelectStartedCommand.Execute(null);
+        }
 
         /// <summary>
         /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
@@ -510,6 +531,8 @@ namespace Nodify
         public static readonly DependencyProperty RemoveConnectionCommandProperty = DependencyProperty.Register(nameof(RemoveConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
+        public static readonly DependencyProperty ItemsSelectStartedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectStartedCommand), typeof(ICommand), typeof(NodifyEditor));
+        public static readonly DependencyProperty ItemsSelectCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
@@ -571,6 +594,20 @@ namespace Nodify
         {
             get => (ICommand?)GetValue(ItemsDragCompletedCommandProperty);
             set => SetValue(ItemsDragCompletedCommandProperty, value);
+        }
+
+        /// <summary>Invoked when a selection operation is started.</summary>
+        public ICommand? ItemsSelectStartedCommand
+        {
+            get => (ICommand?)GetValue(ItemsSelectStartedCommandProperty);
+            set => SetValue(ItemsSelectStartedCommandProperty, value);
+        }
+
+        /// <summary>Invoked when a selection operation is completed.</summary>
+        public ICommand? ItemsSelectCompletedCommand
+        {
+            get => (ICommand?)GetValue(ItemsSelectCompletedCommandProperty);
+            set => SetValue(ItemsSelectCompletedCommandProperty, value);
         }
 
         #endregion
@@ -1111,6 +1148,7 @@ namespace Nodify
             ItemCollection items = Items;
             IList selected = base.SelectedItems;
 
+            IsSelecting = true;
             BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
@@ -1126,6 +1164,7 @@ namespace Nodify
                 container.IsPreviewingSelection = null;
             }
             EndUpdateSelectedItems();
+            IsSelecting = false;
         }
 
         /// <summary>
@@ -1138,6 +1177,7 @@ namespace Nodify
             ItemCollection items = Items;
             IList selected = base.SelectedItems;
 
+            IsSelecting = true;
             BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
@@ -1157,6 +1197,7 @@ namespace Nodify
                 }
             }
             EndUpdateSelectedItems();
+            IsSelecting = false;
         }
 
         /// <summary>
@@ -1175,6 +1216,7 @@ namespace Nodify
             ItemCollection items = Items;
             IList selected = base.SelectedItems;
 
+            IsSelecting = true;
             BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
@@ -1185,6 +1227,7 @@ namespace Nodify
                 }
             }
             EndUpdateSelectedItems();
+            IsSelecting = false;
         }
 
         /// <summary>
@@ -1196,6 +1239,7 @@ namespace Nodify
         {
             IList items = base.SelectedItems;
 
+            IsSelecting = true;
             BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
@@ -1206,6 +1250,7 @@ namespace Nodify
                 }
             }
             EndUpdateSelectedItems();
+            IsSelecting = false;
         }
 
         #endregion

@@ -8,21 +8,24 @@ namespace Nodify
         /// <summary>The selection strategies.</summary>
         public static class Selection
         {
+            /// <summary>The default <see cref="MouseAction"/> to use for selection.</summary>
+            public static MouseAction DefaultMouseAction { get; set; } = MouseAction.LeftClick;
+
             /// <summary>Gesture to replace previous selection with the selected items.</summary>
-            /// <remarks>Defaults to <see cref="MouseAction.LeftClick"/>.</remarks>
-            public static InputGesture Replace { get; set; } = new MouseGesture(MouseAction.LeftClick);
+            /// <remarks>Defaults to <see cref="DefaultMouseAction"/>.</remarks>
+            public static InputGesture Replace { get; set; } = new MouseGesture(DefaultMouseAction);
 
             /// <summary>Gesture to remove the selected items from the previous selection.</summary>
-            /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
-            public static InputGesture Remove { get; set; } = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt);
+            /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="DefaultMouseAction"/>.</remarks>
+            public static InputGesture Remove { get; set; } = new MouseGesture(DefaultMouseAction, ModifierKeys.Alt);
 
             /// <summary>Gesture to add the new selected items to the previous selection.</summary>
-            /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
-            public static InputGesture Append { get; set; } = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Shift);
-            
+            /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>+<see cref="DefaultMouseAction"/>.</remarks>
+            public static InputGesture Append { get; set; } = new MouseGesture(DefaultMouseAction, ModifierKeys.Shift);
+
             /// <summary>Gesture to invert the selected items.</summary>
-            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
-            public static InputGesture Invert { get; set; } = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control);
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="DefaultMouseAction"/>.</remarks>
+            public static InputGesture Invert { get; set; } = new MouseGesture(DefaultMouseAction, ModifierKeys.Control);
         }
 
         /// <summary>Gesture used to start selecting using a <see cref="Selection"/> strategy.</summary>
