@@ -1,13 +1,8 @@
 ﻿namespace Nodifier
 {
-    public interface IBlueprintPendingConnection
+    public class BlueprintPendingConnection : PendingConnection
     {
-        IConnector? Source { get; }
-    }
-
-    public class BlueprintPendingConnection : PendingConnection, IBlueprintPendingConnection
-    {
-        public BlueprintPendingConnection(IGraph graph) : base(graph)
+        public BlueprintPendingConnection(IGraphEditor graph) : base(graph)
         {
         }
 

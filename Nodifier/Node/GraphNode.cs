@@ -32,7 +32,7 @@ namespace Nodifier
             set => SetAndNotify(ref _header, value);
         }
 
-        public GraphNode(IGraph graph) : base(graph)
+        public GraphNode(IGraphEditor graph) : base(graph)
         {
         }
 

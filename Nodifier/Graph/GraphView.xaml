@@ -9,7 +9,7 @@
              xmlns:s="clr-namespace:Nodifier.XAML"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=vm:GraphEditor, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=vm:IGraphEditor, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"

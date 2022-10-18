@@ -4,7 +4,7 @@
     {
         public class WithContent<TContent> : GraphNode
         {
-            public WithContent(IGraph graph) : base(graph)
+            public WithContent(IGraphEditor graph) : base(graph)
             {
             }
 
@@ -16,7 +16,7 @@
 
             public new class WithFooter<TFooter> : WithContent<TContent>
             {
-                public WithFooter(IGraph graph) : base(graph)
+                public WithFooter(IGraphEditor graph) : base(graph)
                 {
                 }
 
@@ -28,7 +28,7 @@
 
                 public new class WithHeader<THeader> : WithFooter<TFooter>
                 {
-                    public WithHeader(IGraph graph) : base(graph)
+                    public WithHeader(IGraphEditor graph) : base(graph)
                     {
                     }
 
@@ -42,7 +42,7 @@
 
             public new class WithHeader<THeader> : WithContent<TContent>
             {
-                public WithHeader(IGraph graph) : base(graph)
+                public WithHeader(IGraphEditor graph) : base(graph)
                 {
                 }
 
@@ -54,7 +54,7 @@
 
                 public new class WithFooter<TFooter> : WithHeader<THeader>
                 {
-                    public WithFooter(IGraph graph) : base(graph)
+                    public WithFooter(IGraphEditor graph) : base(graph)
                     {
                     }
 

@@ -62,7 +62,7 @@ namespace Nodifier
 
         public bool CanUndo => _position > -1;
 
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
 
         public IDisposable Batch(string? label = default)
         {

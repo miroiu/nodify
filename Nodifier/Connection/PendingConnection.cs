@@ -3,9 +3,19 @@ using System.Windows;
 
 namespace Nodifier
 {
+    public interface IPendingConnection
+    {
+        bool IsVisible { get; set; }
+        Point TargetLocation { get; set; }
+        public object? PreviewTarget { get; set; }
+
+        void Start(IConnector source);
+        void Complete(object target);
+    }
+
     public class PendingConnection : PropertyChangedBase, IPendingConnection
     {
-        public IGraph Graph { get; }
+        public IGraphEditor Graph { get; }
 
         private bool _isVisible;
         public bool IsVisible
@@ -30,7 +40,7 @@ namespace Nodifier
 
         private IConnector? _source;
 
-        public PendingConnection(IGraph graph)
+        public PendingConnection(IGraphEditor graph)
         {
             Graph = graph;
         }

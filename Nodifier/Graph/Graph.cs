@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public partial class GraphEditor : Undoable, IGraph
+    public partial class GraphEditor : Undoable, IGraphEditor
     {
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
@@ -15,6 +15,9 @@ namespace Nodifier
 
         protected readonly BindableCollection<IConnection> _connections = new BindableCollection<IConnection>();
         public IReadOnlyCollection<IConnection> Connections => _connections;
+
+        protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
+        public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
 
         public virtual IPendingConnection PendingConnection { get; }
         
@@ -28,25 +31,44 @@ namespace Nodifier
 
         }
 
+        public virtual void AddDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Add(decorator);
+        }
+
+        public virtual void RemoveDecorator(IGraphDecorator decorator)
+        {
+            _decorators.Remove(decorator);
+        }
+
         public virtual void AddElement(IGraphElement node)
         {
             _elements.Add(node);
+            History.Record(() => AddElement(node), () => RemoveElement(node), nameof(AddElement));
         }
 
         public virtual void RemoveElement(IGraphElement node)
         {
             _elements.Remove(node);
+            History.Record(() => RemoveElement(node), () => AddElement(node), nameof(RemoveElement));
         }
 
         public virtual void AddElements(IEnumerable<IGraphElement> nodes)
         {
-            _elements.AddRange(nodes);
+            var newNodes = nodes.ToList();
+            _elements.AddRange(newNodes);
+            History.Record(() => AddElements(newNodes), () => RemoveElements(newNodes), nameof(AddElements));
         }
 
         public virtual void RemoveElements(IEnumerable<IGraphElement> nodes)
         {
+            var newNodes = nodes.ToList();
             _elements.RemoveRange(nodes);
+            History.Record(() => RemoveElements(newNodes), () => AddElements(newNodes), nameof(RemoveElements));
         }
+
+        public void DeleteSelection()
+            => RemoveElements(SelectedElements);
 
         public virtual bool TryConnect(IConnector source, IConnector target)
         {
@@ -66,20 +88,6 @@ namespace Nodifier
                 IConnection connection = CreateConnection(source, target);
                 _connections.Add(connection);
             }
-
-            return canConnect;
-        }
-
-        protected virtual IConnection CreateConnection(IConnector source, IConnector target)
-        {
-            return new NodeConnection(source, target);
-        }
-
-        protected virtual bool CanConnect(IConnector source, IConnector target)
-        {
-            bool canConnect = source != target
-                && source.Node != target.Node
-                && source.Node.Graph == target.Node.Graph;
 
             return canConnect;
         }
@@ -105,6 +113,20 @@ namespace Nodifier
             }
 
             return false;
+        }
+
+        protected virtual IConnection CreateConnection(IConnector source, IConnector target)
+        {
+            return new NodeConnection(source, target);
+        }
+
+        protected virtual bool CanConnect(IConnector source, IConnector target)
+        {
+            bool canConnect = source != target
+                && source.Node != target.Node
+                && source.Node.Graph == target.Node.Graph;
+
+            return canConnect;
         }
 
         public virtual void Disconnect(IConnector connector)

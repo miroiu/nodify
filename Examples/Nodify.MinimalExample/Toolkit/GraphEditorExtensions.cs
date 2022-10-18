@@ -1,6 +1,6 @@
 ﻿namespace Nodifier
 {
-    public static class BlueprintNodeExtensions
+    public static class GraphEditorExtensions
     {
         public static ValueInput<T> AddValueInput<T>(this IGraphNode node, string? title = default, T value = default!)
         {

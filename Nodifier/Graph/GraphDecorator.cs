@@ -2,9 +2,16 @@
 
 namespace Nodifier
 {
+    public interface IGraphDecorator
+    {
+        IGraphEditor Editor { get; }
+        Point Location { get; set; }
+        Size Size { get; }
+    }
+
     public abstract class GraphDecorator : PropertyChangedBase, IGraphDecorator
     {
-        public IEditor Editor { get; }
+        public IGraphEditor Editor { get; }
 
         private Point _location;
         public Point Location
@@ -20,7 +27,7 @@ namespace Nodifier
             set => SetAndNotify(ref _size, value);
         }
 
-        public GraphDecorator(IEditor editor)
+        public GraphDecorator(IGraphEditor editor)
         {
             Editor = editor;
         }

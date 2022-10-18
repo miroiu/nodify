@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Nodifier.Views
 {
-    public interface INodifyEditorAware
+    public interface IEditorHost
     {
         NodifyEditor Editor { get; }
     }
@@ -12,7 +12,7 @@ namespace Nodifier.Views
     /// <summary>
     /// Interaction logic for GraphView.xaml
     /// </summary>
-    public partial class GraphView : UserControl, INodifyEditorAware, IViewFor<IGraph>
+    public partial class GraphView : UserControl, IEditorHost, IViewFor<IGraphEditor>
     {
         public GraphView()
         {

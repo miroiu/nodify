@@ -25,9 +25,9 @@ namespace Nodify.MinimalExample
             services.AddNodifier();
             services.AddSingleton<MinimalApp>();
             services.AddLogging(x => x.SetMinimumLevel(LogLevel.Debug));
-            services.AddTransient<IGraph, GraphEditor>();
-            services.AddTransient<IEditor, GraphEditor>();
-            services.AddSingleton<Func<IGraph>>(x => () => x.GetRequiredService<IGraph>()); // TODO: Create scope for IActionsHistory
+            services.AddTransient<IGraphEditor, GraphEditor>();
+            services.AddTransient<IGraphEditor, GraphEditor>();
+            services.AddSingleton<Func<IGraphEditor>>(x => () => x.GetRequiredService<IGraphEditor>()); // TODO: Create scope for IActionsHistory
         }
     }
 }

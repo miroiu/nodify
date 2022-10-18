@@ -2,6 +2,17 @@
 
 namespace Nodifier
 {
+    public interface IConnection
+    {
+        IGraphEditor Graph { get; }
+
+        IConnector Source { get; }
+        IConnector Target { get; }
+
+        void Split(Point location);
+        void Disconnect();
+    }
+
     public class NodeConnection : IConnection
     {
         public NodeConnection(IConnector source, IConnector target)
@@ -16,7 +27,7 @@ namespace Nodifier
         public IConnector Source { get; }
         public IConnector Target { get; }
 
-        public IGraph Graph => Source.Node.Graph;
+        public IGraphEditor Graph => Source.Node.Graph;
 
         public virtual void Disconnect()
         {

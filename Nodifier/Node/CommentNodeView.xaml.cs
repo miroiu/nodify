@@ -6,7 +6,7 @@ namespace Nodifier.Views
     /// <summary>
     /// Interaction logic for CommentNodeView.xaml
     /// </summary>
-    public partial class CommentNodeView : UserControl, IViewFor<ICommentNode>
+    public partial class CommentNodeView : UserControl, IViewFor<CommentNode>
     {
         public CommentNodeView()
         {

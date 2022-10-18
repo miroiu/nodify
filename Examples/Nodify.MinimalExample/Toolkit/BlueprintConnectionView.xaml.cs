@@ -6,7 +6,7 @@ namespace Nodifier.Views
     /// <summary>
     /// Interaction logic for BlueprintConnectionView.xaml
     /// </summary>
-    public partial class BlueprintConnectionView : UserControl, IViewFor<IBlueprintConnection>
+    public partial class BlueprintConnectionView : UserControl, IViewFor<BlueprintConnection>
     {
         public BlueprintConnectionView()
         {

@@ -1,4 +1,6 @@
-﻿namespace Nodifier
+﻿using System;
+
+namespace Nodifier
 {
     public class ValueEditor<T> : PropertyChangedBase
     {
@@ -37,5 +39,8 @@
             get => Editor.Value;
             set => Editor.Value = value;
         }
+
+        // TODO: Call ValueChanged when value changes
+        public Action<T> ValueChanged;
     }
 }

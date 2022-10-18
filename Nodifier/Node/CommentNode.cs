@@ -14,7 +14,7 @@ namespace Nodifier
 
     public class CommentNode : GraphElement, ICommentNode
     {
-        public CommentNode(IGraph graph) : base(graph)
+        public CommentNode(IGraphEditor graph) : base(graph)
         {
             ConfigurePoperty(nameof(Title), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
             ConfigurePoperty(nameof(CommentSize), PropertyFlags.TrackHistory | PropertyFlags.Serialize);

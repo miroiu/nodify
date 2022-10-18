@@ -17,10 +17,10 @@ namespace Nodifier
         Center
     }
 
-    public partial class GraphEditor : IEditor, IViewAware
+    public partial class GraphEditor : IGraphEditor, IViewAware
     {
         private NodifyEditor? _editor;
-        protected NodifyEditor Editor => _editor ?? throw new InvalidOperationException($"No editor attached. Please implement {nameof(INodifyEditorAware)} in the view and wait for initialization.");
+        protected NodifyEditor Editor => _editor ?? throw new InvalidOperationException($"No editor attached. Please implement {nameof(IEditorHost)} in the view and wait for initialization.");
         UIElement? IViewAware.View => _editor;
 
         private static readonly Dictionary<Alignment, EditorCommands.Alignment> _alignments = new Dictionary<Alignment, EditorCommands.Alignment>
@@ -71,22 +71,9 @@ namespace Nodifier
             set => SetAndNotify(ref _decoratorsExtent, value);
         }
 
-        public virtual void AddDecorator(IGraphDecorator decorator)
-        {
-            _decorators.Add(decorator);
-        }
-
-        public virtual void RemoveDecorator(IGraphDecorator decorator)
-        {
-            _decorators.Remove(decorator);
-        }
-
-        protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
-        public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
-
         void IViewAware.AttachView(UIElement view)
         {
-            if (view is INodifyEditorAware editorAware)
+            if (view is IEditorHost editorAware)
             {
                 _editor = editorAware.Editor;
             }
@@ -130,23 +117,15 @@ namespace Nodifier
         }
 
         protected virtual void OnDragStarted()
-        {
-            History.Pause("Dragging");
-        }
+            => History.Pause("Dragging");
 
         protected virtual void OnDragCompleted()
-        {
-            History.Resume();
-        }
+            => History.Resume();
 
         protected virtual void OnSelectStarted()
-        {
-            History.Pause("Selecting");
-        }
+            => History.Pause("Selecting");
 
         protected virtual void OnSelectCompleted()
-        {
-            History.Resume();
-        }
+            => History.Resume();
     }
 }

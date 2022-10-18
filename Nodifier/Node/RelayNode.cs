@@ -7,7 +7,7 @@
 
     public class RelayNode : GraphElement, IRelayNode
     {
-        public RelayNode(IGraph graph) : base(graph)
+        public RelayNode(IGraphEditor graph) : base(graph)
         {
             Connector = new RelayConnector(this);
         }

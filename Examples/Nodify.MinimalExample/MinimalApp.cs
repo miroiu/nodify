@@ -10,7 +10,7 @@ namespace Nodify.MinimalExample
         public ValueInput<bool> In { get; }
         public ValueOutput<double> Out { get; }
 
-        public CustomGraphNode(IGraph graph) : base(graph)
+        public CustomGraphNode(IGraphEditor graph) : base(graph)
         {
             Footer = "Custom Graph Node";
 
@@ -24,16 +24,16 @@ namespace Nodify.MinimalExample
     {
         private readonly ILogger<MinimalApp> _logger;
 
-        public IGraph Editor { get; }
+        public IGraphEditor Editor { get; }
 
-        public MinimalApp(ILogger<MinimalApp> logger, Func<IGraph> createEditor)
+        public MinimalApp(ILogger<MinimalApp> logger, Func<IGraphEditor> createEditor)
         {
             Editor = createEditor();
             _logger = logger;
 
 
             Editor.History.IsEnabled = false;
-            
+
             Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 50) });
             Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(200, 150) });
             Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 250) });
