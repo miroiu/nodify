@@ -71,7 +71,7 @@ namespace Nodify
                 PreviewSelection(_host.SelectedArea);
             }
         }
-        
+
         /// <summary>Commits the current selection to the editor.</summary>
         public void End()
         {
@@ -80,6 +80,17 @@ namespace Nodify
                 PreviewSelection(_host.SelectedArea);
 
                 _host.ApplyPreviewingSelection();
+                _initialSelection.Clear();
+                _host.IsSelecting = false;
+            }
+        }
+
+        /// <summary>Aborts the current selection.</summary>
+        public void Abort()
+        {
+            if (_host.IsSelecting)
+            {
+                _host.ClearPreviewingSelection();
                 _initialSelection.Clear();
                 _host.IsSelecting = false;
             }
@@ -179,7 +190,7 @@ namespace Nodify
                 }
             }
         }
-        
+
         private IList<ItemContainer> GetSelectedContainers()
         {
             var result = new List<ItemContainer>(32);

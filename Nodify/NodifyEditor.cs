@@ -1163,6 +1163,16 @@ namespace Nodify
             IsSelecting = false;
         }
 
+        internal void ClearPreviewingSelection()
+        {
+            ItemCollection items = Items;
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                container.IsPreviewingSelection = null;
+            }
+        }
+
         /// <summary>
         /// Inverts the <see cref="ItemContainer"/>s selection in the specified <paramref name="area"/>.
         /// </summary>

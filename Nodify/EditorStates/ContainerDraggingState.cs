@@ -60,9 +60,13 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            Canceled = EditorGestures.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
-            if (Canceled || EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
+            bool canCancel = EditorGestures.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
+            bool canComplete = EditorGestures.ItemContainer.Drag.Matches(e.Source, e);
+            if (canCancel || canComplete)
             {
+                // Prevent canceling if drag and cancel are bound to the same mouse action
+                Canceled = !canComplete && canCancel;
+
                 // Handle right click if dragging or canceled and moved the mouse more than threshold so context menus don't open
                 if (e.ChangedButton == MouseButton.Right)
                 {
