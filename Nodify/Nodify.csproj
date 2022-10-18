@@ -16,12 +16,13 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>4.0.1</Version>
+    <Version>4.1.0</Version>
     <PackageReleaseNotes>
-      > - Breaking Changes:
       > - Features:
+      >   - Added EditorGestures.Selection.DefaultMouseAction to make it easier to change between mouse buttons for selection
+      >   - Added ItemsSelectStartedCommand and ItemsSelectCompletedCommand dependency properties to NodifyEditor for better undo/redo support
       > - Bugfixes:
-      >   - Fixed DisablePanning not working anymore
+      >   - Fixed NodifyEditor.SelectedItems being empty after selection is completed
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

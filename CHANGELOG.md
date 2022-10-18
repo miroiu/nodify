@@ -4,9 +4,15 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 4.1.0**
+
+> - Features:
 >   - Added EditorGestures.Selection.DefaultMouseAction to make it easier to change between mouse buttons for selection
 >   - Added ItemsSelectStartedCommand and ItemsSelectCompletedCommand dependency properties to NodifyEditor for better undo/redo support
 > - Bugfixes:
+>   - Fixed NodifyEditor.SelectedItems being empty after selection is completed
 
 #### **Version 4.0.1**
 
