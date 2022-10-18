@@ -217,7 +217,7 @@ namespace Nodify
         /// <param name="newValue">True if selected, false otherwise.</param>
         protected void OnSelectedChanged(bool newValue)
         {
-            // Raise event after the selection operation ended
+            // Don't raise the event if the editor is selecting
             if (!Editor.IsSelecting)
             {
                 RaiseEvent(new RoutedEventArgs(newValue ? SelectedEvent : UnselectedEvent, this));
@@ -227,10 +227,9 @@ namespace Nodify
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var elem = (ItemContainer)d;
-
             bool result = elem.IsSelectable && (bool)e.NewValue;
-            elem.OnSelectedChanged(result);
             elem.IsSelected = result;
+            elem.OnSelectedChanged(result);
         }
 
         #endregion

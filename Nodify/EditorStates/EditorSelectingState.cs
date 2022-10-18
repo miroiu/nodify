@@ -7,6 +7,7 @@ namespace Nodify
     public class EditorSelectingState : EditorState
     {
         private readonly SelectionType _type;
+        private bool _canceled;
 
         /// <summary>The selection helper.</summary>
         protected SelectionHelper Selection { get; }
@@ -21,11 +22,23 @@ namespace Nodify
 
         /// <inheritdoc />
         public override void Enter(EditorState? from)
-            => Selection.Start(Editor.MouseLocation, _type);
+        {
+            _canceled = false;
+            Selection.Start(Editor.MouseLocation, _type);
+        }
 
         /// <inheritdoc />
         public override void Exit()
-            => Selection.End();
+        {
+            if (_canceled)
+            {
+                Selection.Abort();
+            }
+            else
+            {
+                Selection.End();
+            }
+        }
 
         /// <inheritdoc />
         public override void HandleMouseMove(MouseEventArgs e)
@@ -43,8 +56,11 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            if (EditorGestures.Select.Matches(e.Source, e))
+            bool canCancel = EditorGestures.Selection.Cancel.Matches(e.Source, e);
+            bool canComplete = EditorGestures.Select.Matches(e.Source, e);
+            if (canCancel || canComplete)
             {
+                _canceled = !canComplete && canCancel;
                 PopState();
             }
         }
@@ -52,5 +68,14 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleAutoPanning(MouseEventArgs e)
             => HandleMouseMove(e);
+
+        public override void HandleKeyUp(KeyEventArgs e)
+        {
+            if (EditorGestures.Selection.Cancel.Matches(e.Source, e))
+            {
+                _canceled = true;
+                PopState();
+            }
+        }
     }
 }

@@ -1114,27 +1114,23 @@ namespace Nodify
         {
             base.OnSelectionChanged(e);
 
-            if (!IsSelecting)
+            IList? selected = SelectedItems;
+            if (selected != null)
             {
-                IList? selected = SelectedItems;
-
-                if (selected != null)
+                IList added = e.AddedItems;
+                for (var i = 0; i < added.Count; i++)
                 {
-                    IList added = e.AddedItems;
-                    for (var i = 0; i < added.Count; i++)
+                    // Ensure no duplicates are added
+                    if (!selected.Contains(added[i]))
                     {
-                        // Ensure no duplicates are added
-                        if (!selected.Contains(added[i]))
-                        {
-                            selected.Add(added[i]);
-                        }
+                        selected.Add(added[i]);
                     }
+                }
 
-                    IList removed = e.RemovedItems;
-                    for (var i = 0; i < removed.Count; i++)
-                    {
-                        selected.Remove(removed[i]);
-                    }
+                IList removed = e.RemovedItems;
+                for (var i = 0; i < removed.Count; i++)
+                {
+                    selected.Remove(removed[i]);
                 }
             }
         }
@@ -1165,6 +1161,16 @@ namespace Nodify
             }
             EndUpdateSelectedItems();
             IsSelecting = false;
+        }
+
+        internal void ClearPreviewingSelection()
+        {
+            ItemCollection items = Items;
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                container.IsPreviewingSelection = null;
+            }
         }
 
         /// <summary>
