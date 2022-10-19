@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nodifier
 {
@@ -10,7 +9,7 @@ namespace Nodifier
 
         private readonly BindableCollection<IConnector> _output = new BindableCollection<IConnector>();
         public IReadOnlyCollection<IConnector> Output => _output;
-        
+
         private object? _content = default!;
         public object? Content
         {
@@ -34,29 +33,67 @@ namespace Nodifier
 
         public GraphNode(IGraphEditor graph) : base(graph)
         {
+            ConfigurePoperty(nameof(Content), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Footer), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Header), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Input), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Output), PropertyFlags.Serialize);
         }
 
         public void AddInput(IConnector input)
         {
-            if (!_input.Contains(input))
+            if (_input.Contains(input))
             {
-                _input.Add(input);
+                throw new GraphException("Input already exists.");
             }
-            else
+
+            _input.Add(input);
+            History.Record(() => AddInput(input), () => RemoveInput(input), nameof(AddInput));
+        }
+
+        public void RemoveInput(IConnector input)
+        {
+            if (!_input.Remove(input))
             {
-                throw new InvalidOperationException("Input already exists");
+                throw new GraphException("Input does not exist.");
             }
+
+            History.Record(() => RemoveInput(input), () => AddInput(input), nameof(RemoveInput));
         }
 
         public void AddOutput(IConnector output)
         {
-            if (!_output.Contains(output))
+            if (_output.Contains(output))
             {
-                _output.Add(output);
+                throw new GraphException("Output already exists.");
             }
-            else
+
+            _output.Add(output);
+            History.Record(() => AddOutput(output), () => RemoveOutput(output), nameof(AddOutput));
+        }
+
+        public void RemoveOutput(IConnector output)
+        {
+            if (!_output.Remove(output))
             {
-                throw new InvalidOperationException("Output already exists");
+                throw new GraphException("Input does not exist.");
+            }
+
+            History.Record(() => RemoveOutput(output), () => AddOutput(output), nameof(RemoveOutput));
+        }
+
+        public void Disconnect()
+        {
+            using (History.Batch(nameof(Disconnect)))
+            {
+                foreach (var input in _input)
+                {
+                    input.Disconnect();
+                }
+                foreach (var output in _output)
+                {
+                    output.Disconnect();
+                }
             }
         }
     }

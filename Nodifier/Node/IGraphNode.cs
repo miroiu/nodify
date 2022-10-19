@@ -2,7 +2,12 @@
 
 namespace Nodifier
 {
-    public interface IGraphNode : IGraphElement
+    public interface ICanDisconnect
+    {
+        void Disconnect();
+    }
+
+    public interface IGraphNode : IGraphElement, ICanDisconnect
     {
         object? Content { get; set; }
         object? Footer { get; set; }
@@ -12,6 +17,9 @@ namespace Nodifier
         IReadOnlyCollection<IConnector> Output { get; }
 
         void AddInput(IConnector input);
+        void RemoveInput(IConnector input);
+
         void AddOutput(IConnector output);
+        void RemoveOutput(IConnector output);
     }
 }

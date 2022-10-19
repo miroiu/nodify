@@ -3,14 +3,13 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public interface IConnector
+    public interface IConnector : ICanDisconnect
     {
         IGraphElement Node { get; }
         Point Anchor { get; }
         bool IsConnected { get; }
         IReadOnlyCollection<IConnection> Connections { get; }
 
-        void Disconnect();
         void AddConnection(IConnection connection);
         void RemoveConnection(IConnection connection);
 
@@ -43,23 +42,34 @@ namespace Nodifier
 
         private readonly HashSet<IConnection> _connections = new HashSet<IConnection>();
         public IReadOnlyCollection<IConnection> Connections => _connections;
+
         public void Disconnect() => Node.Graph.Disconnect(this);
 
         public virtual void AddConnection(IConnection connection)
         {
-            if (connection.Source == this || connection.Target == this)
+            if (!(connection.Source == this || connection.Target == this))
+            {
+                throw new GraphException($"The connector must be a {nameof(connection.Source)} or a {nameof(connection.Target)} of the connection.");
+            }
+
+            if (_connections.Add(connection))
             {
                 IsConnected = true;
-                _connections.Add(connection);
+                Node.Graph.AddConnection(connection);
             }
         }
 
         public virtual void RemoveConnection(IConnection connection)
         {
-            if (connection.Source == this || connection.Target == this)
+            if (!(connection.Source == this || connection.Target == this))
             {
-                _connections.Remove(connection);
+                throw new GraphException($"The connector must be a {nameof(connection.Source)} or a {nameof(connection.Target)} of the connection.");
+            }
+
+            if (_connections.Remove(connection))
+            {
                 IsConnected = _connections.Count > 0;
+                Node.Graph.RemoveConnection(connection);
             }
         }
 
@@ -71,30 +81,6 @@ namespace Nodifier
         public virtual bool TryConnectTo(IConnector other)
         {
             return Node.Graph.TryConnect(this, other);
-        }
-    }
-
-    public interface IRelayConnector : IConnector
-    {
-        IConnector Source { get; }
-        IConnector Target { get; }
-    }
-
-    public class RelayConnector : BaseConnector, IRelayConnector
-    {
-        public IConnector Source { get; private set; } = default!;
-        public IConnector Target { get; private set; } = default!;
-
-        public override void AddConnection(IConnection connection)
-        {
-            Source = connection.Source != this ? connection.Source : connection.Target;
-            Target = connection.Target != this ? connection.Target : connection.Source;
-
-            base.AddConnection(connection);
-        }
-
-        public RelayConnector(IRelayNode node) : base(node)
-        {
         }
     }
 }

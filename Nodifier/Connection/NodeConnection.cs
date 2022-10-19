@@ -2,7 +2,7 @@
 
 namespace Nodifier
 {
-    public interface IConnection
+    public interface IConnection : ICanDisconnect
     {
         IGraphEditor Graph { get; }
 
@@ -10,18 +10,19 @@ namespace Nodifier
         IConnector Target { get; }
 
         void Split(Point location);
-        void Disconnect();
     }
 
     public class NodeConnection : IConnection
     {
         public NodeConnection(IConnector source, IConnector target)
         {
+            if (source.Node.Graph != target.Node.Graph)
+            {
+                throw new GraphException($"The {nameof(source)} and {nameof(target)} must be in the same graph.");
+            }
+
             Source = source;
             Target = target;
-
-            source.AddConnection(this);
-            target.AddConnection(this);
         }
 
         public IConnector Source { get; }
@@ -31,7 +32,7 @@ namespace Nodifier
 
         public virtual void Disconnect()
         {
-            Graph.Disconnect(this);
+            Graph.RemoveConnection(this);
         }
 
         public virtual void Split(Point location)

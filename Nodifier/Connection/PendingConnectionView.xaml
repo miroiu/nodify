@@ -10,10 +10,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:IPendingConnection, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <s:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
+
     <nodify:PendingConnection StartedCommand="{s:Action Start}"
                               CompletedCommand="{s:Action Complete}" 
                               IsVisible="{Binding IsVisible}"
                               PreviewTarget="{Binding PreviewTarget, Mode=OneWayToSource}"
                               TargetAnchor="{Binding TargetLocation, Mode=OneWayToSource}"
-                              AllowOnlyConnectors="False" />
+                              EnablePreview="True"
+                              Content="{Binding PreviewText}"
+                              AllowOnlyConnectors="False"
+                              Padding="0"
+                              BorderThickness="0">
+        <nodify:PendingConnection.ContentTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="7 5" Visibility="{Binding ., Converter={StaticResource NullToVisibilityConverter}}" />
+            </DataTemplate>
+        </nodify:PendingConnection.ContentTemplate>
+    </nodify:PendingConnection>
 </UserControl>

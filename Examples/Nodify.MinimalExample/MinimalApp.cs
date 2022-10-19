@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Nodify.MinimalExample
 {
-    public class CustomGraphNode : GraphNode.WithFooter<string>
+    public class CustomGraphNode : GraphNode
     {
         public ValueInput<bool> In { get; }
         public ValueOutput<double> Out { get; }

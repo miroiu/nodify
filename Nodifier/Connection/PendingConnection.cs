@@ -6,8 +6,13 @@ namespace Nodifier
     public interface IPendingConnection
     {
         bool IsVisible { get; set; }
-        Point TargetLocation { get; set; }
-        public object? PreviewTarget { get; set; }
+        Point TargetLocation { get; }
+
+        /// <summary>The preview target could be a connector, a node or a graph.</summary>
+        public object? PreviewTarget { get; }
+
+        /// <summary>The text to show when the connection is over the <see cref="PreviewTarget"/>.</summary>
+        public string? PreviewText { get; }
 
         void Start(IConnector source);
         void Complete(object target);
@@ -35,8 +40,16 @@ namespace Nodifier
         public object? PreviewTarget
         {
             get => _previewTarget;
-            set => SetAndNotify(ref _previewTarget, value);
+            set
+            {
+                if (SetAndNotify(ref _previewTarget, value))
+                {
+                    OnPropertyChanged(nameof(PreviewText));
+                }
+            }
         }
+
+        public virtual string? PreviewText => null;
 
         private IConnector? _source;
 
@@ -54,7 +67,7 @@ namespace Nodifier
         {
             if (_source == null)
             {
-                throw new NullReferenceException("Must call Start() before calling Complete()");
+                throw new GraphException($"Must call {nameof(Start)} before calling {nameof(Complete)}.");
             }
 
             if (target is IConnector connector)

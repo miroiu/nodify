@@ -20,7 +20,7 @@ namespace Nodifier
     public partial class GraphEditor : IGraphEditor, IViewAware
     {
         private NodifyEditor? _editor;
-        protected NodifyEditor Editor => _editor ?? throw new InvalidOperationException($"No editor attached. Please implement {nameof(IEditorHost)} in the view and wait for initialization.");
+        protected NodifyEditor Editor => _editor ?? throw new GraphException($"No editor attached. Please implement {nameof(IEditorHost)} in the view and wait for initialization.");
         UIElement? IViewAware.View => _editor;
 
         private static readonly Dictionary<Alignment, EditorCommands.Alignment> _alignments = new Dictionary<Alignment, EditorCommands.Alignment>
@@ -91,23 +91,23 @@ namespace Nodifier
             }
         }
 
-        public virtual void FocusLocation(Point location) => Editor.BringIntoView(location, animated: true);
+        public void FocusLocation(Point location) => Editor.BringIntoView(location, animated: true);
 
-        public virtual void FitToScreen(Rect? area = null) => Editor.FitToScreen(area);
+        public void FitToScreen(Rect? area = null) => Editor.FitToScreen(area);
 
-        public virtual void SelectAll() => Editor.SelectAll();
+        public void SelectAll() => Editor.SelectAll();
 
-        public virtual void ZoomIn() => Editor.ZoomIn();
+        public void ZoomIn() => Editor.ZoomIn();
 
-        public virtual void ZoomOut() => Editor.ZoomOut();
+        public void ZoomOut() => Editor.ZoomOut();
 
-        public virtual void SelectArea(Rect area) => Editor.SelectArea(area);
+        public void SelectArea(Rect area) => Editor.SelectArea(area);
 
-        public virtual void UnselectAll() => Editor.UnselectAll();
+        public void UnselectAll() => Editor.UnselectAll();
 
-        public virtual void UnselectArea(Rect area) => Editor.UnselectArea(area);
+        public void UnselectArea(Rect area) => Editor.UnselectArea(area);
 
-        public virtual void AlignSelection(Alignment alignment)
+        public void AlignSelection(Alignment alignment)
         {
             EditorCommands.Alignment editorAlignment = _alignments[alignment];
             if (EditorCommands.Align.CanExecute(editorAlignment, Editor))
@@ -116,16 +116,16 @@ namespace Nodifier
             }
         }
 
-        protected virtual void OnDragStarted()
+        protected void OnDragStarted()
             => History.Pause("Dragging");
 
-        protected virtual void OnDragCompleted()
+        protected void OnDragCompleted()
             => History.Resume();
 
-        protected virtual void OnSelectStarted()
+        protected void OnSelectStarted()
             => History.Pause("Selecting");
 
-        protected virtual void OnSelectCompleted()
+        protected void OnSelectCompleted()
             => History.Resume();
     }
 }

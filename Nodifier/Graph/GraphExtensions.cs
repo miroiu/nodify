@@ -11,7 +11,7 @@ namespace Nodifier
             double midY = (node.Location.Y + node.Size.Height / 2);
             graph.FocusLocation(midX, midY);
         }
-        
+
         public static void FocusLocation(this IGraphEditor graph, double x, double y)
         {
             graph.FocusLocation(new Point(x, y));

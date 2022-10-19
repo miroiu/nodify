@@ -19,11 +19,18 @@ namespace Nodifier
         protected readonly BindableCollection<IGraphDecorator> _decorators = new BindableCollection<IGraphDecorator>();
         public IReadOnlyCollection<IGraphDecorator> Decorators => _decorators;
 
-        public virtual IPendingConnection PendingConnection { get; }
-        
+        public IPendingConnection PendingConnection { get; }
+
         public GraphEditor(IActionsHistory history) : base(history)
         {
-            PendingConnection = new PendingConnection(this);
+            PendingConnection = CreatePendingConnection();
+
+            ConfigurePoperty(nameof(Settings), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(ViewportLocation), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(ViewportZoom), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Elements), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Connections), PropertyFlags.Serialize);
+            ConfigurePoperty(nameof(Decorators), PropertyFlags.Serialize);
         }
 
         public GraphEditor() : this(new ActionsHistory())
@@ -31,46 +38,132 @@ namespace Nodifier
 
         }
 
-        public virtual void AddDecorator(IGraphDecorator decorator)
+        public void AddDecorator(IGraphDecorator decorator)
         {
             _decorators.Add(decorator);
+            History.Record(() => AddDecorator(decorator), () => RemoveDecorator(decorator), nameof(AddDecorator));
         }
 
-        public virtual void RemoveDecorator(IGraphDecorator decorator)
+        public void RemoveDecorator(IGraphDecorator decorator)
         {
             _decorators.Remove(decorator);
+            History.Record(() => RemoveDecorator(decorator), () => AddDecorator(decorator), nameof(RemoveDecorator));
         }
 
-        public virtual void AddElement(IGraphElement node)
+        public void AddElement(IGraphElement node)
         {
             _elements.Add(node);
             History.Record(() => AddElement(node), () => RemoveElement(node), nameof(AddElement));
         }
 
-        public virtual void RemoveElement(IGraphElement node)
+        public void RemoveElement(IGraphElement node)
         {
-            _elements.Remove(node);
-            History.Record(() => RemoveElement(node), () => AddElement(node), nameof(RemoveElement));
+            using (History.Batch(nameof(RemoveElement)))
+            {
+                History.Record(() => RemoveElement(node), () => AddElement(node), nameof(RemoveElement));
+                _elements.Remove(node);
+
+                if (node is ICanDisconnect canDisconnect)
+                {
+                    canDisconnect.Disconnect();
+                }
+            }
         }
 
-        public virtual void AddElements(IEnumerable<IGraphElement> nodes)
+        public void AddElements(IEnumerable<IGraphElement> nodes)
         {
             var newNodes = nodes.ToList();
             _elements.AddRange(newNodes);
             History.Record(() => AddElements(newNodes), () => RemoveElements(newNodes), nameof(AddElements));
         }
 
-        public virtual void RemoveElements(IEnumerable<IGraphElement> nodes)
+        public void RemoveElements(IEnumerable<IGraphElement> nodes)
         {
-            var newNodes = nodes.ToList();
-            _elements.RemoveRange(nodes);
-            History.Record(() => RemoveElements(newNodes), () => AddElements(newNodes), nameof(RemoveElements));
+            using (History.Batch(nameof(RemoveElements)))
+            {
+                var newNodes = nodes.ToList();
+                _elements.RemoveRange(nodes);
+                History.Record(() => RemoveElements(newNodes), () => AddElements(newNodes), nameof(RemoveElements));
+
+                foreach (var graphNode in newNodes.Where(x => x is ICanDisconnect).Cast<ICanDisconnect>())
+                {
+                    graphNode.Disconnect();
+                }
+            }
         }
 
         public void DeleteSelection()
             => RemoveElements(SelectedElements);
 
-        public virtual bool TryConnect(IConnector source, IConnector target)
+        public void Disconnect(IConnector connector)
+        {
+            var connections = _connections.Where(c => c.Source == connector || c.Target == connector).ToList();
+            using (History.Batch(nameof(Disconnect)))
+            {
+                connections.ForEach(c => RemoveConnection(c));
+            }
+            _connections.RemoveRange(connections);
+        }
+
+        public void Split(IConnection connection, Point location)
+        {
+            var node = new RelayNode(this)
+            {
+                Location = location
+            };
+
+            using (History.Batch(nameof(Split)))
+            {
+                NewConnection(connection.Source, node.Connector);
+                NewConnection(node.Connector, connection.Target);
+
+                AddElement(node);
+
+                connection.Disconnect();
+            }
+        }
+
+        public void AddConnection(IConnection connection)
+        {
+            if (connection.Graph != this)
+            {
+                throw new GraphException("The connection must be in this graph.");
+            }
+
+            if (!_connections.Contains(connection))
+            {
+                _connections.Add(connection);
+
+                using (History.Batch(nameof(AddConnection)))
+                {
+                    connection.Source.AddConnection(connection);
+                    connection.Target.AddConnection(connection);
+                    History.Record(() => AddConnection(connection), () => RemoveConnection(connection), nameof(AddConnection));
+                }
+            }
+        }
+
+        public void RemoveConnection(IConnection connection)
+        {
+            if (connection.Graph != this)
+            {
+                throw new GraphException("The connection must be in this graph.");
+            }
+
+            if (_connections.Contains(connection))
+            {
+                using (History.Batch(nameof(RemoveConnection)))
+                {
+                    connection.Source.RemoveConnection(connection);
+                    connection.Target.RemoveConnection(connection);
+
+                    _connections.Remove(connection);
+                    History.Record(() => RemoveConnection(connection), () => AddConnection(connection), nameof(RemoveConnection));
+                }
+            }
+        }
+
+        public bool TryConnect(IConnector source, IConnector target)
         {
             if (source == null)
             {
@@ -85,14 +178,13 @@ namespace Nodifier
             bool canConnect = CanConnect(source, target);
             if (canConnect)
             {
-                IConnection connection = CreateConnection(source, target);
-                _connections.Add(connection);
+                NewConnection(source, target);
             }
 
             return canConnect;
         }
 
-        public virtual bool TryConnect(IConnector source, IGraphElement target)
+        public bool TryConnect(IConnector source, IGraphElement target)
         {
             if (source == null)
             {
@@ -115,10 +207,20 @@ namespace Nodifier
             return false;
         }
 
-        protected virtual IConnection CreateConnection(IConnector source, IConnector target)
+        private void NewConnection(IConnector source, IConnector target)
         {
-            return new NodeConnection(source, target);
+            using (History.Batch(nameof(AddConnection)))
+            {
+                var conn = CreateConnection(source, target);
+                AddConnection(conn);
+            }
         }
+
+        protected virtual IConnection CreateConnection(IConnector source, IConnector target)
+            => new NodeConnection(source, target);
+
+        protected virtual IPendingConnection CreatePendingConnection()
+            => new PendingConnection(this);
 
         protected virtual bool CanConnect(IConnector source, IConnector target)
         {
@@ -127,47 +229,6 @@ namespace Nodifier
                 && source.Node.Graph == target.Node.Graph;
 
             return canConnect;
-        }
-
-        public virtual void Disconnect(IConnector connector)
-        {
-            var connections = _connections.Where(c => c.Source == connector || c.Target == connector).ToList();
-            connections.ForEach(c =>
-            {
-                c.Source.RemoveConnection(c);
-                c.Target.RemoveConnection(c);
-            });
-            _connections.RemoveRange(connections);
-        }
-
-        public virtual void Disconnect(IConnection connection)
-        {
-            RemoveConnection(connection);
-        }
-
-        public virtual void Split(IConnection connection, Point location)
-        {
-            var node = new RelayNode(this)
-            {
-                Location = location
-            };
-
-            var sourceCon = CreateConnection(connection.Source, node.Connector);
-            var targetCon = CreateConnection(node.Connector, connection.Target);
-
-            _connections.Add(sourceCon);
-            _connections.Add(targetCon);
-
-            AddElement(node);
-
-            connection.Disconnect();
-        }
-
-        protected virtual void RemoveConnection(IConnection connection)
-        {
-            connection.Source.RemoveConnection(connection);
-            connection.Target.RemoveConnection(connection);
-            _connections.Remove(connection);
         }
     }
 }

@@ -47,6 +47,7 @@ namespace Nodifier
         private int _position = -1;
         private bool _isApplyingOperation = false;
         private string? _batchLabel;
+        private int _batchDepth;
 
         private static readonly PropertyChangedEventArgs _canRedoArgs = new PropertyChangedEventArgs(nameof(CanRedo));
         private static readonly PropertyChangedEventArgs _canUndoArgs = new PropertyChangedEventArgs(nameof(CanUndo));
@@ -65,14 +66,7 @@ namespace Nodifier
         public bool IsEnabled { get; set; } = true;
 
         public IDisposable Batch(string? label = default)
-        {
-            if (IsBatching)
-            {
-                throw new InvalidOperationException($"{nameof(Batch)} is not allowed during a batch.");
-            }
-
-            return new BatchOperation(label, this);
-        }
+            => new BatchOperation(label, this);
 
         public void Record(IAction op)
         {
@@ -133,7 +127,7 @@ namespace Nodifier
         {
             if (IsBatching)
             {
-                throw new InvalidOperationException($"{nameof(Undo)} is not allowed during a batch.");
+                throw new InvalidOperationException($"{nameof(Redo)} is not allowed during a batch.");
             }
 
             if (CanRedo)
@@ -154,34 +148,53 @@ namespace Nodifier
 
         public void Pause(string? label = default)
         {
-            if (IsBatching)
+            if (_batchDepth > 0)
             {
-                throw new InvalidOperationException($"{nameof(Pause)} is not allowed during a batch.");
+                return;
             }
 
+            _batchLabel = label;
             IsBatching = true;
         }
 
         public void Resume()
         {
-            AddToUndoStack(new BatchAction(_batchLabel, _batchHistory));
+            if (_batchDepth > 0)
+            {
+                return;
+            }
+
+            if (_batchHistory.Count > 0)
+            {
+                AddToUndoStack(new BatchAction(_batchLabel, _batchHistory));
+                _batchHistory.Clear();
+            }
+
             _batchLabel = null;
-            _batchHistory.Clear();
             IsBatching = false;
         }
 
         private class BatchOperation : IDisposable
         {
-            private readonly IActionsHistory _history;
+            private readonly ActionsHistory _history;
+            private bool _disposed;
 
-            public BatchOperation(string? label, IActionsHistory history)
+            public BatchOperation(string? label, ActionsHistory history)
             {
                 _history = history;
                 _history.Pause(label);
+                _history._batchDepth++;
             }
 
             public void Dispose()
-                => _history.Resume();
+            {
+                if (!_disposed)
+                {
+                    _disposed = true;
+                    _history._batchDepth--;
+                    _history.Resume();
+                }
+            }
         }
     }
 }
