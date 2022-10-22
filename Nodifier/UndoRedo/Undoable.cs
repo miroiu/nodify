@@ -9,9 +9,8 @@ namespace Nodifier
     [Flags]
     public enum PropertyFlags
     {
-        None = 0,
-        Serialize = 1,
-        TrackHistory = 2
+        Disable = 0,
+        Enable = 1
     }
 
     public abstract class Undoable : PropertyChangedBase
@@ -29,30 +28,22 @@ namespace Nodifier
             }
         }
 
-        protected void ConfigurePoperty(string propName, PropertyFlags flags)
+        protected void RecordProperty(string propName, PropertyFlags flags = PropertyFlags.Enable)
         {
-            if (flags == PropertyFlags.None)
+            if (flags == PropertyFlags.Disable)
             {
-                // TODO: remove from serializable properties list
                 _trackedProperties.Remove(propName);
-                return;
             }
-
-            if (flags.HasFlag(PropertyFlags.TrackHistory))
+            else if (flags.HasFlag(PropertyFlags.Enable))
             {
                 _trackedProperties.Add(propName);
             }
-
-            if (flags.HasFlag(PropertyFlags.Serialize))
-            {
-                // TODO: add to serializable properties list
-            }
         }
 
-        protected void ConfigurePoperty<TType>(Expression<Func<TType, object?>> selector, PropertyFlags flags)
+        protected void RecordProperty<TType>(Expression<Func<TType, object?>> selector, PropertyFlags flags = PropertyFlags.Enable)
         {
             string name = GetPropertyName(selector);
-            ConfigurePoperty(name, flags);
+            RecordProperty(name, flags);
         }
 
         private static string GetPropertyName(Expression memberAccess)

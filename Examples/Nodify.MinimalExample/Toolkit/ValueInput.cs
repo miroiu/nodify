@@ -2,8 +2,13 @@
 
 namespace Nodifier
 {
-    public class ValueEditor<T> : PropertyChangedBase
+    public class ValueEditor<T> : Undoable
     {
+        public ValueEditor(IActionsHistory history) : base(history)
+        {
+            RecordProperty(nameof(Value), PropertyFlags.Enable);
+        }
+
         private T _value;
         public T Value
         {
@@ -16,9 +21,20 @@ namespace Nodifier
     {
         public ValueInput(IGraphNode node) : base(node)
         {
+            Editor = new ValueEditor<T>(History);
+            Editor.PropertyChanged += OnEditorPropertyChanged;
         }
 
-        public ValueEditor<T> Editor { get; } = new ValueEditor<T>();
+        private void OnEditorPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ValueEditor<T>.Value))
+            {
+                ValueChanged?.Invoke(Editor.Value);
+                OnPropertyChanged(nameof(Value));
+            }
+        }
+
+        public ValueEditor<T> Editor { get; }
 
         private string? _title;
         public string? Title
@@ -40,7 +56,6 @@ namespace Nodifier
             set => Editor.Value = value;
         }
 
-        // TODO: Call ValueChanged when value changes
-        public Action<T> ValueChanged;
+        public Action<T>? ValueChanged;
     }
 }

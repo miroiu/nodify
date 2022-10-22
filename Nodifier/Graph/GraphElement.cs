@@ -56,10 +56,8 @@ namespace Nodifier
         {
             Graph = graph;
 
-            ConfigurePoperty(nameof(Location), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(IsSelected), PropertyFlags.TrackHistory);
-            ConfigurePoperty(nameof(IsDraggable), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(IsSelectable), PropertyFlags.Serialize);
+            RecordProperty(nameof(Location));
+            RecordProperty(nameof(IsSelected));
         }
     }
 }

@@ -17,9 +17,9 @@ namespace Nodifier
         bool TryConnectTo(IConnector other);
     }
 
-    public class BaseConnector : PropertyChangedBase, IConnector
+    public class BaseConnector : Undoable, IConnector
     {
-        public BaseConnector(IGraphElement node)
+        public BaseConnector(IGraphElement node) : base(node.Graph.History)
         {
             Node = node;
         }

@@ -16,9 +16,9 @@ namespace Nodifier
     {
         public CommentNode(IGraphEditor graph) : base(graph)
         {
-            ConfigurePoperty(nameof(Title), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(CommentSize), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(CanResize), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
+            RecordProperty(nameof(Title));
+            RecordProperty(nameof(CommentSize));
+            RecordProperty(nameof(CanResize));
         }
 
         private string? _title;

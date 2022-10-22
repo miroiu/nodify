@@ -24,13 +24,6 @@ namespace Nodifier
         public GraphEditor(IActionsHistory history) : base(history)
         {
             PendingConnection = CreatePendingConnection();
-
-            ConfigurePoperty(nameof(Settings), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(ViewportLocation), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(ViewportZoom), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Elements), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Connections), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Decorators), PropertyFlags.Serialize);
         }
 
         public GraphEditor() : this(new ActionsHistory())

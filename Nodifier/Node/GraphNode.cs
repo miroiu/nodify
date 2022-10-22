@@ -33,11 +33,9 @@ namespace Nodifier
 
         public GraphNode(IGraphEditor graph) : base(graph)
         {
-            ConfigurePoperty(nameof(Content), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Footer), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Header), PropertyFlags.TrackHistory | PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Input), PropertyFlags.Serialize);
-            ConfigurePoperty(nameof(Output), PropertyFlags.Serialize);
+            RecordProperty(nameof(Content));
+            RecordProperty(nameof(Footer));
+            RecordProperty(nameof(Header));
         }
 
         public void AddInput(IConnector input)

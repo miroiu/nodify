@@ -10,8 +10,6 @@
         public RelayNode(IGraphEditor graph) : base(graph)
         {
             Connector = new RelayConnector(this);
-
-            ConfigurePoperty(nameof(Connector), PropertyFlags.Serialize);
         }
 
         public IConnector Connector { get; }
