@@ -1,4 +1,6 @@
-﻿namespace Nodifier
+﻿using System;
+
+namespace Nodifier
 {
     public class ValueOutput<T> : BaseConnector
     {
@@ -17,7 +19,15 @@
         public T Value
         {
             get => _value;
-            set => SetAndNotify(ref _value, value);
+            set
+            {
+                if (SetAndNotify(ref _value, value))
+                {
+                    ValueChanged?.Invoke(_value);
+                }
+            }
         }
+
+        public Action<T>? ValueChanged;
     }
 }

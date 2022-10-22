@@ -4,12 +4,14 @@
     {
         public static bool TryConnect(this IGraphNode source, IGraphNode target)
         {
-            bool result = false;
             foreach (IConnector output in source.Output)
             {
-                result |= output.TryConnectTo(target);
+                if (output.TryConnectTo(target))
+                {
+                    return true;
+                }
             }
-            return result;
+            return false;
         }
     }
 }

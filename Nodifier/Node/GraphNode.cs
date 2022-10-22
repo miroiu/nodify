@@ -2,7 +2,7 @@
 
 namespace Nodifier
 {
-    public partial class GraphNode : GraphElement, IGraphNode
+    public class GraphNode : GraphElement, IGraphNode
     {
         private readonly BindableCollection<IConnector> _input = new BindableCollection<IConnector>();
         public IReadOnlyCollection<IConnector> Input => _input;
