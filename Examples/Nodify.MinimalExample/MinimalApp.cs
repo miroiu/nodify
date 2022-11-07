@@ -1,25 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nodifier;
 using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Nodify.MinimalExample
 {
-    public class CustomGraphNode : GraphNode
-    {
-        public ValueInput<bool> In { get; }
-        public ValueOutput<double> Out { get; }
-
-        public CustomGraphNode(IGraphEditor graph) : base(graph)
-        {
-            Footer = "Custom Graph Node";
-
-            In = this.AddValueInput<bool>("Boolean");
-            this.AddValueInput<bool>("Boolean 2");
-            Out = this.AddValueOutput<double>("Double");
-        }
-    }
-
     public class MinimalApp
     {
         private readonly ILogger<MinimalApp> _logger;
@@ -30,15 +17,40 @@ namespace Nodify.MinimalExample
         {
             Editor = createEditor();
             _logger = logger;
-
-
+            
             Editor.History.IsEnabled = false;
 
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 50) });
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(200, 150) });
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 250) });
-            Editor.AddComment("Generated comment", Editor.Elements);
+            var view = new Item("myText");
+            var viewModel = new ItemViewModel(view);
+            view.DataContext = viewModel;
+            
+            var node = new GraphNode(Editor)
+            {
+                Location = new Point(100, 100),
+                Header = "Hello World",
+                Footer = view,
+                Content = "This is a content"
+            };
+            
+            node.AddOutput(new BaseConnector(node));
+            node.AddOutput(new BaseConnector(node));
 
+
+            
+            var node2 = new GraphNode(Editor)
+            {
+                Location = new Point(200, 200),
+                Header = "Hello World",
+                Footer = "This is a footer",
+                Content = "This is a content"
+            };
+            node2.AddInput(new BaseConnector(node2));
+            node2.AddInput(new BaseConnector(node2));
+
+            
+            Editor.AddElement(node);
+            Editor.AddElement(node2);
+            
             Editor.History.IsEnabled = true;
         }
 
