@@ -45,6 +45,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -240,28 +241,40 @@
                       Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="22"
+                       Text="Arrow head end: "
+                       ToolTip="Bring location into view animation speed in pixels per second"
+                       Margin="0 5 5 0" />
+            <ComboBox Grid.Row="22"
+                      Grid.Column="1"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding ArrowHeadEnds, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                      ItemsSource="{Binding ArrowHeadEnds, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+            
+            <TextBlock Grid.Row="23"
                        Text="Bring into view speed: "
                        ToolTip="Bring location into view animation speed in pixels per second"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="22"
+            <TextBox Grid.Row="23"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewSpeed, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="23"
+            <TextBlock Grid.Row="24"
                        Text="Bring into view max duration: "
                        ToolTip="Bring location into view max animation duration"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="23"
+            <TextBox Grid.Row="24"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewMaxDuration, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="24"
+            <TextBlock Grid.Row="25"
                        Text="Grouping node movement: "
                        ToolTip="Whether the grouping node is sticky or not"
                        Margin="0 5 5 0" />
-            <ComboBox Grid.Row="24"
+            <ComboBox Grid.Row="25"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
@@ -269,7 +282,7 @@
                       ItemsSource="{Binding GroupingNodeMovement, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
-            <Expander Grid.Row="25"
+            <Expander Grid.Row="26"
                       Grid.ColumnSpan="2"
                       Header="Advanced"
                       Padding="0 5 0 0"

@@ -87,7 +87,7 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(Ends), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ArrowHeadEnds), FrameworkPropertyMetadataOptions.Affects));
+        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(Ends), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ArrowHeadEnds), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
@@ -256,35 +256,18 @@ namespace Nodify
 
             //Shumayl: Ugly implementation. Consider creating a new method. 
             //Shumayl: Modify XML and check if the below works first. 
-            switch (Ends) 
+            (Point from, Point to) = Ends switch
             {
-                case ArrowHeadEnds.Start: 
-                    (Point from, Point to) = GetArrowHeadPoints(source, target);
-                    context.BeginFigure(target, true, true);
-                    context.LineTo(from, true, true);
-                    context.LineTo(to, true, true);
-                    break;
-                case ArrowHeadEnds.End:
-                    (Point to, Point from) = GetArrowHeadPoints(source, target);
-                    context.BeginFigure(target, true, true);
-                    context.LineTo(from, true, true);
-                    context.LineTo(to, true, true);
-                    break;
-                case ArrowHeadEnds.Both:
-                    (Point from, Point to) = GetArrowHeadPoints(source, target);
-                    context.BeginFigure(target, true, true);
-                    context.LineTo(from, true, true);
-                    context.LineTo(to, true, true);
-                    (Point to, Point from) = GetArrowHeadPoints(source, target);
-                    context.BeginFigure(target, true, true);
-                    context.LineTo(from, true, true);
-                    context.LineTo(to, true, true);
-                    break;
-                case ArrowHeadEnds.None:
-                    break;
-                case default:
-                    break;
+                ArrowHeadEnds.Start => GetArrowHeadPoints(source, target),
+                ArrowHeadEnds.End => GetArrowHeadPoints(target, source),
+                ArrowHeadEnds.Both => GetArrowHeadPoints(source, target),
+                ArrowHeadEnds.None => GetArrowHeadPoints(source, target),
+                _ => GetArrowHeadPoints(source, target)
             };
+
+            context.BeginFigure(target, true, true);
+            context.LineTo(from, true, true);
+            context.LineTo(to, true, true);
         }
 
         protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target)
@@ -292,7 +275,7 @@ namespace Nodify
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;
 
-            double Direction = direction == ConnectionDirection.Forward ? 1d : -1d;
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
             return (from, to);
