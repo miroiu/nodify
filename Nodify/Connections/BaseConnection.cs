@@ -1,4 +1,6 @@
 using System;
+using System.IO.Packaging;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -241,7 +243,23 @@ namespace Nodify
 
                     if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                     {
-                        DrawArrowGeometry(context, arrowSource, arrowTarget);
+                        switch(Ends)
+                        {
+                            case ArrowHeadEnds.Start: 
+                                DrawArrowGeometry(context, arrowTarget, arrowSource);
+                                break; 
+                            case ArrowHeadEnds.End:
+                                DrawArrowGeometry(context, arrowSource, arrowTarget);
+                                break;
+                            case ArrowHeadEnds.Both:
+                                DrawArrowGeometry(context, arrowSource, arrowTarget);
+                                DrawArrowGeometry(context, arrowTarget, arrowSource);
+                                break;
+                            case ArrowHeadEnds.None:
+                                break;
+                            default:
+                                break;
+                        };
                     }
                 }
 
@@ -253,17 +271,7 @@ namespace Nodify
 
         protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
         {
-
-            //Shumayl: Ugly implementation. Consider creating a new method. 
-            //Shumayl: Modify XML and check if the below works first. 
-            (Point from, Point to) = Ends switch
-            {
-                ArrowHeadEnds.Start => GetArrowHeadPoints(source, target),
-                ArrowHeadEnds.End => GetArrowHeadPoints(target, source),
-                ArrowHeadEnds.Both => GetArrowHeadPoints(source, target),
-                ArrowHeadEnds.None => GetArrowHeadPoints(source, target),
-                _ => GetArrowHeadPoints(source, target)
-            };
+            (Point from, Point to) = GetArrowHeadPoints(source, target);
 
             context.BeginFigure(target, true, true);
             context.LineTo(from, true, true);
@@ -279,7 +287,7 @@ namespace Nodify
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
             return (from, to);
-        }
+    }
 
         /// <summary>
         /// Gets the resulting offset after applying the <see cref="OffsetMode"/>.
