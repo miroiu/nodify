@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -49,6 +49,32 @@ namespace Nodify
     }
 
     /// <summary>
+    /// The end at which the arrow head is drawn.
+    /// </summary>
+    public enum ArrowHeadEnds
+    {
+        /// <summary>
+        /// Arrow head at start.
+        /// <summary>
+        Start,
+
+        /// <summary>
+        /// Arrow head at start.
+        /// <summary>
+        End,
+
+        /// <summary>
+        /// Arrow heads at both ends.
+        /// <summary>
+        Both,
+
+        /// <summary>
+        /// No arrow head.
+        /// <summary>
+        None
+    }
+
+    /// <summary>
     /// Represents the base class for shapes that are drawn from a <see cref="Source"/> point to a <see cref="Target"/> point.
     /// </summary>
     public abstract class BaseConnection : Shape
@@ -61,6 +87,7 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(Ends), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ArrowHeadEnds), FrameworkPropertyMetadataOptions.Affects));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
@@ -118,6 +145,15 @@ namespace Nodify
         {
             get => (ConnectionDirection)GetValue(DirectionProperty);
             set => SetValue(DirectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the arrow ends.
+        /// </summary>
+        public ArrowHeadEnds Ends 
+        { 
+            get => (ArrowHeadEnds)GetValue(ArrowHeadEndsProperty);
+            set => SetValue(ArrowHeadEndsProperty, value); 
         }
 
         /// <summary>
@@ -217,11 +253,38 @@ namespace Nodify
 
         protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            (Point from, Point to) = GetArrowHeadPoints(source, target);
 
-            context.BeginFigure(target, true, true);
-            context.LineTo(from, true, true);
-            context.LineTo(to, true, true);
+            //Shumayl: Ugly implementation. Consider creating a new method. 
+            //Shumayl: Modify XML and check if the below works first. 
+            switch (Ends) 
+            {
+                case ArrowHeadEnds.Start: 
+                    (Point from, Point to) = GetArrowHeadPoints(source, target);
+                    context.BeginFigure(target, true, true);
+                    context.LineTo(from, true, true);
+                    context.LineTo(to, true, true);
+                    break;
+                case ArrowHeadEnds.End:
+                    (Point to, Point from) = GetArrowHeadPoints(source, target);
+                    context.BeginFigure(target, true, true);
+                    context.LineTo(from, true, true);
+                    context.LineTo(to, true, true);
+                    break;
+                case ArrowHeadEnds.Both:
+                    (Point from, Point to) = GetArrowHeadPoints(source, target);
+                    context.BeginFigure(target, true, true);
+                    context.LineTo(from, true, true);
+                    context.LineTo(to, true, true);
+                    (Point to, Point from) = GetArrowHeadPoints(source, target);
+                    context.BeginFigure(target, true, true);
+                    context.LineTo(from, true, true);
+                    context.LineTo(to, true, true);
+                    break;
+                case ArrowHeadEnds.None:
+                    break;
+                case default:
+                    break;
+            };
         }
 
         protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target)
@@ -229,7 +292,7 @@ namespace Nodify
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;
 
-            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            double Direction = direction == ConnectionDirection.Forward ? 1d : -1d;
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
             return (from, to);
