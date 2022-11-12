@@ -259,7 +259,7 @@ namespace Nodify
                                 break;
                             default:
                                 break;
-                        };
+                        }
                     }
                 }
 
