@@ -247,7 +247,7 @@ namespace Nodify
                                 DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
                                 break; 
                             case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
+                                DrawArrowGeometry(context, arrowSource, arrowTarget);
                                 break;
                             case ArrowHeadEnds.Both:
                                 DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
@@ -267,7 +267,7 @@ namespace Nodify
 
         protected abstract (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
-        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection Direction)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection Direction = ConnectionDirection.Forward)
         {
             (Point from, Point to) = GetArrowHeadPoints(source, target, Direction);
 
@@ -276,7 +276,7 @@ namespace Nodify
             context.LineTo(to, true, true);
         }
 
-        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection Direction = ConnectionDirection.Forward)
+        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection Direction)
         {
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;

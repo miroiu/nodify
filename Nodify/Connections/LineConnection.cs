@@ -46,7 +46,7 @@ namespace Nodify
                 return (from, to);
             }
 
-            return base.GetArrowHeadPoints(source, target);
+            return base.GetArrowHeadPoints(source, target, Direction);
         }
     }
 }
