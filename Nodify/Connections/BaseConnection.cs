@@ -307,7 +307,7 @@ namespace Nodify
                 default:
                     direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
                     break;
-            };
+            }
 
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
