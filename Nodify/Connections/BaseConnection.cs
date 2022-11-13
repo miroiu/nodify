@@ -244,14 +244,14 @@ namespace Nodify
                         switch(ArrowEnds)
                         {
                             case ArrowHeadEnds.Start: 
-                                DrawArrowGeometry(context, arrowTarget, arrowSource);
+                                DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
                                 break; 
                             case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowSource, arrowTarget);
+                                DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
                                 break;
                             case ArrowHeadEnds.Both:
-                                DrawArrowGeometry(context, arrowSource, arrowTarget);
-                                DrawArrowGeometry(context, arrowTarget, arrowSource, true);
+                                DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
+                                DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
                                 break;
                             case ArrowHeadEnds.None:
                                 break;
@@ -267,48 +267,21 @@ namespace Nodify
 
         protected abstract (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
-        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, bool secondArrow = false)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection Direction)
         {
-            (Point from, Point to) = GetArrowHeadPoints(source, target, secondArrow);
+            (Point from, Point to) = GetArrowHeadPoints(source, target, Direction);
 
             context.BeginFigure(target, true, true);
             context.LineTo(from, true, true);
             context.LineTo(to, true, true);
         }
 
-        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, bool secondArrow = false)
+        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection Direction = ConnectionDirection.Forward)
         {
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;
 
-            double direction;
-
-            switch(ArrowEnds)
-            {
-                case ArrowHeadEnds.Start:
-                    direction = Direction == ConnectionDirection.Backward ? 1d : -1d;
-                    break;
-                case ArrowHeadEnds.End:
-                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
-                    break;
-                case ArrowHeadEnds.Both:
-                    if (secondArrow)
-                    {
-                        direction = Direction == ConnectionDirection.Backward ? 1d : -1d;
-                    }
-                    else
-                    {
-                        direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
-                    }
-                    break;
-                case ArrowHeadEnds.None:
-                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
-                    break;
-                default:
-                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
-                    break;
-            }
-
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
             return (from, to);

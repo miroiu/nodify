@@ -29,7 +29,7 @@ namespace Nodify
             return (source, target);
         }
 
-        protected override (Point From, Point To) GetArrowHeadPoints(Point source, Point target, bool secondArrow = false)
+        protected override (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection Direction)
         {
             if(Spacing < 1d)
             {
