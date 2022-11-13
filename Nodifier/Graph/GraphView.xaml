@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="Nodifier.Views.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Nodifier.Views"
+             xmlns:vm="clr-namespace:Nodifier"
+             xmlns:nodify="https://miroiu.github.io/nodify"
+             xmlns:s="clr-namespace:Nodifier.XAML"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:IGraphEditor, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <GeometryDrawing x:Key="SmallGridGeometry"
+                         Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                         Brush="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
+
+        <GeometryDrawing x:Key="LargeGridGeometry"
+                         Geometry="M0,0 L0,1 0.015,1 0.015,0.015 1,0.015 1,0 Z"
+                         Brush="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
+
+        <DrawingBrush x:Key="SmallGridLinesDrawingBrush"
+                      TileMode="Tile"
+                      ViewportUnits="Absolute"
+                      Viewport="0 0 20 20"
+                      Transform="{Binding ViewportTransform, ElementName=EditorInstance}"
+                      Drawing="{StaticResource SmallGridGeometry}" />
+
+        <DrawingBrush x:Key="LargeGridLinesDrawingBrush"
+                      TileMode="Tile"
+                      ViewportUnits="Absolute"
+                      Opacity="0.5"
+                      Viewport="0 0 100 100"
+                      Transform="{Binding ViewportTransform, ElementName=EditorInstance}"
+                      Drawing="{StaticResource LargeGridGeometry}" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource NodifyEditor.BackgroundBrush}">
+        <nodify:NodifyEditor ItemsSource="{Binding Elements}"
+                         Decorators="{Binding Decorators}"
+                         SelectedItems="{Binding SelectedElements}"
+                         Connections="{Binding Connections}"
+                         PendingConnection="{Binding PendingConnection}"
+                         ViewportLocation="{Binding ViewportLocation}"
+                         ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
+                         ViewportZoom="{Binding ViewportZoom}"
+                         ItemsExtent="{Binding ElementsExtent, Mode=OneWayToSource}"
+                         DecoratorsExtent="{Binding DecoratorsExtent, Mode=OneWayToSource}"
+                         DisablePanning="{Binding Settings.DisablePanning}"
+                         DisableZooming="{Binding Settings.DisableZooming}"
+                         DisableAutoPanning="{Binding Settings.DisableAutoPanning}"
+                         MinViewportZoom="{Binding Settings.MinViewportZoom}"
+                         MaxViewportZoom="{Binding Settings.MaxViewportZoom}"
+                         GridCellSize="{Binding Settings.GridSnapSize}"
+                         EnableRealtimeSelection="{Binding Settings.EnableRealtimeSelection}"
+                         ItemsDragStartedCommand="{s:Action OnDragStarted}"
+                         ItemsDragCompletedCommand="{s:Action OnDragCompleted}"
+                         ItemsSelectStartedCommand="{s:Action OnSelectStarted}"
+                         ItemsSelectCompletedCommand="{s:Action OnSelectCompleted}"
+                         x:Name="EditorInstance">
+            <nodify:NodifyEditor.Style>
+                <Style TargetType="{x:Type nodify:NodifyEditor}" BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Settings.ShowGridLines}" Value="True">
+                            <Setter Property="Background" Value="{StaticResource SmallGridLinesDrawingBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </nodify:NodifyEditor.Style>
+            <nodify:NodifyEditor.ItemContainerStyle>
+                <Style TargetType="nodify:ItemContainer">
+                    <Setter Property="Location" Value="{Binding Location, Mode=TwoWay}" />
+                    <Setter Property="ActualSize" Value="{Binding Size, Mode=OneWayToSource}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="IsSelectable" Value="{Binding IsSelectable}" />
+                    <Setter Property="IsDraggable" Value="{Binding IsDraggable}" />
+                </Style>
+            </nodify:NodifyEditor.ItemContainerStyle>
+            <nodify:NodifyEditor.DecoratorContainerStyle>
+                <Style TargetType="nodify:DecoratorContainer"
+                       BasedOn="{StaticResource {x:Type nodify:DecoratorContainer}}">
+                    <Setter Property="Location" Value="{Binding Location, Mode=TwoWay}" />
+                    <Setter Property="ActualSize" Value="{Binding Size, Mode=OneWayToSource}" />
+                </Style>
+            </nodify:NodifyEditor.DecoratorContainerStyle>
+            <nodify:NodifyEditor.DecoratorTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.DecoratorTemplate>
+            <nodify:NodifyEditor.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.ItemTemplate>
+            <nodify:NodifyEditor.PendingConnectionTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.PendingConnectionTemplate>
+            <nodify:NodifyEditor.ConnectionTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.ConnectionTemplate>
+        </nodify:NodifyEditor>
+
+        <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
+              Panel.ZIndex="-2" />
+    </Grid>
+</UserControl>
