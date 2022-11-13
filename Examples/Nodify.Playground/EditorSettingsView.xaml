@@ -241,8 +241,8 @@
                       Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="22"
-                       Text="Arrow head end: "
-                       ToolTip="Bring location into view animation speed in pixels per second"
+                       Text="Connection arrow head end: "
+                       ToolTip="Set location of arrow head"
                        Margin="0 5 5 0" />
             <ComboBox Grid.Row="22"
                       Grid.Column="1"

@@ -1,6 +1,4 @@
 using System;
-using System.IO.Packaging;
-using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -61,7 +59,7 @@ namespace Nodify
         Start,
 
         /// <summary>
-        /// Arrow head at start.
+        /// Arrow head at end.
         /// <summary>
         End,
 
@@ -89,7 +87,7 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(Ends), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ArrowHeadEnds), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ArrowHeadEnds.End), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
@@ -152,7 +150,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the arrow ends.
         /// </summary>
-        public ArrowHeadEnds Ends 
+        public ArrowHeadEnds ArrowEnds 
         { 
             get => (ArrowHeadEnds)GetValue(ArrowHeadEndsProperty);
             set => SetValue(ArrowHeadEndsProperty, value); 
@@ -243,7 +241,7 @@ namespace Nodify
 
                     if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                     {
-                        switch(Ends)
+                        switch(ArrowEnds)
                         {
                             case ArrowHeadEnds.Start: 
                                 DrawArrowGeometry(context, arrowTarget, arrowSource);
@@ -253,7 +251,7 @@ namespace Nodify
                                 break;
                             case ArrowHeadEnds.Both:
                                 DrawArrowGeometry(context, arrowSource, arrowTarget);
-                                DrawArrowGeometry(context, arrowTarget, arrowSource);
+                                DrawArrowGeometry(context, arrowTarget, arrowSource, true);
                                 break;
                             case ArrowHeadEnds.None:
                                 break;
@@ -269,25 +267,52 @@ namespace Nodify
 
         protected abstract (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
-        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, bool secondArrow = false)
         {
-            (Point from, Point to) = GetArrowHeadPoints(source, target);
+            (Point from, Point to) = GetArrowHeadPoints(source, target, secondArrow);
 
             context.BeginFigure(target, true, true);
             context.LineTo(from, true, true);
             context.LineTo(to, true, true);
         }
 
-        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target)
+        protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, bool secondArrow = false)
         {
             double headWidth = ArrowSize.Width;
             double headHeight = ArrowSize.Height;
 
-            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            double direction;
+
+            switch(ArrowEnds)
+            {
+                case ArrowHeadEnds.Start:
+                    direction = Direction == ConnectionDirection.Backward ? 1d : -1d;
+                    break;
+                case ArrowHeadEnds.End:
+                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+                    break;
+                case ArrowHeadEnds.Both:
+                    if (secondArrow)
+                    {
+                        direction = Direction == ConnectionDirection.Backward ? 1d : -1d;
+                    }
+                    else
+                    {
+                        direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+                    }
+                    break;
+                case ArrowHeadEnds.None:
+                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+                    break;
+                default:
+                    direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+                    break;
+            };
+
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
             return (from, to);
-    }
+        }
 
         /// <summary>
         /// Gets the resulting offset after applying the <see cref="OffsetMode"/>.
