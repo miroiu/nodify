@@ -29,7 +29,7 @@ namespace Nodify
             return (source, target);
         }
 
-        protected override (Point From, Point To) GetArrowHeadPoints(Point source, Point target)
+        protected override (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection arrowDirection)
         {
             if(Spacing < 1d)
             {
@@ -46,7 +46,7 @@ namespace Nodify
                 return (from, to);
             }
 
-            return base.GetArrowHeadPoints(source, target);
+            return base.GetArrowHeadPoints(source, target, arrowDirection);
         }
     }
 }

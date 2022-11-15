@@ -141,6 +141,13 @@
             set => SetProperty(ref _connectionOffsetMode, value);
         }
 
+        private ArrowHeadEnds _arrowHeadEnds = ArrowHeadEnds.End;
+        public ArrowHeadEnds ArrowHeadEnds
+        {
+            get => _arrowHeadEnds;  
+            set => SetProperty(ref _arrowHeadEnds, value);
+        }
+
         private PointEditor _connectionSourceOffset = new PointEditor { X = 15, Y = 0 };
         public PointEditor ConnectionSourceOffset
         {
