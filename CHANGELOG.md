@@ -3,11 +3,9 @@
 #### **In development**
 
 > - Breaking Changes: 
->   - Changed the Direction comparison to arrowDirection comparison in GetArrowHeadPoints to determine the direction of arrowhead
+>   - Added parameter of type ConnectionDirection to BaseConnection.GetArrowHeadPoints to determine the direction of the arrowhead
 > - Features:
->   - Added ArrowHeadEnds which allows configurable arrowhead ends
->   - Added ability to configure the direction of arrowhead drawn by GetArrowHeadPoints by passing arrowDirection parameter into DrawArrowGeometry
->   - Added an arrowhead end configuration example in Nodify.Playground
+>   - Added BaseConnection.ArrowEnds which allows configurable arrowhead ends
 > - Bugfixes:
 
 #### **Version 4.1.0**
