@@ -280,6 +280,12 @@
             set => NodifyEditor.FitToScreenExtentMargin = value;
         }
 
+        public bool EnableDraggingOptimizations
+        {
+            get => NodifyEditor.EnableDraggingContainersOptimizations;
+            set => NodifyEditor.EnableDraggingContainersOptimizations = value;
+        }
+
         public bool EnableStickyConnectors
         {
             get => Connector.EnableStickyConnections;

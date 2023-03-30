@@ -46,6 +46,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -339,6 +340,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="Disable context menu after panning: "
@@ -443,19 +445,28 @@
                                  Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="12"
+                                   Text="Enable nodes dragging optimizations: "
+                                   ToolTip="Simulates dragging visually but only commits the changes at the end."
+                                   Margin="0 5 5 0" />
+                        <CheckBox Grid.Row="12"
+                                 Grid.Column="1"
+                                 IsChecked="{Binding EnableDraggingOptimizations, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="13"
                                    Text="Fit to screen extent margin: "
                                    ToolTip="Adds some margin to the nodes extent when fit to screen"
                                    Margin="0 5 5 0" />
-                        <TextBox Grid.Row="12"
+                        <TextBox Grid.Row="13"
                                  Grid.Column="1"
                                  Text="{Binding FitToScreenExtentMargin, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />
 
-                        <TextBlock Grid.Row="13"
+                        <TextBlock Grid.Row="14"
                                    Text="Enable sticky connectors: "
                                    ToolTip="The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"
                                    Margin="0 5 5 0" />
-                        <CheckBox  Grid.Row="13"
+                        <CheckBox  Grid.Row="14"
                                    Grid.Column="1"
                                    IsChecked="{Binding EnableStickyConnectors, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                    Margin="0 5 5 0" />
