@@ -2,10 +2,10 @@
 
 #### **In development**
 
-> - Breaking Changes: 
+> - Breaking Changes:
 >   - Added parameter of type ConnectionDirection to BaseConnection.GetArrowHeadPoints to determine the direction of the arrowhead
 > - Features:
->   - Added BaseConnection.ArrowEnds which allows configurable arrowhead ends
+>   - Added BaseConnection.ArrowEnds dependency property to allow configurable arrowhead ends
 > - Bugfixes:
 
 #### **Version 4.1.0**

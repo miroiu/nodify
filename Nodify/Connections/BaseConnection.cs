@@ -87,9 +87,9 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowHeadEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
         public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
 
@@ -148,12 +148,12 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the arrow ends.
+        /// Gets or sets the arrowhead ends.
         /// </summary>
         public ArrowHeadEnds ArrowEnds 
         { 
-            get => (ArrowHeadEnds)GetValue(ArrowHeadEndsProperty);
-            set => SetValue(ArrowHeadEndsProperty, value); 
+            get => (ArrowHeadEnds)GetValue(ArrowEndsProperty);
+            set => SetValue(ArrowEndsProperty, value); 
         }
 
         /// <summary>
@@ -241,23 +241,7 @@ namespace Nodify
 
                     if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                     {
-                        switch(ArrowEnds)
-                        {
-                            case ArrowHeadEnds.Start: 
-                                DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
-                                break; 
-                            case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
-                                break;
-                            case ArrowHeadEnds.Both:
-                                DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
-                                DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
-                                break;
-                            case ArrowHeadEnds.None:
-                                break;
-                            default:
-                                break;
-                        }
+                        DrawArrowheadGeometry(context, arrowSource, arrowTarget, ArrowEnds);
                     }
                 }
 
@@ -274,6 +258,26 @@ namespace Nodify
             context.BeginFigure(target, true, true);
             context.LineTo(from, true, true);
             context.LineTo(to, true, true);
+        }
+
+        private void DrawArrowheadGeometry(StreamGeometryContext context, Point arrowSource, Point arrowTarget, ArrowHeadEnds arrowEnd)
+        {
+            switch (arrowEnd)
+            {
+                case ArrowHeadEnds.Start:
+                    DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
+                    break;
+                case ArrowHeadEnds.End:
+                    DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
+                    break;
+                case ArrowHeadEnds.Both:
+                    DrawArrowGeometry(context, arrowSource, arrowTarget, ConnectionDirection.Forward);
+                    DrawArrowGeometry(context, arrowTarget, arrowSource, ConnectionDirection.Backward);
+                    break;
+                case ArrowHeadEnds.None:
+                default:
+                    break;
+            }
         }
 
         protected virtual (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection arrowDirection)
