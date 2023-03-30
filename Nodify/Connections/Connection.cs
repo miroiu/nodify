@@ -19,7 +19,7 @@ namespace Nodify
         // ReSharper disable once InconsistentNaming
         private const double _offsetGrowthRate = 25d;
 
-        protected override (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+        protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
@@ -45,7 +45,7 @@ namespace Nodify
             context.BezierTo(startPoint + controlPoint, endPoint - controlPoint, endPoint, true, true);
             context.LineTo(endPoint, true, true);
 
-            return (source, target);
+            return ((target, source), (source, target));
         }
     }
 }

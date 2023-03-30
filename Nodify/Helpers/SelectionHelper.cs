@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace Nodify
 {
@@ -16,7 +14,7 @@ namespace Nodify
         private Point _startLocation;
         private SelectionType _selectionType;
         private bool _isRealtime;
-        private IList<ItemContainer> _initialSelection = new List<ItemContainer>();
+        private IReadOnlyList<ItemContainer> _initialSelection = new List<ItemContainer>();
 
         /// <summary>Constructs a new instance of a <see cref="SelectionHelper"/>.</summary>
         /// <param name="host">The editor to select items from.</param>
@@ -45,7 +43,7 @@ namespace Nodify
             if (!_host.IsSelecting)
             {
                 _selectionType = selectionType;
-                _initialSelection = GetSelectedContainers();
+                _initialSelection = _host.SelectedContainers;
 
                 _isRealtime = _host.EnableRealtimeSelection;
                 _startLocation = location;
@@ -80,7 +78,6 @@ namespace Nodify
                 PreviewSelection(_host.SelectedArea);
 
                 _host.ApplyPreviewingSelection();
-                _initialSelection.Clear();
                 _host.IsSelecting = false;
             }
         }
@@ -91,7 +88,6 @@ namespace Nodify
             if (_host.IsSelecting)
             {
                 _host.ClearPreviewingSelection();
-                _initialSelection.Clear();
                 _host.IsSelecting = false;
             }
         }
@@ -170,7 +166,7 @@ namespace Nodify
             }
         }
 
-        private void PreviewSelectContainers(IList<ItemContainer> containers)
+        private void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
         {
             for (var i = 0; i < containers.Count; i++)
             {
@@ -189,18 +185,6 @@ namespace Nodify
                     container.IsPreviewingSelection = !container.IsPreviewingSelection;
                 }
             }
-        }
-
-        private IList<ItemContainer> GetSelectedContainers()
-        {
-            var result = new List<ItemContainer>(32);
-            IList items = ((MultiSelector)_host).SelectedItems;
-            for (var i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromItem(items[i]);
-                result.Add(container);
-            }
-            return result;
         }
     }
 }

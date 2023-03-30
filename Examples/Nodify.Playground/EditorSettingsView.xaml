@@ -45,6 +45,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -196,8 +198,8 @@
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="17"
-                       Text="Connection arrow size: "
-                       ToolTip="Adds an arrow at the end of the connection"
+                       Text="Connection arrowhead size: "
+                       ToolTip="The size of the arrowhead."
                        Margin="0 5 5 0" />
             <local:PointEditorView  Grid.Row="17"
                                     Grid.Column="1"
@@ -205,9 +207,33 @@
                                     Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="18"
-                       Text="Connection offset mode: "
+                       Text="Connection arrowhead end: "
+                       ToolTip="The location of the arrowhead."
                        Margin="0 5 5 0" />
             <ComboBox Grid.Row="18"
+                      Grid.Column="1"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding ArrowHeadEnds, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                      ItemsSource="{Binding ArrowHeadEnds, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="19"
+                       Text="Connection arrow head shape: "
+                       ToolTip="The shape of the arrow head."
+                       Margin="0 5 5 0" />
+            <ComboBox Grid.Row="19"
+                      Grid.Column="1"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding ArrowHeadShape, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                      ItemsSource="{Binding ArrowHeadShape, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="20"
+                       Text="Connection offset mode: "
+                       Margin="0 5 5 0" />
+            <ComboBox Grid.Row="20"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
@@ -215,53 +241,53 @@
                       ItemsSource="{Binding ConnectionOffsetMode, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="19"
+            <TextBlock Grid.Row="21"
                        Text="Connection source offset: "
                        Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="19"
+            <local:PointEditorView  Grid.Row="21"
                                     Grid.Column="1"
                                     DataContext="{Binding ConnectionSourceOffset, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                     Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="20"
+            <TextBlock Grid.Row="22"
                        Text="Connection target offset: "
                        Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="20"
+            <local:PointEditorView  Grid.Row="22"
                                     Grid.Column="1"
                                     DataContext="{Binding ConnectionTargetOffset, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                     Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="21"
+            <TextBlock Grid.Row="23"
                        Text="Display connections on top: "
                        Margin="0 5 5 0" />
-            <CheckBox Grid.Row="21"
+            <CheckBox Grid.Row="23"
                       Grid.Column="1"
                       IsChecked="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="22"
+            
+            <TextBlock Grid.Row="24"
                        Text="Bring into view speed: "
                        ToolTip="Bring location into view animation speed in pixels per second"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="22"
+            <TextBox Grid.Row="24"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewSpeed, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="23"
+            <TextBlock Grid.Row="25"
                        Text="Bring into view max duration: "
                        ToolTip="Bring location into view max animation duration"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="23"
+            <TextBox Grid.Row="25"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewMaxDuration, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="24"
+            <TextBlock Grid.Row="26"
                        Text="Grouping node movement: "
                        ToolTip="Whether the grouping node is sticky or not"
                        Margin="0 5 5 0" />
-            <ComboBox Grid.Row="24"
+            <ComboBox Grid.Row="26"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
@@ -269,7 +295,7 @@
                       ItemsSource="{Binding GroupingNodeMovement, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
-            <Expander Grid.Row="25"
+            <Expander Grid.Row="27"
                       Grid.ColumnSpan="2"
                       Header="Advanced"
                       Padding="0 5 0 0"
@@ -300,6 +326,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -418,19 +445,28 @@
                                  Margin="0 5 5 0" />
 
                         <TextBlock Grid.Row="12"
+                                   Text="Enable nodes dragging optimizations: "
+                                   ToolTip="Simulates dragging visually but only commits the changes at the end."
+                                   Margin="0 5 5 0" />
+                        <CheckBox Grid.Row="12"
+                                 Grid.Column="1"
+                                 IsChecked="{Binding EnableDraggingOptimizations, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                 Margin="0 5 5 0" />
+
+                        <TextBlock Grid.Row="13"
                                    Text="Fit to screen extent margin: "
                                    ToolTip="Adds some margin to the nodes extent when fit to screen"
                                    Margin="0 5 5 0" />
-                        <TextBox Grid.Row="12"
+                        <TextBox Grid.Row="13"
                                  Grid.Column="1"
                                  Text="{Binding FitToScreenExtentMargin, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                  Margin="0 5 5 0" />
 
-                        <TextBlock Grid.Row="13"
+                        <TextBlock Grid.Row="14"
                                    Text="Enable sticky connectors: "
                                    ToolTip="The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"
                                    Margin="0 5 5 0" />
-                        <CheckBox  Grid.Row="13"
+                        <CheckBox  Grid.Row="14"
                                    Grid.Column="1"
                                    IsChecked="{Binding EnableStickyConnectors, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                    Margin="0 5 5 0" />

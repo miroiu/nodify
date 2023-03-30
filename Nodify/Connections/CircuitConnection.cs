@@ -27,7 +27,7 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CircuitConnection), new FrameworkPropertyMetadata(typeof(CircuitConnection)));
         }
 
-        protected override (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+        protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
@@ -44,7 +44,12 @@ namespace Nodify
             context.LineTo(p3, true, true);
             context.LineTo(target, true, true);
 
-            return (p2, target);
+            if (Spacing < 1d)
+            {
+                return ((p2, source), (p2, target));
+            }
+
+            return ((p1, source), (p2, target));
         }
 
         private Point GetControlPoint(Point source, Point target)

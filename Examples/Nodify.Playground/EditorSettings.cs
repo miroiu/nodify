@@ -141,6 +141,20 @@
             set => SetProperty(ref _connectionOffsetMode, value);
         }
 
+        private ArrowHeadEnds _arrowHeadEnds = ArrowHeadEnds.End;
+        public ArrowHeadEnds ArrowHeadEnds
+        {
+            get => _arrowHeadEnds;  
+            set => SetProperty(ref _arrowHeadEnds, value);
+        }
+
+        private ArrowHeadShape _arrowHeadShape = ArrowHeadShape.Default;
+        public ArrowHeadShape ArrowHeadShape
+        {
+            get => _arrowHeadShape;
+            set => SetProperty(ref _arrowHeadShape, value);
+        }
+
         private PointEditor _connectionSourceOffset = new PointEditor { X = 15, Y = 0 };
         public PointEditor ConnectionSourceOffset
         {
@@ -264,6 +278,12 @@
         {
             get => NodifyEditor.FitToScreenExtentMargin;
             set => NodifyEditor.FitToScreenExtentMargin = value;
+        }
+
+        public bool EnableDraggingOptimizations
+        {
+            get => NodifyEditor.EnableDraggingContainersOptimizations;
+            set => NodifyEditor.EnableDraggingContainersOptimizations = value;
         }
 
         public bool EnableStickyConnectors

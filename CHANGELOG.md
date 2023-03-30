@@ -3,7 +3,12 @@
 #### **In development**
 
 > - Breaking Changes:
+>   - Removed BaseConnection.GetArrowHeadPoints
+>   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
 > - Features:
+>   - Added BaseConnection.ArrowEnds dependency property to allow configurable arrowhead ends
+>   - Added BaseConnection.ArrowShape dependency property to allow configurable arrowhead shape
+>   - Added NodifyEditor.EnableDraggingContainersOptimizations to allow receiving ItemContainer.Location updates in realtime
 > - Bugfixes:
 
 #### **Version 4.1.0**
