@@ -3,9 +3,11 @@
 #### **In development**
 
 > - Breaking Changes:
->   - Added parameter of type ConnectionDirection to BaseConnection.GetArrowHeadPoints to determine the direction of the arrowhead
+>   - Removed BaseConnection.GetArrowHeadPoints
+>   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
 > - Features:
 >   - Added BaseConnection.ArrowEnds dependency property to allow configurable arrowhead ends
+>   - Added BaseConnection.ArrowShape dependency property to allow configurable arrowhead shape
 > - Bugfixes:
 
 #### **Version 4.1.0**

@@ -14,7 +14,7 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LineConnection), new FrameworkPropertyMetadata(typeof(LineConnection)));
         }
 
-        protected override (Point ArrowSource, Point ArrowTarget) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+        protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
@@ -26,12 +26,12 @@ namespace Nodify
             context.LineTo(endPoint - spacing, true, true);
             context.LineTo(endPoint, true, true);
 
-            return (source, target);
+            return ((target, source), (source, target));
         }
 
-        protected override (Point From, Point To) GetArrowHeadPoints(Point source, Point target, ConnectionDirection arrowDirection)
+        protected override void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
         {
-            if(Spacing < 1d)
+            if (Spacing < 1d)
             {
                 Vector delta = source - target;
                 double headWidth = ArrowSize.Width;
@@ -43,10 +43,15 @@ namespace Nodify
 
                 var from = new Point(target.X + (headWidth * cosT - headHeight * sinT), target.Y + (headWidth * sinT + headHeight * cosT));
                 var to = new Point(target.X + (headWidth * cosT + headHeight * sinT), target.Y - (headHeight * cosT - headWidth * sinT));
-                return (from, to);
-            }
 
-            return base.GetArrowHeadPoints(source, target, arrowDirection);
+                context.BeginFigure(target, true, true);
+                context.LineTo(from, true, true);
+                context.LineTo(to, true, true);
+            }
+            else
+            {
+                base.DrawDefaultArrowhead(context, source, target, arrowDirection);
+            }
         }
     }
 }

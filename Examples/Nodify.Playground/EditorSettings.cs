@@ -148,6 +148,13 @@
             set => SetProperty(ref _arrowHeadEnds, value);
         }
 
+        private ArrowHeadShape _arrowHeadShape = ArrowHeadShape.Default;
+        public ArrowHeadShape ArrowHeadShape
+        {
+            get => _arrowHeadShape;
+            set => SetProperty(ref _arrowHeadShape, value);
+        }
+
         private PointEditor _connectionSourceOffset = new PointEditor { X = 15, Y = 0 };
         public PointEditor ConnectionSourceOffset
         {
