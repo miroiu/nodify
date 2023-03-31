@@ -40,7 +40,8 @@
                                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
                                               Direction="{TemplateBinding Direction}"
                                               Spacing="0"
-                                              ArrowSize="0 0" />
+                                              ArrowSize="0 0"
+                                              TargetOffsetMode="None" />
                         <Border Background="{TemplateBinding Background}"
                                 Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"

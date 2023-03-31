@@ -4,11 +4,12 @@
 
 > - Breaking Changes:
 >   - Removed BaseConnection.GetArrowHeadPoints
+>   - Removed BaseConnection.OffsetMode
 >   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
->   - Changed the default for BaseConnection.OffsetMode from ConnectionOffsetMode.None to ConnectionOffsetMode.Static
->   - Changed the default for BaseConnection.SourceOffset and BaseConnection.TargetOffset from Size(0, 0) to Size(16, 0)
+>   - Changed the default for BaseConnection.SourceOffset and BaseConnection.TargetOffset from Size(0, 0) to Size(14, 0)
 >   - Changed the default for BaseConnection.ArrowSize from Size(7, 6) to Size(8, 8)
 > - Features:
+>   - Added BaseConnection.SourceOffsetMode and BaseConnection.TargetOffsetMode
 >   - Added BaseConnection.ArrowEnds dependency property to allow configurable arrowhead ends
 >   - Added BaseConnection.ArrowShape dependency property to allow configurable arrowhead shape
 >   - Added NodifyEditor.EnableDraggingContainersOptimizations to allow receiving ItemContainer.Location updates in realtime

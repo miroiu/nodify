@@ -134,11 +134,18 @@
             set => SetProperty(ref _connectionSpacing, value);
         }
 
-        private ConnectionOffsetMode _connectionOffsetMode = ConnectionOffsetMode.Static;
-        public ConnectionOffsetMode ConnectionOffsetMode
+        private ConnectionOffsetMode _srcConnectionOffsetMode = ConnectionOffsetMode.Static;
+        public ConnectionOffsetMode ConnectionSourceOffsetMode
         {
-            get => _connectionOffsetMode;
-            set => SetProperty(ref _connectionOffsetMode, value);
+            get => _srcConnectionOffsetMode;
+            set => SetProperty(ref _srcConnectionOffsetMode, value);
+        }
+
+        private ConnectionOffsetMode _targetConnectionOffsetMode = ConnectionOffsetMode.Static;
+        public ConnectionOffsetMode ConnectionTargetOffsetMode
+        {
+            get => _targetConnectionOffsetMode;
+            set => SetProperty(ref _targetConnectionOffsetMode, value);
         }
 
         private ArrowHeadEnds _arrowHeadEnds = ArrowHeadEnds.End;
@@ -155,14 +162,14 @@
             set => SetProperty(ref _arrowHeadShape, value);
         }
 
-        private PointEditor _connectionSourceOffset = new PointEditor { X = 16, Y = 0 };
+        private PointEditor _connectionSourceOffset = new PointEditor { X = 14, Y = 0 };
         public PointEditor ConnectionSourceOffset
         {
             get => _connectionSourceOffset;
             set => SetProperty(ref _connectionSourceOffset, value);
         }
 
-        private PointEditor _connectionTargetOffset = new PointEditor { X = 16, Y = 0 };
+        private PointEditor _connectionTargetOffset = new PointEditor { X = 14, Y = 0 };
         public PointEditor ConnectionTargetOffset
         {
             get => _connectionTargetOffset;
