@@ -3,6 +3,12 @@
 #### **In development**
 
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 5.0.0**
+
+> - Breaking Changes:
 >   - Removed BaseConnection.GetArrowHeadPoints
 >   - Removed BaseConnection.OffsetMode
 >   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
