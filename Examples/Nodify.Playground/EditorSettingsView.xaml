@@ -169,42 +169,42 @@
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="14"
+                       Text="Connection angle: "
+                       ToolTip="Applies to circuit connection style"
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="14"
+                     Grid.Column="1"
+                     Text="{Binding CircuitConnectionAngle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="15"
+                       Text="Connection spacing: "
+                       ToolTip="The distance between the start point and the where the angle breaks"
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="15"
+                     Grid.Column="1"
+                     Text="{Binding ConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="16"
+                       Text="Connection arrowhead size: "
+                       ToolTip="The size of the arrowhead."
+                       Margin="0 5 5 0" />
+            <local:PointEditorView  Grid.Row="16"
+                                    Grid.Column="1"
+                                    DataContext="{Binding ConnectionArrowSize, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                    Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="17"
                        Text="Connection style: "
                        Margin="0 5 5 0" />
-            <ComboBox Grid.Row="14"
+            <ComboBox Grid.Row="17"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
                       SelectedValue="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                       ItemsSource="{Binding ConnectionStyle, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="15"
-                       Text="Connection angle: "
-                       ToolTip="Applies to circuit connection style"
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="15"
-                     Grid.Column="1"
-                     Text="{Binding CircuitConnectionAngle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="16"
-                       Text="Connection spacing: "
-                       ToolTip="The distance between the start point and the where the angle breaks"
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="16"
-                     Grid.Column="1"
-                     Text="{Binding ConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="17"
-                       Text="Connection arrowhead size: "
-                       ToolTip="The size of the arrowhead."
-                       Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="17"
-                                    Grid.Column="1"
-                                    DataContext="{Binding ConnectionArrowSize, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                                    Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="18"
                        Text="Connection arrowhead end: "

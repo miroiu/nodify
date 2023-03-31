@@ -30,6 +30,11 @@ namespace Nodify
         /// The offset is applied in a rectangle shape around the point, perpendicular to the edges.
         /// </summary>
         Edge,
+
+        /// <summary>
+        /// The offset is applied as a fixed margin.
+        /// </summary>
+        Static
     }
 
     /// <summary>
@@ -82,7 +87,7 @@ namespace Nodify
         /// <summary>
         /// The default arrowhead.
         /// </summary>
-        Default,
+        Arrowhead,
 
         /// <summary>
         /// An ellipse.
@@ -104,14 +109,14 @@ namespace Nodify
 
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(Point), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(nameof(Target), typeof(Point), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SourceOffsetProperty = DependencyProperty.Register(nameof(SourceOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionOffsetMode), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty SourceOffsetProperty = DependencyProperty.Register(nameof(SourceOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ConnectionOffset, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ConnectionOffset, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty OffsetModeProperty = DependencyProperty.Register(nameof(OffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(ConnectionOffsetMode.Static, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowShapeProperty = DependencyProperty.Register(nameof(ArrowShape), typeof(ArrowHeadShape), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadShape.Default, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty ArrowShapeProperty = DependencyProperty.Register(nameof(ArrowShape), typeof(ArrowHeadShape), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadShape.Arrowhead, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
         public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
 
@@ -297,7 +302,7 @@ namespace Nodify
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
-        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Default)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead)
         {
             switch (shape)
             {
@@ -307,7 +312,7 @@ namespace Nodify
                 case ArrowHeadShape.Rectangle:
                     DrawRectangleArrowhead(context, source, target, arrowDirection);
                     break;
-                case ArrowHeadShape.Default:
+                case ArrowHeadShape.Arrowhead:
                 default:
                     DrawDefaultArrowhead(context, source, target, arrowDirection);
                     break;
@@ -317,7 +322,7 @@ namespace Nodify
         protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
         {
             double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height;
+            double headHeight = ArrowSize.Height / 2;
 
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
@@ -331,12 +336,12 @@ namespace Nodify
         protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
         {
             double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height;
+            double headHeight = ArrowSize.Height / 2;
 
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
             var bottomRight = new Point(target.X, target.Y + headHeight);
-            var bottomLeft = new Point(target.X - headWidth * 2 * direction, target.Y + headHeight);
-            var topLeft = new Point(target.X - headWidth * 2 * direction, target.Y - headHeight);
+            var bottomLeft = new Point(target.X - headWidth * direction, target.Y + headHeight);
+            var topLeft = new Point(target.X - headWidth  * direction, target.Y - headHeight);
             var topRight = new Point(target.X, target.Y - headHeight);
 
             context.BeginFigure(target, true, true);
@@ -351,10 +356,10 @@ namespace Nodify
             const double ControlPointRatio = 0.55228474983079356; // (Math.Sqrt(2) - 1) * 4 / 3;
 
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
-            var targetLocation = new Point(target.X - ArrowSize.Width * direction, target.Y);
+            var targetLocation = new Point(target.X - ArrowSize.Width / 2 * direction, target.Y);
 
-            double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height;
+            double headWidth = ArrowSize.Width / 2;
+            double headHeight = ArrowSize.Height / 2;
 
             double x0 = targetLocation.X - headWidth;
             double x1 = targetLocation.X - headWidth * ControlPointRatio;
@@ -383,15 +388,25 @@ namespace Nodify
         {
             Vector delta = Target - Source;
             Vector delta2 = Source - Target;
+            double arrowDirection = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
             return OffsetMode switch
             {
                 ConnectionOffsetMode.Rectangle => (GetRectangleModeOffset(delta, SourceOffset), GetRectangleModeOffset(delta2, TargetOffset)),
                 ConnectionOffsetMode.Circle => (GetCircleModeOffset(delta, SourceOffset), GetCircleModeOffset(delta2, TargetOffset)),
                 ConnectionOffsetMode.Edge => (GetEdgeModeOffset(delta, SourceOffset), GetEdgeModeOffset(delta2, TargetOffset)),
+                ConnectionOffsetMode.Static => (GetStaticModeOffset(arrowDirection, SourceOffset), GetStaticModeOffset(-arrowDirection, TargetOffset)),
                 ConnectionOffsetMode.None => (ZeroVector, ZeroVector),
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        private static Vector GetStaticModeOffset(double direction, Size offset)
+        {
+            double xOffset = offset.Width * direction;
+            double yOffset = offset.Height * direction;
+
+            return new Vector(xOffset, yOffset);
         }
 
         private static Vector GetEdgeModeOffset(Vector delta, Size offset)

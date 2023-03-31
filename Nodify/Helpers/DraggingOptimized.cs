@@ -12,7 +12,7 @@ namespace Nodify
     {
         private readonly NodifyEditor _editor;
         private Vector _dragAccumulator;
-        private readonly IReadOnlyList<ItemContainer> _selectedContainers;
+        private readonly IList<ItemContainer> _selectedContainers;
 
         public DraggingOptimized(NodifyEditor editor)
         {
@@ -32,6 +32,8 @@ namespace Nodify
 
                 container.OnPreviewLocationChanged(container.Location);
             }
+
+            _selectedContainers.Clear();
         }
 
         public void End(Vector change)
@@ -55,6 +57,8 @@ namespace Nodify
                 r.X = 0;
                 r.Y = 0;
             }
+
+            _selectedContainers.Clear();
         }
 
         public void Start(Vector change)

@@ -19,6 +19,7 @@ namespace Nodify
         public static readonly object Int1 = 1;
         public static readonly object UInt1 = 1u;
 
-        public static readonly object ArrowSize = new Size(7, 6);
+        public static readonly object ArrowSize = new Size(8, 8);
+        public static readonly object ConnectionOffset = new Size(16, 0);
     }
 }

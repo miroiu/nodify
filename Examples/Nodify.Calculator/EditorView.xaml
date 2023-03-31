@@ -38,10 +38,7 @@
         <DataTemplate x:Key="ConnectionTemplate"
                       DataType="{x:Type local:ConnectionViewModel}">
             <nodify:CircuitConnection Source="{Binding Output.Anchor}"
-                                      Target="{Binding Input.Anchor}"
-                                      SourceOffset="10 0"
-                                      TargetOffset="20 0"
-                                      OffsetMode="Circle" />
+                                      Target="{Binding Input.Anchor}" />
         </DataTemplate>
 
         <DataTemplate x:Key="PendingConnectionTemplate"
@@ -124,8 +121,7 @@
                 <DataTemplate DataType="{x:Type local:OperationViewModel}">
                     <nodify:Node Content="{Binding Title}"
                                  Input="{Binding Input}"
-                                 Output="{Binding Output, Converter={StaticResource ItemToListConverter}}"
-                                 Padding="5 0 0 0" />
+                                 Output="{Binding Output, Converter={StaticResource ItemToListConverter}}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:ExpandoOperationViewModel}">
