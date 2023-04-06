@@ -331,6 +331,11 @@
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                     <Setter Property="Location"
                             Value="{Binding Location}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="1" />
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </nodify:NodifyEditor.ItemContainerStyle>
         </nodify:NodifyEditor>
