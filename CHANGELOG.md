@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection.
 
 #### **Version 5.0.0**
 

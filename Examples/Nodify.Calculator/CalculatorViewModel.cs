@@ -10,7 +10,7 @@ namespace Nodify.Calculator
             CreateConnectionCommand = new DelegateCommand<ConnectorViewModel>(
                 _ => CreateConnection(PendingConnection.Source, PendingConnection.Target),
                 _ => CanCreateConnection(PendingConnection.Source, PendingConnection.Target));
-            StartConnectionCommand = new DelegateCommand<object>(_ => PendingConnection.IsVisible = true);
+            StartConnectionCommand = new DelegateCommand<ConnectorViewModel>(_ => PendingConnection.IsVisible = true, (c) => !(c.IsConnected && c.IsInput));
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
             GroupSelectionCommand = new DelegateCommand(GroupSelectedOperations, () => SelectedOperations.Count > 0);

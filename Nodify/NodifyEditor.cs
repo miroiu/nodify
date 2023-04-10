@@ -673,7 +673,7 @@ namespace Nodify
         /// Gets a list of <see cref="ItemContainer"/>s that are selected.
         /// </summary>
         /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
-        public IReadOnlyList<ItemContainer> SelectedContainers
+        protected internal IReadOnlyList<ItemContainer> SelectedContainers
         {
             get
             {
@@ -926,9 +926,13 @@ namespace Nodify
 
         private void OnConnectionStarted(object sender, PendingConnectionEventArgs e)
         {
-            if (!e.Canceled && (ConnectionStartedCommand?.CanExecute(e.SourceConnector) ?? false))
+            if (!e.Canceled && ConnectionStartedCommand != null)
             {
-                ConnectionStartedCommand.Execute(e.SourceConnector);
+                e.Canceled = !ConnectionStartedCommand.CanExecute(e.SourceConnector);
+                if (!e.Canceled)
+                {
+                    ConnectionStartedCommand.Execute(e.SourceConnector);
+                }
             }
         }
 
