@@ -5,7 +5,8 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
->   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection.
+>   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection
+>   - BaseConnection.ArrowEnds does not display correctly when BaseConnection.Direction is ConnectionDirection.Backward
 
 #### **Version 5.0.0**
 

@@ -87,6 +87,7 @@
             <Setter Property="ArrowEnds" Value="{Binding ArrowHeadEnds, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="ArrowShape" Value="{Binding ArrowHeadShape, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Spacing" Value="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="Direction" Value="{Binding Output.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
@@ -230,7 +231,6 @@
                                     <nodify:Connection Source="{TemplateBinding SourceAnchor}"
                                                        Target="{TemplateBinding TargetAnchor}"
                                                        Direction="{TemplateBinding Direction}"
-                                                       Stroke="{TemplateBinding Stroke}"
                                                        StrokeThickness="{TemplateBinding StrokeThickness}"
                                                        SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                                        TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -239,7 +239,32 @@
                                                        ArrowSize="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}"
                                                        ArrowEnds="{Binding ArrowHeadEnds, Source={x:Static local:EditorSettings.Instance}}"
                                                        ArrowShape="{Binding ArrowHeadShape, Source={x:Static local:EditorSettings.Instance}}"
-                                                       Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
+                                                       Spacing="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}">
+                                        <nodify:Connection.Style>
+                                            <Style TargetType="nodify:Connection" BasedOn="{StaticResource {x:Type nodify:Connection}}">
+                                                <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
+                                                <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Source.Shape}" Value="{x:Static local:ConnectorShape.Square}">
+                                                        <Setter Property="Stroke" Value="{StaticResource SquareConnectorColor}"/>
+                                                        <Setter Property="Fill" Value="{StaticResource SquareConnectorColor}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Source.Shape}" Value="{x:Static local:ConnectorShape.Triangle}">
+                                                        <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"/>
+                                                        <Setter Property="Fill" Value="{StaticResource TriangleConnectorColor}"/>
+                                                    </DataTrigger>
+                                                    <Trigger Property="IsMouseDirectlyOver" Value="True">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard Name="HighlightConnection" Storyboard="{StaticResource HighlightConnection}" />
+                                                        </Trigger.EnterActions>
+                                                        <Trigger.ExitActions>
+                                                            <RemoveStoryboard BeginStoryboardName="HighlightConnection" />
+                                                        </Trigger.ExitActions>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </nodify:Connection.Style>
+                                    </nodify:Connection>
                                     <Border Background="{TemplateBinding Background}"
                                             Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                             Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
