@@ -421,7 +421,12 @@ namespace Nodify
             };
 
             RaiseEvent(args);
-            IsPendingConnection = true;
+            IsPendingConnection = !args.Canceled;
+
+            if (IsMouseCaptured && !IsPendingConnection)
+            {
+                ReleaseMouseCapture();
+            }
         }
 
         protected virtual void OnConnectorDragCompleted(bool cancel = false)

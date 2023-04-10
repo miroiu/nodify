@@ -287,17 +287,18 @@ namespace Nodify
 
                     if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                     {
+                        var reverseDirection = Direction == ConnectionDirection.Forward ? ConnectionDirection.Backward : ConnectionDirection.Forward;
                         switch (ArrowEnds)
                         {
                             case ArrowHeadEnds.Start:
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, ConnectionDirection.Backward, ArrowShape);
+                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
                                 break;
                             case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, ConnectionDirection.Forward, ArrowShape);
+                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
                                 break;
                             case ArrowHeadEnds.Both:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, ConnectionDirection.Forward, ArrowShape);
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, ConnectionDirection.Backward, ArrowShape);
+                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
+                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
                                 break;
                             case ArrowHeadEnds.None:
                             default:
