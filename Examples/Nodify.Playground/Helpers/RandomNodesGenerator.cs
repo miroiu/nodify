@@ -16,7 +16,7 @@ namespace Nodify.Playground
             MinInputCount = MinOutputCount = 0;
             MaxInputCount = MaxOutputCount = 7;
 
-            ConnectorNameGenerator = (s, i) => $"C {i}";
+            ConnectorNameGenerator = (s, i) => $"{new string('C', (int)i % 5)} {i}";
             NodeNameGenerator = (s, i) => $"Node {i}";
             NodeLocationGenerator = (s, i) =>
             {

@@ -297,15 +297,45 @@
                                      Value="{x:Static local:ConnectorShape.Square}">
                             <Setter Property="ConnectorTemplate" Value="{StaticResource SquareConnector}" />
                             <Setter Property="BorderBrush" Value="{StaticResource SquareConnectorColor}"/>
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Title}" Margin="0 0 5 0" />
+                                            <TextBox Text="{Binding MaxConnections}" MinWidth="30" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Shape}" 
                                      Value="{x:Static local:ConnectorShape.Triangle}">
                             <Setter Property="ConnectorTemplate" Value="{StaticResource TriangleConnector}" />
                             <Setter Property="BorderBrush" Value="{StaticResource TriangleConnectorColor}"/>
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Title}" Margin="0 0 5 0" />
+                                            <ComboBox DisplayMemberPath="Name"
+                                                      SelectedValuePath="Value"
+                                                      SelectedValue="{Binding Shape}"
+                                                      ItemsSource="{Binding Shape, Converter={shared:EnumValuesConverter}}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </DataTrigger>
                     </Style.Triggers>
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                <TextBlock Text="{Binding Title}" />
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
                     <Setter Property="Header"
-                            Value="{Binding Title}" />
+                            Value="{Binding}" />
                     <Setter Property="Anchor"
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
@@ -354,6 +384,11 @@
             <nodify:NodifyEditor.ItemContainerStyle>
                 <Style TargetType="{x:Type nodify:ItemContainer}"
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                    <Setter Property="CacheMode">
+                        <Setter.Value>
+                            <BitmapCache RenderAtScale="2" EnableClearType="True" />
+                        </Setter.Value>
+                    </Setter>
                     <Setter Property="Location"
                             Value="{Binding Location}" />
                     <Style.Triggers>
