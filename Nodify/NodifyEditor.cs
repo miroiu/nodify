@@ -636,7 +636,7 @@ namespace Nodify
         public static bool EnableRenderingContainersOptimizations { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the minimum selected <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// Gets or sets the minimum number of <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
         /// </summary>
         public static uint OptimizeRenderingMinimumContainers { get; set; } = 700;
 

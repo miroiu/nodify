@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>   - Fixed NodeOutput content horizontal alignment
 
 #### **Version 5.0.1**
 
