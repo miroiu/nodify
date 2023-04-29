@@ -33,6 +33,40 @@
                       Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
+        <LinearGradientBrush x:Key="AnimatedBrush" StartPoint="0 0" EndPoint="1 0">
+            <GradientStop Color="#6366f1" Offset="0" />
+            <GradientStop Color="#a855f7" Offset="0.5" />
+            <GradientStop Color="#ec4899" Offset="1" />
+        </LinearGradientBrush>
+        <Border x:Key="AnimatedBorderPlaceholder" BorderBrush="{StaticResource AnimatedBrush}" />
+
+        <Storyboard x:Key="AnimateBorder" RepeatBehavior="Forever">
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                                    Duration="0:0:2" To="1 0" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 1" BeginTime="0:0:2" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 1" BeginTime="0:0:4" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 0" BeginTime="0:0:6" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 1" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)" 
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                                    Duration="0:0:2" To="0 1" BeginTime="0:0:2" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 0" BeginTime="0:0:4" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 0" BeginTime="0:0:6" />
+        </Storyboard>
+
         <local:ItemToListConverter x:Key="ItemToListConverter" />
 
         <DataTemplate x:Key="ConnectionTemplate"
@@ -60,8 +94,10 @@
                     Value="{Binding IsSelected}" />
             <Setter Property="ActualSize"
                     Value="{Binding Size, Mode=OneWayToSource}" />
+            <Setter Property="BorderBrush" Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
         </Style>
     </UserControl.Resources>
+    
     <Grid>
         <nodify:NodifyEditor DataContext="{Binding Calculator}"
                              ItemsSource="{Binding Operations}"
@@ -299,6 +335,12 @@
                 <KeyBinding Key="C"
                             Command="{Binding GroupSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
+
+            <nodify:NodifyEditor.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Name="AnimateBorder" Storyboard="{StaticResource AnimateBorder}" />
+                </EventTrigger>
+            </nodify:NodifyEditor.Triggers>
 
             <CompositeCollection>
                 <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"

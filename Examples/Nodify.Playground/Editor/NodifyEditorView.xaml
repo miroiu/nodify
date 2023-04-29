@@ -45,9 +45,14 @@
         <SolidColorBrush x:Key="SquareConnectorColor" Color="MediumSlateBlue" />
         <SolidColorBrush x:Key="TriangleConnectorColor" Color="MediumVioletRed" />
 
+        <UIElement x:Key="ConnectionAnimationPlaceholder" Opacity="1" />
+
         <Storyboard x:Key="HighlightConnection">
             <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" 
-                         Duration="0:0:0.3" From="3" To="6"  />
+                             Duration="0:0:0.3" From="3" To="6"  />
+            <DoubleAnimation Storyboard.Target="{StaticResource ConnectionAnimationPlaceholder}"
+                             Storyboard.TargetProperty="(UIElement.Opacity)" 
+                             Duration="0:0:0.3" From="1" To="0.3"  />
         </Storyboard>
 
         <Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
@@ -69,8 +74,10 @@
                     <Trigger.ExitActions>
                         <RemoveStoryboard BeginStoryboardName="HighlightConnection" />
                     </Trigger.ExitActions>
+                    <Setter Property="Opacity" Value="1" />
                 </Trigger>
             </Style.Triggers>
+            <Setter Property="Opacity" Value="{Binding Source={StaticResource ConnectionAnimationPlaceholder}, Path=Opacity}" />
             <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
             <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -253,14 +260,6 @@
                                                         <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"/>
                                                         <Setter Property="Fill" Value="{StaticResource TriangleConnectorColor}"/>
                                                     </DataTrigger>
-                                                    <Trigger Property="IsMouseDirectlyOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Name="HighlightConnection" Storyboard="{StaticResource HighlightConnection}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <RemoveStoryboard BeginStoryboardName="HighlightConnection" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </nodify:Connection.Style>
