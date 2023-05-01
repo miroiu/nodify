@@ -33,9 +33,9 @@ namespace Nodifier
 
         public static readonly ViewConfigurationStrategy ManualViewConfiguration = (views, assemblies) =>
         {
-            views.Add<IGraphEditor, GraphView>();
-            views.Add<IGraphNode, GraphNodeView>();
-            views.Add<IRelayNode, RelayNodeView>();
+            views.Add<IGraphWidget, GraphView>();
+            views.Add<INodeWidget, GraphNodeView>();
+            views.Add<IRelayNodeWidget, RelayNodeView>();
             views.Add<IConnection, ConnectionView>();
             views.Add<IPendingConnection, PendingConnectionView>();
             views.Add<IConnector, ConnectorView>();

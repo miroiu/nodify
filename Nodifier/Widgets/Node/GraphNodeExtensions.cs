@@ -2,7 +2,7 @@
 {
     public static class GraphNodeExtensions
     {
-        public static bool TryConnect(this IGraphNode source, IGraphNode target)
+        public static bool TryConnect(this INodeWidget source, INodeWidget target)
         {
             foreach (IConnector output in source.Output)
             {

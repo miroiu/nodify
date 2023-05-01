@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public interface IGraphEditor
+    public interface IGraphWidget
     {
         IActionsHistory History { get; }
 

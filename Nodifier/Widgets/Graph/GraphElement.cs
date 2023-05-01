@@ -4,7 +4,7 @@ namespace Nodifier
 {
     public interface IGraphElement
     {
-        IGraphEditor Graph { get; }
+        IGraphWidget Graph { get; }
 
         Point Location { get; set; }
         Size Size { get; }
@@ -15,7 +15,7 @@ namespace Nodifier
 
     public abstract class GraphElement : Undoable, IGraphElement
     {
-        public IGraphEditor Graph { get; }
+        public IGraphWidget Graph { get; }
 
         private Point _location;
         public Point Location
@@ -52,7 +52,7 @@ namespace Nodifier
             set => SetAndNotify(ref _isDraggable, value);
         }
 
-        public GraphElement(IGraphEditor graph) : base(graph.History)
+        public GraphElement(IGraphWidget graph) : base(graph.History)
         {
             Graph = graph;
 

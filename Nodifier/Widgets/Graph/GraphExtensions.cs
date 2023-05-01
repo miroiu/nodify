@@ -5,22 +5,22 @@ namespace Nodifier
 {
     public static class GraphExtensions
     {
-        public static void FocusElement(this IGraphEditor graph, IGraphElement node)
+        public static void FocusElement(this IGraphWidget graph, IGraphElement node)
         {
             double midX = (node.Location.X + node.Size.Width / 2);
             double midY = (node.Location.Y + node.Size.Height / 2);
             graph.FocusLocation(midX, midY);
         }
 
-        public static void FocusLocation(this IGraphEditor graph, double x, double y)
+        public static void FocusLocation(this IGraphWidget graph, double x, double y)
         {
             graph.FocusLocation(new Point(x, y));
         }
 
-        public static CommentNode AddComment(this IGraphEditor graph, string text, IEnumerable<IGraphElement> nodes)
+        public static CommentNodeWidget AddComment(this IGraphWidget graph, string text, IEnumerable<IGraphElement> nodes)
         {
             var bounds = nodes.GetBoundingBox();
-            var comment = new CommentNode(graph)
+            var comment = new CommentNodeWidget(graph)
             {
                 Location = bounds.Location,
                 CommentSize = bounds.Size,

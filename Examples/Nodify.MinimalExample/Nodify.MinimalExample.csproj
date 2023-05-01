@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net5-windows;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6-windows;netcoreapp3.1</TargetFrameworks>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>

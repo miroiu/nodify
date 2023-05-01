@@ -17,7 +17,7 @@ namespace Nodifier
         Center
     }
 
-    public partial class GraphEditor : IGraphEditor, IViewAware
+    public partial class GraphWidget : IGraphWidget, IViewAware
     {
         private NodifyEditor? _editor;
         protected NodifyEditor Editor => _editor ?? throw new GraphException($"No editor attached. Please implement {nameof(IEditorHost)} in the view and wait for initialization.");

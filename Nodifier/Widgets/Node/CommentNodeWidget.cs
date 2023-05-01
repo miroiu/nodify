@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public interface ICommentNode : IGraphElement
+    public interface ICommentNodeWidget : IGraphElement
     {
         string? Title { get; set; }
         bool CanResize { get; set; }
@@ -12,9 +12,9 @@ namespace Nodifier
         IReadOnlyList<IGraphElement> GetElements();
     }
 
-    public class CommentNode : GraphElement, ICommentNode
+    public class CommentNodeWidget : GraphElement, ICommentNodeWidget
     {
-        public CommentNode(IGraphEditor graph) : base(graph)
+        public CommentNodeWidget(IGraphWidget graph) : base(graph)
         {
             RecordProperty(nameof(Title));
             RecordProperty(nameof(CommentSize));

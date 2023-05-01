@@ -52,7 +52,7 @@ namespace Nodifier
                 LambdaExpression lambda => GetPropertyName(lambda.Body),
                 MemberExpression mbr => mbr.Member.Name,
                 UnaryExpression unary => GetPropertyName(unary.Operand),
-                _ => throw new Exception("Member name could not be extracted.")
+                _ => throw new Exception($"Member name could not be extracted from {memberAccess}.")
             };
 
         protected override bool SetAndNotify<TPropType>(ref TPropType field, TPropType value, [CallerMemberName] string propertyName = "")

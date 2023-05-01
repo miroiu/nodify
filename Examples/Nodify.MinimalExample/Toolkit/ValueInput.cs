@@ -19,7 +19,7 @@ namespace Nodifier
 
     public class ValueInput<T> : BaseConnector
     {
-        public ValueInput(IGraphNode node) : base(node)
+        public ValueInput(INodeWidget node) : base(node)
         {
             Editor = new ValueEditor<T>(History);
             Editor.PropertyChanged += OnEditorPropertyChanged;

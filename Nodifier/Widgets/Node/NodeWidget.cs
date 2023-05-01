@@ -2,7 +2,28 @@
 
 namespace Nodifier
 {
-    public class GraphNode : GraphElement, IGraphNode
+    public interface ICanDisconnect
+    {
+        void Disconnect();
+    }
+
+    public interface INodeWidget : IGraphElement, ICanDisconnect
+    {
+        object? Content { get; set; }
+        object? Footer { get; set; }
+        object? Header { get; set; }
+
+        IReadOnlyCollection<IConnector> Input { get; }
+        IReadOnlyCollection<IConnector> Output { get; }
+
+        void AddInput(IConnector input);
+        void RemoveInput(IConnector input);
+
+        void AddOutput(IConnector output);
+        void RemoveOutput(IConnector output);
+    }
+
+    public class NodeWidget : GraphElement, INodeWidget
     {
         private readonly BindableCollection<IConnector> _input = new BindableCollection<IConnector>();
         public IReadOnlyCollection<IConnector> Input => _input;
@@ -31,7 +52,7 @@ namespace Nodifier
             set => SetAndNotify(ref _header, value);
         }
 
-        public GraphNode(IGraphEditor graph) : base(graph)
+        public NodeWidget(IGraphWidget graph) : base(graph)
         {
             RecordProperty(nameof(Content));
             RecordProperty(nameof(Footer));

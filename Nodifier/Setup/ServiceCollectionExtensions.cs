@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Nodifier.Blueprint;
 using System;
 using System.Windows;
 
 namespace Nodifier
 {
-    public static class NodifierExtensions
+    public static class ServiceCollectionExtensions
     {
-        public static void AddNodifier(this IServiceCollection services, Action<NodifierConfiguration>? configure = default)
+        public static void AddBlueprints(this IServiceCollection services, Action<NodifierConfiguration>? configure = default)
         {
             var options = new NodifierConfiguration();
             configure?.Invoke(options);
@@ -17,10 +18,17 @@ namespace Nodifier
             services.AddSingleton<XAML.IViewManager, XAML.ViewManager>();
             services.AddSingleton<IViewFactory, DefaultViewFactory>();
             services.AddSingleton<IViewCollection, ViewCollection>();
+
+            services.AddSingleton<INodeFactory, BPNodeFactory>();
+            services.AddSingleton<IGraphFactory, BPGraphFactory>();
+
             services.AddScoped<IActionsHistory, ActionsHistory>();
+
+            services.AddTransient<IGraphWidget, GraphWidget>();
+            services.AddTransient<IBlueprintGraph, BPGraph>();
         }
 
-        public static void UseNodifier(this IServiceProvider provider)
+        public static void UseBlueprints(this IServiceProvider provider)
         {
             var viewManager = provider.GetRequiredService<XAML.IViewManager>();
             XAML.View.ViewManager = viewManager;

@@ -4,11 +4,11 @@ using System.Windows.Controls;
 namespace Nodifier.Views
 {
     /// <summary>
-    /// Interaction logic for CommentNodeView.xaml
+    /// Interaction logic for RelayNodeView.xaml
     /// </summary>
-    public partial class CommentNodeView : UserControl, IViewFor<CommentNode>
+    public partial class RelayNodeView : UserControl, IViewFor<IRelayNodeWidget>
     {
-        public CommentNodeView()
+        public RelayNodeView()
         {
             InitializeComponent();
         }

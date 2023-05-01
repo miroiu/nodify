@@ -20,7 +20,7 @@ namespace Nodifier
 
     public class PendingConnection : PropertyChangedBase, IPendingConnection
     {
-        public IGraphEditor Graph { get; }
+        public IGraphWidget Graph { get; }
 
         private bool _isVisible;
         public bool IsVisible
@@ -53,7 +53,7 @@ namespace Nodifier
 
         private IConnector? _source;
 
-        public PendingConnection(IGraphEditor graph)
+        public PendingConnection(IGraphWidget graph)
         {
             Graph = graph;
         }

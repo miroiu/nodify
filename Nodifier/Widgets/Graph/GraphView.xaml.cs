@@ -12,7 +12,7 @@ namespace Nodifier.Views
     /// <summary>
     /// Interaction logic for GraphView.xaml
     /// </summary>
-    public partial class GraphView : UserControl, IEditorHost, IViewFor<IGraphEditor>
+    public partial class GraphView : UserControl, IEditorHost, IViewFor<IGraphWidget>
     {
         public GraphView()
         {

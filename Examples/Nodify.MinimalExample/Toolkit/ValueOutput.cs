@@ -4,7 +4,7 @@ namespace Nodifier
 {
     public class ValueOutput<T> : BaseConnector
     {
-        public ValueOutput(IGraphNode node) : base(node)
+        public ValueOutput(INodeWidget node) : base(node)
         {
         }
 

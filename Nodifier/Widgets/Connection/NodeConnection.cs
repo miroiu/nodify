@@ -4,7 +4,7 @@ namespace Nodifier
 {
     public interface IConnection : ICanDisconnect
     {
-        IGraphEditor Graph { get; }
+        IGraphWidget Graph { get; }
 
         IConnector Source { get; }
         IConnector Target { get; }
@@ -28,7 +28,7 @@ namespace Nodifier
         public IConnector Source { get; }
         public IConnector Target { get; }
 
-        public IGraphEditor Graph => Source.Node.Graph;
+        public IGraphWidget Graph => Source.Node.Graph;
 
         public virtual void Disconnect()
         {

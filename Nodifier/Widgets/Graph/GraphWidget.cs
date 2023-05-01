@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Nodifier
 {
-    public partial class GraphEditor : Undoable, IGraphEditor
+    public partial class GraphWidget : Undoable, IGraphWidget
     {
         protected readonly BindableCollection<IGraphElement> _elements = new BindableCollection<IGraphElement>();
         public IReadOnlyCollection<IGraphElement> Elements => _elements;
@@ -21,12 +21,12 @@ namespace Nodifier
 
         public IPendingConnection PendingConnection { get; }
 
-        public GraphEditor(IActionsHistory history) : base(history)
+        public GraphWidget(IActionsHistory history) : base(history)
         {
             PendingConnection = CreatePendingConnection();
         }
 
-        public GraphEditor() : this(new ActionsHistory())
+        public GraphWidget() : this(new ActionsHistory())
         {
 
         }
@@ -100,7 +100,7 @@ namespace Nodifier
 
         public void Split(IConnection connection, Point location)
         {
-            var node = new RelayNode(this)
+            var node = new RelayNodeWidget(this)
             {
                 Location = location
             };
@@ -184,7 +184,7 @@ namespace Nodifier
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (target is IGraphNode node)
+            if (target is INodeWidget node)
             {
                 IConnector? connector = node.Input.FirstOrDefault(x => CanConnect(source, x)) ?? node.Output.FirstOrDefault(x => CanConnect(source, x));
                 if (connector != null)
@@ -192,7 +192,7 @@ namespace Nodifier
                     return TryConnect(source, connector);
                 }
             }
-            else if (target is IRelayNode relay)
+            else if (target is IRelayNodeWidget relay)
             {
                 return TryConnect(source, relay.Connector);
             }

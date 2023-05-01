@@ -1,48 +1,57 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nodifier;
-using System;
-using System.Windows;
+using Nodifier.Blueprint;
 
 namespace Nodify.MinimalExample
 {
-    public class CustomGraphNode : GraphNode
+    public class ForLoopNode : BPNode
     {
-        public ValueInput<bool> In { get; }
-        public ValueOutput<double> Out { get; }
+        public FlowInput In { get; }
+        public FlowOutput Body { get; }
+        public FlowOutput Completed { get; }
+        public ValueInput<int> FirstIndex { get; }
+        public ValueInput<int> LastIndex { get; }
+        public ValueInput<int> Step { get; }
+        public ValueOutput<int> Index { get; }
 
-        public CustomGraphNode(IGraphEditor graph) : base(graph)
+        public ForLoopNode(BPGraph graph, ILogger<ForLoopNode> logger) : base(graph)
         {
-            Footer = "Custom Graph Node";
+            Widget.Footer = "Custom Graph Node";
+            Widget.Header = "Header ";
 
-            In = this.AddValueInput<bool>("Boolean");
-            this.AddValueInput<bool>("Boolean 2");
-            Out = this.AddValueOutput<double>("Double");
+            In = this.AddFlowInput();
+
+            FirstIndex = this.AddValueInput<int>("First Index");
+            LastIndex = this.AddValueInput<int>("Last Index");
+            Step = this.AddValueInput<int>("Step");
+
+            Body = this.AddFlowOutput("Body");
+            Index = this.AddValueOutput<int>("Index");
+            Completed = this.AddFlowOutput("Completed");
         }
     }
 
     public class MinimalApp
     {
-        private readonly ILogger<MinimalApp> _logger;
+        public IBlueprintGraph Graph { get; }
 
-        public IGraphEditor Editor { get; }
-
-        public MinimalApp(ILogger<MinimalApp> logger, Func<IGraphEditor> createEditor)
+        public MinimalApp(IGraphFactory graphFactory)
         {
-            Editor = createEditor();
-            _logger = logger;
+            Graph = graphFactory.Get<IBlueprintGraph>();
 
+            Graph.History.IsEnabled = false;
 
-            Editor.History.IsEnabled = false;
+            //Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 50) });
+            //Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(200, 150) });
+            //Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 250) });
+            //Editor.AddComment("Generated comment", Editor.Elements);
 
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 50) });
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(200, 150) });
-            Editor.AddElement(new CustomGraphNode(Editor) { Location = new Point(100, 250) });
-            Editor.AddComment("Generated comment", Editor.Elements);
+            Graph.AddNode<ForLoopNode>();
 
-            Editor.History.IsEnabled = true;
+            Graph.History.IsEnabled = true;
         }
 
-        public void Undo() => Editor.History.Undo();
-        public void Redo() => Editor.History.Redo();
+        public void Undo() => Graph.History.Undo();
+        public void Redo() => Graph.History.Redo();
     }
 }

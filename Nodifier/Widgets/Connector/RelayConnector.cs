@@ -27,7 +27,7 @@
             base.RemoveConnection(connection);
         }
 
-        public RelayConnector(IRelayNode node) : base(node)
+        public RelayConnector(IRelayNodeWidget node) : base(node)
         {
         }
     }

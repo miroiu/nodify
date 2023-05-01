@@ -4,11 +4,11 @@ using System.Windows.Controls;
 namespace Nodifier.Views
 {
     /// <summary>
-    /// Interaction logic for RelayNodeView.xaml
+    /// Interaction logic for GraphNodeView.xaml
     /// </summary>
-    public partial class RelayNodeView : UserControl, IViewFor<IRelayNode>
+    public partial class GraphNodeView : UserControl, IViewFor<INodeWidget>
     {
-        public RelayNodeView()
+        public GraphNodeView()
         {
             InitializeComponent();
         }

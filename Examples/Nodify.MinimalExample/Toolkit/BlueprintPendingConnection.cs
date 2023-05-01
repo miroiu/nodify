@@ -2,7 +2,7 @@
 {
     public class BlueprintPendingConnection : PendingConnection
     {
-        public BlueprintPendingConnection(IGraphEditor graph) : base(graph)
+        public BlueprintPendingConnection(IGraphWidget graph) : base(graph)
         {
         }
 

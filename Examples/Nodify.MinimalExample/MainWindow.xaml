@@ -17,7 +17,7 @@
     </Window.DataContext>
 
     <Grid>
-        <nodifier:NodeGraph DataContext="{Binding Editor}" />
+        <nodifier:NodeGraph DataContext="{Binding Graph.Widget}" />
         <Border VerticalAlignment="Top"
                 Padding="10"
                 Background="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
