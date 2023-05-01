@@ -18,13 +18,14 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
-            var arrowOffset = new Vector(ArrowSize.Width * direction, 0d);
-            Point endPoint = Spacing > 0 ? target - arrowOffset : target;
+
+            Point p1 = source + spacing;
+            Point p2 = target - spacing;
 
             context.BeginFigure(source, false, false);
-            context.LineTo(source + spacing, true, true);
-            context.LineTo(endPoint - spacing, true, true);
-            context.LineTo(endPoint, true, true);
+            context.LineTo(p1, true, true);
+            context.LineTo(p2, true, true);
+            context.LineTo(target, true, true);
 
             return ((target, source), (source, target));
         }
@@ -35,7 +36,7 @@ namespace Nodify
             {
                 Vector delta = source - target;
                 double headWidth = ArrowSize.Width;
-                double headHeight = ArrowSize.Height;
+                double headHeight = ArrowSize.Height / 2;
 
                 double angle = Math.Atan2(delta.Y, delta.X);
                 double sinT = Math.Sin(angle);

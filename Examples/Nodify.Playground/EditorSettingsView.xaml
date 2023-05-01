@@ -47,6 +47,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Realtime selection: "
@@ -169,42 +170,42 @@
                      Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="14"
+                       Text="Connection angle: "
+                       ToolTip="Applies to circuit connection style"
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="14"
+                     Grid.Column="1"
+                     Text="{Binding CircuitConnectionAngle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="15"
+                       Text="Connection spacing: "
+                       ToolTip="The distance between the start point and the where the angle breaks"
+                       Margin="0 5 5 0" />
+            <TextBox Grid.Row="15"
+                     Grid.Column="1"
+                     Text="{Binding ConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                     Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="16"
+                       Text="Connection arrowhead size: "
+                       ToolTip="The size of the arrowhead."
+                       Margin="0 5 5 0" />
+            <local:PointEditorView  Grid.Row="16"
+                                    Grid.Column="1"
+                                    DataContext="{Binding ConnectionArrowSize, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                    Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="17"
                        Text="Connection style: "
                        Margin="0 5 5 0" />
-            <ComboBox Grid.Row="14"
+            <ComboBox Grid.Row="17"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
                       SelectedValue="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                       ItemsSource="{Binding ConnectionStyle, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="15"
-                       Text="Connection angle: "
-                       ToolTip="Applies to circuit connection style"
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="15"
-                     Grid.Column="1"
-                     Text="{Binding CircuitConnectionAngle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="16"
-                       Text="Connection spacing: "
-                       ToolTip="The distance between the start point and the where the angle breaks"
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="16"
-                     Grid.Column="1"
-                     Text="{Binding ConnectionSpacing, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="17"
-                       Text="Connection arrowhead size: "
-                       ToolTip="The size of the arrowhead."
-                       Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="17"
-                                    Grid.Column="1"
-                                    DataContext="{Binding ConnectionArrowSize, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                                    Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="18"
                        Text="Connection arrowhead end: "
@@ -231,63 +232,74 @@
                       Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="20"
-                       Text="Connection offset mode: "
+                       Text="Connection source offset mode: "
                        Margin="0 5 5 0" />
             <ComboBox Grid.Row="20"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
-                      SelectedValue="{Binding ConnectionOffsetMode, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
-                      ItemsSource="{Binding ConnectionOffsetMode, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
+                      SelectedValue="{Binding ConnectionSourceOffsetMode, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                      ItemsSource="{Binding ConnectionSourceOffsetMode, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
             <TextBlock Grid.Row="21"
+                       Text="Connection target offset mode: "
+                       Margin="0 5 5 0" />
+            <ComboBox Grid.Row="21"
+                      Grid.Column="1"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding ConnectionTargetOffsetMode, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                      ItemsSource="{Binding ConnectionTargetOffsetMode, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
+                      Margin="0 5 5 0" />
+
+            <TextBlock Grid.Row="22"
                        Text="Connection source offset: "
                        Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="21"
+            <local:PointEditorView  Grid.Row="22"
                                     Grid.Column="1"
                                     DataContext="{Binding ConnectionSourceOffset, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                     Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="22"
+            <TextBlock Grid.Row="23"
                        Text="Connection target offset: "
                        Margin="0 5 5 0" />
-            <local:PointEditorView  Grid.Row="22"
+            <local:PointEditorView  Grid.Row="23"
                                     Grid.Column="1"
                                     DataContext="{Binding ConnectionTargetOffset, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                     Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="23"
+            <TextBlock Grid.Row="24"
                        Text="Display connections on top: "
                        Margin="0 5 5 0" />
-            <CheckBox Grid.Row="23"
+            <CheckBox Grid.Row="24"
                       Grid.Column="1"
                       IsChecked="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
             
-            <TextBlock Grid.Row="24"
+            <TextBlock Grid.Row="25"
                        Text="Bring into view speed: "
                        ToolTip="Bring location into view animation speed in pixels per second"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="24"
+            <TextBox Grid.Row="25"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewSpeed, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="25"
+            <TextBlock Grid.Row="26"
                        Text="Bring into view max duration: "
                        ToolTip="Bring location into view max animation duration"
                        Margin="0 5 5 0" />
-            <TextBox Grid.Row="25"
+            <TextBox Grid.Row="26"
                      Grid.Column="1"
                      Text="{Binding BringIntoViewMaxDuration, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                      Margin="0 5 5 0" />
 
-            <TextBlock Grid.Row="26"
+            <TextBlock Grid.Row="27"
                        Text="Grouping node movement: "
                        ToolTip="Whether the grouping node is sticky or not"
                        Margin="0 5 5 0" />
-            <ComboBox Grid.Row="26"
+            <ComboBox Grid.Row="27"
                       Grid.Column="1"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Value"
@@ -295,7 +307,7 @@
                       ItemsSource="{Binding GroupingNodeMovement, Converter={shared:EnumValuesConverter}, Source={x:Static local:EditorSettings.Instance}}"
                       Margin="0 5 5 0" />
 
-            <Expander Grid.Row="27"
+            <Expander Grid.Row="28"
                       Grid.ColumnSpan="2"
                       Header="Advanced"
                       Padding="0 5 0 0"

@@ -224,6 +224,12 @@
                                  Text="{Binding Zoom, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
+                    <TextBlock ToolTip="The estimated frame rate. (my be buggy)">
+                        <TextBlock.Inlines>
+                            <Run Text="FPS: " />
+                            <Run Foreground="LawnGreen" Name="FPSText" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
                 </StackPanel>
             </Grid>
         </Border>

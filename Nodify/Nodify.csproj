@@ -16,13 +16,11 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>4.1.0</Version>
+    <Version>5.0.1</Version>
     <PackageReleaseNotes>
-      > - Features:
-      >   - Added EditorGestures.Selection.DefaultMouseAction to make it easier to change between mouse buttons for selection
-      >   - Added ItemsSelectStartedCommand and ItemsSelectCompletedCommand dependency properties to NodifyEditor for better undo/redo support
       > - Bugfixes:
-      >   - Fixed NodifyEditor.SelectedItems being empty after selection is completed
+      >   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection
+      >   - BaseConnection.ArrowEnds does not display correctly when BaseConnection.Direction is ConnectionDirection.Backward
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

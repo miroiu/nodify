@@ -17,7 +17,7 @@ namespace Nodify
         private readonly NodifyEditor _editor;
         private Vector _dragOffset;
         private Vector _dragAccumulator;
-        private readonly IReadOnlyList<ItemContainer> _selectedContainers;
+        private readonly IList<ItemContainer> _selectedContainers;
 
         public DraggingSimple(NodifyEditor editor)
         {
@@ -32,6 +32,8 @@ namespace Nodify
                 ItemContainer container = _selectedContainers[i];
                 container.Location -= _dragOffset;
             }
+
+            _selectedContainers.Clear();
         }
 
         public void End(Vector change)
@@ -50,6 +52,8 @@ namespace Nodify
 
                 container.Location = result;
             }
+
+            _selectedContainers.Clear();
         }
 
         public void Start(Vector change)

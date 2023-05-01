@@ -45,6 +45,7 @@
                                 Background="{TemplateBinding BorderBrush}" />
 
                         <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
                                     Margin="{TemplateBinding Padding}">
 
                             <ContentPresenter ContentSource="Header" />

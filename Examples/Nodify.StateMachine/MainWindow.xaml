@@ -52,7 +52,8 @@
                                                               StrokeDashArray="{TemplateBinding StrokeDashArray}"
                                                               SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                               Spacing="0"
-                                                              OffsetMode="Edge" />
+                                                              SourceOffsetMode="Edge"
+                                                              TargetOffsetMode="None" />
                             </ControlTemplate>
                         </nodify:PendingConnection.Template>
                     </nodify:PendingConnection>
@@ -66,7 +67,8 @@
                                                   SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                   TargetOffset="{Binding Target.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
                                                   Spacing="0"
-                                                  OffsetMode="Edge"
+                                                  SourceOffsetMode="Edge"
+                                                  TargetOffsetMode="Edge"
                                                   Tag="{Binding}">
                         <nodify:LineConnection.Style>
                             <Style TargetType="{x:Type nodify:LineConnection}"

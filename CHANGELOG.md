@@ -3,12 +3,30 @@
 #### **In development**
 
 > - Breaking Changes:
->   - Removed BaseConnection.GetArrowHeadPoints
->   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
 > - Features:
+> - Bugfixes:
+>   - Fixed NodeOutput content horizontal alignment
+
+#### **Version 5.0.1**
+
+> - Bugfixes:
+>   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection
+>   - BaseConnection.ArrowEnds does not display correctly when BaseConnection.Direction is ConnectionDirection.Backward
+
+#### **Version 5.0.0**
+
+> - Breaking Changes:
+>   - Removed BaseConnection.GetArrowHeadPoints
+>   - Removed BaseConnection.OffsetMode
+>   - Changed return type of BaseConnection.DrawLineGeometry to support both arrowheads no matter the number of points on the line
+>   - Changed the default for BaseConnection.SourceOffset and BaseConnection.TargetOffset from Size(0, 0) to Size(14, 0)
+>   - Changed the default for BaseConnection.ArrowSize from Size(7, 6) to Size(8, 8)
+> - Features:
+>   - Added BaseConnection.SourceOffsetMode and BaseConnection.TargetOffsetMode
 >   - Added BaseConnection.ArrowEnds dependency property to allow configurable arrowhead ends
 >   - Added BaseConnection.ArrowShape dependency property to allow configurable arrowhead shape
 >   - Added NodifyEditor.EnableDraggingContainersOptimizations to allow receiving ItemContainer.Location updates in realtime
+>   - Added ConnectionOffsetMode.Static to allow offsetting the source and target points of the connection on the X and the Y axis without revolving around the source or target points
 > - Bugfixes:
 
 #### **Version 4.1.0**

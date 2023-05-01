@@ -23,9 +23,8 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
-            var arrowOffset = new Vector(ArrowSize.Width * direction, 0d);
-            Point endPoint = Spacing > 0 ? target - arrowOffset : target;
             Point startPoint = source + spacing;
+            Point endPoint = target - spacing;
 
             Vector delta = target - source;
             double height = Math.Abs(delta.Y);
@@ -43,7 +42,7 @@ namespace Nodify
             context.BeginFigure(source, false, false);
             context.LineTo(startPoint, true, true);
             context.BezierTo(startPoint + controlPoint, endPoint - controlPoint, endPoint, true, true);
-            context.LineTo(endPoint, true, true);
+            context.LineTo(target, true, true);
 
             return ((target, source), (source, target));
         }

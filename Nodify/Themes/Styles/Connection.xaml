@@ -33,8 +33,6 @@
                 Value="DodgerBlue" />
         <Setter Property="Spacing"
                 Value="30" />
-        <Setter Property="ArrowSize"
-                Value="7 3" />
     </Style>
 
 </ResourceDictionary>

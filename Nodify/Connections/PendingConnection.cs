@@ -253,13 +253,15 @@ namespace Nodify
             if (!e.Handled && !e.Canceled)
             {
                 e.Handled = true;
+                e.Canceled = !StartedCommand?.CanExecute(e.SourceConnector) ?? false;
+                    
                 Target = null;
-                IsVisible = true;
+                IsVisible = !e.Canceled;
                 SourceAnchor = e.Anchor;
                 TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
                 Source = e.SourceConnector;
 
-                if (StartedCommand?.CanExecute(Source) ?? false)
+                if (!e.Canceled)
                 {
                     StartedCommand?.Execute(Source);
                 }
