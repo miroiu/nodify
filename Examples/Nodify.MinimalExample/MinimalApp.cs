@@ -4,7 +4,14 @@ using Nodifier.Blueprint;
 
 namespace Nodify.MinimalExample
 {
-    public class ForLoopNode : BPNode
+    public class ForLoopSnapshot : INodeSnapshot
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public bool IsSelected { get; set; }
+    }
+
+    public class ForLoopNode : BPNode<ForLoopSnapshot>
     {
         public FlowInput In { get; }
         public FlowOutput Body { get; }
@@ -19,15 +26,15 @@ namespace Nodify.MinimalExample
             Widget.Footer = "Custom Graph Node";
             Widget.Header = "Header ";
 
-            In = this.AddFlowInput();
+            In = AddFlowInput();
 
-            FirstIndex = this.AddValueInput<int>("First Index");
-            LastIndex = this.AddValueInput<int>("Last Index");
-            Step = this.AddValueInput<int>("Step");
+            FirstIndex = AddValueInput<int>("First Index");
+            LastIndex = AddValueInput<int>("Last Index");
+            Step = AddValueInput<int>("Step");
 
-            Body = this.AddFlowOutput("Body");
-            Index = this.AddValueOutput<int>("Index");
-            Completed = this.AddFlowOutput("Completed");
+            Body = AddFlowOutput("Body");
+            Index = AddValueOutput<int>("Index");
+            Completed = AddFlowOutput("Completed");
         }
     }
 
@@ -47,6 +54,12 @@ namespace Nodify.MinimalExample
             //Editor.AddComment("Generated comment", Editor.Elements);
 
             Graph.AddNode<ForLoopNode>();
+            var node = new NodeWidget(Graph.Widget);
+            node.Content = "ADD";
+            node.AddInput(new BaseConnector(node));
+            node.AddInput(new BaseConnector(node));
+            node.AddOutput(new BaseConnector(node));
+            Graph.Widget.AddElement(node);
 
             Graph.History.IsEnabled = true;
         }

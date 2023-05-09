@@ -7,6 +7,7 @@
         xmlns:nodifier="https://miroiu.github.io/nodifier" 
         xmlns:s="clr-namespace:Nodifier.XAML;assembly=Nodifier"
         mc:Ignorable="d"
+        Background="{StaticResource NodifyEditor.BackgroundBrush}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <local:Bootstrapper x:Key="Bootstrapper" />
@@ -17,7 +18,11 @@
     </Window.DataContext>
 
     <Grid>
-        <nodifier:NodeGraph DataContext="{Binding Graph.Widget}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
         <Border VerticalAlignment="Top"
                 Padding="10"
                 Background="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
@@ -28,10 +33,13 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{s:Action Undo}" s:View.ActionTarget="{Binding}">Undo</Button>
+                    <Button Command="{s:Action Undo}" s:View.ActionTarget="{Binding}" Margin="0 0 8 0">Undo</Button>
                     <Button Command="{s:Action Redo}" s:View.ActionTarget="{Binding}">Redo</Button>
                 </StackPanel>
             </Grid>
         </Border>
+        
+        <nodifier:NodeGraph DataContext="{Binding Graph.Widget}" Grid.Row="1" />
+        <!--<nodifier:BlueprintGraph DataContext="{Binding Graph}" />-->
     </Grid>
 </Window>
