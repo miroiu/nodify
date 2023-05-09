@@ -1,9 +1,9 @@
 ﻿namespace Nodifier.Blueprint
 {
-    public class BPNode<TGraph, TWidget, TSnapshot> : IBlueprintNode, IMemento<TSnapshot>
+    public class BPNode<TGraph, TWidget, TSnapshot> : IBlueprintNode, IMemento<TSnapshot>, INodeMemento
         where TGraph : class, IBlueprintGraph
         where TWidget : class, IGraphElement
-        where TSnapshot : INodeSnapshot
+        where TSnapshot : INodeSnapshot, new()
     {
         IGraphElement IBlueprintNode.Widget => Widget;
         IBlueprintGraph IBlueprintNode.Graph => Graph;
@@ -19,24 +19,47 @@
             Widget = widget;
         }
 
-        public virtual void SaveSnapshot(TSnapshot snapshot)
+        public TSnapshot CreateSnapshot()
         {
-            snapshot.X = Widget.Location.X;
-            snapshot.Y = Widget.Location.Y;
-            snapshot.IsSelected = Widget.IsSelected;
+            var snapshot = new TSnapshot
+            {
+                X = Widget.Location.X,
+                Y = Widget.Location.Y,
+                IsSelected = Widget.IsSelected
+            };
+
+            OnSnapshotCreating(snapshot);
+            return snapshot;
+        }
+
+        protected virtual void OnSnapshotCreating(TSnapshot snapshot)
+        {
         }
 
         public virtual void RestoreSnapshot(TSnapshot snapshot)
         {
-            Widget.Location = new System.Windows.Point(snapshot.X, snapshot.Y);
-            Widget.IsSelected = Widget.IsSelected;
+            using (History.Batch(nameof(RestoreSnapshot)))
+            {
+                Widget.Location = new System.Windows.Point(snapshot.X, snapshot.Y);
+                Widget.IsSelected = snapshot.IsSelected;
+            }
+        }
+
+        INodeSnapshot INodeMemento.CreateSnapshot()
+        {
+            return CreateSnapshot();
+        }
+
+        void INodeMemento.RestoreSnapshot(INodeSnapshot snapshot)
+        {
+            RestoreSnapshot((TSnapshot)snapshot);
         }
     }
 
-    public class BPNode<TSnapshot> : BPNode<BPGraph, INodeWidget, TSnapshot>
-        where TSnapshot : class, INodeSnapshot
+    public class BPNode<TSnapshot> : BPNode<IBlueprintGraph, INodeWidget, TSnapshot>
+        where TSnapshot : INodeSnapshot, new()
     {
-        public BPNode(BPGraph graph) : base(graph, new NodeWidget(graph.Widget))
+        public BPNode(IBlueprintGraph graph) : base(graph, new NodeWidget(graph.Widget))
         {
         }
 
@@ -79,9 +102,9 @@
         }
     }
 
-    public class BPNode : BPNode<BPGraph, INodeWidget, BPNodeSnapshot>
+    public class BPNode : BPNode<IBlueprintGraph, INodeWidget, BPNodeSnapshot>
     {
-        public BPNode(BPGraph graph) : base(graph, new NodeWidget(graph.Widget))
+        public BPNode(IBlueprintGraph graph) : base(graph, new NodeWidget(graph.Widget))
         {
         }
     }

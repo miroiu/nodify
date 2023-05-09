@@ -25,7 +25,8 @@ namespace Nodifier
             services.AddScoped<IActionsHistory, ActionsHistory>();
 
             services.AddTransient<IGraphWidget, GraphWidget>();
-            services.AddTransient<IBlueprintGraph, BPGraph>();
+            services.AddTransient<IBlueprintGraph, BPGraph<GraphSnapshot>>();
+            services.AddTransient<BPGraph, BPGraph>();
         }
 
         public static void UseBlueprints(this IServiceProvider provider)

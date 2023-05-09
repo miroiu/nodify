@@ -209,11 +209,12 @@ namespace Nodifier
             }
         }
 
+        // TODO: This should be NodeConnection
         protected virtual IConnection CreateConnection(IConnector source, IConnector target)
-            => new NodeConnection(source, target);
+            => new BlueprintConnection(source, target);
 
         protected virtual IPendingConnection CreatePendingConnection()
-            => new PendingConnection(this);
+            => new BlueprintPendingConnection(this);
 
         protected virtual bool CanConnect(IConnector source, IConnector target)
         {

@@ -36,6 +36,8 @@ namespace Nodifier
         public event EventHandler? Initialized;
         public IEditorSettings Settings { get; } = new EditorSettings();
 
+        public Point MouseLocation => Editor.MouseLocation;
+
         private Point _viewportLocation;
         public Point ViewportLocation
         {

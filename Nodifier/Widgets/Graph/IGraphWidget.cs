@@ -16,6 +16,7 @@ namespace Nodifier
         IPendingConnection PendingConnection { get; }
         IEditorSettings Settings { get; }
 
+        Point MouseLocation { get; }
         Point ViewportLocation { get; set; }
         double ViewportZoom { get; set; }
         Size ViewportSize { get; }

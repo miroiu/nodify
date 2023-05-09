@@ -17,6 +17,11 @@
         <Binding Path="Application" Source="{StaticResource Bootstrapper}" />
     </Window.DataContext>
 
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+C" Command="{s:Action Copy}" s:View.ActionTarget="{Binding}" />
+        <KeyBinding Gesture="Ctrl+V" Command="{s:Action Paste}" s:View.ActionTarget="{Binding}" />
+    </Window.InputBindings>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -27,6 +32,7 @@
                 Padding="10"
                 Background="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
             <Grid>
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
@@ -34,7 +40,10 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{s:Action Undo}" s:View.ActionTarget="{Binding}" Margin="0 0 8 0">Undo</Button>
-                    <Button Command="{s:Action Redo}" s:View.ActionTarget="{Binding}">Redo</Button>
+                    <Button Command="{s:Action Redo}" s:View.ActionTarget="{Binding}" Margin="0 0 32 0">Redo</Button>
+                    <Button Command="{s:Action Copy}" s:View.ActionTarget="{Binding}" Margin="0 0 8 0">Copy</Button>
+                    <Button Command="{s:Action Paste}" s:View.ActionTarget="{Binding}" Margin="0 0 32 0">Paste</Button>
+                    <Button Command="{s:Action SaveAndReload}" s:View.ActionTarget="{Binding}">Save and Reload</Button>
                 </StackPanel>
             </Grid>
         </Border>

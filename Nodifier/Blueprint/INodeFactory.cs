@@ -8,6 +8,7 @@ namespace Nodifier.Blueprint
     {
         TNode Get<TNode>(IBlueprintGraph graph)
             where TNode : IBlueprintNode;
+        IBlueprintNode Get(Type nodeType, IBlueprintGraph graph);
     }
 
     internal class BPNodeFactory : INodeFactory
@@ -23,18 +24,28 @@ namespace Nodifier.Blueprint
         public TNode Get<TNode>(IBlueprintGraph graph)
             where TNode : IBlueprintNode
         {
+            return (TNode)Get(typeof(TNode), graph);
+        }
+
+        public IBlueprintNode Get(Type nodeType, IBlueprintGraph graph)
+        {
+            if(!typeof(IBlueprintNode).IsAssignableFrom(nodeType))
+            {
+                throw new ArgumentException($"{nameof(nodeType)} must implement {nameof(IBlueprintNode)}");
+            }
+
             var editorType = graph.GetType();
-            var factoryKey = (typeof(TNode), editorType);
+            var factoryKey = (nodeType, editorType);
 
             if (!_factories.TryGetValue(factoryKey, out var factory))
             {
-                var nodeFactory = ActivatorUtilities.CreateFactory(typeof(TNode), new[] { editorType });
+                var nodeFactory = ActivatorUtilities.CreateFactory(nodeType, new[] { editorType });
                 _factories.Add(factoryKey, nodeFactory);
                 factory = nodeFactory;
             }
 
             var nodeResult = factory(_serviceProvider, new object[] { graph });
-            return (TNode)nodeResult;
+            return (IBlueprintNode)nodeResult;
         }
     }
 }
