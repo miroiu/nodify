@@ -16,11 +16,11 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>5.0.1</Version>
+    <Version>5.0.2</Version>
     <PackageReleaseNotes>
       > - Bugfixes:
-      >   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection
-      >   - BaseConnection.ArrowEnds does not display correctly when BaseConnection.Direction is ConnectionDirection.Backward
+      >   - Fixed NodeOutput content horizontal alignment
+      >   - Fixed Connector not opening Context Menu
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

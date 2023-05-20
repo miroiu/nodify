@@ -5,7 +5,12 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+
+#### **Version 5.0.2**
+
+> - Bugfixes:
 >   - Fixed NodeOutput content horizontal alignment
+>   - Fixed Connector not opening Context Menu
 
 #### **Version 5.0.1**
 
