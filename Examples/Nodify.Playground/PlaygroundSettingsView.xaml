@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Nodify.Playground"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance Type=local:PlaygroundViewModel, IsDesignTimeCreatable=True}"
              d:Foreground="{DynamicResource ForegroundBrush}"
              d:Background="{DynamicResource PanelBackgroundBrush}"
@@ -11,94 +12,50 @@
     <Border BorderThickness="1"
             Padding="10"
             HorizontalAlignment="Stretch">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"
-                                  SharedSizeGroup="PropertyName" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
 
-            <TextBlock Text="Show grid lines: "
-                       Margin="0 0 5 0" />
-            <CheckBox Grid.Column="1"
-                      IsChecked="{Binding Settings.ShowGridLines}"
-                      Margin="0 0 5 0" />
-
-            <TextBlock Grid.Row="1"
-                       Text="Connect nodes: "
-                       Margin="0 5 5 0" />
-            <CheckBox Grid.Row="1"
-                      Grid.Column="1"
-                      IsChecked="{Binding Settings.ShouldConnectNodes}"
-                      Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="2"
-                       Text="Async loading: "
-                       Margin="0 5 5 0" />
-            <CheckBox Grid.Row="2"
-                      Grid.Column="1"
-                      IsChecked="{Binding Settings.AsyncLoading}"
-                      Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="3"
-                       Text="Min nodes: "
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="3"
-                     Grid.Column="1"
-                     Text="{Binding Settings.MinNodes, Mode=TwoWay}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="4"
-                       Text="Max nodes: "
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     Text="{Binding Settings.MaxNodes, Mode=TwoWay}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="5"
-                       Text="Min connectors: "
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="5"
-                     Grid.Column="1"
-                     Text="{Binding Settings.MinConnectors, Mode=TwoWay}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="6"
-                       Text="Max connectors: "
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="6"
-                     Grid.Column="1"
-                     Text="{Binding Settings.MaxConnectors, Mode=TwoWay}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="7"
-                       Text="Performance test nodes: "
-                       Margin="0 5 5 0" />
-            <TextBox Grid.Row="7"
-                     Grid.Column="1"
-                     IsEnabled="False"
-                     Text="{Binding Settings.PerformanceTestNodes}"
-                     Margin="0 5 5 0" />
-
-            <TextBlock Grid.Row="8"
-                       Text="Use custom shapes for connectors: "
-                       Margin="0 5 5 0" />
-            <CheckBox Grid.Row="8"
-                      Grid.Column="1"
-                      IsChecked="{Binding Settings.UseCustomConnectors}"
-                      Margin="0 5 5 0" />
-        </Grid>
+        <ItemsControl ItemsSource="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DataTemplate.Resources>
+                        <DataTemplate x:Key="NumberTemplate">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"
+                                                      SharedSizeGroup="PropertyName" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Margin="0 5 5 0" Text="{Binding Name}" />
+                                <TextBox Grid.Column="1" Margin="0 5 5 0" Text="{Binding Value}" />
+                            </Grid>
+                        </DataTemplate>
+                        <DataTemplate x:Key="BoolTemplate">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"
+                                                      SharedSizeGroup="PropertyName" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Margin="0 5 5 0" Text="{Binding Name}" />
+                                <CheckBox Grid.Column="1" Margin="0 5 5 0" IsChecked="{Binding Value}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataTemplate.Resources>
+                    <ContentPresenter x:Name="ContentField"
+                                      Content="{Binding}"
+                                      ContentTemplate="{StaticResource ResourceKey=NumberTemplate}" />
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=Type}" Value="Boolean">
+                            <Setter TargetName="ContentField" Property="ContentTemplate"
+                                    Value="{StaticResource ResourceKey=BoolTemplate}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=Type}" Value="Number">
+                            <Setter TargetName="ContentField" Property="ContentTemplate"
+                                    Value="{StaticResource ResourceKey=NumberTemplate}" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
     </Border>
 </UserControl>
