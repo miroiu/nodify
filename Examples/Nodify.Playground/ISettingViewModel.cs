@@ -14,9 +14,13 @@ namespace Nodify.Playground
     public interface ISettingViewModel
     {
         string Name { get; }
-        string? Description { get; } // This is the tooltip
+        
+        /// <value>
+        /// Property <c>Description</c> represents the content within the tooltip.
+        /// </value>
+        string? Description { get; }
         object? Value { get; set; }
 
-        public SettingsType Type { get; set; }
+        SettingsType Type { get;}
     }
 }

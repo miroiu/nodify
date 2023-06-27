@@ -7,8 +7,8 @@ namespace Nodify.Playground
         private readonly Func<T> _getter;
         private readonly Action<T> _setter;
 
-        public ProxySettingViewModel(Func<T> getter, Action<T> setter, string name, SettingsType type, string? description = default)
-            : base(name, type, description)
+        public ProxySettingViewModel(Func<T> getter, Action<T> setter, string name, string? description = default)
+            : base(name, description)
         {
             _getter = getter;
             _setter = setter;

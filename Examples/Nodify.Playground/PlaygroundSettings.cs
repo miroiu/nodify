@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Nodify.Playground
 {
-    public class PlaygroundSettings : ObservableObject, IEnumerable<ISettingViewModel>
+    public class PlaygroundSettings : ObservableObject
     {
         public ObservableCollection<ISettingViewModel> Settings { get; set; }
 
@@ -15,43 +15,35 @@ namespace Nodify.Playground
                 new ProxySettingViewModel<bool>(
                     () => Instance.ShowGridLines,
                     val => Instance.ShowGridLines = val,
-                    "Show grid lines:",
-                    SettingsType.Boolean),
+                    "Show grid lines:"),
                 new ProxySettingViewModel<bool>(
                     () => Instance.ShouldConnectNodes,
                     val => Instance.ShouldConnectNodes = val,
-                    "Connect nodes:",
-                    SettingsType.Boolean),
+                    "Connect nodes:"),
                 new ProxySettingViewModel<bool>(
                     () => Instance.AsyncLoading,
                     val => Instance.AsyncLoading = val,
-                    "Async loading:",
-                    SettingsType.Boolean),
+                    "Async loading:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.MinNodes,
                     val => Instance.MinNodes = val,
-                    "Min nodes:",
-                    SettingsType.Number),
+                    "Min nodes:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.MaxNodes,
                     val => Instance.MaxNodes = val,
-                    "Max nodes:",
-                    SettingsType.Number),
+                    "Max nodes:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.MinConnectors,
                     val => Instance.MinConnectors = val,
-                    "Min connectors:",
-                    SettingsType.Number),
+                    "Min connectors:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.MaxConnectors,
                     val => Instance.MaxConnectors = val,
-                    "Max connectors:",
-                    SettingsType.Number),
+                    "Max connectors:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.PerformanceTestNodes,
                     val => Instance.PerformanceTestNodes = val,
-                    "Performance test nodes:",
-                    SettingsType.Number),
+                    "Performance test nodes:"),
             };
         }
 
@@ -122,16 +114,6 @@ namespace Nodify.Playground
         {
             get => _customConnectors;
             set => SetProperty(ref _customConnectors, value);
-        }
-
-        public IEnumerator<ISettingViewModel> GetEnumerator()
-        {
-            return Settings.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

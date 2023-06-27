@@ -13,19 +13,26 @@
             set => SetProperty(ref _value, value);
         }
 
-        public SettingsType Type { get; set; }
+        public SettingsType Type { get;}
 
         public T Value
         {
-            get => ((ISettingViewModel)this).Value is T val ? val : default!;
+            get => (T)((ISettingViewModel)this).Value!;
             set => ((ISettingViewModel)this).Value = value;
         }
 
-        public BaseSettingViewModel(string name, SettingsType type, string? description = default)
+        public BaseSettingViewModel(string name, string? description = default)
         {
             Name = name;
             Description = description;
-            Type = type;
+            if (typeof(T) == typeof(bool))
+                Type = SettingsType.Boolean;
+            else if (typeof(T) == typeof(double) || typeof(T) == typeof(uint))
+                Type = SettingsType.Number;
+            else if (typeof(T) == typeof(PointEditor))
+                Type = SettingsType.Point;
+            else
+                Type = SettingsType.Option;
         }
     }
 }
