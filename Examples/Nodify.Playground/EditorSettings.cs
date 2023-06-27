@@ -13,8 +13,8 @@ namespace Nodify.Playground
 
     public class EditorSettings : ObservableObject
     {
-        public ObservableCollection<ISettingViewModel> Settings { get; set; }
-        public ObservableCollection<ISettingViewModel> AdvancedSettings { get; set; }
+        public IReadOnlyCollection<ISettingViewModel> Settings { get; }
+        public IReadOnlyCollection<ISettingViewModel> AdvancedSettings { get; }
 
         private EditorSettings()
         {

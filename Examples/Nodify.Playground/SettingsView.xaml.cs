@@ -1,18 +1,19 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Nodify.Playground
 {
     public partial class SettingsView : UserControl
     {
-        public static readonly DependencyProperty SettingsItemsProperty =
-            DependencyProperty.Register("SettingsItems", typeof(object), typeof(SettingsView),
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register("Items", typeof(IEnumerable<ISettingViewModel>), typeof(SettingsView),
                 new PropertyMetadata(null));
 
-        public object SettingsItems
+        public IEnumerable<ISettingViewModel> Items
         {
-            get { return GetValue(SettingsItemsProperty); }
-            set { SetValue(SettingsItemsProperty, value); }
+            get { return (IEnumerable<ISettingViewModel>)GetValue(ItemsProperty); }
+            set { SetValue(ItemsProperty, value); }
         }
 
         public SettingsView()

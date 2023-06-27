@@ -6,7 +6,7 @@ namespace Nodify.Playground
 {
     public class PlaygroundSettings : ObservableObject
     {
-        public ObservableCollection<ISettingViewModel> Settings { get; set; }
+        public IReadOnlyCollection<ISettingViewModel> Settings { get; }
 
         private PlaygroundSettings()
         {
@@ -24,6 +24,10 @@ namespace Nodify.Playground
                     () => Instance.AsyncLoading,
                     val => Instance.AsyncLoading = val,
                     "Async loading:"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.UseCustomConnectors,
+                    val => Instance.UseCustomConnectors = val,
+                    "Custom connectors:"),
                 new ProxySettingViewModel<uint>(
                     () => Instance.MinNodes,
                     val => Instance.MinNodes = val,

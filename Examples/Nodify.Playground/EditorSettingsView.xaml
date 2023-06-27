@@ -13,7 +13,7 @@
         <Border BorderThickness="1"
                 Padding="10"
                 HorizontalAlignment="Stretch">
-            <local:SettingsView SettingsItems="{Binding Source={x:Static local:EditorSettings.Instance}, Path=Settings}"/>
+            <local:SettingsView Items="{Binding Source={x:Static local:EditorSettings.Instance}, Path=Settings}"/>
         </Border>
         <Expander
             Header="Advanced"
@@ -37,8 +37,9 @@
             </Expander.Style>
 
             <Border BorderThickness="1"
+                    Padding="10"
                     HorizontalAlignment="Stretch">
-                <local:SettingsView SettingsItems="{Binding Source={x:Static local:EditorSettings.Instance}, Path=AdvancedSettings}"/>
+                <local:SettingsView Items="{Binding Source={x:Static local:EditorSettings.Instance}, Path=AdvancedSettings}"/>
             </Border>
         </Expander>
     </StackPanel>

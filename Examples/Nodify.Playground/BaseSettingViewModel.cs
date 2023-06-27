@@ -1,9 +1,11 @@
-﻿namespace Nodify.Playground
+﻿using System;
+
+namespace Nodify.Playground
 {
     public class BaseSettingViewModel<T> : ObservableObject, ISettingViewModel
     {
         public string Name { get; }
-        public string? Description { get; } // This is the tooltip
+        public string? Description { get; }
 
         private object? _value;
 
@@ -25,14 +27,14 @@
         {
             Name = name;
             Description = description;
-            if (typeof(T) == typeof(bool))
-                Type = SettingsType.Boolean;
-            else if (typeof(T) == typeof(double) || typeof(T) == typeof(uint))
-                Type = SettingsType.Number;
-            else if (typeof(T) == typeof(PointEditor))
-                Type = SettingsType.Point;
-            else
-                Type = SettingsType.Option;
+            Type = typeof(T) switch
+            {
+                { } t when t == typeof(bool) => SettingsType.Boolean,
+                { } t when t == typeof(uint) || t == typeof(double) => SettingsType.Number,
+                { } t when t == typeof(PointEditor) => SettingsType.Point,
+                { IsEnum: true } => SettingsType.Option,
+                _ => throw new InvalidOperationException($"Type {typeof(T).Name} does not have a matching {nameof(SettingsType)}.")
+            };
         }
     }
 }

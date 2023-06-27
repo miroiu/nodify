@@ -1,13 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace Nodify.Playground
+﻿namespace Nodify.Playground
 {
     public enum SettingsType
     {
         Boolean,
         Number,
-        Option, //For ComboBox
+        Option,
         Point
     }
 
@@ -15,9 +12,9 @@ namespace Nodify.Playground
     {
         string Name { get; }
         
-        /// <value>
-        /// Property <c>Description</c> represents the content within the tooltip.
-        /// </value>
+        /// <summary>
+        /// Represents the content within the tooltip.
+        /// </summary>
         string? Description { get; }
         object? Value { get; set; }
 
