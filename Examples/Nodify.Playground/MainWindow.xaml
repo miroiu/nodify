@@ -131,8 +131,11 @@
                                 </Style.Triggers>
                             </Style>
                         </Expander.Style>
-
-                        <local:PlaygroundSettingsView />
+                        <Border BorderThickness="1"
+                                Padding="10"
+                                HorizontalAlignment="Stretch">
+                            <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
+                        </Border>
                     </Expander>
 
                     <Expander Header="Editor Settings"
