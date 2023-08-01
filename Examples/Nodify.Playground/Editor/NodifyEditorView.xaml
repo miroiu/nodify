@@ -385,7 +385,7 @@
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
                     <Setter Property="CacheMode">
                         <Setter.Value>
-                            <BitmapCache RenderAtScale="2" EnableClearType="True" />
+                            <BitmapCache RenderAtScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}" EnableClearType="True" />
                         </Setter.Value>
                     </Setter>
                     <Setter Property="Location"
