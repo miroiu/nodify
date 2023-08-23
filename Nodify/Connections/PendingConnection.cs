@@ -305,6 +305,9 @@ namespace Nodify
                             {
                                 PreviewTarget = connector.DataContext;
                             }
+                        }else if (EnablePreview)
+                        {
+                            PreviewTarget = null;
                         }
 
                         _previousConnector = connector;
