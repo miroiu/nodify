@@ -30,7 +30,7 @@
         <Setter Property="MinWidth"
                 Value="15" />
         <Setter Property="VerticalAlignment"
-                Value="Center" />
+                Value="Top" />
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
         <Setter Property="VerticalContentAlignment"

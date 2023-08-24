@@ -299,15 +299,12 @@ namespace Nodify
                         if (connector != null)
                         {
                             SetIsOverElement(connector, true);
+                        }
 
-                            // Update the preview target if enabled
-                            if (EnablePreview)
-                            {
-                                PreviewTarget = connector.DataContext;
-                            }
-                        }else if (EnablePreview)
+                        // Update the preview target if enabled
+                        if (EnablePreview)
                         {
-                            PreviewTarget = null;
+                            PreviewTarget = connector?.DataContext;
                         }
 
                         _previousConnector = connector;
