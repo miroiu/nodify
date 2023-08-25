@@ -5,6 +5,8 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>   - Fixed PendingConnection.PreviewTarget not being set to null when there is no actual target
+>   - Fixed connectors panel not being affected by Node.VerticalAlignment
 
 #### **Version 5.0.2**
 
