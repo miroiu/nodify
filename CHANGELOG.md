@@ -4,9 +4,11 @@
 
 > - Breaking Changes:
 > - Features:
+>   - Added ItemContainer.SelectedBorderThickness dependency property
 > - Bugfixes:
 >   - Fixed PendingConnection.PreviewTarget not being set to null when there is no actual target
 >   - Fixed connectors panel not being affected by Node.VerticalAlignment
+>   - Changing BorderThickness causes layout shift when selecting an item container
 
 #### **Version 5.0.2**
 

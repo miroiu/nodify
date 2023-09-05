@@ -95,6 +95,7 @@
             <Setter Property="ActualSize"
                     Value="{Binding Size, Mode=OneWayToSource}" />
             <Setter Property="BorderBrush" Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
+            <Setter Property="BorderThickness" Value="2" />
         </Style>
     </UserControl.Resources>
     
