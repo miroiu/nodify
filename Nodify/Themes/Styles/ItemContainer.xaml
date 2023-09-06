@@ -26,6 +26,8 @@
     <Style TargetType="{x:Type local:ItemContainer}">
         <Setter Property="BorderThickness"
                 Value="1" />
+        <Setter Property="SelectedBorderThickness"
+                Value="2" />
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
         <Setter Property="SelectedBrush"
@@ -59,29 +61,29 @@
                 <MultiTrigger.Setters>
                     <Setter Property="BorderBrush"
                             Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
-                    <Setter Property="BorderThickness"
-                            Value="2" />
                     <Setter Property="Margin"
-                            Value="-1" />
+                            Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="BorderThickness"
+                            Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
                 </MultiTrigger.Setters>
             </MultiTrigger>
             <Trigger Property="IsPreviewingSelection"
                      Value="True">
                 <Setter Property="BorderBrush"
                         Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="BorderThickness"
-                        Value="2" />
                 <Setter Property="Margin"
-                        Value="-1" />
+                        Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+                <Setter Property="BorderThickness"
+                        Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
             </Trigger>
             <Trigger Property="local:PendingConnection.IsOverElement"
                      Value="True">
                 <Setter Property="BorderBrush"
                         Value="{Binding HighlightBrush, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="BorderThickness"
-                        Value="2" />
                 <Setter Property="Margin"
-                        Value="-1" />
+                        Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+                <Setter Property="BorderThickness"
+                        Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
             </Trigger>
         </Style.Triggers>
     </Style>

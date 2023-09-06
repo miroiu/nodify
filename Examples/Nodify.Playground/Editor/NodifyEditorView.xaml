@@ -315,7 +315,7 @@
                                 <Setter.Value>
                                     <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Title}" Margin="0 0 5 0" />
+                                            <TextBlock Text="{Binding Title}" Margin="0 0 5 0" VerticalAlignment="Center" />
                                             <ComboBox DisplayMemberPath="Name"
                                                       SelectedValuePath="Value"
                                                       SelectedValue="{Binding Shape}"
@@ -383,6 +383,10 @@
             <nodify:NodifyEditor.ItemContainerStyle>
                 <Style TargetType="{x:Type nodify:ItemContainer}"
                        BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                    <Setter Property="BorderThickness"
+                            Value="2" />
+                    <Setter Property="SelectedBorderThickness"
+                            Value="4" />
                     <Setter Property="CacheMode">
                         <Setter.Value>
                             <BitmapCache RenderAtScale="{Binding MaxZoom, Source={x:Static local:EditorSettings.Instance}}" EnableClearType="True" />
