@@ -46,7 +46,7 @@ namespace Nodify
                 Point result = container.Location + new Vector(r.X, r.Y);
 
                 // Correct the final position
-                if (NodifyEditor.EnableSnappingCorrection && r.X != 0 && r.Y != 0)
+                if (NodifyEditor.EnableSnappingCorrection && (r.X != 0 || r.Y != 0))
                 {
                     result.X = (int)result.X / _editor.GridCellSize * _editor.GridCellSize;
                     result.Y = (int)result.Y / _editor.GridCellSize * _editor.GridCellSize;
