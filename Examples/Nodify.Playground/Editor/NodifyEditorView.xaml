@@ -267,7 +267,7 @@
                                     <Border Background="{TemplateBinding Background}"
                                             Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                             Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Visibility="{TemplateBinding EnablePreview, Converter={shared:BooleanToVisibilityConverter}}"
+                                            Visibility="{Binding PreviewText, Converter={shared:StringToVisibilityConverter}}"
                                             Padding="{TemplateBinding Padding}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
                                             BorderBrush="{TemplateBinding BorderBrush}"

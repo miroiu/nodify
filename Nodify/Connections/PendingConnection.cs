@@ -265,6 +265,11 @@ namespace Nodify
                 {
                     StartedCommand?.Execute(Source);
                 }
+
+                if(EnablePreview)
+                {
+                    PreviewTarget = e.SourceConnector;
+                }
             }
         }
 
@@ -335,6 +340,11 @@ namespace Nodify
                     {
                         CompletedCommand?.Execute(Target);
                     }
+                }
+
+                if(EnablePreview)
+                {
+                    PreviewTarget = null;
                 }
             }
         }

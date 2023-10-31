@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="Auto" SharedSizeGroup="PropertyName" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Name}" Margin="0 5 5 0" Grid.Column="0" />
+                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Margin="0 5 5 0" Grid.Column="0" />
                     <ContentControl Content="{Binding}" Margin="5 5 5 0" Grid.Column="1">
                         <ContentControl.Style>
                             <Style TargetType="{x:Type ContentControl}">
