@@ -1,0 +1,54 @@
+﻿<Window x:Class="Nodify.MinimalExample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nodify.MinimalExample" 
+        xmlns:nodifier="https://miroiu.github.io/nodifier" 
+        xmlns:s="clr-namespace:Nodifier.XAML;assembly=Nodifier"
+        mc:Ignorable="d"
+        Background="{StaticResource NodifyEditor.BackgroundBrush}"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:Bootstrapper x:Key="Bootstrapper" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <Binding Path="Application" Source="{StaticResource Bootstrapper}" />
+    </Window.DataContext>
+
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+C" Command="{s:Action Copy}" s:View.ActionTarget="{Binding}" />
+        <KeyBinding Gesture="Ctrl+V" Command="{s:Action Paste}" s:View.ActionTarget="{Binding}" />
+    </Window.InputBindings>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Border VerticalAlignment="Top"
+                Padding="10"
+                Background="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
+            <Grid>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{s:Action Undo}" s:View.ActionTarget="{Binding}" Margin="0 0 8 0">Undo</Button>
+                    <Button Command="{s:Action Redo}" s:View.ActionTarget="{Binding}" Margin="0 0 32 0">Redo</Button>
+                    <Button Command="{s:Action Copy}" s:View.ActionTarget="{Binding}" Margin="0 0 8 0">Copy</Button>
+                    <Button Command="{s:Action Paste}" s:View.ActionTarget="{Binding}" Margin="0 0 32 0">Paste</Button>
+                    <Button Command="{s:Action SaveAndReload}" s:View.ActionTarget="{Binding}">Save and Reload</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <nodifier:NodeGraph DataContext="{Binding Graph.Widget}" Grid.Row="1" />
+        <!--<nodifier:BlueprintGraph DataContext="{Binding Graph}" />-->
+    </Grid>
+</Window>
