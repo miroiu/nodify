@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Nodify.Calculator"
              xmlns:nodify="https://miroiu.github.io/nodify"
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared" 
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance Type=local:EditorViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -98,7 +99,7 @@
             <Setter Property="BorderThickness" Value="2" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
         <nodify:NodifyEditor DataContext="{Binding Calculator}"
                              ItemsSource="{Binding Operations}"
@@ -111,6 +112,8 @@
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
                              ItemContainerStyle="{StaticResource ItemContainerStyle}"
                              GridCellSize="15"
+                             AllowDrop="True"
+                             Drop="OnDropNode"
                              x:Name="Editor">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:NodeInput}"
@@ -287,7 +290,9 @@
                                                  ConnectionTemplate="{StaticResource ConnectionTemplate}"
                                                  ItemContainerStyle="{StaticResource ItemContainerStyle}"
                                                  Background="Transparent"
-                                                 GridCellSize="15"
+                                                 GridCellSize="15"                    
+                                                 AllowDrop="True"
+                                                 Drop="OnDropNode"
                                                  Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
 
                                 <nodify:NodifyEditor.InputBindings>
@@ -350,8 +355,48 @@
                 </nodify:DecoratorContainer>
             </CompositeCollection>
         </nodify:NodifyEditor>
-        
+
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
+
+        <Border HorizontalAlignment="Right" 
+                MinWidth="200"
+                MaxWidth="300"
+                Padding="7"
+                Margin="10"
+                CornerRadius="3"
+                BorderThickness="2">
+            <Border.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}"
+                                 Opacity="0.7" />
+            </Border.Background>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Calculator.OperationsMenu.AvailableOperations}">
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.Margin" Value="5"/>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Left"/>
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand"/>
+                            <Setter Property="FrameworkElement.ToolTip" Value="Drag and drop into the editor"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:OperationViewModel}">
+                            <nodify:Node Content="{Binding Title}"
+                                     Input="{Binding Input}"
+                                     BorderBrush="{StaticResource AnimatedBrush}"
+                                     BorderThickness="2"
+                                     MouseMove="OnNodeDrag">
+                                <nodify:Node.Output>
+                                    <CompositeCollection>
+                                        <sys:String>Output</sys:String>
+                                    </CompositeCollection>
+                                </nodify:Node.Output>
+                            </nodify:Node>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>

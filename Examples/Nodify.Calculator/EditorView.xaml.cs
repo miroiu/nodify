@@ -34,5 +34,27 @@ namespace Nodify.Calculator
                 calculator.OperationsMenu.Close();
             }
         }
+
+        private void OnDropNode(object sender, DragEventArgs e)
+        {
+            if(e.Source is NodifyEditor editor && editor.DataContext is CalculatorViewModel calculator
+                && e.Data.GetData(typeof(OperationInfoViewModel)) is OperationInfoViewModel operation)
+            {
+                OperationViewModel op = OperationFactory.GetOperation(operation);
+                op.Location = editor.GetLocationInsideEditor(e);
+                calculator.Operations.Add(op);
+
+                e.Handled = true;
+            }
+        }
+
+        private void OnNodeDrag(object sender, MouseEventArgs e)
+        {
+            if(e.LeftButton == MouseButtonState.Pressed && ((FrameworkElement)sender).DataContext is OperationInfoViewModel operation)
+            { 
+                var data = new DataObject(typeof(OperationInfoViewModel), operation);
+                DragDrop.DoDragDrop(this, data, DragDropEffects.Copy);
+            }
+        }
     }
 }

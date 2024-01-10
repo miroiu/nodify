@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 >   - Added ItemContainer.SelectedBorderThickness dependency property
+    - Added NodifyEditor.GetLocationInsideEditor
 > - Bugfixes:
 >   - Fixed PendingConnection.PreviewTarget not being set to null when there is no actual target
 >   - Fixed PendingConnection.PreviewTarget not being set on Connector.PendingConnectionStartedEvent
