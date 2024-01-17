@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Nodify.Calculator"
              xmlns:nodify="https://miroiu.github.io/nodify"
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared" 
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance Type=local:EditorViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -32,6 +33,40 @@
                       Viewport="0 0 150 150"
                       Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
+
+        <LinearGradientBrush x:Key="AnimatedBrush" StartPoint="0 0" EndPoint="1 0">
+            <GradientStop Color="#6366f1" Offset="0" />
+            <GradientStop Color="#a855f7" Offset="0.5" />
+            <GradientStop Color="#ec4899" Offset="1" />
+        </LinearGradientBrush>
+        <Border x:Key="AnimatedBorderPlaceholder" BorderBrush="{StaticResource AnimatedBrush}" />
+
+        <Storyboard x:Key="AnimateBorder" RepeatBehavior="Forever">
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                                    Duration="0:0:2" To="1 0" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 1" BeginTime="0:0:2" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 1" BeginTime="0:0:4" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 0" BeginTime="0:0:6" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 1" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)" 
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                                    Duration="0:0:2" To="0 1" BeginTime="0:0:2" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="0 0" BeginTime="0:0:4" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
+                                    Duration="0:0:2" To="1 0" BeginTime="0:0:6" />
+        </Storyboard>
 
         <local:ItemToListConverter x:Key="ItemToListConverter" />
 
@@ -60,8 +95,11 @@
                     Value="{Binding IsSelected}" />
             <Setter Property="ActualSize"
                     Value="{Binding Size, Mode=OneWayToSource}" />
+            <Setter Property="BorderBrush" Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
+            <Setter Property="BorderThickness" Value="2" />
         </Style>
     </UserControl.Resources>
+
     <Grid>
         <nodify:NodifyEditor DataContext="{Binding Calculator}"
                              ItemsSource="{Binding Operations}"
@@ -74,6 +112,8 @@
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
                              ItemContainerStyle="{StaticResource ItemContainerStyle}"
                              GridCellSize="15"
+                             AllowDrop="True"
+                             Drop="OnDropNode"
                              x:Name="Editor">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:NodeInput}"
@@ -250,7 +290,9 @@
                                                  ConnectionTemplate="{StaticResource ConnectionTemplate}"
                                                  ItemContainerStyle="{StaticResource ItemContainerStyle}"
                                                  Background="Transparent"
-                                                 GridCellSize="15"
+                                                 GridCellSize="15"                    
+                                                 AllowDrop="True"
+                                                 Drop="OnDropNode"
                                                  Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
 
                                 <nodify:NodifyEditor.InputBindings>
@@ -300,6 +342,12 @@
                             Command="{Binding GroupSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
 
+            <nodify:NodifyEditor.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Name="AnimateBorder" Storyboard="{StaticResource AnimateBorder}" />
+                </EventTrigger>
+            </nodify:NodifyEditor.Triggers>
+
             <CompositeCollection>
                 <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
                                            Location="{Binding Location}">
@@ -307,8 +355,48 @@
                 </nodify:DecoratorContainer>
             </CompositeCollection>
         </nodify:NodifyEditor>
-        
+
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
+
+        <Border HorizontalAlignment="Right" 
+                MinWidth="200"
+                MaxWidth="300"
+                Padding="7"
+                Margin="10"
+                CornerRadius="3"
+                BorderThickness="2">
+            <Border.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}"
+                                 Opacity="0.7" />
+            </Border.Background>
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Calculator.OperationsMenu.AvailableOperations}">
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.Margin" Value="5"/>
+                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Left"/>
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand"/>
+                            <Setter Property="FrameworkElement.ToolTip" Value="Drag and drop into the editor"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:OperationViewModel}">
+                            <nodify:Node Content="{Binding Title}"
+                                     Input="{Binding Input}"
+                                     BorderBrush="{StaticResource AnimatedBrush}"
+                                     BorderThickness="2"
+                                     MouseMove="OnNodeDrag">
+                                <nodify:Node.Output>
+                                    <CompositeCollection>
+                                        <sys:String>Output</sys:String>
+                                    </CompositeCollection>
+                                </nodify:Node.Output>
+                            </nodify:Node>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>

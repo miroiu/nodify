@@ -6,6 +6,26 @@
 > - Features:
 > - Bugfixes:
 
+#### **Version 5.1.0**
+
+> - Breaking Changes:
+> - Features:
+>   - Added ItemContainer.SelectedBorderThickness dependency property
+>   - Added NodifyEditor.GetLocationInsideEditor
+> - Bugfixes:
+>   - Fixed PendingConnection.PreviewTarget not being set to null when there is no actual target
+>   - Fixed PendingConnection.PreviewTarget not being set on Connector.PendingConnectionStartedEvent
+>   - Fixed PendingConnection.PreviewTarget not being set to null on Connector.PendingConnectionCompletedEvent
+>   - Fixed connectors panel not being affected by Node.VerticalAlignment
+>   - Changing BorderThickness causes layout shift when selecting an item container
+>   - Fixed the unintentional movement caused by snapping correction
+
+#### **Version 5.0.2**
+
+> - Bugfixes:
+>   - Fixed NodeOutput content horizontal alignment
+>   - Fixed Connector not opening Context Menu
+
 #### **Version 5.0.1**
 
 > - Bugfixes:

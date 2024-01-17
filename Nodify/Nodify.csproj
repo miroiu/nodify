@@ -16,11 +16,18 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>5.0.1</Version>
+    <Version>5.1.0</Version>
     <PackageReleaseNotes>
+      > - Features:
+      >   - Added ItemContainer.SelectedBorderThickness dependency property
+      >   - Added NodifyEditor.GetLocationInsideEditor
       > - Bugfixes:
-      >   - Returning false from PendingConnection.StartedCommand.CanExecute does not stop the creation of a pending connection
-      >   - BaseConnection.ArrowEnds does not display correctly when BaseConnection.Direction is ConnectionDirection.Backward
+      >   - Fixed PendingConnection.PreviewTarget not being set to null when there is no actual target
+      >   - Fixed PendingConnection.PreviewTarget not being set on Connector.PendingConnectionStartedEvent
+      >   - Fixed PendingConnection.PreviewTarget not being set to null on Connector.PendingConnectionCompletedEvent
+      >   - Fixed connectors panel not being affected by Node.VerticalAlignment
+      >   - Changing BorderThickness causes layout shift when selecting an item container
+      >   - Fixed the unintentional movement caused by snapping correction
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

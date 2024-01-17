@@ -636,7 +636,7 @@ namespace Nodify
         public static bool EnableRenderingContainersOptimizations { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the minimum selected <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// Gets or sets the minimum number of <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
         /// </summary>
         public static uint OptimizeRenderingMinimumContainers { get; set; } = 700;
 
@@ -1359,5 +1359,34 @@ namespace Nodify
 
             OnViewportUpdated();
         }
+
+        #region Utilities
+
+        /// <summary>
+        /// Translates the specified location to graph space coordinates (relative to the <see cref="ItemsHost" />).
+        /// </summary>
+        /// <param name="location">The location coordinates relative to <paramref name="relativeTo"/></param>
+        /// <param name="relativeTo">The element where the <paramref name="location"/> was calculated from.</param>
+        /// <returns>A location inside the graph.</returns>
+        public Point GetLocationInsideEditor(Point location, UIElement relativeTo)
+            => relativeTo.TranslatePoint(location, ItemsHost);
+
+        /// <summary>
+        /// Translates the event location to graph space coordinates (relative to the <see cref="ItemsHost" />).
+        /// </summary>
+        /// <param name="args">The drag event.</param>
+        /// <returns>A location inside the graph</returns>
+        public Point GetLocationInsideEditor(DragEventArgs args)
+            => args.GetPosition(ItemsHost);
+
+        /// <summary>
+        /// Translates the event location to graph space coordinates (relative to the <see cref="ItemsHost" />).
+        /// </summary>
+        /// <param name="args">The mouse event.</param>
+        /// <returns>A location inside the graph</returns>
+        public Point GetLocationInsideEditor(MouseEventArgs args)
+            => args.GetPosition(ItemsHost);
+
+        #endregion
     }
 }

@@ -22,6 +22,7 @@ namespace Nodify
 
         public static readonly DependencyProperty HighlightBrushProperty = DependencyProperty.Register(nameof(HighlightBrush), typeof(Brush), typeof(ItemContainer));
         public static readonly DependencyProperty SelectedBrushProperty = DependencyProperty.Register(nameof(SelectedBrush), typeof(Brush), typeof(ItemContainer));
+        public static readonly DependencyProperty SelectedBorderThicknessProperty = DependencyProperty.Register(nameof(SelectedBorderThickness), typeof(Thickness), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.Thickness2));
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
         public static readonly DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         public static readonly DependencyPropertyKey IsPreviewingSelectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingSelection), typeof(bool?), typeof(ItemContainer), new FrameworkPropertyMetadata(null));
@@ -49,6 +50,15 @@ namespace Nodify
         {
             get => (Brush)GetValue(SelectedBrushProperty);
             set => SetValue(SelectedBrushProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the border thickness used when <see cref="IsSelected"/> or <see cref="IsPreviewingSelection"/> is true.
+        /// </summary>
+        public Thickness SelectedBorderThickness
+        {
+            get => (Thickness)GetValue(SelectedBorderThicknessProperty);
+            set => SetValue(SelectedBorderThicknessProperty, value);
         }
 
         /// <summary>
@@ -245,6 +255,15 @@ namespace Nodify
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public NodifyEditor Editor { get; }
+
+        /// <summary>
+        /// The calculated margin when the container is selected or previewing selection.
+        /// </summary>
+        public Thickness SelectedMargin => new Thickness(
+            BorderThickness.Left - SelectedBorderThickness.Left,
+            BorderThickness.Top - SelectedBorderThickness.Top,
+            BorderThickness.Right - SelectedBorderThickness.Right,
+            BorderThickness.Bottom - SelectedBorderThickness.Bottom);
 
         #endregion
 

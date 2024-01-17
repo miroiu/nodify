@@ -1,4 +1,8 @@
-﻿namespace Nodify.Playground
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace Nodify.Playground
 {
     public enum ConnectionStyle
     {
@@ -9,7 +13,218 @@
 
     public class EditorSettings : ObservableObject
     {
-        private EditorSettings() { }
+        public IReadOnlyCollection<ISettingViewModel> Settings { get; }
+        public IReadOnlyCollection<ISettingViewModel> AdvancedSettings { get; }
+
+        private EditorSettings()
+        {
+            Settings = new ObservableCollection<ISettingViewModel>()
+            {
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableRealtimeSelection,
+                    val => Instance.EnableRealtimeSelection = val,
+                    "Realtime selection: ",
+                    "Selects items when finished if disabled."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnablePendingConnectionSnapping,
+                    val => Instance.EnablePendingConnectionSnapping = val,
+                    "Pending connection snapping: ",
+                    "Whether to snap the pending connection to connectors"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnablePendingConnectionPreview,
+                    val => Instance.EnablePendingConnectionPreview = val,
+                    "Pending connection preview: ",
+                    "Show information about the pending connection."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowConnectingToConnectorsOnly,
+                    val => Instance.AllowConnectingToConnectorsOnly = val,
+                    "Disable drop connection on node: ",
+                    "Can connect directly to nodes if enabled"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.DisableAutoPanning,
+                    val => Instance.DisableAutoPanning = val,
+                    "Disable auto panning: "),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.DisablePanning,
+                    val => Instance.DisablePanning = val,
+                    "Disable panning: "),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.DisableZooming,
+                    val => Instance.DisableZooming = val,
+                    "Disable zooming: "),
+                new ProxySettingViewModel<uint>(
+                    () => Instance.GridSpacing,
+                    val => Instance.GridSpacing = val,
+                    "Grid spacing: ",
+                    "Snapping value in pixels"),
+                new ProxySettingViewModel<PointEditor>(
+                    () => Instance.Location,
+                    val => Instance.Location = val,
+                    "Location: ",
+                    "The viewport's location."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.Zoom,
+                    val => Instance.Zoom = val,
+                    "Zoom: ",
+                    "The viewport's zoom. Not accurate when trying to zoom outside the MinViewportZoom and MaxViewportZoom because of dependency property coercion not updating the binding with the final result."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.MinZoom,
+                    val => Instance.MinZoom = val,
+                    "Min zoom: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.MaxZoom,
+                    val => Instance.MaxZoom = val,
+                    "Max zoom: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.AutoPanningSpeed,
+                    val => Instance.AutoPanningSpeed = val,
+                    "Auto panning speed: ",
+                    "Speed value in pixels per tick"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.AutoPanningEdgeDistance,
+                    val => Instance.AutoPanningEdgeDistance = val,
+                    "Auto panning edge distance: ",
+                    "Distance from edge to trigger auto panning"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.CircuitConnectionAngle,
+                    val => Instance.CircuitConnectionAngle = val,
+                    "Connection angle: ",
+                    "Applies to circuit connection style"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionSpacing,
+                    val => Instance.ConnectionSpacing = val,
+                    "Connection spacing: ",
+                    "The distance between the start point and the where the angle breaks"),
+                new ProxySettingViewModel<PointEditor>(
+                    () => Instance.ConnectionArrowSize,
+                    val => Instance.ConnectionArrowSize = val,
+                    "Connection arrowhead size: ",
+                    "The size of the arrowhead."),
+                new ProxySettingViewModel<ConnectionStyle>(
+                    () => Instance.ConnectionStyle,
+                    val => Instance.ConnectionStyle = val,
+                    "Connection style: "),
+                new ProxySettingViewModel<ArrowHeadEnds>(
+                    () => Instance.ArrowHeadEnds,
+                    val => Instance.ArrowHeadEnds = val,
+                    "Connection arrowhead end: ",
+                    "The location of the arrowhead."),
+                new ProxySettingViewModel<ArrowHeadShape>(
+                    () => Instance.ArrowHeadShape,
+                    val => Instance.ArrowHeadShape = val,
+                    "Connection arrowhead shape: ",
+                    "The shape of the arrow head."),
+                new ProxySettingViewModel<ConnectionOffsetMode>(
+                    () => Instance.ConnectionSourceOffsetMode,
+                    val => Instance.ConnectionSourceOffsetMode = val,
+                    "Connection source offset mode: "),
+                new ProxySettingViewModel<ConnectionOffsetMode>(
+                    () => Instance.ConnectionTargetOffsetMode,
+                    val => Instance.ConnectionTargetOffsetMode = val,
+                    "Connection target offset mode: "),
+                new ProxySettingViewModel<PointEditor>(
+                    () => Instance.ConnectionSourceOffset,
+                    val => Instance.ConnectionSourceOffset = val,
+                    "Connection source offset: "),
+                new ProxySettingViewModel<PointEditor>(
+                    () => Instance.ConnectionTargetOffset,
+                    val => Instance.ConnectionTargetOffset = val,
+                    "Connection target offset: "),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.DisplayConnectionsOnTop,
+                    val => Instance.DisplayConnectionsOnTop = val,
+                    "Display connections on top: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.BringIntoViewSpeed,
+                    val => Instance.BringIntoViewSpeed = val,
+                    "Bring into view speed: ",
+                    "Bring location into view animation speed in pixels per second"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.BringIntoViewMaxDuration,
+                    val => Instance.BringIntoViewMaxDuration = val,
+                    "Bring into view max duration: ",
+                    "Bring location into view max animation duration"),
+                new ProxySettingViewModel<GroupingMovementMode>(
+                    () => Instance.GroupingNodeMovement,
+                    val => Instance.GroupingNodeMovement = val,
+                    "Grouping node movement: ",
+                    "Whether the grouping node is sticky or not"),
+            };
+
+            AdvancedSettings = new ObservableCollection<ISettingViewModel>()
+            {
+                new ProxySettingViewModel<double>(
+                    () => Instance.HandleRightClickAfterPanningThreshold,
+                    val => Instance.HandleRightClickAfterPanningThreshold = val,
+                    "Disable context menu after panning: ",
+                    "Disable after mouse moved this far"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.AutoPanningTickRate,
+                    val => Instance.AutoPanningTickRate = val,
+                    "Auto panning tick rate: ",
+                    "How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowDraggingCancellation,
+                    val => Instance.AllowDraggingCancellation = val,
+                    "Allow dragging cancellation: ",
+                    "Right click to cancel dragging."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPendingConnectionCancellation,
+                    val => Instance.AllowPendingConnectionCancellation = val,
+                    "Allow pending connection cancellation: ",
+                    "Right click to cancel pending connection."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableSnappingCorrection,
+                    val => Instance.EnableSnappingCorrection = val,
+                    "Enable snapping correction: ",
+                    "Correct the final position when moving a selection"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableConnectorOptimizations,
+                    val => Instance.EnableConnectorOptimizations = val,
+                    "Enable connector optimizations: ",
+                    "Enables optimizations for connectors based on viewport distance and minimum selected nodes."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.OptimizeSafeZone,
+                    val => Instance.OptimizeSafeZone = val,
+                    "Optimize connectors safe zone: ",
+                    "The minimum distance from the viewport where connectors will start optimizing"),
+                new ProxySettingViewModel<uint>(
+                    () => Instance.OptimizeMinimumSelectedItems,
+                    val => Instance.OptimizeMinimumSelectedItems = val,
+                    "Optimize connectors minimum selection: ",
+                    "The minimum selected items needed to start optimizing when outside the safe zone."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableRenderingOptimizations,
+                    val => Instance.EnableRenderingOptimizations = val,
+                    "Enable nodes rendering optimization: ",
+                    "Enables rendering optimizations for nodes based on zoom out percent and nodes count. (zoom in/out to apply optimization)"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.OptimizeRenderingZoomOutPercent,
+                    val => Instance.OptimizeRenderingZoomOutPercent = val,
+                    "Rendering optimization zoom out percent: ",
+                    "The zoom out percent that triggers the optimization. (percent of x = 1 - MinViewportZoom)"),
+                new ProxySettingViewModel<uint>(
+                    () => Instance.OptimizeRenderingMinimumNodes,
+                    val => Instance.OptimizeRenderingMinimumNodes = val,
+                    "Rendering optimization minimum nodes: ",
+                    "The minimum nodes needed to start optimizing when zoom out percent is met."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableDraggingOptimizations,
+                    val => Instance.EnableDraggingOptimizations = val,
+                    "Enable nodes dragging optimizations: ",
+                    "Simulates dragging visually but only commits the changes at the end."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.FitToScreenExtentMargin,
+                    val => Instance.FitToScreenExtentMargin = val,
+                    "Fit to screen extent margin: ",
+                    "Adds some margin to the nodes extent when fit to screen"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableStickyConnectors,
+                    val => Instance.EnableStickyConnectors = val,
+                    "Enable sticky connectors: ",
+                    "The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"),
+            };
+        }
 
         public static EditorSettings Instance { get; } = new EditorSettings();
 

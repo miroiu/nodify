@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify", "Nodify\Nodify.csproj", "{A4349FD1-2774-42F2-90FD-7D8F4CA8BB71}"
 EndProject
@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.StateMachine", "Exam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Shared", "Examples\Nodify.Shared\Nodify.Shared.csproj", "{499C8539-9973-4102-B976-57DB3F3C7DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nodify.Calculator", "Examples\Nodify.Calculator\Nodify.Calculator.csproj", "{7ADD1DAF-B589-4742-8E72-872D2842E73D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{88D231A7-D09F-492F-887F-DDBC46398284}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

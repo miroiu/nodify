@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Nodify.Playground.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nodify.Playground"
+             xmlns:nodify="clr-namespace:Nodify;assembly=Nodify.Shared"
+             d:DataContext="{d:DesignInstance Type=local:PlaygroundViewModel, IsDesignTimeCreatable=True}"
+             d:Foreground="{DynamicResource ForegroundBrush}"
+             d:Background="{DynamicResource PanelBackgroundBrush}"
+             mc:Ignorable="d">
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <ItemsControl.Resources>
+            <DataTemplate x:Key="NumberEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+                <TextBox Text="{Binding Value}" />
+            </DataTemplate>
+            <DataTemplate x:Key="BooleanEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+                <CheckBox IsChecked="{Binding Value}" />
+            </DataTemplate>
+            <DataTemplate x:Key="PointEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+                <local:PointEditorView DataContext="{Binding Value, Mode=TwoWay}" />
+            </DataTemplate>
+            <DataTemplate x:Key="OptionEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+                <ComboBox
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="Value"
+                    SelectedValue="{Binding Value, Mode=TwoWay}"
+                    ItemsSource="{Binding Value, Converter={nodify:EnumValuesConverter}}" />
+            </DataTemplate>
+        </ItemsControl.Resources>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:ISettingViewModel}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="PropertyName" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Margin="0 5 5 0" Grid.Column="0" />
+                    <ContentControl Content="{Binding}" Margin="5 5 5 0" Grid.Column="1">
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Boolean">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource ResourceKey=BooleanEditorTemplate}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Number">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource ResourceKey=NumberEditorTemplate}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Point">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource ResourceKey=PointEditorTemplate}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Option">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource ResourceKey=OptionEditorTemplate}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </Grid>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

@@ -348,15 +348,15 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            // Don't give the ItemContainer the chance to handle selection
-            e.Handled = EnableStickyConnections;
+            // Don't select the ItemContainer when starting a pending connecton for sticky connections
+            e.Handled = EnableStickyConnections && IsPendingConnection;
 
             if (!EnableStickyConnections && EditorGestures.Connector.Connect.Matches(e.Source, e))
             {
                 OnConnectorDragCompleted();
                 e.Handled = true;
             }
-            else if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
+            else if (AllowPendingConnectionCancellation && IsPendingConnection && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);

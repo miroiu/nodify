@@ -131,8 +131,11 @@
                                 </Style.Triggers>
                             </Style>
                         </Expander.Style>
-
-                        <local:PlaygroundSettingsView />
+                        <Border BorderThickness="1"
+                                Padding="10"
+                                HorizontalAlignment="Stretch">
+                            <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
+                        </Border>
                     </Expander>
 
                     <Expander Header="Editor Settings"
@@ -222,6 +225,12 @@
                             <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"
                                  Text="{Binding Zoom, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                    <TextBlock ToolTip="The estimated frame rate. (my be buggy)">
+                        <TextBlock.Inlines>
+                            <Run Text="FPS: " />
+                            <Run Foreground="LawnGreen" Name="FPSText" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>

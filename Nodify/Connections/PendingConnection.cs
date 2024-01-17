@@ -265,6 +265,11 @@ namespace Nodify
                 {
                     StartedCommand?.Execute(Source);
                 }
+
+                if(EnablePreview)
+                {
+                    PreviewTarget = e.SourceConnector;
+                }
             }
         }
 
@@ -299,12 +304,12 @@ namespace Nodify
                         if (connector != null)
                         {
                             SetIsOverElement(connector, true);
+                        }
 
-                            // Update the preview target if enabled
-                            if (EnablePreview)
-                            {
-                                PreviewTarget = connector.DataContext;
-                            }
+                        // Update the preview target if enabled
+                        if (EnablePreview)
+                        {
+                            PreviewTarget = connector?.DataContext;
                         }
 
                         _previousConnector = connector;
@@ -335,6 +340,11 @@ namespace Nodify
                     {
                         CompletedCommand?.Execute(Target);
                     }
+                }
+
+                if(EnablePreview)
+                {
+                    PreviewTarget = null;
                 }
             }
         }

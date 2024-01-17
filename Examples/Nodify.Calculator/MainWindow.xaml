@@ -54,77 +54,80 @@
                 </Style>
             </shared:TabControlEx.ItemContainerStyle>
         </shared:TabControlEx>
-        
+
         <Expander Header="Click to hide/show"
                   IsExpanded="True"
                   Margin="10"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Bottom">
             <Border MaxWidth="325"
+                    MaxHeight="300"
                     CornerRadius="3">
                 <Border.Background>
                     <SolidColorBrush Color="{DynamicResource BackgroundColor}"
                                      Opacity="0.7" />
                 </Border.Background>
-                <StackPanel Margin="10"
-                            IsHitTestVisible="False">
-                    <StackPanel.Resources>
-                        <Style TargetType="{x:Type TextBlock}"
-                               BasedOn="{StaticResource {x:Type TextBlock}}">
-                            <Setter Property="Margin"
-                                    Value="0 0 0 5" />
-                        </Style>
-                    </StackPanel.Resources>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="10"
+                                IsHitTestVisible="False">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type TextBlock}"
+                                   BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="Margin"
+                                        Value="0 0 0 5" />
+                            </Style>
+                        </StackPanel.Resources>
 
-                    <StackPanel Margin="0 0 0 20">
-                        <TextBlock Text="(New) Drag a connection and drop it on the editor"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource NodeInput.BorderBrush}"
-                               FontWeight="Bold"/>
-                        <TextBlock Text="(New) CTRL + N : open new editor"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource NodeInput.BorderBrush}"
-                               FontWeight="Bold"/>
-                        <TextBlock Text="(New) CTRL + W : close current editor"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource NodeInput.BorderBrush}"
-                               FontWeight="Bold"/>
+                        <StackPanel Margin="0 0 0 20">
+                            <TextBlock Text="(New) Drag and drop nodes from the toolbox"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource NodeInput.BorderBrush}"
+                                   FontWeight="Bold"/>
+                        </StackPanel>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">CTRL + N/W</Run>
+                            <Run>: open/close editor</Run>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">ALT + Click</Run>
+                            <Run>: disconnect connector</Run>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">Right Click</Run>
+                            <Run>: show operations menu (create nodes)</Run>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">Delete</Run>
+                            <Run>:  delete selection</Run>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">CTRL + T</Run>
+                            <Run>: change theme</Run>
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Foreground="Red"
+                                    FontWeight="Bold">C</Run>
+                            <Run>: group selection (hold SHIFT and mouse drag the header to move the group node alone)</Run>
+                        </TextBlock>
+                        <TextBlock Text="Drag a connection and drop it on the editor"
+                                TextWrapping="Wrap"
+                                FontWeight="Bold" />
+                        <TextBlock Text="Hover over a connector to see its value"
+                                   TextWrapping="Wrap"
+                                   FontWeight="Bold" />
+                        <TextBlock Text="Create a Calculator node and double click it to open"
+                                   TextWrapping="Wrap"
+                                   FontWeight="Bold" />
+                        <TextBlock Text="Create an Operation Graph and add operations to it"
+                                   TextWrapping="Wrap"
+                                   FontWeight="Bold" />
                     </StackPanel>
-                    <TextBlock TextWrapping="Wrap">
-                <Run Foreground="Red"
-                        FontWeight="Bold">ALT + Click</Run>
-                <Run>: disconnect connector</Run>
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap">
-                <Run Foreground="Red"
-                        FontWeight="Bold">Right Click</Run>
-                <Run>: show operations menu (create nodes)</Run>
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap">
-                <Run Foreground="Red"
-                        FontWeight="Bold">Delete</Run>
-                <Run>:  delete selection</Run>
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap">
-                <Run Foreground="Red"
-                        FontWeight="Bold">CTRL + T</Run>
-                <Run>: change theme</Run>
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap">
-                <Run Foreground="Red"
-                        FontWeight="Bold">C</Run>
-                <Run>: group selection (hold SHIFT and mouse drag the header to move the group node alone)</Run>
-                    </TextBlock>
-                    <TextBlock Text="Hover over a connector to see its value"
-                               TextWrapping="Wrap"
-                               FontWeight="Bold" />
-                    <TextBlock Text="Create a Calculator node and double click it to open"
-                               TextWrapping="Wrap"
-                               FontWeight="Bold" />
-                    <TextBlock Text="Create an Operation Graph and add operations to it"
-                               TextWrapping="Wrap"
-                               FontWeight="Bold" />
-                </StackPanel>
+                </ScrollViewer>
             </Border>
         </Expander>
     </Grid>

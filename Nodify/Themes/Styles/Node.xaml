@@ -30,7 +30,7 @@
         <Setter Property="MinWidth"
                 Value="15" />
         <Setter Property="VerticalAlignment"
-                Value="Center" />
+                Value="Top" />
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
         <Setter Property="VerticalContentAlignment"
@@ -75,6 +75,7 @@
 
                                 <!--Data IN-->
                                 <ItemsControl ItemsSource="{TemplateBinding Input}"
+                                              VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                               ItemTemplate="{TemplateBinding InputConnectorTemplate}"
                                               Focusable="False" />
 
@@ -89,6 +90,7 @@
                                 <!--Data OUT-->
                                 <ItemsControl ItemsSource="{TemplateBinding Output}"
                                               ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
+                                              VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                               HorizontalContentAlignment="Right"
                                               Grid.Column="2"
                                               Focusable="False" />

@@ -29,8 +29,8 @@
             }
         }
 
-        private string _previewText = "Drop on connector";
-        public string PreviewText
+        private string? _previewText;
+        public string? PreviewText
         {
             get => _previewText;
             set => SetProperty(ref _previewText, value);
@@ -44,7 +44,7 @@
                 ConnectorViewModel con when con == Source => $"Can't connect to self",
                 ConnectorViewModel con => $"{(canConnect ? "Connect" : "Can't connect")} to {con.Title ?? "pin"}",
                 FlowNodeViewModel flow => $"{(canConnect ? "Connect" : "Can't connect")} to {flow.Title ?? "node"}",
-                _ => $"Drop on connector"
+                _ => null
             };
         }
     }
