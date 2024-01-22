@@ -54,7 +54,7 @@ namespace Nodify.Calculator
                 new OperationInfoViewModel
                 {
                     Type = OperationType.Graph,
-                    Title = "(New) Operation Graph",
+                    Title = "Operation Graph",
                 },
                 new OperationInfoViewModel
                 {

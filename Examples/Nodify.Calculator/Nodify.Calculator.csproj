@@ -10,7 +10,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="StringMath" Version="4.1.1" />
+    <PackageReference Include="StringMath" Version="4.1.2" />
   </ItemGroup>
 
   <ItemGroup>
