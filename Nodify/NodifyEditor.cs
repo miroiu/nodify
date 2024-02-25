@@ -800,7 +800,7 @@ namespace Nodify
         /// <remarks>Temporarily disables editor controls when animated.</remarks>
         public void BringIntoView(Point? point, bool animated = true, Action? onFinish = null)
         {
-            // if point is null, the viewport shall be reseted to the origin
+            // if point is null, the viewport shall be reset to the origin
             Point newLocation = point == null ? new Point(0, 0) : (Point)((Vector)point - (Vector)ViewportSize / 2);
 
             if (animated && newLocation != ViewportLocation)
