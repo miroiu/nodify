@@ -798,9 +798,10 @@ namespace Nodify
         /// <param name="animated">True to animate the movement.</param>
         /// <param name="onFinish">The callback invoked when movement is finished.</param>
         /// <remarks>Temporarily disables editor controls when animated.</remarks>
-        public void BringIntoView(Point point, bool animated = true, Action? onFinish = null)
+        public void BringIntoView(Point? point, bool animated = true, Action? onFinish = null)
         {
-            Point newLocation = (Point)((Vector)point - (Vector)ViewportSize / 2);
+            // if point is null, the viewport shall be reseted to the origin
+            Point newLocation = point == null ? new Point(0, 0) : (Point)((Vector)point - (Vector)ViewportSize / 2);
 
             if (animated && newLocation != ViewportLocation)
             {

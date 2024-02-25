@@ -185,7 +185,7 @@ namespace Nodify
                         editor.BringIntoView(Point.Parse(str));
                         break;
                     default:
-                        editor.BringIntoView(new Point());
+                        editor.BringIntoView(null);
                         break;
                 }
             }
