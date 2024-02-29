@@ -29,6 +29,7 @@ namespace Nodify.Playground
             Description = description;
             Type = typeof(T) switch
             {
+                { } t when t == typeof(string) => SettingsType.Text,
                 { } t when t == typeof(bool) => SettingsType.Boolean,
                 { } t when t == typeof(uint) || t == typeof(double) => SettingsType.Number,
                 { } t when t == typeof(PointEditor) => SettingsType.Point,

@@ -85,6 +85,14 @@ namespace Nodify.Playground
                     val => Instance.AutoPanningEdgeDistance = val,
                     "Auto panning edge distance: ",
                     "Distance from edge to trigger auto panning"),
+                new ProxySettingViewModel<ConnectionStyle>(
+                    () => Instance.ConnectionStyle,
+                    val => Instance.ConnectionStyle = val,
+                    "Connection style: "),
+                new ProxySettingViewModel<string>(
+                    () => Instance.ConnectionText,
+                    val => Instance.ConnectionText = val,
+                    "Connection text: "),
                 new ProxySettingViewModel<double>(
                     () => Instance.CircuitConnectionAngle,
                     val => Instance.CircuitConnectionAngle = val,
@@ -100,10 +108,6 @@ namespace Nodify.Playground
                     val => Instance.ConnectionArrowSize = val,
                     "Connection arrowhead size: ",
                     "The size of the arrowhead."),
-                new ProxySettingViewModel<ConnectionStyle>(
-                    () => Instance.ConnectionStyle,
-                    val => Instance.ConnectionStyle = val,
-                    "Connection style: "),
                 new ProxySettingViewModel<ArrowHeadEnds>(
                     () => Instance.ArrowHeadEnds,
                     val => Instance.ArrowHeadEnds = val,
@@ -230,13 +234,6 @@ namespace Nodify.Playground
 
         #region Default settings
 
-        private ConnectionStyle _connectionStyle;
-        public ConnectionStyle ConnectionStyle
-        {
-            get => _connectionStyle;
-            set => SetProperty(ref _connectionStyle, value);
-        }
-
         private bool _enablePendingConnectionSnapping = true;
         public bool EnablePendingConnectionSnapping
         {
@@ -335,6 +332,20 @@ namespace Nodify.Playground
             set => SetProperty(ref _location, value);
         }
 
+        private ConnectionStyle _connectionStyle;
+        public ConnectionStyle ConnectionStyle
+        {
+            get => _connectionStyle;
+            set => SetProperty(ref _connectionStyle, value);
+        }
+
+        private string _connectionText;
+        public string ConnectionText
+        {
+            get => _connectionText;
+            set => SetProperty(ref _connectionText, value);
+        }
+
         private double _circuitConnectionAngle = 45;
         public double CircuitConnectionAngle
         {
@@ -366,7 +377,7 @@ namespace Nodify.Playground
         private ArrowHeadEnds _arrowHeadEnds = ArrowHeadEnds.End;
         public ArrowHeadEnds ArrowHeadEnds
         {
-            get => _arrowHeadEnds;  
+            get => _arrowHeadEnds;
             set => SetProperty(ref _arrowHeadEnds, value);
         }
 

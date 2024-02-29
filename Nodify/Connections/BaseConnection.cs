@@ -1,5 +1,9 @@
 using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -120,6 +124,13 @@ namespace Nodify
         public static readonly DependencyProperty ArrowShapeProperty = DependencyProperty.Register(nameof(ArrowShape), typeof(ArrowHeadShape), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadShape.Arrowhead, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
         public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty ForegroundProperty = TextBlock.ForegroundProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty FontSizeProperty = TextElement.FontSizeProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontStretchtProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
 
         /// <summary>
         /// Gets or sets the start point of this connection.
@@ -187,8 +198,8 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the arrowhead ends.
         /// </summary>
-        public ArrowHeadEnds ArrowEnds 
-        { 
+        public ArrowHeadEnds ArrowEnds
+        {
             get => (ArrowHeadEnds)GetValue(ArrowEndsProperty);
             set => SetValue(ArrowEndsProperty, value);
         }
@@ -240,6 +251,60 @@ namespace Nodify
             set => SetValue(DisconnectCommandProperty, value);
         }
 
+        /// <summary>
+        /// The brush used to render the <see cref="Text"/>.
+        /// </summary>
+        public Brush? Foreground
+        {
+            get => (Brush?)GetValue(ForegroundProperty);
+            set => SetValue(ForegroundProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the text contents of the <see cref="BaseConnection"/>.
+        /// </summary>
+        public string? Text
+        {
+            get => (string?)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        /// <inheritdoc cref="TextElement.FontSize" />
+        [TypeConverter(typeof(FontSizeConverter))]
+        public double FontSize
+        {
+            get => (double)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
+        }
+
+        /// <inheritdoc cref="TextElement.FontFamily" />
+        public FontFamily FontFamily
+        {
+            get => (FontFamily)GetValue(FontFamilyProperty);
+            set => SetValue(FontFamilyProperty, value);
+        }
+
+        /// <inheritdoc cref="TextElement.FontStyle" />
+        public FontStyle FontStyle
+        {
+            get => (FontStyle)GetValue(FontStyleProperty);
+            set => SetValue(FontStyleProperty, value);
+        }
+
+        /// <inheritdoc cref="TextElement.FontWeight" />
+        public FontWeight FontWeight
+        {
+            get => (FontWeight)GetValue(FontWeightProperty);
+            set => SetValue(FontWeightProperty, value);
+        }
+
+        /// <inheritdoc cref="TextElement.FontStretch" />
+        public FontStretch FontStretch
+        {
+            get => (FontStretch)GetValue(FontStretchtProperty);
+            set => SetValue(FontStretchtProperty, value);
+        }
+
         #endregion
 
         #region Routed Events
@@ -280,10 +345,7 @@ namespace Nodify
                 using (StreamGeometryContext context = _geometry.Open())
                 {
                     (Vector sourceOffset, Vector targetOffset) = GetOffset();
-                    Point source = Source + sourceOffset;
-                    Point target = Target + targetOffset;
-
-                    var (arrowStart, arrowEnd) = DrawLineGeometry(context, source, target);
+                    var (arrowStart, arrowEnd) = DrawLineGeometry(context, Source + sourceOffset, Target + targetOffset);
 
                     if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                     {
@@ -352,7 +414,7 @@ namespace Nodify
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
             var bottomRight = new Point(target.X, target.Y + headHeight);
             var bottomLeft = new Point(target.X - headWidth * direction, target.Y + headHeight);
-            var topLeft = new Point(target.X - headWidth  * direction, target.Y - headHeight);
+            var topLeft = new Point(target.X - headWidth * direction, target.Y - headHeight);
             var topRight = new Point(target.X, target.Y - headHeight);
 
             context.BeginFigure(target, true, true);
@@ -464,6 +526,15 @@ namespace Nodify
             }
         }
 
+        protected virtual Point GetTextPosition(FormattedText text)
+        {
+            (Vector sourceOffset, Vector targetOffset) = GetOffset();
+            Point source = Source + sourceOffset;
+            Point target = Target + targetOffset;
+
+            return new Point((source.X + target.X - text.Width) / 2, (source.Y + target.Y - text.Height) / 2);
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
@@ -519,6 +590,20 @@ namespace Nodify
             if (IsMouseCaptured)
             {
                 ReleaseMouseCapture();
+            }
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            base.OnRender(drawingContext);
+
+            if (!string.IsNullOrEmpty(Text))
+            {
+                double dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
+                var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
+                var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke, dpi);
+
+                drawingContext.DrawText(text, GetTextPosition(text));
             }
         }
     }

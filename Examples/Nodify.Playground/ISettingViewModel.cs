@@ -5,7 +5,8 @@
         Boolean,
         Number,
         Option,
-        Point
+        Point,
+        Text
     }
 
     public interface ISettingViewModel
