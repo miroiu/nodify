@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Media;
 
 namespace Nodify
 {
@@ -23,11 +22,5 @@ namespace Nodify
         public static readonly object Thickness2 = new Thickness(2);
         public static readonly object ArrowSize = new Size(8, 8);
         public static readonly object ConnectionOffset = new Size(14, 0);
-
-#if NET5_0_OR_GREATER || NETFRAMEWORK
-        public static readonly object BrushBlack = Brushes.Black;
-#else
-        public static readonly object BrushBlack = new SolidColorBrush(Colors.Black);
-#endif
     }
 }
