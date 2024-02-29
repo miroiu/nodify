@@ -11,6 +11,9 @@
              mc:Ignorable="d">
     <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}">
         <ItemsControl.Resources>
+            <DataTemplate x:Key="TextEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+                <TextBox Text="{Binding Value}" TextWrapping="Wrap" AcceptsReturn="True" />
+            </DataTemplate>
             <DataTemplate x:Key="NumberEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
                 <TextBox Text="{Binding Value}" />
             </DataTemplate>
@@ -55,6 +58,10 @@
                                     <DataTrigger Binding="{Binding Type}" Value="Option">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=OptionEditorTemplate}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Text">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource ResourceKey=TextEditorTemplate}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
