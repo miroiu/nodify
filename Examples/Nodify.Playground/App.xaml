@@ -1,15 +1,27 @@
 ﻿<Application x:Class="Nodify.Playground.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             RequestedThemeVariant="Dark">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Nodify.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Nodify.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Icons.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Nodify.xaml" />
+                <ResourceInclude Source="avares://Nodify.Playground/Themes/Nodify.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+    
+    <Application.Styles>
+        <FluentTheme DensityStyle="Compact"/>
+    </Application.Styles>
+    
+    <Application.DataTemplates>
+        <DataTemplate x:DataType="DrawingBrush">
+            <Rectangle Fill="{Binding .}" Width="16" Height="16" />
+        </DataTemplate>
+    </Application.DataTemplates>
 </Application>

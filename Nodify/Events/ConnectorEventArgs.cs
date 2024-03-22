@@ -8,7 +8,7 @@ namespace Nodify
     /// </summary>
     /// <param name="sender">The object where the event handler is attached.</param>
     /// <param name="e">The event data.</param>
-    public delegate void ConnectorEventHandler(object sender, ConnectorEventArgs e);
+    public delegate void ConnectorEventHandler(object? sender, ConnectorEventArgs e);
 
     /// <summary>
     /// Provides data for <see cref="Nodify.Connector"/> related routed events.
@@ -31,8 +31,5 @@ namespace Nodify
         /// Gets the <see cref="FrameworkElement.DataContext"/> of the <see cref="Nodify.Connector"/> associated with this event.
         /// </summary>
         public object Connector { get; }
-
-        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
-            => ((ConnectorEventHandler)genericHandler)(genericTarget, this);
     }
 }

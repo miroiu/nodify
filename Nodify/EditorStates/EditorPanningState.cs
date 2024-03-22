@@ -21,9 +21,9 @@ namespace Nodify
             => Editor.IsPanning = false;
 
         /// <inheritdoc />
-        public override void Enter(EditorState? from)
+        public override void Enter(EditorState? from, MouseEventArgs e)
         {
-            _initialMousePosition = Mouse.GetPosition(Editor);
+            _initialMousePosition = e.GetPosition(Editor);
             _previousMousePosition = _initialMousePosition;
             _currentMousePosition = _initialMousePosition;
             Editor.IsPanning = true;
@@ -46,7 +46,7 @@ namespace Nodify
                 if (e.ChangedButton == MouseButton.Right)
                 {
                     double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                    if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    if ((_currentMousePosition - _initialMousePosition).LengthSquared() > contextMenuTreshold)
                     {
                         e.Handled = true;
                     }
@@ -61,7 +61,7 @@ namespace Nodify
                 if (Editor.State is EditorSelectingState && !Editor.DisablePanning)
                 {
                     PopState();
-                    PushState(new EditorPanningState(Editor));
+                    PushState(new EditorPanningState(Editor), e);
                 }
             }
         }

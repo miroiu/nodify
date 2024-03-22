@@ -82,7 +82,7 @@ namespace Nodify
         {
             if (_canBeDragging)
             {
-                PushState(new ContainerDraggingState(Container));
+                PushState(new ContainerDraggingState(Container), e);
             }
         }
     }

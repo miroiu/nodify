@@ -1,8 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
-
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <DataTemplate x:Key="DefaultInputConnectorTemplate">
         <local:NodeInput />
@@ -12,7 +10,7 @@
         <local:NodeOutput />
     </DataTemplate>
 
-    <Style TargetType="{x:Type local:Node}">
+    <ControlTheme TargetType="{x:Type local:Node}" x:Key="{x:Type local:Node}">
         <Setter Property="Background"
                 Value="#2D2D30" />
         <Setter Property="ContentBrush"
@@ -57,12 +55,13 @@
                             </Grid.RowDefinitions>
 
                             <!--Header-->
-                            <Border Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            <Border IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Name="PART_Header"
                                     Background="{TemplateBinding HeaderBrush}"
                                     CornerRadius="3 3 0 0"
                                     Grid.ColumnSpan="3"
                                     Padding="6 4 6 4">
-                                <ContentPresenter ContentSource="Header" />
+                                <ContentPresenter Name="PART_HeaderPresenter" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" />
                             </Border>
 
                             <!--Body-->
@@ -84,32 +83,40 @@
                                         Padding="16 0 16 0"
                                         Background="{TemplateBinding ContentBrush}">
                                     <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
                                 </Border>
 
                                 <!--Data OUT-->
+                                <!-- HorizontalContentAlignment="Right" -->
                                 <ItemsControl ItemsSource="{TemplateBinding Output}"
                                               ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
                                               VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                                              HorizontalContentAlignment="Right"
                                               Grid.Column="2"
                                               Focusable="False" />
                             </Grid>
 
                             <!--Footer-->
-                            <Border Visibility="{TemplateBinding HasFooter, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            <Border IsVisible="{TemplateBinding HasFooter}"
                                     Background="{TemplateBinding FooterBrush}"
                                     CornerRadius="0 0 3 3"
                                     Grid.Row="2"
                                     Grid.ColumnSpan="3"
                                     Padding="6 4 6 4">
-                                <ContentPresenter ContentSource="Footer" />
+                                <ContentControl Content="{TemplateBinding Footer}" ContentTemplate="{TemplateBinding FooterTemplate}" />
                             </Border>
                         </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:has-header /template/ Border#PART_Header">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

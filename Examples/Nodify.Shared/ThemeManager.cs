@@ -10,8 +10,8 @@ namespace Nodify
     {
         private static readonly string? _assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
 
-        private static readonly Dictionary<string, List<Uri>> _themesUris = new Dictionary<string, List<Uri>>();
-        private static readonly Dictionary<string, List<ResourceDictionary>> _themesResources = new Dictionary<string, List<ResourceDictionary>>();
+        private static readonly Dictionary<string, List<(Uri baseUri, Uri source)>> _themesUris = new Dictionary<string, List<(Uri, Uri)>>();
+        private static readonly Dictionary<string, List<ResourceInclude>> _themesResources = new Dictionary<string, List<ResourceInclude>>();
 
         public static string? ActiveTheme { get; private set; }
 
@@ -29,14 +29,14 @@ namespace Nodify
             SetNextThemeCommand = new DelegateCommand(SetNextTheme);
         }
 
-        private static List<ResourceDictionary> FindExistingResources(List<Uri> uris)
+        private static List<ResourceInclude> FindExistingResources(List<(Uri baseUri, Uri source)> uris)
         {
-            var result = new List<ResourceDictionary>();
+            var result = new List<ResourceInclude>();
             foreach (var d in Application.Current.Resources.MergedDictionaries)
             {
-                if (d.Source != null && uris.Contains(d.Source))
+                if (d is ResourceInclude resourceInclude && uris.Any(x => x.source == resourceInclude.Source))
                 {
-                    result.Add(d);
+                    result.Add(resourceInclude);
                 }
             }
 
@@ -47,15 +47,14 @@ namespace Nodify
         {
             if (!_themesUris.TryGetValue(themeName, out var preload))
             {
-                preload = new List<Uri>(3)
+                preload = new List<(Uri, Uri)>(2)
                 {
-                    new Uri($"pack://application:,,,/Nodify;component/Themes/{themeName}.xaml"),
-                    new Uri($"pack://application:,,,/Nodify.Shared;component/Themes/{themeName}.xaml")
+                    (new Uri("resm:Resources?assembly=Nodify.Shared"), new Uri($"avares://Nodify.Shared/Themes/{themeName}.xaml")),
+                    (new Uri("resm:Resources?assembly=Nodify"), new Uri($"avares://Nodify/Themes/{themeName}.xaml")),
                 };
-
                 if (_assemblyName != null)
                 {
-                    preload.Add(new Uri($"pack://application:,,,/{_assemblyName};component/Themes/{themeName}.xaml"));
+                    preload.Add((new Uri($"resm:Resources?assembly={_assemblyName}"), new Uri($"avares://{_assemblyName}/Themes/{themeName}.xaml")));
                 }
 
                 _themesUris.Add(themeName, preload);
@@ -68,9 +67,9 @@ namespace Nodify
                 {
                     try
                     {
-                        resources.Add(new ResourceDictionary
+                        resources.Add(new ResourceInclude(preload[i].baseUri)
                         {
-                            Source = preload[i]
+                            Source = preload[i].source
                         });
                     }
                     catch
@@ -129,6 +128,8 @@ namespace Nodify
 
                 ActiveTheme = themeName;
             }
+            
+            Application.Current.RequestedThemeVariant = themeName == "Light" ? ThemeVariant.Light : ThemeVariant.Dark;
         }
     }
 }

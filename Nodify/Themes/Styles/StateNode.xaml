@@ -1,8 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <Style TargetType="{x:Type local:StateNode}">
+    <ControlTheme TargetType="{x:Type local:StateNode}" x:Key="{x:Type local:StateNode}">
         <Setter Property="Padding"
                 Value="7 5" />
         <Setter Property="BorderThickness"
@@ -31,33 +31,26 @@
                                 MinWidth="30"
                                 MinHeight="30"
                                 CornerRadius="{TemplateBinding CornerRadius}">
-                            <ContentPresenter />
+                            <ContentControl Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                         </Border>
-                        <Border.Style>
-                            <Style TargetType="Border">
+                        <Border.Theme>
+                            <ControlTheme TargetType="Border">
                                 <Setter Property="Background"
                                         Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseDirectlyOver"
-                                             Value="True">
-                                        <Setter Property="Background"
-                                                Value="{Binding HighlightBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                                <Style Selector="^:pointerover">
+                                    <Setter Property="Background"
+                                            Value="{Binding HighlightBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Style>
+                            </ControlTheme>
+                        </Border.Theme>
                     </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="local:PendingConnection.IsOverElement"
-                                 Value="True">
-                            <Setter Property="Background"
-                                    TargetName="Border"
-                                    Value="{Binding HighlightBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^.isOverElement /template/ Border#Border">
+            <Setter Property="Background"
+                    Value="{Binding HighlightBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

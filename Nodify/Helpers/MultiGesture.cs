@@ -27,7 +27,7 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
+        public override bool Matches(object targetElement, EventArgs inputEventArgs)
         {
             if (_match == Match.Any)
             {
@@ -37,7 +37,7 @@ namespace Nodify
             return MatchesAll(targetElement, inputEventArgs);
         }
 
-        private bool MatchesAll(object targetElement, InputEventArgs inputEventArgs)
+        private bool MatchesAll(object targetElement, EventArgs inputEventArgs)
         {
             for (int i = 0; i < _gestures.Length; i++)
             {
@@ -50,7 +50,7 @@ namespace Nodify
             return true;
         }
 
-        private bool MatchesAny(object targetElement, InputEventArgs inputEventArgs)
+        private bool MatchesAny(object targetElement, EventArgs inputEventArgs)
         {
             for (int i = 0; i < _gestures.Length; i++)
             {

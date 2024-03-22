@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -6,7 +7,7 @@ namespace Nodify.Playground
 {
     public static class CompositionTargetEx
     {
-        private static TimeSpan _last = TimeSpan.Zero;
+        private static Stopwatch sw = new Stopwatch();
         private static event Action<double>? FrameUpdating;
 
         public static event Action<double> Rendering
@@ -15,7 +16,7 @@ namespace Nodify.Playground
             {
                 if (FrameUpdating == null)
                 {
-                    CompositionTarget.Rendering += OnRendering;
+                    sw.Start();
                 }
                 FrameUpdating += value;
             }
@@ -24,20 +25,17 @@ namespace Nodify.Playground
                 FrameUpdating -= value;
                 if (FrameUpdating == null)
                 {
-                    CompositionTarget.Rendering -= OnRendering;
+                    sw.Stop();
                 }
             }
         }
 
-        private static void OnRendering(object? sender, EventArgs e)
+        public static void OnRendering(object? sender, EventArgs e)
         {
-            RenderingEventArgs args = (RenderingEventArgs)e;
-            var renderingTime = args.RenderingTime;
-            if (renderingTime == _last)
-                return;
+            var took = sw.Elapsed;
+            sw.Restart();
 
-            double fps = 1000 / (renderingTime - _last).TotalMilliseconds;
-            _last = renderingTime;
+            double fps = 1000 / took.TotalMilliseconds;
             FrameUpdating?.Invoke(fps);
         }
     }
@@ -58,10 +56,13 @@ namespace Nodify.Playground
 
         private void OnRendering(double fps)
         {
-            FPSText.Text = fps.ToString("0");
+            Dispatcher.UIThread.Post(() =>
+            {
+                FPSText.Text = fps.ToString("###");
+            });
         }
 
-        private void BringIntoView_Click(object sender, RoutedEventArgs e)
+        private void BringIntoView_Click(object? sender, RoutedEventArgs e)
         {
             if (DataContext is PlaygroundViewModel model)
             {
@@ -74,6 +75,13 @@ namespace Nodify.Playground
                     EditorCommands.BringIntoView.Execute(node.Location, EditorView.Editor);
                 }
             }
+        }
+
+        public override void Render(DrawingContext context)
+        {
+            base.Render(context);
+            CompositionTargetEx.OnRendering(null, default!);
+            Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Send);
         }
     }
 }

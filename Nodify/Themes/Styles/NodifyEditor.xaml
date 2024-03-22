@@ -1,8 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
     <local:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
 
@@ -14,7 +13,7 @@
         <local:PendingConnection IsTabStop="False" />
     </DataTemplate>
 
-    <Style x:Key="SelectionRectangleStyle"
+    <ControlTheme x:Key="SelectionRectangleStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
                 Value="DodgerBlue" />
@@ -26,9 +25,9 @@
                                  Color="DodgerBlue" />
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:NodifyEditor}">
+    <ControlTheme TargetType="{x:Type local:NodifyEditor}" x:Key="{x:Type local:NodifyEditor}">
         <Setter Property="ClipToBounds"
                 Value="True" />
         <Setter Property="Foreground"
@@ -52,28 +51,22 @@
                 <ControlTemplate TargetType="{x:Type local:NodifyEditor}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
-                            <local:NodifyCanvas x:Name="PART_ItemsHost"
-                                                IsItemsHost="True"
-                                                Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            x:Name="PART_MainBorder">
+                        <Canvas RenderTransform="{TemplateBinding ViewportTransform}" RenderTransformOrigin="0,0">
+                            <ItemsPresenter Name="PART_ItemsPresenter">
+                                <ItemsPresenter.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <local:NodifyCanvas Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    </ItemsPanelTemplate>
+                                </ItemsPresenter.ItemsPanel>
+                            </ItemsPresenter>
 
                             <ItemsControl ItemsSource="{TemplateBinding Connections}"
                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
-                                          IsTabStop="False">
-                                <ItemsControl.Style>
-                                    <Style TargetType="ItemsControl">
-                                        <Setter Property="Panel.ZIndex"
-                                                Value="-1" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DisplayConnectionsOnTop, RelativeSource={RelativeSource TemplatedParent}}"
-                                                         Value="True">
-                                                <Setter Property="Panel.ZIndex"
-                                                        Value="0" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ItemsControl.Style>
+                                          ClipToBounds="False"
+                                          IsTabStop="False"
+                                          x:Name="PART_ConnectionsItemsControl">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Canvas />
@@ -81,13 +74,14 @@
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
 
-                            <ContentPresenter ContentSource="PendingConnection" />
+                            <ContentControl ClipToBounds="False" Content="{TemplateBinding PendingConnection}" ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
 
-                            <Rectangle Style="{TemplateBinding SelectionRectangleStyle}"
+                            <Rectangle Theme="{TemplateBinding SelectionRectangleStyle}"
                                        RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
+                                       RenderTransformOrigin="0,0"
                                        Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                        Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                       IsVisible="{TemplateBinding IsSelecting}">
                                 <Rectangle.Width>
                                     <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
                                         <Binding Path="SelectedArea.Width" RelativeSource="{RelativeSource TemplatedParent}" />
@@ -103,9 +97,10 @@
                             </Rectangle>
 
                             <local:DecoratorsControl ItemsSource="{TemplateBinding Decorators}"
-                                                     ItemContainerStyle="{TemplateBinding DecoratorContainerStyle}"
+                                                     ItemContainerTheme="{TemplateBinding DecoratorContainerStyle}"
                                                      ItemTemplate="{TemplateBinding DecoratorTemplate}"
-                                                     IsTabStop="False">
+                                                     IsTabStop="False"
+                                                     ClipToBounds="False">
                                 <local:DecoratorsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <local:NodifyCanvas Extent="{Binding DecoratorsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}}"/>
@@ -117,6 +112,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^ /template/ ItemsControl#PART_ConnectionsItemsControl">
+            <Setter Property="ZIndex" Value="-1" />
+        </Style>
+        <Style Selector="^:connections-on-top /template/ ItemsControl#PART_ConnectionsItemsControl">
+            <Setter Property="ZIndex" Value="0" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

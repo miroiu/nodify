@@ -10,9 +10,9 @@ namespace Nodify
     {
         #region Dependency Properties
         
-        public static readonly DependencyProperty HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner(typeof(NodeOutput));
-        public static readonly DependencyProperty HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner(typeof(NodeOutput));
-        public static readonly DependencyProperty ConnectorTemplateProperty = NodeInput.ConnectorTemplateProperty.AddOwner(typeof(NodeOutput));
+        public static readonly StyledProperty<object?> HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner<NodeOutput>();
+        public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner<NodeOutput>();
+        public static readonly StyledProperty<ControlTemplate> ConnectorTemplateProperty = NodeInput.ConnectorTemplateProperty.AddOwner<NodeOutput>();
         
         /// <summary>
         /// Gets of sets the data used for the control's header.

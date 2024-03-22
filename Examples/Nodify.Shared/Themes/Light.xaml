@@ -1,9 +1,9 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Brushes.xaml" />
-        <ResourceDictionary Source="Controls.xaml" />
+        <ResourceInclude Source="Brushes.xaml" />
+        <ResourceInclude Source="Controls.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Color x:Key="ForegroundColor">Black</Color>

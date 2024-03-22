@@ -22,7 +22,7 @@ namespace Nodify
             Point p1 = source + spacing;
             Point p2 = target - spacing;
 
-            context.BeginFigure(source, false, false);
+            using var _ = context.BeginFigure(source, false, false);
             context.LineTo(p1, true, true);
             context.LineTo(p2, true, true);
             context.LineTo(target, true, true);
@@ -45,7 +45,7 @@ namespace Nodify
                 var from = new Point(target.X + (headWidth * cosT - headHeight * sinT), target.Y + (headWidth * sinT + headHeight * cosT));
                 var to = new Point(target.X + (headWidth * cosT + headHeight * sinT), target.Y - (headHeight * cosT - headWidth * sinT));
 
-                context.BeginFigure(target, true, true);
+                using var _ = context.BeginFigure(target, true, true);
                 context.LineTo(from, true, true);
                 context.LineTo(to, true, true);
             }

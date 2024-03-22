@@ -38,7 +38,7 @@ namespace Nodify
 
         /// <summary>Called when <see cref="ItemContainer.PushState(ContainerState)"/> or <see cref="ItemContainer.PopState"/> is called.</summary>
         /// <param name="from">The state we enter from (is null for root state).</param>
-        public virtual void Enter(ContainerState? from) { }
+        public virtual void Enter(ContainerState? from, MouseEventArgs? e) { }
 
         /// <summary>Called when <see cref="ItemContainer.PopState"/> is called.</summary>
         public virtual void Exit() { }
@@ -49,7 +49,8 @@ namespace Nodify
 
         /// <summary>Pushes a new state into the stack.</summary>
         /// <param name="newState">The new state.</param>
-        public virtual void PushState(ContainerState newState) => Container.PushState(newState);
+        /// <param name="pointerEventArgs"></param>
+        public virtual void PushState(ContainerState newState, MouseEventArgs e) => Container.PushState(newState, e);
 
         /// <summary>Pops the current state from the stack.</summary>
         public virtual void PopState() => Container.PopState();

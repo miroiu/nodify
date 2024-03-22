@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
@@ -6,8 +6,7 @@
                      Color="DodgerBlue" />
 
     <DrawingBrush x:Key="ItemContainer.HighlightBrush"
-                  Viewport="0 0 24 24"
-                  ViewportUnits="Absolute"
+                  DestinationRect="0 0 24 24"
                   TileMode="Tile">
         <DrawingBrush.Drawing>
             <DrawingGroup>
@@ -23,7 +22,7 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <Style TargetType="{x:Type local:ItemContainer}">
+    <ControlTheme TargetType="{x:Type local:ItemContainer}" x:Key="{x:Type local:ItemContainer}">
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="SelectedBorderThickness"
@@ -45,47 +44,35 @@
                             Padding="{TemplateBinding Padding}"
                             x:Name="Border"
                             CornerRadius="3">
-                        <ContentPresenter />
+                        <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsSelected"
-                               Value="True" />
-                    <Condition Property="IsPreviewingSelection"
-                               Value="{x:Null}" />
-                </MultiTrigger.Conditions>
-                <MultiTrigger.Setters>
-                    <Setter Property="BorderBrush"
-                            Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
-                    <Setter Property="Margin"
-                            Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
-                    <Setter Property="BorderThickness"
-                            Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
-                </MultiTrigger.Setters>
-            </MultiTrigger>
-            <Trigger Property="IsPreviewingSelection"
-                     Value="True">
-                <Setter Property="BorderBrush"
-                        Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="Margin"
-                        Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="BorderThickness"
-                        Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
-            </Trigger>
-            <Trigger Property="local:PendingConnection.IsOverElement"
-                     Value="True">
-                <Setter Property="BorderBrush"
-                        Value="{Binding HighlightBrush, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="Margin"
-                        Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
-                <Setter Property="BorderThickness"
-                        Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+        <Style Selector="^:selected:null-previewing-selection">
+            <Setter Property="BorderBrush"
+                    Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="Margin"
+                    Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="BorderThickness"
+                    Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
+        </Style>
+        <Style Selector="^:previewing-selection">
+            <Setter Property="BorderBrush"
+                    Value="{Binding SelectedBrush, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="Margin"
+                    Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="BorderThickness"
+                    Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
+        </Style>
+        <Style Selector="^.isOverElement">
+            <Setter Property="BorderBrush"
+                    Value="{Binding HighlightBrush, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="Margin"
+                    Value="{Binding SelectedMargin, RelativeSource={RelativeSource Self}}" />
+            <Setter Property="BorderThickness"
+                    Value="{Binding SelectedBorderThickness, RelativeSource={RelativeSource Self}}" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

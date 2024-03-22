@@ -30,7 +30,7 @@ namespace Nodify
             for (var i = 0; i < _selectedContainers.Count; i++)
             {
                 ItemContainer container = _selectedContainers[i];
-                container.Location -= _dragOffset;
+                container.SetCurrentValue(ItemContainer.LocationProperty, container.Location - _dragOffset);
             }
 
             _selectedContainers.Clear();
@@ -46,11 +46,12 @@ namespace Nodify
                 // Correct the final position
                 if (NodifyEditor.EnableSnappingCorrection)
                 {
-                    result.X = (int)result.X / _editor.GridCellSize * _editor.GridCellSize;
-                    result.Y = (int)result.Y / _editor.GridCellSize * _editor.GridCellSize;
+                    result = new Point(
+                    (int)result.X / _editor.GridCellSize * _editor.GridCellSize,
+                    (int)result.Y / _editor.GridCellSize * _editor.GridCellSize);
                 }
 
-                container.Location = result;
+                container.SetCurrentValue(ItemContainer.LocationProperty, result);
             }
 
             _selectedContainers.Clear();
@@ -75,7 +76,7 @@ namespace Nodify
                 for (var i = 0; i < _selectedContainers.Count; i++)
                 {
                     ItemContainer container = _selectedContainers[i];
-                    container.Location = new Point(container.Location.X + delta.X, container.Location.Y + delta.Y);
+                    container.SetCurrentValue(ItemContainer.LocationProperty, new Point(container.Location.X + delta.X, container.Location.Y + delta.Y));
                 }
             }
         }

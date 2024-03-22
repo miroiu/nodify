@@ -1,17 +1,14 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
     
     <SolidColorBrush x:Key="PanelBackgroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource PanelBackgroundColor}" />
     
     <SolidColorBrush x:Key="ActiveStateBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource ActiveStateColor}" />
     
     <SolidColorBrush x:Key="ReadOnlyStateBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource ReadOnlyStateColor}" />
     
 </ResourceDictionary>

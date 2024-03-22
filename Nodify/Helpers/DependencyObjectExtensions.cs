@@ -26,7 +26,7 @@ namespace Nodify
             return (T)current;
         }
 
-        public static T? GetElementUnderMouse<T>(this UIElement container)
+        public static T? GetElementUnderMouse<T>(this UIElement container, Point relativePosition)
             where T : UIElement
         {
             T? result = default;
@@ -52,49 +52,42 @@ namespace Nodify
                     return HitTestResultBehavior.Stop;
                 }
                 return HitTestResultBehavior.Continue;
-            }, new PointHitTestParameters(Mouse.GetPosition(container)));
+            }, new PointHitTestParameters(relativePosition));
 
             return result;
         }
 
-        public static bool CaptureMouseSafe(this UIElement elem)
-        {
-            if (Mouse.Captured == null || elem.IsMouseCaptured)
-            {
-                return elem.CaptureMouse();
-            }
-
-            return false;
-        }
-
         #region Animation
 
-        public static void StartAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, Point toValue, double animationDurationSeconds, EventHandler? completedEvent = null)
+        public static async System.Threading.Tasks.Task StartAnimation<T>(this Control animatableElement, StyledProperty<T> dependencyProperty, T toValue, double animationDurationSeconds, EventHandler? completedEvent = null)
         {
-            var fromValue = (Point)animatableElement.GetValue(dependencyProperty);
+            var fromValue = (T)animatableElement.GetValue(dependencyProperty);
 
-            PointAnimation animation = new PointAnimation
+            var keyframe1 = new KeyFrame()
             {
-                From = fromValue,
-                To = toValue,
-                Duration = TimeSpan.FromSeconds(animationDurationSeconds)
+                Setters = { new Setter(dependencyProperty, fromValue), }, KeyTime = TimeSpan.FromSeconds(0)
             };
 
-            animation.Completed += delegate (object? sender, EventArgs e)
+            var keyframe2 = new KeyFrame()
             {
-                animatableElement.SetValue(dependencyProperty, animatableElement.GetValue(dependencyProperty));
-                CancelAnimation(animatableElement, dependencyProperty);
-
-                completedEvent?.Invoke(sender, e);
+                Setters = { new Setter(dependencyProperty, toValue), }, KeyTime = TimeSpan.FromSeconds(animationDurationSeconds)
             };
 
-            animation.Freeze();
+            var animation = new Avalonia.Animation.Animation()
+            {
+                Duration = TimeSpan.FromSeconds(animationDurationSeconds), Children = { keyframe1, keyframe2 },
+            };
 
-            animatableElement.BeginAnimation(dependencyProperty, animation);
+            await animation.RunAsync(animatableElement);
+            
+            //animatableElement.SetValue(dependencyProperty, animatableElement.GetValue(dependencyProperty));
+            //CancelAnimation(animatableElement, dependencyProperty);
+
+            completedEvent?.Invoke(animatableElement, EventArgs.Empty);
         }
 
-        public static void CancelAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty)
-            => animatableElement.BeginAnimation(dependencyProperty, null);
+        //public static void CancelAnimation(this Control animatableElement, DependencyProperty dependencyProperty)
+        //    => animatableElement.BeginAnimation(dependencyProperty, null);
 
         #endregion
     }

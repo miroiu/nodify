@@ -1,9 +1,9 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <ControlTemplate x:Key="ConnectorThumbTemplate"
-                     TargetType="Control">
+    <ControlTemplate x:Key="InputConnectorThumbTemplate"
+                     TargetType="TemplatedControl">
         <Ellipse Width="14"
                  Height="14"
                  Stroke="{TemplateBinding BorderBrush}"
@@ -11,7 +11,7 @@
                  StrokeThickness="2" />
     </ControlTemplate>
 
-    <LinearGradientBrush x:Key="FadeOpacityMask"
+    <LinearGradientBrush x:Key="InputFadeOpacityMask"
                          StartPoint="0 0"
                          EndPoint="1 0">
         <GradientStop Color="#22FFFFFF"
@@ -24,7 +24,7 @@
                       Offset="1" />
     </LinearGradientBrush>
 
-    <Style TargetType="{x:Type local:NodeInput}">
+    <ControlTheme TargetType="{x:Type local:NodeInput}" x:Key="{x:Type local:NodeInput}">
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
         <Setter Property="Background"
@@ -34,20 +34,20 @@
         <Setter Property="Padding"
                 Value="4 2" />
         <Setter Property="ConnectorTemplate"
-                Value="{StaticResource ConnectorThumbTemplate}" />
+                Value="{StaticResource InputConnectorThumbTemplate}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NodeInput}">
                     <Grid Background="{TemplateBinding Background}">
-                        <Border Visibility="Collapsed"
+                        <Border IsVisible="False"
                                 x:Name="Highlight"
-                                OpacityMask="{StaticResource FadeOpacityMask}"
+                                OpacityMask="{StaticResource InputFadeOpacityMask}"
                                 Background="{TemplateBinding BorderBrush}" />
 
                         <StackPanel Orientation="Horizontal"
                                     Margin="{TemplateBinding Padding}">
 
-                            <Control x:Name="PART_Connector"
+                            <TemplatedControl x:Name="PART_Connector"
                                      Focusable="False"
                                      Margin="0 0 5 0"
                                      VerticalAlignment="Center"
@@ -55,38 +55,28 @@
                                      BorderBrush="{TemplateBinding BorderBrush}"
                                      Template="{TemplateBinding ConnectorTemplate}" />
 
-                            <ContentPresenter ContentSource="Header" />
+                            <ContentControl Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" />
                         </StackPanel>
                     </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsConnected"
-                                 Value="True">
-                            <Setter TargetName="PART_Connector"
-                                    Property="Background"
-                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Trigger>
-                        <Trigger Property="local:PendingConnection.IsOverElement"
-                                 Value="True">
-                            <Setter TargetName="PART_Connector"
-                                    Property="Background"
-                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver"
-                                 Value="True">
-                            <Setter TargetName="Highlight"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                        </Trigger>
-                        <Trigger Property="local:PendingConnection.IsOverElement"
-                                 Value="True">
-                            <Setter TargetName="Highlight"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^:connected /template/ TemplatedControl#PART_Connector">
+            <Setter Property="Background"
+                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+        </Style>
+        <Style Selector="^.isOverElement /template/ TemplatedControl#PART_Connector">
+            <Setter Property="Background"
+                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#Highlight">
+            <Setter Property="IsVisible"
+                    Value="True" />
+        </Style>
+        <Style Selector="^.isOverElement /template/ Border#Highlight">
+            <Setter Property="IsVisible"
+                    Value="True" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

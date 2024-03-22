@@ -1,8 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <Style TargetType="{x:Type local:Connection}">
+    <ControlTheme TargetType="{x:Type local:Connection}" x:Key="{x:Type local:Connection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -11,9 +11,9 @@
                 Value="DodgerBlue" />
         <Setter Property="Spacing"
                 Value="20" />
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:LineConnection}">
+    <ControlTheme TargetType="{x:Type local:LineConnection}" x:Key="{x:Type local:LineConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -22,9 +22,9 @@
                 Value="DodgerBlue" />
         <Setter Property="Spacing"
                 Value="30" />
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:CircuitConnection}">
+    <ControlTheme TargetType="{x:Type local:CircuitConnection}" x:Key="{x:Type local:CircuitConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -33,6 +33,6 @@
                 Value="DodgerBlue" />
         <Setter Property="Spacing"
                 Value="30" />
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

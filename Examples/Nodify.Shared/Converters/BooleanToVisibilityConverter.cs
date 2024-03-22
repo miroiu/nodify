@@ -8,7 +8,7 @@ namespace Nodify
 {
     public class BooleanToVisibilityConverter : MarkupExtension, IValueConverter
     {
-        public Visibility FalseVisibility { get; set; } = Visibility.Collapsed;
+        public bool FalseVisibility { get; set; } = false;
         public bool Negate { get; set; }
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -16,19 +16,19 @@ namespace Nodify
             string? stringValue = value?.ToString();
             if (bool.TryParse(stringValue, out var b))
             {
-                return (Negate ? !b : b) ? Visibility.Visible : FalseVisibility;
+                return (Negate ? !b : b) ? true : FalseVisibility;
             }
             else if (double.TryParse(stringValue, out var d))
             {
-                return (Negate ? !(d > 0) : (d > 0)) ? Visibility.Visible : FalseVisibility;
+                return (Negate ? !(d > 0) : (d > 0)) ? true : FalseVisibility;
             }
 
             bool result = value != null;
-            return (Negate ? !result : result) ? Visibility.Visible : FalseVisibility;
+            return (Negate ? !result : result) ? true : FalseVisibility;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => value is Visibility v && v == Visibility.Visible;
+            => value is bool v && v;
 
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }

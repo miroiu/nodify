@@ -9,9 +9,9 @@ namespace Nodify.StateMachine
 {
     public class FilterBlackboardKeysConverter : MarkupExtension, IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (values.Length >= 2 && values[0] is IEnumerable<BlackboardKeyViewModel> keys && values[1] is BlackboardKeyType filter)
+            if (values.Count >= 2 && values[0] is IEnumerable<BlackboardKeyViewModel> keys && values[1] is BlackboardKeyType filter)
             {
                 return keys.Where(k => k.Type == filter || filter == BlackboardKeyType.Object);
             }

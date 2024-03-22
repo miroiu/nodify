@@ -15,17 +15,16 @@ namespace Nodify
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty HighlightBrushProperty = ItemContainer.HighlightBrushProperty.AddOwner(typeof(StateNode));
-        public static readonly DependencyProperty ContentProperty = ContentPresenter.ContentProperty.AddOwner(typeof(StateNode));
-        public static readonly DependencyProperty ContentTemplateProperty = ContentPresenter.ContentTemplateProperty.AddOwner(typeof(StateNode));
-        public static readonly DependencyProperty CornerRadiusProperty = Border.CornerRadiusProperty.AddOwner(typeof(StateNode));
+        public static readonly StyledProperty<IBrush> HighlightBrushProperty = ItemContainer.HighlightBrushProperty.AddOwner<StateNode>();
+        public static readonly StyledProperty<object?> ContentProperty = ContentPresenter.ContentProperty.AddOwner<StateNode>();
+        public static readonly StyledProperty<IDataTemplate?> ContentTemplateProperty = ContentPresenter.ContentTemplateProperty.AddOwner<StateNode>();
 
         /// <summary>
         /// Gets or sets the brush used when the <see cref="PendingConnection.IsOverElementProperty"/> attached property is true for this <see cref="StateNode"/>.
         /// </summary>
-        public Brush HighlightBrush
+        public IBrush HighlightBrush
         {
-            get => (Brush)GetValue(HighlightBrushProperty);
+            get => (IBrush)GetValue(HighlightBrushProperty);
             set => SetValue(HighlightBrushProperty, value);
         }
 
@@ -47,15 +46,6 @@ namespace Nodify
             set => SetValue(ContentTemplateProperty, value);
         }
         
-        /// <summary>
-        /// Gets or sets a value that represents the degree to which the corners of the <see cref="StateNode"/> are rounded.
-        /// </summary>
-        public CornerRadius CornerRadius
-        {
-            get => (CornerRadius)GetValue(CornerRadiusProperty);
-            set => SetValue(CornerRadiusProperty, value);
-        }
-
         #endregion
         
         /// <summary>
@@ -69,18 +59,18 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void OnApplyTemplate()
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(e);
 
-            ContentControl = Template.FindName(ElementContent, this) as UIElement;
+            ContentControl = e.NameScope.Find<Control>(ElementContent);
         }
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content
-            if (e.OriginalSource is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
+            if (e.Source is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
             {
                 base.OnMouseDown(e);
             }
@@ -90,7 +80,7 @@ namespace Nodify
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             // Do not raise PendingConnection events if clicked on content
-            if (e.OriginalSource is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
+            if (e.Source is Visual visual && (!ContentControl?.IsAncestorOf(visual) ?? true))
             {
                 base.OnMouseUp(e);
             }

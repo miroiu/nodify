@@ -19,9 +19,9 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void Enter(ContainerState? from)
+        public override void Enter(ContainerState? from, MouseEventArgs? e)
         {
-            _initialMousePosition = Mouse.GetPosition(Editor.ItemsHost);
+            _initialMousePosition = e?.GetPosition(Editor.ItemsHost) ?? default;
 
             Container.IsSelected = true;
             Container.IsPreviewingLocation = true;
@@ -71,7 +71,7 @@ namespace Nodify
                 if (e.ChangedButton == MouseButton.Right)
                 {
                     double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                    if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    if ((_currentMousePosition - _initialMousePosition).LengthSquared() > contextMenuTreshold)
                     {
                         e.Handled = true;
                     }

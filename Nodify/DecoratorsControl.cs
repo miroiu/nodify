@@ -8,12 +8,14 @@ namespace Nodify
     /// </summary>
     internal class DecoratorsControl : ItemsControl
     {
-        /// <inheritdoc />
-        protected override bool IsItemItsOwnContainerOverride(object item)
-            => item is DecoratorContainer;
+        protected override Type StyleKeyOverride => typeof(ItemsControl);
 
         /// <inheritdoc />
-        protected override DependencyObject GetContainerForItemOverride()
+        protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) 
+            => NeedsContainer<DecoratorContainer>(item, out recycleKey);
+
+        /// <inheritdoc />
+        protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) 
             => new DecoratorContainer();
     }
 }

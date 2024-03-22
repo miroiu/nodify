@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-
+using KeyGesture = Nodify.Compatibility.InputKeyGesture;
 namespace Nodify
 {
     /// <summary>Gestures used by the <see cref="NodifyEditor"/>.</summary>

@@ -1,14 +1,14 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Brushes.xaml" />
+        <ResourceInclude Source="Brushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--NODIFY EDITOR-->
 
-    <Style x:Key="NodifyEditor.SelectionRectangleStyle"
+    <ControlTheme x:Key="NodifyEditor.SelectionRectangleStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
                 Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
@@ -16,43 +16,45 @@
                 Value="1" />
         <Setter Property="Fill"
                 Value="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:NodifyEditor}"
-           BasedOn="{StaticResource {x:Type local:NodifyEditor}}">
+    <ControlTheme TargetType="{x:Type local:NodifyEditor}" x:Key="{x:Type local:NodifyEditor}"
+                  BasedOn="{StaticResource {x:Type local:NodifyEditor}}">
         <Setter Property="Background"
                 Value="{StaticResource NodifyEditor.BackgroundBrush}" />
         <Setter Property="Foreground"
                 Value="{StaticResource NodifyEditor.ForegroundBrush}" />
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource NodifyEditor.SelectionRectangleStyle}" />
-    </Style>
+    </ControlTheme>
 
     <!--ITEM CONTAINER-->
 
-    <Style TargetType="{x:Type local:ItemContainer}"
-           BasedOn="{StaticResource {x:Type local:ItemContainer}}">
+    <ControlTheme TargetType="{x:Type local:ItemContainer}" x:Key="{x:Type local:ItemContainer}"
+                  BasedOn="{StaticResource {x:Type local:ItemContainer}}">
         <Setter Property="HighlightBrush"
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource ItemContainer.BorderBrush}" />
         <Setter Property="SelectedBrush"
                 Value="{StaticResource ItemContainer.SelectedBrush}" />
-    </Style>
+    </ControlTheme>
     
     <!--DECORATOR CONTAINER-->
     
     <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
 
-    <Style TargetType="{x:Type local:DecoratorContainer}"
-           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
+    <ControlTheme TargetType="{x:Type local:DecoratorContainer}" x:Key="{x:Type local:DecoratorContainer}"
+                  BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
         <Setter Property="RenderTransform"
                 Value="{Binding ViewportTransform, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}, Converter={StaticResource UnscaleTransformConverter}}" />
-    </Style>
+        <Setter Property="RenderTransformOrigin"
+                Value="0,0" />
+    </ControlTheme>
 
     <!--NODE-->
 
-    <Style TargetType="{x:Type local:Node}"
+    <ControlTheme TargetType="{x:Type local:Node}" x:Key="{x:Type local:Node}"
            BasedOn="{StaticResource {x:Type local:Node}}">
         <Setter Property="Background"
                 Value="{StaticResource Node.BackgroundBrush}" />
@@ -66,18 +68,15 @@
                 Value="{StaticResource Node.FooterBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource Node.BorderBrush}" />
-        <Style.Triggers>
-            <Trigger Property="HasHeader"
-                     Value="True">
-                <Setter Property="Foreground"
-                        Value="{StaticResource Node.HeaderForegroundBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
+        <Style Selector="^:has-header">
+            <Setter Property="Foreground"
+                    Value="{StaticResource Node.HeaderForegroundBrush}" />
+        </Style>
+    </ControlTheme>
+    
     <!--STATE NODE-->
 
-    <Style TargetType="{x:Type local:StateNode}"
+    <ControlTheme TargetType="{x:Type local:StateNode}" x:Key="{x:Type local:StateNode}"
            BasedOn="{StaticResource {x:Type local:StateNode}}">
         <Setter Property="Background"
                 Value="{StaticResource StateNode.BackgroundBrush}" />
@@ -87,11 +86,11 @@
                 Value="{StaticResource StateNode.BorderBrush}" />
         <Setter Property="HighlightBrush"
                 Value="{StaticResource StateNode.HighlightBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--GROUPING NODE-->
 
-    <Style TargetType="{x:Type local:GroupingNode}"
+    <ControlTheme TargetType="{x:Type local:GroupingNode}" x:Key="{x:Type local:GroupingNode}"
            BasedOn="{StaticResource {x:Type local:GroupingNode}}">
         <Setter Property="Background"
                 Value="{StaticResource GroupingNode.BackgroundBrush}" />
@@ -101,11 +100,11 @@
                 Value="{StaticResource GroupingNode.HeaderBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource GroupingNode.BorderBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--KNOT NODE-->
 
-    <Style TargetType="{x:Type local:KnotNode}"
+    <ControlTheme TargetType="{x:Type local:KnotNode}" x:Key="{x:Type local:KnotNode}"
            BasedOn="{StaticResource {x:Type local:KnotNode}}">
         <Setter Property="Background"
                 Value="{StaticResource KnotNode.BackgroundBrush}" />
@@ -113,11 +112,11 @@
                 Value="{StaticResource KnotNode.ForegroundBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource KnotNode.BorderBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--CONNECTOR-->
 
-    <Style TargetType="{x:Type local:Connector}"
+    <ControlTheme TargetType="{x:Type local:Connector}" x:Key="{x:Type local:Connector}"
            BasedOn="{StaticResource {x:Type local:Connector}}">
         <Setter Property="Background"
                 Value="{StaticResource Connector.BackgroundBrush}" />
@@ -125,11 +124,11 @@
                 Value="{StaticResource Connector.ForegroundBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource Connector.BorderBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--NODE INPUT-->
 
-    <Style TargetType="{x:Type local:NodeInput}"
+    <ControlTheme TargetType="{x:Type local:NodeInput}" x:Key="{x:Type local:NodeInput}"
            BasedOn="{StaticResource {x:Type local:NodeInput}}">
         <Setter Property="Background"
                 Value="{StaticResource NodeInput.BackgroundBrush}" />
@@ -137,11 +136,11 @@
                 Value="{StaticResource NodeInput.ForegroundBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource NodeInput.BorderBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--NODE OUTPUT-->
 
-    <Style TargetType="{x:Type local:NodeOutput}"
+    <ControlTheme TargetType="{x:Type local:NodeOutput}" x:Key="{x:Type local:NodeOutput}"
            BasedOn="{StaticResource {x:Type local:NodeOutput}}">
         <Setter Property="Background"
                 Value="{StaticResource NodeOutput.BackgroundBrush}" />
@@ -149,41 +148,41 @@
                 Value="{StaticResource NodeOutput.ForegroundBrush}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource NodeOutput.BorderBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--CONNECTION-->
 
-    <Style TargetType="{x:Type local:Connection}"
+    <ControlTheme TargetType="{x:Type local:Connection}" x:Key="{x:Type local:Connection}"
            BasedOn="{StaticResource {x:Type local:Connection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource Connection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource Connection.StrokeBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--LINE CONNECTION-->
 
-    <Style TargetType="{x:Type local:LineConnection}"
+    <ControlTheme TargetType="{x:Type local:LineConnection}" x:Key="{x:Type local:LineConnection}"
            BasedOn="{StaticResource {x:Type local:LineConnection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource LineConnection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource LineConnection.StrokeBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--CIRCUIT CONNECTION-->
 
-    <Style TargetType="{x:Type local:CircuitConnection}"
+    <ControlTheme TargetType="{x:Type local:CircuitConnection}" x:Key="{x:Type local:CircuitConnection}"
            BasedOn="{StaticResource {x:Type local:CircuitConnection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--PENDING CONNECTION-->
 
-    <Style TargetType="{x:Type local:PendingConnection}"
+    <ControlTheme TargetType="{x:Type local:PendingConnection}" x:Key="{x:Type local:PendingConnection}"
            BasedOn="{StaticResource {x:Type local:PendingConnection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource PendingConnection.StrokeBrush}" />
@@ -193,6 +192,6 @@
                 Value="{StaticResource PendingConnection.ForegroundBrush}" />
         <Setter Property="Background"
                 Value="{StaticResource PendingConnection.BackgroundBrush}" />
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

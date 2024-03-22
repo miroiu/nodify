@@ -10,8 +10,8 @@ namespace Nodify
     {
         #region Dependency Properties
 
-        public static readonly DependencyProperty LocationProperty = ItemContainer.LocationProperty.AddOwner(typeof(DecoratorContainer), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsParentArrange, OnLocationChanged));
-        public static readonly DependencyProperty ActualSizeProperty = ItemContainer.ActualSizeProperty.AddOwner(typeof(DecoratorContainer));
+        public static readonly StyledProperty<Point> LocationProperty = ItemContainer.LocationProperty.AddOwner<DecoratorContainer>();
+        public static readonly StyledProperty<Size> ActualSizeProperty = ItemContainer.ActualSizeProperty.AddOwner<DecoratorContainer>();
 
         /// <summary>
         /// Gets or sets the location of this <see cref="DecoratorContainer"/> inside the <see cref="NodifyEditor.DecoratorsHost"/>.
@@ -41,7 +41,7 @@ namespace Nodify
 
         #region Routed Events
 
-        public static readonly RoutedEvent LocationChangedEvent = EventManager.RegisterRoutedEvent(nameof(LocationChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DecoratorContainer));
+        public static readonly RoutedEvent<RoutedEventArgs> LocationChangedEvent = RoutedEvent.Register<RoutedEventArgs>(nameof(LocationChanged), RoutingStrategies.Bubble, typeof(DecoratorContainer));
 
         /// <summary>
         /// Occurs when the <see cref="Location"/> of this <see cref="DecoratorContainer"/> is changed.
@@ -65,11 +65,14 @@ namespace Nodify
         static DecoratorContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(typeof(DecoratorContainer)));
+            LocationProperty.OverrideMetadata<DecoratorContainer>(new StyledPropertyMetadata<Point>(default, BindingMode.TwoWay));
+            PanelUtilities.AffectsParentArrange<DecoratorContainer>(LocationProperty);
+            LocationProperty.Changed.AddClassHandler<DecoratorContainer>(OnLocationChanged);
         }
 
-        /// <inheritdoc />
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        protected override void OnSizeChanged(SizeChangedInfo sizeInfo)
         {
+            base.OnSizeChanged(sizeInfo);
             ActualSize = sizeInfo.NewSize;
         }
     }

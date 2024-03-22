@@ -1,45 +1,35 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
     <SolidColorBrush x:Key="ForegroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource ForegroundColor}" />
 
     <SolidColorBrush x:Key="DisabledForegroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource DisabledForegroundColor}" />
 
     <SolidColorBrush x:Key="BackgroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource BackgroundColor}" />
 
     <SolidColorBrush x:Key="ContrastBackgroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource ContrastBackgroundColor}" />
     
     <SolidColorBrush x:Key="HighlightedBackgroundBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource HighlightedBackgroundColor}" />
 
     <SolidColorBrush x:Key="BorderBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource BorderColor}" />
 
     <SolidColorBrush x:Key="DisabledBorderBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource DisabledBorderColor}" />
 
     <SolidColorBrush x:Key="HighlightedBorderBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource HighlightedBorderColor}" />
     
     <SolidColorBrush x:Key="FocusedBorderBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource FocusedBorderColor}" />
     
     <SolidColorBrush x:Key="GridLinesBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource GridLinesColor}" />
 
 </ResourceDictionary>

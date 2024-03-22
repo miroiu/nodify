@@ -10,15 +10,15 @@ namespace Nodify.StateMachine
     {
         public bool CanChangeInputType { get; set; }
 
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (values.Length >= 2 && values[0] is ICollection<BlackboardKeyViewModel> availableKeys && values[1] is BlackboardKeyViewModel target)
+            if (values.Count >= 2 && values[0] is ICollection<BlackboardKeyViewModel> availableKeys && values[1] is BlackboardKeyViewModel target)
             {
                 return new BlackboardKeyEditorViewModel
                 {
                     AvailableKeys = availableKeys,
                     Target = target,
-                    IsEditing = values.Length >= 3 && values[2] is bool b && b,
+                    IsEditing = values.Count >= 3 && values[2] is bool b && b,
                     CanChangeInputType = CanChangeInputType && (target.Type != BlackboardKeyType.Object || target.CanChangeType),
                     CanChangeKeyType = target.CanChangeType
                 };

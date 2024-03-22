@@ -1,5 +1,5 @@
 ﻿<UserControl x:Class="Nodify.Calculator.OperationsMenuView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,11 +11,10 @@
              d:DesignWidth="250"
              d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}"
-               BasedOn="{StaticResource {x:Type TextBlock}}">
+        <ControlTheme TargetType="{x:Type TextBlock}" x:Key="{x:Type TextBlock}">
             <Setter Property="Foreground"
                     Value="{DynamicResource ForegroundBrush}" />
-        </Style>
+        </ControlTheme>
     </UserControl.Resources>
 
     <Border Padding="7"
@@ -23,7 +22,7 @@
             Background="{DynamicResource Node.BackgroundBrush}"
             BorderBrush="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}"
             BorderThickness="2"
-            Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
+            IsVisible="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -43,29 +42,25 @@
                                 Padding="3"
                                 Cursor="Hand"
                                 HorizontalContentAlignment="Left">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}">
+                            <Button.Theme>
+                                <ControlTheme TargetType="{x:Type Button}">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type Button}">
                                                 <Border Name="Border"
                                                         Background="{TemplateBinding Background}"
                                                         Padding="{TemplateBinding Padding}">
-                                                    <ContentPresenter />
+                                                    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                                                 </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver"
-                                                             Value="True">
-                                                        <Setter Property="Background"
-                                                                TargetName="Border"
-                                                                Value="{DynamicResource NodeInput.BorderBrush}" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                </Style>
-                            </Button.Style>
+                                    <Style Selector="^:pointerover /template/ Border#Border">
+                                        <Setter Property="Background"
+                                                Value="{DynamicResource NodeInput.BorderBrush}" />                                        
+                                    </Style>
+                                </ControlTheme>
+                            </Button.Theme>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

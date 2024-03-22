@@ -104,7 +104,7 @@ namespace Nodify.Playground
             var rect = nodes.GetBoundingBox(50);
             var comment = new CommentNodeViewModel
             {
-                Location = rect.Location,
+                Location = rect.Position,
                 Size = rect.Size,
                 Title = text ?? "New comment"
             };

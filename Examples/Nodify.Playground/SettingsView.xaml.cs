@@ -6,8 +6,8 @@ namespace Nodify.Playground
 {
     public partial class SettingsView : UserControl
     {
-        public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register(nameof(Items), typeof(IEnumerable<ISettingViewModel>), typeof(SettingsView));
+        public static readonly AvaloniaProperty<IEnumerable<ISettingViewModel>> ItemsProperty =
+            AvaloniaProperty.Register<SettingsView, IEnumerable<ISettingViewModel>>(nameof(Items));
 
         public IEnumerable<ISettingViewModel> Items
         {

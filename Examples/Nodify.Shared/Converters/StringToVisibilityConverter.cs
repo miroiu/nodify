@@ -8,10 +8,10 @@ namespace Nodify
 {
     public class StringToVisibilityConverter : MarkupExtension, IValueConverter
     {
-        public Visibility NullVisibility { get; set; } = Visibility.Collapsed;
+        public bool NullVisibility { get; set; } = false;
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) 
-            => string.IsNullOrEmpty(value as string) ? NullVisibility : Visibility.Visible;
+            => string.IsNullOrEmpty(value as string) ? NullVisibility : true;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();

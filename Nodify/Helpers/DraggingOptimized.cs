@@ -48,11 +48,11 @@ namespace Nodify
                 // Correct the final position
                 if (NodifyEditor.EnableSnappingCorrection && (r.X != 0 || r.Y != 0))
                 {
-                    result.X = (int)result.X / _editor.GridCellSize * _editor.GridCellSize;
-                    result.Y = (int)result.Y / _editor.GridCellSize * _editor.GridCellSize;
+                    result = new Point((int)result.X / _editor.GridCellSize * _editor.GridCellSize,
+                        (int)result.Y / _editor.GridCellSize * _editor.GridCellSize);
                 }
 
-                container.Location = result;
+                container.SetCurrentValue(ItemContainer.LocationProperty, result);
 
                 r.X = 0;
                 r.Y = 0;

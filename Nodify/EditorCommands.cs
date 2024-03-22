@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public static class EditorCommands
+    internal static class EditorCommands
     {
         /// <summary>
         /// Specifies the possible alignment values used by the <see cref="Align"/> command.
@@ -77,19 +77,19 @@ namespace Nodify
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
         }
 
-        private static void OnQueryAlignStatus(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQueryAlignStatus(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
-                e.CanExecute = ((MultiSelector)editor).SelectedItems.Count > 1;
+                e.CanExecute = editor.HasManyItemsSelected;
             }
         }
 
-        private static void OnAlign(object sender, ExecutedRoutedEventArgs e)
+        private static void OnAlign(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
-                IList selected = ((MultiSelector)editor).SelectedItems;
+                var selected = editor.InternalSelectedItems;
                 if (selected.Count > 0)
                 {
                     if (editor.ItemsDragStartedCommand?.CanExecute(null) ?? false)
@@ -101,20 +101,20 @@ namespace Nodify
 
                     for (var i = 0; i < selected.Count; i++)
                     {
-                        containers.Add((ItemContainer)editor.ItemContainerGenerator.ContainerFromItem(selected[i]));
+                        containers.Add((ItemContainer)editor.ContainerFromItem(selected[i]));
                     }
 
                     if (e.Parameter is Alignment alignment)
                     {
-                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
+                        AlignContainers(containers, alignment, e.Source as ItemContainer);
                     }
                     else if (e.Parameter is string str && Enum.TryParse(str, true, out alignment))
                     {
-                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
+                        AlignContainers(containers, alignment, e.Source as ItemContainer);
                     }
                     else
                     {
-                        AlignContainers(containers, Alignment.Top, e.OriginalSource as ItemContainer);
+                        AlignContainers(containers, Alignment.Top, e.Source as ItemContainer);
                     }
 
                     if (editor.ItemsDragCompletedCommand?.CanExecute(null) ?? false)
@@ -140,23 +140,23 @@ namespace Nodify
                     break;
 
                 case Alignment.Bottom:
-                    double bottom = instigator != null ? instigator.Location.Y + instigator.ActualHeight : containers.Max(x => x.Location.Y + x.ActualHeight);
-                    containers.ForEach(c => c.Location = new Point(c.Location.X, bottom - c.ActualHeight));
+                    double bottom = instigator != null ? instigator.Location.Y + instigator.Bounds.Height : containers.Max(x => x.Location.Y + x.Bounds.Height);
+                    containers.ForEach(c => c.Location = new Point(c.Location.X, bottom - c.Bounds.Height));
                     break;
 
                 case Alignment.Right:
-                    double right = instigator != null ? instigator.Location.X + instigator.ActualWidth : containers.Max(x => x.Location.X + x.ActualWidth);
-                    containers.ForEach(c => c.Location = new Point(right - c.ActualWidth, c.Location.Y));
+                    double right = instigator != null ? instigator.Location.X + instigator.Bounds.Width : containers.Max(x => x.Location.X + x.Bounds.Width);
+                    containers.ForEach(c => c.Location = new Point(right - c.Bounds.Width, c.Location.Y));
                     break;
 
                 case Alignment.Middle:
-                    double mid = instigator != null ? instigator.Location.Y + instigator.ActualHeight / 2 : containers.Average(c => c.Location.Y + c.ActualHeight / 2);
-                    containers.ForEach(c => c.Location = new Point(c.Location.X, mid - c.ActualHeight / 2));
+                    double mid = instigator != null ? instigator.Location.Y + instigator.Bounds.Height / 2 : containers.Average(c => c.Location.Y + c.Bounds.Height / 2);
+                    containers.ForEach(c => c.Location = new Point(c.Location.X, mid - c.Bounds.Height / 2));
                     break;
 
                 case Alignment.Center:
-                    double center = instigator != null ? instigator.Location.X + instigator.ActualWidth / 2 : containers.Average(c => c.Location.X + c.ActualWidth / 2);
-                    containers.ForEach(c => c.Location = new Point(center - c.ActualWidth / 2, c.Location.Y));
+                    double center = instigator != null ? instigator.Location.X + instigator.Bounds.Width / 2 : containers.Average(c => c.Location.X + c.Bounds.Width / 2);
+                    containers.ForEach(c => c.Location = new Point(center - c.Bounds.Width / 2, c.Location.Y));
                     break;
 
                 default:
@@ -164,7 +164,7 @@ namespace Nodify
             }
         }
 
-        private static void OnQueryBringIntoViewStatus(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQueryBringIntoViewStatus(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -172,7 +172,7 @@ namespace Nodify
             }
         }
 
-        private static void OnBringIntoView(object sender, ExecutedRoutedEventArgs e)
+        private static void OnBringIntoView(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -191,7 +191,7 @@ namespace Nodify
             }
         }
 
-        private static void OnQueryFitToScreenStatus(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQueryFitToScreenStatus(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -199,7 +199,7 @@ namespace Nodify
             }
         }
 
-        private static void OnFitToScreen(object sender, ExecutedRoutedEventArgs e)
+        private static void OnFitToScreen(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -207,7 +207,7 @@ namespace Nodify
             }
         }
 
-        private static void OnQuerySelectAllStatus(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQuerySelectAllStatus(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -215,7 +215,7 @@ namespace Nodify
             }
         }
 
-        private static void OnSelectAll(object sender, ExecutedRoutedEventArgs e)
+        private static void OnSelectAll(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -223,7 +223,7 @@ namespace Nodify
             }
         }
 
-        private static void OnQueryStatusZoomIn(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQueryStatusZoomIn(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -231,7 +231,7 @@ namespace Nodify
             }
         }
 
-        private static void OnZoomIn(object sender, ExecutedRoutedEventArgs e)
+        private static void OnZoomIn(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -239,7 +239,7 @@ namespace Nodify
             }
         }
 
-        private static void OnQueryStatusZoomOut(object sender, CanExecuteRoutedEventArgs e)
+        private static void OnQueryStatusZoomOut(object? sender, CanExecuteRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {
@@ -247,7 +247,7 @@ namespace Nodify
             }
         }
 
-        private static void OnZoomOut(object sender, ExecutedRoutedEventArgs e)
+        private static void OnZoomOut(object? sender, ExecutedRoutedEventArgs e)
         {
             if (sender is NodifyEditor editor)
             {

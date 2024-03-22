@@ -11,7 +11,7 @@ namespace Nodify
     {
         protected const double Degrees = Math.PI / 180.0d;
 
-        public static readonly DependencyProperty AngleProperty = DependencyProperty.Register(nameof(Angle), typeof(double), typeof(LineConnection), new FrameworkPropertyMetadata(BoxValue.Double45, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly StyledProperty<double> AngleProperty = AvaloniaProperty.Register<LineConnection, double>(nameof(Angle), BoxValue.Double45);
 
         /// <summary>
         /// The angle of the connection in degrees.
@@ -25,13 +25,14 @@ namespace Nodify
         static CircuitConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CircuitConnection), new FrameworkPropertyMetadata(typeof(CircuitConnection)));
+            AffectsRender<CircuitConnection>(AngleProperty);
         }
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
             var (p1, p2, p3) = GetLinePoints(source, target);
 
-            context.BeginFigure(source, false, false);
+            using var _ = context.BeginFigure(source, false, false);
             context.LineTo(p1, true, true);
             context.LineTo(p2, true, true);
             context.LineTo(p3, true, true);
@@ -100,7 +101,7 @@ namespace Nodify
             Vector deltaSource = p1 - p2;
             Vector deltaTarget = p3 - p2;
 
-            if (deltaSource.LengthSquared > deltaTarget.LengthSquared)
+            if (deltaSource.SquaredLength > deltaTarget.SquaredLength)
             {
                 return new Point((p1.X + p2.X - text.Width) / 2, (p1.Y + p2.Y - text.Height) / 2);
             }

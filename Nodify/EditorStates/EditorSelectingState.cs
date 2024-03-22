@@ -21,7 +21,7 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void Enter(EditorState? from)
+        public override void Enter(EditorState? from, MouseEventArgs e)
         {
             _canceled = false;
             Selection.Start(Editor.MouseLocation, _type);
@@ -49,7 +49,7 @@ namespace Nodify
         {
             if (!Editor.DisablePanning && EditorGestures.Pan.Matches(e.Source, e))
             {
-                PushState(new EditorPanningState(Editor));
+                PushState(new EditorPanningState(Editor), e);
             }
         }
 

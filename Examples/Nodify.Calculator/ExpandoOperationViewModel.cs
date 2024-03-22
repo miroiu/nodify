@@ -11,6 +11,11 @@
             RemoveInputCommand = new RequeryCommand(
                 () => Input.RemoveAt(Input.Count - 1),
                 () => Input.Count > MinInput);
+
+            Input.WhenAdded(_ => AddInputCommand.RaiseCanExecuteChanged());
+            Input.WhenRemoved(_ => AddInputCommand.RaiseCanExecuteChanged());
+            Input.WhenAdded(_ => RemoveInputCommand.RaiseCanExecuteChanged());
+            Input.WhenRemoved(_ => RemoveInputCommand.RaiseCanExecuteChanged());
         }
 
         public INodifyCommand AddInputCommand { get; }

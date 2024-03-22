@@ -42,8 +42,10 @@ namespace Nodify.Calculator
             }
 
             var result = new Rect(minX - padding, minY - padding, maxX - minX + padding * 2, maxY - minY + padding * 2);
-            result.X = (int)result.X / gridCellSize * gridCellSize;
-            result.Y = (int)result.Y / gridCellSize * gridCellSize;
+            result = new Rect((int)result.X / gridCellSize * gridCellSize,
+                (int)result.Y / gridCellSize * gridCellSize,
+                result.Width,
+                result.Height);
             return result;
         }
     }

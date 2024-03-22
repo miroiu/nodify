@@ -1,5 +1,5 @@
 ﻿<UserControl x:Class="Nodify.Playground.EditorSettingsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -21,20 +21,25 @@
             BorderThickness="0 0 0 1"
             IsExpanded="True"
             BorderBrush="{DynamicResource BackgroundBrush}">
-            <Expander.Style>
-                <Style TargetType="{x:Type Expander}"
+            <Expander.Theme>
+                <ControlTheme TargetType="{x:Type Expander}"
                        BasedOn="{StaticResource {x:Type Expander}}">
                     <Setter Property="Tag"
                             Value="{StaticResource ExpandRightIcon}" />
-                    <Style.Triggers>
-                        <Trigger Property="IsExpanded"
-                                 Value="True">
-                            <Setter Property="Tag"
-                                    Value="{StaticResource ExpandDownIcon}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Expander.Style>
+                    <Setter Property="(Interaction.Behaviors)">
+                        <BehaviorCollectionTemplate>
+                            <BehaviorCollection>
+                                <DataTrigger Property="IsExpanded"
+                                             UseDataContext="False"
+                                             Value="True">
+                                    <PropertySetter Property="Tag"
+                                                    Value="{StaticResource ExpandDownIcon}" />
+                                </DataTrigger>
+                            </BehaviorCollection>
+                        </BehaviorCollectionTemplate>
+                    </Setter>
+                </ControlTheme>
+            </Expander.Theme>
 
             <Border BorderThickness="1"
                     Padding="10"

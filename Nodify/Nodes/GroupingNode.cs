@@ -31,7 +31,7 @@ namespace Nodify
     [TemplatePart(Name = ElementContent, Type = typeof(FrameworkElement))]
     public class GroupingNode : HeaderedContentControl
     {
-        protected static readonly object GroupMovementBoxed = GroupingMovementMode.Group;
+        protected static readonly GroupingMovementMode GroupMovementBoxed = GroupingMovementMode.Group;
 
         protected const string ElementResizeThumb = "PART_ResizeThumb";
         protected const string ElementHeader = "PART_Header";
@@ -39,8 +39,8 @@ namespace Nodify
 
         #region Routed Events
 
-        public static readonly RoutedEvent ResizeStartedEvent = EventManager.RegisterRoutedEvent(nameof(ResizeStarted), RoutingStrategy.Bubble, typeof(ResizeEventHandler), typeof(GroupingNode));
-        public static readonly RoutedEvent ResizeCompletedEvent = EventManager.RegisterRoutedEvent(nameof(ResizeCompleted), RoutingStrategy.Bubble, typeof(ResizeEventHandler), typeof(GroupingNode));
+        public static readonly RoutedEvent<ResizeEventArgs> ResizeStartedEvent = RoutedEvent.Register<ResizeEventArgs>(nameof(ResizeStarted), RoutingStrategies.Bubble, typeof(GroupingNode));
+        public static readonly RoutedEvent<ResizeEventArgs> ResizeCompletedEvent = RoutedEvent.Register<ResizeEventArgs>(nameof(ResizeCompleted), RoutingStrategies.Bubble, typeof(GroupingNode));
 
         /// <summary>
         /// Occurs when the node finished resizing.
@@ -64,14 +64,14 @@ namespace Nodify
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner(typeof(GroupingNode));
-        public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(nameof(CanResize), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
-        public static readonly DependencyProperty ActualSizeProperty = DependencyProperty.Register(nameof(ActualSize), typeof(Size), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnActualSizeChanged));
-        public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
-        public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(GroupingNode));
-        public static readonly DependencyProperty ResizeStartedCommandProperty = DependencyProperty.Register(nameof(ResizeStartedCommand), typeof(ICommand), typeof(GroupingNode));
-
-        private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static readonly StyledProperty<IBrush> HeaderBrushProperty = Node.HeaderBrushProperty.AddOwner<GroupingNode>();
+        public static readonly StyledProperty<bool> CanResizeProperty = AvaloniaProperty.Register<GroupingNode, bool>(nameof(CanResize), BoxValue.True);
+        public static readonly StyledProperty<Size> ActualSizeProperty = AvaloniaProperty.Register<GroupingNode, Size>(nameof(ActualSize), BoxValue.Size, defaultBindingMode: BindingMode.TwoWay);
+        public static readonly StyledProperty<GroupingMovementMode> MovementModeProperty = AvaloniaProperty.Register<GroupingNode, GroupingMovementMode>(nameof(MovementMode), GroupMovementBoxed);
+        public static readonly StyledProperty<ICommand> ResizeCompletedCommandProperty = AvaloniaProperty.Register<GroupingNode, ICommand>(nameof(ResizeCompletedCommand));
+        public static readonly StyledProperty<ICommand> ResizeStartedCommandProperty = AvaloniaProperty.Register<GroupingNode, ICommand>(nameof(ResizeStartedCommand));
+        
+        private static void OnActualSizeChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             var node = (GroupingNode)d;
             var newSize = (Size)e.NewValue;
@@ -82,9 +82,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the brush used for the background of the <see cref="HeaderedContentControl.Header"/> of this <see cref="GroupingNode"/>.
         /// </summary>
-        public Brush HeaderBrush
+        public IBrush HeaderBrush
         {
-            get => (Brush)GetValue(HeaderBrushProperty);
+            get => (IBrush)GetValue(HeaderBrushProperty);
             set => SetValue(HeaderBrushProperty, value);
         }
 
@@ -172,7 +172,9 @@ namespace Nodify
         static GroupingNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(typeof(GroupingNode)));
-            Panel.ZIndexProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(-1, OnZIndexPropertyChanged));
+            ActualSizeProperty.Changed.AddClassHandler<GroupingNode>(OnActualSizeChanged);
+            ZIndexProperty.OverrideMetadata<GroupingNode>(new StyledPropertyMetadata<int>(-1));
+            ZIndexProperty.Changed.AddClassHandler<GroupingNode>(OnZIndexPropertyChanged);
         }
 
         private static void OnZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -180,7 +182,7 @@ namespace Nodify
             var node = (GroupingNode)d;
             if (node.Container != null)
             {
-                Panel.SetZIndex(node.Container, (int)e.NewValue);
+                node.Container.SetCurrentValue(ZIndexProperty, e.NewValue);
             }
         }
 
@@ -189,40 +191,40 @@ namespace Nodify
         /// </summary>
         public GroupingNode()
         {
-            AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnResize));
-            AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnResizeCompleted));
-            AddHandler(Thumb.DragStartedEvent, new DragStartedEventHandler(OnResizeStarted));
+            AddHandler(Thumb.DragDeltaEvent, OnResize);
+            AddHandler(Thumb.DragCompletedEvent, OnResizeCompleted);
+            AddHandler(Thumb.DragStartedEvent, OnResizeStarted);
 
             Loaded += OnNodeLoaded;
             Unloaded += OnNodeUnloaded;
         }
 
-        private void OnNodeLoaded(object sender, RoutedEventArgs e)
+        private void OnNodeLoaded(object? sender, RoutedEventArgs e)
         {
             if (HeaderControl != null)
             {
-                HeaderControl.MouseDown += OnHeaderMouseDown;
+                HeaderControl.PointerPressed += OnHeaderMouseDown;
                 HeaderControl.SizeChanged += OnHeaderSizeChanged;
                 CalculateDesiredHeaderSize();
             }
         }
 
-        private void OnNodeUnloaded(object sender, RoutedEventArgs e)
+        private void OnNodeUnloaded(object? sender, RoutedEventArgs e)
         {
             if (HeaderControl != null)
             {
-                HeaderControl.MouseDown -= OnHeaderMouseDown;
+                HeaderControl.PointerPressed -= OnHeaderMouseDown;
                 HeaderControl.SizeChanged -= OnHeaderSizeChanged;
             }
         }
 
-        private void OnHeaderMouseDown(object sender, MouseButtonEventArgs e)
+        private void OnHeaderMouseDown(object? sender, PointerPressedEventArgs e)
         {
             if (Container != null && Editor != null && EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
             {
                 // Switch the default movement mode if necessary
                 var prevMovementMode = MovementMode;
-                if (Keyboard.Modifiers == EditorGestures.GroupingNode.SwitchMovementMode)
+                if (e.KeyModifiers == EditorGestures.GroupingNode.SwitchMovementMode)
                 {
                     MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
@@ -230,33 +232,33 @@ namespace Nodify
                 // Select the content and move with it
                 if (EditorGestures.Selection.Append.Matches(e.Source, e))
                 {
-                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                    Editor.SelectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), append: true, fit: true);
                 }
                 else if (EditorGestures.Selection.Remove.Matches(e.Source, e))
                 {
-                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                    Editor.UnselectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), fit: true);
                 }
                 else if (EditorGestures.Selection.Invert.Matches(e.Source, e))
                 {
                     if (Container.IsSelected)
                     {
-                        Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                        Editor.UnselectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), fit: true);
                         Container.IsSelected = true;
                     }
                     else
                     {
-                        Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                        Editor.SelectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), append: true, fit: true);
                     }
                 }
                 else if (EditorGestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
                 {
-                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
+                    Editor.SelectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), append: Container.IsSelected, fit: true);
                 }
 
                 // Deselect content
                 if (MovementMode == GroupingMovementMode.Self)
                 {
-                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                    Editor.UnselectArea(new Rect(Container.Location, Bounds.Size /* RenderSize */), fit: true);
                     Container.IsSelected = true;
                 }
 
@@ -266,29 +268,29 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void OnApplyTemplate()
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(e);
 
-            ResizeThumb = Template.FindName(ElementResizeThumb, this) as FrameworkElement;
-            HeaderControl = Template.FindName(ElementHeader, this) as FrameworkElement;
-            ContentControl = Template.FindName(ElementContent, this) as FrameworkElement;
+            ResizeThumb = e.NameScope.Find<Control>(ElementResizeThumb);
+            HeaderControl = e.NameScope.Find<Control>(ElementHeader);
+            ContentControl = e.NameScope.Find<Control>(ElementContent);
 
             Container = this.GetParentOfType<ItemContainer>();
             Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
 
             if (Container != null)
             {
-                Panel.SetZIndex(Container, Panel.GetZIndex(this));
+                Container.SetCurrentValue(ZIndexProperty, this.GetValue(ZIndexProperty));
             }
         }
 
-        private void OnResize(object sender, DragDeltaEventArgs e)
+        private void OnResize(object? sender, VectorEventArgs e)
         {
-            if (CanResize && ReferenceEquals(e.OriginalSource, ResizeThumb))
+            if (CanResize && ReferenceEquals(e.Source, ResizeThumb))
             {
-                double resultWidth = ActualWidth + e.HorizontalChange;
-                double resultHeight = ActualHeight + e.VerticalChange;
+                double resultWidth = Bounds.Width + e.Vector.X;
+                double resultHeight = Bounds.Height + e.Vector.Y;
 
                 // Snap to grid
                 if (Editor != null)
@@ -305,9 +307,9 @@ namespace Nodify
             }
         }
 
-        private void OnResizeStarted(object sender, DragStartedEventArgs e)
+        private void OnResizeStarted(object? sender, VectorEventArgs e)
         {
-            ActualSize = new Size(ActualWidth, ActualHeight);
+            SetCurrentValue(ActualSizeProperty, Bounds.Size);
             var args = new ResizeEventArgs(ActualSize, ActualSize)
             {
                 RoutedEvent = ResizeStartedEvent,
@@ -323,11 +325,11 @@ namespace Nodify
             }
         }
 
-        private void OnResizeCompleted(object sender, DragCompletedEventArgs e)
+        private void OnResizeCompleted(object? sender, VectorEventArgs e)
         {
             Size previousSize = ActualSize;
-            var newSize = new Size(ActualWidth, ActualHeight);
-            ActualSize = newSize;
+            var newSize = Bounds.Size;
+            SetCurrentValue(ActualSizeProperty, newSize);
 
             var args = new ResizeEventArgs(previousSize, newSize)
             {
@@ -344,15 +346,15 @@ namespace Nodify
             }
         }
 
-        private void OnHeaderSizeChanged(object sender, SizeChangedEventArgs e)
+        private void OnHeaderSizeChanged(object? sender, SizeChangedEventArgs e)
             => CalculateDesiredHeaderSize();
 
         private void CalculateDesiredHeaderSize()
         {
             if (HeaderControl != null && ResizeThumb != null)
             {
-                _minHeight = Math.Max(HeaderControl.ActualHeight + ResizeThumb.ActualHeight, MinHeight);
-                _minWidth = Math.Max(ResizeThumb.ActualWidth, MinWidth);
+                _minHeight = Math.Max(HeaderControl.Bounds.Height + ResizeThumb.Bounds.Height, MinHeight);
+                _minWidth = Math.Max(ResizeThumb.Bounds.Width, MinWidth);
 
                 // If there's content don't resize it
                 if (ContentControl != null)
@@ -365,7 +367,7 @@ namespace Nodify
             // Allow selecting only by the header
             if (Container != null)
             {
-                Container.DesiredSizeForSelection = new Size(ActualWidth, Math.Max(HeaderControl?.ActualHeight ?? _minHeight, MinHeight));
+                Container.DesiredSizeForSelection = new Size(Bounds.Width, Math.Max(HeaderControl?.Bounds.Height ?? _minHeight, MinHeight));
             }
         }
     }

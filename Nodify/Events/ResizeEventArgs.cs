@@ -8,7 +8,7 @@ namespace Nodify
     /// </summary>
     /// <param name="sender">The sender of this event.</param>
     /// <param name="e">The event data.</param>
-    public delegate void ResizeEventHandler(object sender, ResizeEventArgs e);
+    public delegate void ResizeEventHandler(object? sender, ResizeEventArgs e);
 
     /// <summary>
     /// Provides data for resize related routed events.
@@ -36,8 +36,5 @@ namespace Nodify
         /// Gets the new size of the object.
         /// </summary>
         public Size NewSize { get; }
-
-        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
-            => ((ResizeEventHandler)genericHandler)(genericTarget, this);
     }
 }

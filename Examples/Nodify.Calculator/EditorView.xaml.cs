@@ -10,21 +10,29 @@ namespace Nodify.Calculator
         {
             InitializeComponent();
 
-            EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseLeftButtonDownEvent, new MouseButtonEventHandler(CloseOperationsMenu));
-            EventManager.RegisterClassHandler(typeof(ItemContainer), ItemContainer.DragStartedEvent, new RoutedEventHandler(CloseOperationsMenu));
-            EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseRightButtonUpEvent, new MouseButtonEventHandler(OpenOperationsMenu));
+            PointerPressedEvent.AddClassHandler<NodifyEditor>(CloseOperationsMenuPointerPressed);
+            ItemContainer.DragStartedEvent.AddClassHandler<ItemContainer>(CloseOperationsMenu);
+            PointerReleasedEvent.AddClassHandler<NodifyEditor>(OpenOperationsMenu);
+            Editor.AddHandler(DragDrop.DropEvent, OnDropNode);
         }
-
-        private void OpenOperationsMenu(object sender, MouseButtonEventArgs e)
+        
+        private void OpenOperationsMenu(object? sender, PointerReleasedEventArgs e)
         {
-            if (!e.Handled && e.OriginalSource is NodifyEditor editor && !editor.IsPanning && editor.DataContext is CalculatorViewModel calculator)
+            if (!e.Handled && e.Source is NodifyEditor editor && !editor.IsPanning && editor.DataContext is CalculatorViewModel calculator &&
+                e.InitialPressMouseButton == MouseButton.Right)
             {
                 e.Handled = true;
                 calculator.OperationsMenu.OpenAt(editor.MouseLocation);
             }
         }
 
-        private void CloseOperationsMenu(object sender, RoutedEventArgs e)
+        private void CloseOperationsMenuPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed)
+                CloseOperationsMenu(sender, e);
+        }
+        
+        private void CloseOperationsMenu(object? sender, RoutedEventArgs e)
         {
             ItemContainer? itemContainer = sender as ItemContainer;
             NodifyEditor? editor = sender as NodifyEditor ?? itemContainer?.Editor;
@@ -35,10 +43,11 @@ namespace Nodify.Calculator
             }
         }
 
-        private void OnDropNode(object sender, DragEventArgs e)
+        private void OnDropNode(object? sender, DragEventArgs e)
         {
-            if(e.Source is NodifyEditor editor && editor.DataContext is CalculatorViewModel calculator
-                && e.Data.GetData(typeof(OperationInfoViewModel)) is OperationInfoViewModel operation)
+            NodifyEditor? editor = (e.Source as NodifyEditor) ?? (e.Source as Control)?.GetLogicalParent() as NodifyEditor;
+            if(editor != null && editor.DataContext is CalculatorViewModel calculator
+                && e.Data.Get(typeof(OperationInfoViewModel).FullName) is OperationInfoViewModel operation)
             {
                 OperationViewModel op = OperationFactory.GetOperation(operation);
                 op.Location = editor.GetLocationInsideEditor(e);
@@ -47,14 +56,28 @@ namespace Nodify.Calculator
                 e.Handled = true;
             }
         }
-
-        private void OnNodeDrag(object sender, MouseEventArgs e)
+        
+        private void OnNodeDrag(object? sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed && ((FrameworkElement)sender).DataContext is OperationInfoViewModel operation)
-            { 
-                var data = new DataObject(typeof(OperationInfoViewModel), operation);
-                DragDrop.DoDragDrop(this, data, DragDropEffects.Copy);
+            if(leftButtonPressed && ((Control)sender).DataContext is OperationInfoViewModel operation)
+            {
+                var data = new DataObject();
+                data.Set(typeof(OperationInfoViewModel).FullName, operation);
+                DragDrop.DoDragDrop(e, data, DragDropEffects.Copy);
             }
         }
+
+        private void OnNodePressed(object? sender, PointerPressedEventArgs e)
+        {
+            leftButtonPressed = e.GetCurrentPoint(this).Properties.PointerUpdateKind ==
+                                PointerUpdateKind.LeftButtonPressed;
+        }
+
+        private void OnNodeExited(object? sender, PointerEventArgs e)
+        {
+            leftButtonPressed = false;
+        }
+        
+        private bool leftButtonPressed;
     }
 }

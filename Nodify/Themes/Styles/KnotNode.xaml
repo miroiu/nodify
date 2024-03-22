@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
@@ -7,7 +7,7 @@
                          Cursor="Arrow" />
     </DataTemplate>
 
-    <Style TargetType="{x:Type local:KnotNode}">
+    <ControlTheme TargetType="{x:Type local:KnotNode}" x:Key="{x:Type local:KnotNode}">
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
@@ -28,11 +28,11 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="3">
-                        <ContentPresenter />
+                        <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

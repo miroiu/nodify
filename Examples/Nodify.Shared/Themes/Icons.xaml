@@ -1,12 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Rectangle x:Key="AlignCenterIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+
+            <DrawingBrush x:Key="AlignCenterIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -20,15 +16,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AlignMiddleIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AlignMiddleIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -42,15 +31,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AlignRightIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AlignRightIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -64,15 +46,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AlignBottomIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AlignBottomIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -86,15 +61,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AlignLeftIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AlignLeftIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -108,15 +76,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AlignTopIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AlignTopIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -130,15 +91,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ThemeIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="ThemeIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -152,15 +106,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="DiamondFillIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="DiamondFillIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -176,15 +123,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="DiamondIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="DiamondIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -200,15 +140,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="PlusIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="PlusIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -222,15 +155,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="RemoveKeyIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="RemoveKeyIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -244,15 +170,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AddKeyIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AddKeyIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -268,15 +187,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ExpandRightIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="ExpandRightIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -290,18 +202,12 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ExpandLeftIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.LayoutTransform>
-            <RotateTransform Angle="180" />
-        </Rectangle.LayoutTransform>
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="ExpandLeftIcon">
+                <DrawingBrush.Transform>
+                    <RotateTransform Angle="180" CenterX="8" CenterY="8" />
+                </DrawingBrush.Transform>
+                <DrawingBrush.TransformOrigin>50%,50%</DrawingBrush.TransformOrigin>
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -315,15 +221,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ExpandDownIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="ExpandDownIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -337,15 +236,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="EditIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="EditIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -373,15 +265,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="UnpauseIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="UnpauseIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -393,15 +278,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="PauseIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="PauseIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -415,15 +293,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ZoomOutIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="ZoomOutIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
                         <GeometryDrawing Geometry="F1 M16,16z M0,0z M16,16L0,16 0,0 16,0 16,16z">
@@ -443,15 +314,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="ZoomInIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush  x:Key="ZoomInIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
                         <GeometryDrawing Geometry="F1 M16,16z M0,0z M16,16L0,16 0,0 16,0 16,16z">
@@ -471,15 +335,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="StopIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="StopIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -493,15 +350,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="RunIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="RunIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -513,15 +363,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="AddStateIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="AddStateIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -539,15 +382,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="RenameIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="RenameIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -597,15 +433,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="DeleteIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="DeleteIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup ClipGeometry="M0,0 V511.992 H511.992 V0 H0 Z">
                         <DrawingGroup.Transform>
@@ -617,15 +446,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="DisconnectIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="DisconnectIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -643,15 +465,8 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
-    <Rectangle x:Key="SelectAllIcon"
-               x:Shared="False"
-               Width="16"
-               Height="16">
-        <Rectangle.Fill>
-            <DrawingBrush>
+            <DrawingBrush x:Key="SelectAllIcon">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <DrawingGroup.Children>
@@ -711,14 +526,10 @@
                     </DrawingGroup>
                 </DrawingBrush.Drawing>
             </DrawingBrush>
-        </Rectangle.Fill>
-    </Rectangle>
 
     <PathGeometry x:Key="CloseGeometry"
-                  x:Shared="False"
-                  Figures="M9.15625 6.3125L6.3125 9.15625L22.15625 25L6.21875 40.96875L9.03125 43.78125L25 27.84375L40.9375 43.78125L43.78125 40.9375L27.84375 25L43.6875 9.15625L40.84375 6.3125L25 22.15625Z"/>
+                     Figures="M9.15625 6.3125L6.3125 9.15625L22.15625 25L6.21875 40.96875L9.03125 43.78125L25 27.84375L40.9375 43.78125L43.78125 40.9375L27.84375 25L43.6875 9.15625L40.84375 6.3125L25 22.15625Z"/>
     
     <PathGeometry x:Key="AddGeometry"
-                  x:Shared="False"
-                  Figures="M15 5L15 15L5 15L5 17L15 17L15 27L17 27L17 17L27 17L27 15L17 15L17 5Z"/>
+                     Figures="M15 5L15 15L5 15L5 17L15 17L15 27L17 27L17 17L27 17L27 15L17 15L17 5Z"/>
 </ResourceDictionary>

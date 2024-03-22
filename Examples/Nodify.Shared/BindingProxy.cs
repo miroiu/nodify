@@ -1,19 +1,17 @@
-﻿using System.Windows;
+using System.Windows;
+using Avalonia;
 
 namespace Nodify
 {
-    public class BindingProxy : Freezable
+    public class BindingProxy : AvaloniaObject
     {
-        public static readonly DependencyProperty DataContextProperty =
-            DependencyProperty.Register(nameof(DataContext), typeof(object), typeof(BindingProxy), new UIPropertyMetadata(default(object)));
+        public static readonly StyledProperty<object?> DataContextProperty =
+            AvaloniaProperty.Register<BindingProxy, object?>(nameof(DataContext));
 
-        public object DataContext
+        public object? DataContext
         {
             get => GetValue(DataContextProperty);
             set => SetValue(DataContextProperty, value);
         }
-
-        protected override Freezable CreateInstanceCore()
-            => new BindingProxy();
     }
 }

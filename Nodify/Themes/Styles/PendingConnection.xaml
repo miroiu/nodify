@@ -1,10 +1,10 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
-    <Style TargetType="{x:Type local:PendingConnection}">
+    <ControlTheme TargetType="{x:Type local:PendingConnection}" x:Key="{x:Type local:PendingConnection}">
+        <Setter Property="ClipToBounds"
+                Value="False" />
         <Setter Property="IsHitTestVisible"
                 Value="False" />
         <Setter Property="Background"
@@ -21,10 +21,10 @@
                 Value="3" />
         <Setter Property="BorderThickness"
                 Value="1" />
-        <Setter Property="Visibility"
-                Value="Hidden" />
+        <Setter Property="IsVisible"
+                Value="False" />
         <Setter Property="StrokeDashArray"
-                Value="4 4" />
+                Value="4,4" />
         <Setter Property="Padding"
                 Value="5" />
         <Setter Property="EnableSnapping"
@@ -46,18 +46,18 @@
                         <Border Background="{TemplateBinding Background}"
                                 Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
                                 Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                Visibility="{TemplateBinding EnablePreview, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                IsVisible="{TemplateBinding EnablePreview}"
                                 Padding="{TemplateBinding Padding}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 CornerRadius="3"
                                 Margin="15">
-                            <ContentPresenter />
+                            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                         </Border>
                     </Canvas>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

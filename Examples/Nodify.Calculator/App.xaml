@@ -1,14 +1,22 @@
-﻿<Application x:Class="Nodify.Calculator.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             x:Class="Nodify.Calculator.App"
+             RequestedThemeVariant="Dark">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Dark.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Icons.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Dark.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Dark.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+    
+    <Application.Styles>
+        <FluentTheme DensityStyle="Compact"/>
+    </Application.Styles>
 </Application>

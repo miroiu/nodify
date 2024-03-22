@@ -1,13 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net8-windows;net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
-    <UseWPF>true</UseWPF>
+    <TargetFrameworks>net8</TargetFrameworks>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
-    <LangVersion>8.0</LangVersion>
+    <AssemblyOriginatorKeyFile>..\..\build\Nodify.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StringMath" Version="4.1.2" />
@@ -18,4 +16,18 @@
     <ProjectReference Include="..\Nodify.Shared\Nodify.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.1.0-beta1"/>
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.0-beta1"/>
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0-beta1"/>
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.0-beta1"/>
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-beta1"/>
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0-beta1"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles SourceItemGroup="AvaloniaXaml" Include="**/*.xaml"/>
+    <AvaloniaResource Include="**/*.xaml" />
+  </ItemGroup>
 </Project>

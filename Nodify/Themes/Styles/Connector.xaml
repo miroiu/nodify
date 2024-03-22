@@ -1,8 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <Style TargetType="{x:Type local:Connector}">
+    <ControlTheme TargetType="{x:Type local:Connector}" x:Key="{x:Type local:Connector}">
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
         <Setter Property="Foreground"
@@ -22,23 +22,17 @@
                              Stroke="{TemplateBinding BorderBrush}"
                              Fill="Transparent"
                              StrokeThickness="2" />
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsConnected"
-                                 Value="True">
-                            <Setter TargetName="Connector"
-                                    Property="Ellipse.Fill"
-                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Trigger>
-                        <Trigger Property="local:PendingConnection.IsOverElement"
-                                 Value="True">
-                            <Setter TargetName="Connector"
-                                    Property="Ellipse.Fill"
-                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^:connected /template/ Ellipse#Connector">
+            <Setter Property="Ellipse.Fill"
+                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+        </Style>
+        <Style Selector="^.isOverElement /template/ Ellipse#Connector">
+            <Setter Property="Ellipse.Fill"
+                    Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+        </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

@@ -107,31 +107,39 @@ namespace Nodify
     /// <summary>
     /// Represents the base class for shapes that are drawn from a <see cref="Source"/> point to a <see cref="Target"/> point.
     /// </summary>
-    public abstract class BaseConnection : Shape
+    public abstract class BaseConnection : WpfShape
     {
         #region Dependency Properties
 
-        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(Point), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty TargetProperty = DependencyProperty.Register(nameof(Target), typeof(Point), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SourceOffsetProperty = DependencyProperty.Register(nameof(SourceOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ConnectionOffset, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ConnectionOffset, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SourceOffsetModeProperty = DependencyProperty.Register(nameof(SourceOffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(ConnectionOffsetMode.Static, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty TargetOffsetModeProperty = DependencyProperty.Register(nameof(TargetOffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(ConnectionOffsetMode.Static, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty ArrowShapeProperty = DependencyProperty.Register(nameof(ArrowShape), typeof(ArrowHeadShape), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadShape.Arrowhead, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
-        public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty ForegroundProperty = TextBlock.ForegroundProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty FontSizeProperty = TextElement.FontSizeProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontStretchtProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
+        public static readonly StyledProperty<Point> SourceProperty = AvaloniaProperty.Register<BaseConnection, Point>(nameof(Source), BoxValue.Point);
+        public static readonly StyledProperty<Point> TargetProperty = AvaloniaProperty.Register<BaseConnection, Point>(nameof(Target), BoxValue.Point);
+        public static readonly StyledProperty<Size> SourceOffsetProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(SourceOffset), BoxValue.ConnectionOffset);
+        public static readonly StyledProperty<Size> TargetOffsetProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(TargetOffset), BoxValue.ConnectionOffset);
+        public static readonly StyledProperty<ConnectionOffsetMode> SourceOffsetModeProperty = AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(SourceOffsetMode), ConnectionOffsetMode.Static);
+        public static readonly StyledProperty<ConnectionOffsetMode> TargetOffsetModeProperty = AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(TargetOffsetMode), ConnectionOffsetMode.Static);
+        public static readonly StyledProperty<ConnectionDirection> DirectionProperty = AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
+        public static readonly StyledProperty<double> SpacingProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
+        public static readonly StyledProperty<Size> ArrowSizeProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
+        public static readonly StyledProperty<ArrowHeadEnds> ArrowEndsProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadEnds>(nameof(ArrowEnds), ArrowHeadEnds.End);
+        public static readonly StyledProperty<ArrowHeadShape> ArrowShapeProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadShape>(nameof(ArrowShape), ArrowHeadShape.Arrowhead);
+        public static readonly StyledProperty<ICommand> SplitCommandProperty = AvaloniaProperty.Register<BaseConnection, ICommand>(nameof(SplitCommand));
+        public static readonly StyledProperty<ICommand> DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<IBrush?> ForegroundProperty = TextBlock.ForegroundProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<string?> TextProperty = TextBlock.TextProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<FontStyle> FontStyleProperty = TextElement.FontStyleProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<FontStretch> FontStretchtProperty = TextElement.FontStretchProperty.AddOwner<BaseConnection>();
 
+        static BaseConnection()
+        {
+            AffectsRender<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty);
+            AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty);
+        }
+        
         /// <summary>
         /// Gets or sets the start point of this connection.
         /// </summary>
@@ -254,9 +262,9 @@ namespace Nodify
         /// <summary>
         /// The brush used to render the <see cref="Text"/>.
         /// </summary>
-        public Brush? Foreground
+        public IBrush? Foreground
         {
-            get => (Brush?)GetValue(ForegroundProperty);
+            get => (IBrush?)GetValue(ForegroundProperty);
             set => SetValue(ForegroundProperty, value);
         }
 
@@ -270,7 +278,7 @@ namespace Nodify
         }
 
         /// <inheritdoc cref="TextElement.FontSize" />
-        [TypeConverter(typeof(FontSizeConverter))]
+        //[TypeConverter(typeof(FontSizeConverter))]
         public double FontSize
         {
             get => (double)GetValue(FontSizeProperty);
@@ -309,8 +317,8 @@ namespace Nodify
 
         #region Routed Events
 
-        public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
-        public static readonly RoutedEvent SplitEvent = EventManager.RegisterRoutedEvent(nameof(Split), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
+        public static readonly RoutedEvent DisconnectEvent = RoutedEvent.Register<ConnectionEventArgs>(nameof(Disconnect), RoutingStrategies.Bubble, typeof(BaseConnection));
+        public static readonly RoutedEvent SplitEvent = RoutedEvent.Register<ConnectionEventArgs>(nameof(Split), RoutingStrategies.Bubble, typeof(BaseConnection));
 
         /// <summary>Triggered by the <see cref="EditorGestures.Connection.Disconnect"/> gesture.</summary>
         public event ConnectionEventHandler Disconnect
@@ -332,45 +340,41 @@ namespace Nodify
         /// Gets a vector that has its coordinates set to 0.
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
-
-        private readonly StreamGeometry _geometry = new StreamGeometry
+        
+        protected override Geometry CreateDefiningGeometry()
         {
-            FillRule = FillRule.EvenOdd
-        };
-
-        protected override Geometry DefiningGeometry
-        {
-            get
+            var _geometry = new StreamGeometry
             {
-                using (StreamGeometryContext context = _geometry.Open())
-                {
-                    (Vector sourceOffset, Vector targetOffset) = GetOffset();
-                    var (arrowStart, arrowEnd) = DrawLineGeometry(context, Source + sourceOffset, Target + targetOffset);
+                // FillRule = FillRule.EvenOdd
+            };
+            using (StreamGeometryContext context = _geometry.Open())
+            {
+                (Vector sourceOffset, Vector targetOffset) = GetOffset();
+                var (arrowStart, arrowEnd) = DrawLineGeometry(context, Source + sourceOffset, Target + targetOffset);
 
-                    if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
+                if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
+                {
+                    var reverseDirection = Direction == ConnectionDirection.Forward ? ConnectionDirection.Backward : ConnectionDirection.Forward;
+                    switch (ArrowEnds)
                     {
-                        var reverseDirection = Direction == ConnectionDirection.Forward ? ConnectionDirection.Backward : ConnectionDirection.Forward;
-                        switch (ArrowEnds)
-                        {
-                            case ArrowHeadEnds.Start:
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
-                                break;
-                            case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
-                                break;
-                            case ArrowHeadEnds.Both:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
-                                break;
-                            case ArrowHeadEnds.None:
-                            default:
-                                break;
-                        }
+                        case ArrowHeadEnds.Start:
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
+                            break;
+                        case ArrowHeadEnds.End:
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
+                            break;
+                        case ArrowHeadEnds.Both:
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
+                            break;
+                        case ArrowHeadEnds.None:
+                        default:
+                            break;
                     }
                 }
-
-                return _geometry;
             }
+
+            return _geometry;
         }
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
@@ -401,7 +405,7 @@ namespace Nodify
             var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
             var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
 
-            context.BeginFigure(target, true, true);
+            using var _ = context.BeginFigure(target, true, true);
             context.LineTo(from, true, true);
             context.LineTo(to, true, true);
         }
@@ -417,7 +421,7 @@ namespace Nodify
             var topLeft = new Point(target.X - headWidth * direction, target.Y - headHeight);
             var topRight = new Point(target.X, target.Y - headHeight);
 
-            context.BeginFigure(target, true, true);
+            using var _ = context.BeginFigure(target, true, true);
             context.LineTo(bottomRight, true, true);
             context.LineTo(bottomLeft, true, true);
             context.LineTo(topLeft, true, true);
@@ -446,7 +450,7 @@ namespace Nodify
             double y3 = targetLocation.Y + headHeight * ControlPointRatio;
             double y4 = targetLocation.Y + headHeight;
 
-            context.BeginFigure(new Point(x2, y0), true, true);
+            using var _ = context.BeginFigure(new Point(x2, y0), true, true);
             context.BezierTo(new Point(x3, y0), new Point(x4, y1), new Point(x4, y2), true, true);
             context.BezierTo(new Point(x4, y3), new Point(x3, y4), new Point(x2, y4), true, true);
             context.BezierTo(new Point(x1, y4), new Point(x0, y3), new Point(x0, y2), true, true);
@@ -493,7 +497,7 @@ namespace Nodify
 
             static Vector GetCircleModeOffset(Vector delta, Size offset)
             {
-                if (delta.LengthSquared > 0d)
+                if (delta.SquaredLength > 0d)
                 {
                     delta.Normalize();
                 }
@@ -503,26 +507,26 @@ namespace Nodify
 
             static Vector GetRectangleModeOffset(Vector delta, Size offset)
             {
-                if (delta.LengthSquared > 0d)
+                if (delta.SquaredLength > 0d)
                 {
                     delta.Normalize();
                 }
 
                 double angle = Math.Atan2(delta.Y, delta.X);
-                var result = new Vector();
+                double x, y;
 
                 if (offset.Width * 2d * Math.Abs(delta.Y) < offset.Height * 2d * Math.Abs(delta.X))
                 {
-                    result.X = Math.Sign(delta.X) * offset.Width;
-                    result.Y = Math.Tan(angle) * result.X;
+                    x = Math.Sign(delta.X) * offset.Width;
+                    y = Math.Tan(angle) * x;
                 }
                 else
                 {
-                    result.Y = Math.Sign(delta.Y) * offset.Height;
-                    result.X = 1.0d / Math.Tan(angle) * result.Y;
+                    y = Math.Sign(delta.Y) * offset.Height;
+                    x = 1.0d / Math.Tan(angle) * y;
                 }
 
-                return result;
+                return new Vector(x, y);
             }
         }
 
@@ -535,11 +539,11 @@ namespace Nodify
             return new Point((source.X + target.X - text.Width) / 2, (source.Y + target.Y - text.Height) / 2);
         }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             Focus();
 
-            this.CaptureMouseSafe();
+            e.Pointer.Capture(this);
 
             if (EditorGestures.Connection.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
             {
@@ -585,24 +589,23 @@ namespace Nodify
             }
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
-            if (IsMouseCaptured)
+            if (ReferenceEquals(e.Pointer.Captured, this))
             {
-                ReleaseMouseCapture();
+                e.Pointer.Capture(null);
             }
         }
-
-        protected override void OnRender(DrawingContext drawingContext)
+        
+        protected override void Render(DrawingContext drawingContext)
         {
-            base.OnRender(drawingContext);
-
+            base.Render(drawingContext);
+        
             if (!string.IsNullOrEmpty(Text))
             {
-                double dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
                 var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-                var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke, dpi);
-
+                var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke);
+        
                 drawingContext.DrawText(text, GetTextPosition(text));
             }
         }

@@ -29,7 +29,7 @@ namespace Nodify.Calculator
                     {
                         _prevSize = Size;
                         // Fit content
-                        DesiredSize = new Size(double.NaN, double.NaN);
+                        DesiredSize = new Size(0,0);
                     }
                 }
             }

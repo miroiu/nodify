@@ -9,7 +9,7 @@ namespace Nodify
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Transform result = (Transform)((TransformGroup)value).Children[0].Inverse;
+            Transform result = new MatrixTransform(((TransformGroup)value).Children[0].Value.Invert());
             return result;
         }
 
@@ -21,7 +21,7 @@ namespace Nodify
 
     internal class UnscaleDoubleConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(IList<object?> values, Type targetType, object parameter, CultureInfo culture)
         {
             double result = (double)values[0] * (double)values[1];
             return result;

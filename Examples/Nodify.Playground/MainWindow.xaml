@@ -1,5 +1,5 @@
 ﻿<Window x:Class="Nodify.Playground.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -43,39 +43,39 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding GenerateRandomNodesCommand}"
                             Content="GENERATE RANDOM NODES"
-                            ToolTip="Generate nodes using the specified settings."
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="Generate nodes using the specified settings."
+                            Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding PerformanceTestCommand}"
                             Content="PERFORMANCE TEST"
-                            ToolTip="You will encounter rendering performance issues. Try disabling the connections to see the difference."
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="You will encounter rendering performance issues. Try disabling the connections to see the difference."
+                            Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding ToggleConnectionsCommand}"
                             Content="CONNECT / DISCONNECT"
-                            ToolTip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes."
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes."
+                            Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding ResetCommand}"
                             Content="RESET PLAYGROUND"
-                            ToolTip="Reset the Location, Zoom, Nodes and Connections."
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="Reset the Location, Zoom, Nodes and Connections."
+                            Theme="{StaticResource HollowButton}" />
                     <Button Click="BringIntoView_Click"
                             Content="BRING INTO VIEW"
-                            ToolTip="Bring a random node into view."
-                            Style="{StaticResource HollowButton}" />
-                    <Button Command="{x:Static nodify:EditorCommands.FitToScreen}"
+                            ToolTip.Tip="Bring a random node into view."
+                            Theme="{StaticResource HollowButton}" />
+                    <WpfBtn Command="{x:Static nodify:EditorCommands.FitToScreen}"
                             Content="FIT TO SCREEN"
-                            ToolTip="Scales the viewport to fit all nodes if that's possible."
                             CommandTarget="{Binding EditorInstance, ElementName=EditorView}"
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="Scales the viewport to fit all nodes if that's possible."
+                            Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding GraphViewModel.CommentSelectionCommand}"
                             Content="COMMENT SELECTION"
-                            ToolTip="Creates a comment node containing the selected nodes."
-                            Style="{StaticResource HollowButton}" />
+                            ToolTip.Tip="Creates a comment node containing the selected nodes."
+                            Theme="{StaticResource HollowButton}" />
                 </StackPanel>
 
-                <Button Style="{StaticResource IconButton}"
+                <Button Theme="{StaticResource IconButton}"
                         Content="{StaticResource ThemeIcon}"
                         Command="{Binding Source={x:Static shared:ThemeManager.SetNextThemeCommand}}"
-                        ToolTip="Change theme"
+                        ToolTip.Tip="Change theme"
                         Grid.Column="1" />
             </Grid>
         </Border>
@@ -89,24 +89,29 @@
                   IsExpanded="True"
                   ExpandDirection="Left"
                   Padding="0 1 4 3">
-            <Expander.Style>
-                <Style TargetType="{x:Type Expander}"
+            <Expander.Theme>
+                <ControlTheme TargetType="{x:Type Expander}"
                        BasedOn="{StaticResource {x:Type Expander}}">
                     <Setter Property="Tag"
                             Value="{StaticResource ExpandRightIcon}" />
-                    <Style.Triggers>
-                        <Trigger Property="IsExpanded"
-                                 Value="True">
-                            <Setter Property="Tag"
-                                    Value="{StaticResource ExpandLeftIcon}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Expander.Style>
+                    <Setter Property="(Interaction.Behaviors)">
+                        <BehaviorCollectionTemplate>
+                            <BehaviorCollection>
+                                <DataTrigger Property="IsExpanded" 
+                                             UseDataContext="False"
+                                             Value="True">
+                                    <PropertySetter Property="Tag"
+                                            Value="{StaticResource ExpandLeftIcon}" />
+                                </DataTrigger>
+                            </BehaviorCollection>
+                        </BehaviorCollectionTemplate>
+                    </Setter>
+                </ControlTheme>
+            </Expander.Theme>
 
             <ScrollViewer>
                 <Grid IsSharedSizeScope="True"
-                      Width="330">
+                      Width="380">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -117,20 +122,25 @@
                               BorderThickness="0 0 0 1"
                               IsExpanded="True"
                               BorderBrush="{DynamicResource BackgroundBrush}">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
+                        <Expander.Theme>
+                            <ControlTheme TargetType="{x:Type Expander}"
                                    BasedOn="{StaticResource {x:Type Expander}}">
                                 <Setter Property="Tag"
                                         Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
+                                <Setter Property="(Interaction.Behaviors)">
+                                    <BehaviorCollectionTemplate>
+                                        <BehaviorCollection>
+                                            <DataTrigger Property="IsExpanded"
+                                                         UseDataContext="False"
+                                                     Value="True">
+                                                <PropertySetter Property="Tag"
+                                                        Value="{StaticResource ExpandDownIcon}" />
+                                            </DataTrigger>
+                                        </BehaviorCollection>
+                                    </BehaviorCollectionTemplate>
+                                </Setter>
+                            </ControlTheme>
+                        </Expander.Theme>
                         <Border BorderThickness="1"
                                 Padding="10"
                                 HorizontalAlignment="Stretch">
@@ -144,20 +154,25 @@
                               IsExpanded="True"
                               BorderBrush="{DynamicResource BackgroundBrush}"
                               Grid.Row="1">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
+                        <Expander.Theme>
+                            <ControlTheme TargetType="{x:Type Expander}"
                                    BasedOn="{StaticResource {x:Type Expander}}">
                                 <Setter Property="Tag"
                                         Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
+                                <Setter Property="(Interaction.Behaviors)">
+                                    <BehaviorCollectionTemplate>
+                                        <BehaviorCollection>
+                                            <DataTrigger Property="IsExpanded"
+                                                         UseDataContext="False"
+                                                     Value="True">
+                                                <PropertySetter Property="Tag"
+                                                        Value="{StaticResource ExpandDownIcon}" />
+                                            </DataTrigger>
+                                        </BehaviorCollection>
+                                    </BehaviorCollectionTemplate>
+                                </Setter>
+                            </ControlTheme>
+                        </Expander.Theme>
 
                         <local:EditorSettingsView />
                     </Expander>
@@ -176,17 +191,16 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <Style TargetType="{x:Type TextBlock}"
-                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <ControlTheme TargetType="{x:Type TextBlock}" x:Key="{x:Type TextBlock}">
                         <Setter Property="Foreground"
                                 Value="{DynamicResource ForegroundBrush}" />
                         <Setter Property="Margin"
                                 Value="0 0 10 0" />
-                    </Style>
+                    </ControlTheme>
                 </Grid.Resources>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock ToolTip="The number of selected items.">
+                    <TextBlock ToolTip.Tip="The number of selected items.">
                         <TextBlock.Inlines>
                             <Run Text="Selected: " />
                             <Run Foreground="YellowGreen"
@@ -195,7 +209,7 @@
                             <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The number of connections.">
+                    <TextBlock ToolTip.Tip="The number of connections.">
                         <TextBlock.Inlines>
                             <Run Text="Connections: " />
                             <Run Foreground="YellowGreen"
@@ -206,28 +220,28 @@
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                    <TextBlock ToolTip="The viewport's location.">
+                    <TextBlock ToolTip.Tip="The viewport's location.">
                         <TextBlock.Inlines>
                             <Run Text="Location: " />
                             <Run Foreground="Orange"
                                  Text="{Binding Location.Value, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The viewport's size.">
+                    <TextBlock ToolTip.Tip="The viewport's size.">
                         <TextBlock.Inlines>
                             <Run Text="Size: " />
                             <Run Foreground="YellowGreen"
                                  Text="{Binding GraphViewModel.ViewportSize, Mode=OneWay, Converter={StaticResource ToStringConverter}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The viewport's zoom. Not accurate when trying to zoom outside the MinViewportZoom and MaxViewportZoom because of dependency property coercion not updating the binding with the final result.">
+                    <TextBlock ToolTip.Tip="The viewport's zoom. Not accurate when trying to zoom outside the MinViewportZoom and MaxViewportZoom because of dependency property coercion not updating the binding with the final result.">
                         <TextBlock.Inlines>
                             <Run Text="Zoom: " />
                             <Run Foreground="DodgerBlue"
                                  Text="{Binding Zoom, Mode=OneWay, Converter={StaticResource ToStringConverter}, Source={x:Static local:EditorSettings.Instance}}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The estimated frame rate. (my be buggy)">
+                    <TextBlock ToolTip.Tip="The estimated frame rate. (my be buggy)">
                         <TextBlock.Inlines>
                             <Run Text="FPS: " />
                             <Run Foreground="LawnGreen" Name="FPSText" />

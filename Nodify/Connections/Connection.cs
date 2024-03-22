@@ -39,7 +39,7 @@ namespace Nodify
 
             var controlPoint = new Vector(offset * direction, 0d);
 
-            context.BeginFigure(source, false, false);
+            using var _ = context.BeginFigure(source, false, false);
             context.LineTo(startPoint, true, true);
             context.BezierTo(startPoint + controlPoint, endPoint - controlPoint, endPoint, true, true);
             context.LineTo(target, true, true);

@@ -1,19 +1,19 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui">
     <ResourceDictionary.MergedDictionaries>
         <!--NODES-->
-        <ResourceDictionary Source="Node.xaml" />
-        <ResourceDictionary Source="KnotNode.xaml" />
-        <ResourceDictionary Source="GroupingNode.xaml" />
-        <ResourceDictionary Source="StateNode.xaml" />
-        <ResourceDictionary Source="Connector.xaml" />
-        <ResourceDictionary Source="NodeInput.xaml" />
-        <ResourceDictionary Source="NodeOutput.xaml" />
-        <ResourceDictionary Source="Connection.xaml" />
-        <ResourceDictionary Source="PendingConnection.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/Node.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/KnotNode.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/GroupingNode.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/StateNode.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/Connector.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/NodeInput.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/NodeOutput.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/Connection.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/PendingConnection.xaml" />
 
         <!--CORE-->
-        <ResourceDictionary Source="ItemContainer.xaml" />
-        <ResourceDictionary Source="DecoratorContainer.xaml" />
-        <ResourceDictionary Source="NodifyEditor.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/ItemContainer.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/DecoratorContainer.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/NodifyEditor.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

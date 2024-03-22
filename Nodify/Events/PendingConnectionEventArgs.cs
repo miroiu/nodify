@@ -8,19 +8,24 @@ namespace Nodify
     /// </summary>
     /// <param name="sender">The object where the event handler is attached.</param>
     /// <param name="e">The event data.</param>
-    public delegate void PendingConnectionEventHandler(object sender, PendingConnectionEventArgs e);
+    public delegate void PendingConnectionEventHandler(object? sender, PendingConnectionEventArgs e);
     
     /// <summary>
     /// Provides data for <see cref="PendingConnection"/> related routed events.
     /// </summary>
     public class PendingConnectionEventArgs : RoutedEventArgs
     {
+        private readonly MouseEventArgs? mouseEventArgs;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PendingConnectionEventArgs"/> class using the specified <see cref="SourceConnector"/>.
         /// </summary>
         /// <param name="sourceConnector">The <see cref="FrameworkElement.DataContext"/> of a related <see cref="Connector"/>.</param>
-        public PendingConnectionEventArgs(object sourceConnector)
-            => SourceConnector = sourceConnector;
+        public PendingConnectionEventArgs(object sourceConnector, MouseEventArgs? mouseEventArgs)
+        {
+            this.mouseEventArgs = mouseEventArgs;
+            SourceConnector = sourceConnector;
+        }
         
         /// <summary>
         /// Gets or sets the <see cref="Connector.Anchor"/> of the <see cref="Connector"/> that raised this event.
@@ -51,8 +56,10 @@ namespace Nodify
         /// Gets or sets a value that indicates whether this <see cref="PendingConnection"/> was cancelled.
         /// </summary>
         public bool Canceled { get; set; }
-
-        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
-            => ((PendingConnectionEventHandler)genericHandler)(genericTarget, this);
+        
+        public Point GetPosition(Visual? relativeTo)
+        {
+            return mouseEventArgs?.GetPosition(relativeTo) ?? default;
+        }
     }
 }

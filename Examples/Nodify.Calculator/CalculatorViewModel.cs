@@ -150,7 +150,7 @@ namespace Nodify.Calculator
             Operations.Add(new OperationGroupViewModel
             {
                 Title = "Operations",
-                Location = bounding.Location,
+                Location = bounding.Position,
                 GroupSize = new Size(bounding.Width, bounding.Height)
             });
         }

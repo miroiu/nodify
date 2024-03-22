@@ -1,21 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8-windows;net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
-    <UseWPF>true</UseWPF>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>miroiu</Authors>
+    <Authors>miroiu, bandysc</Authors>
     <Company />
-    <PackageId>Nodify</PackageId>
-    <Product>Nodify</Product>
-    <Description>The core controls for a node based editor (designed for MVVM)</Description>
+    <PackageId>NodifyAvalonia</PackageId>
+    <Product>NodifyAvalonia</Product>
+    <Description>The core controls for a node based editor (designed for MVVM) for Avalonia</Description>
     <Copyright>Miroiu Emanuel</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/miroiu/nodify</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/BAndysc/nodify-avalonia</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
-    <PackageTags>wpf mvvm node-editor controls</PackageTags>
+    <RepositoryUrl>https://github.com/BAndysc/nodify-avalonia</RepositoryUrl>
+    <PackageTags>avalonia mvvm node-editor controls</PackageTags>
     <Version>5.2.0</Version>
     <PackageReleaseNotes>
       > - Features:
@@ -27,8 +26,8 @@
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
-    <LangVersion>8.0</LangVersion>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -45,5 +44,14 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.1.0-beta1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Themes\*.xaml" />
+    <AvaloniaResource Include="Themes\*.xaml" />
+    <None Remove="Themes\Styles\*.xaml" />
+    <AvaloniaResource Include="Themes\Styles\*.xaml" />
+  </ItemGroup>
+  
 </Project>

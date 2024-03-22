@@ -1,13 +1,13 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Controls.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
+        <ResourceInclude Source="avares://Nodify.Shared/Themes/Controls.xaml" />
+        <ResourceInclude Source="avares://Nodify.Shared/Themes/Icons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="EditableTextBlockBaseStyle"
+    <ControlTheme x:Key="EditableTextBlockBaseStyle"
            TargetType="{x:Type local:EditableTextBlock}">
         <Setter Property="Background"
                 Value="Transparent" />
@@ -57,35 +57,29 @@
                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                  AcceptsTab="True"
-                                 Visibility="Collapsed"
+                                 IsVisible="False"
                                  Margin="-1"
                                  x:Name="PART_TextBox" />
                     </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEditing"
-                                 Value="True">
-                            <Setter TargetName="PART_TextBox"
-                                    Property="Visibility"
-                                    Value="Visible" />
-                            <Setter TargetName="PART_Text"
-                                    Property="Visibility"
-                                    Value="Collapsed" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^:editing /template/ TextBox#PART_TextBox">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:editing /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:EditableTextBlock}"
+    <ControlTheme TargetType="{x:Type local:EditableTextBlock}" x:Key="{x:Type local:EditableTextBlock}"
            BasedOn="{StaticResource EditableTextBlockBaseStyle}" />
 
-    <Style TargetType="{x:Type local:TabControlEx}">
+    <ControlTheme TargetType="{x:Type local:TabControlEx}" x:Key="{x:Type local:TabControlEx}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:TabControlEx}">
                     <Grid KeyboardNavigation.TabNavigation="Local" 
-                          SnapsToDevicePixels="true"
                           ClipToBounds="true">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -103,15 +97,20 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal"
-                                                IsItemsHost="True"/>
-                                    <Button Style="{StaticResource IconButton}"
+                                    <ItemsPresenter Name="PART_ItemsPresenter">
+                                        <ItemsPresenter.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsPresenter.ItemsPanel>
+                                    </ItemsPresenter>
+                                    <Button Theme="{StaticResource IconButton}"
                                             Command="{TemplateBinding AddTabCommand}"
                                             Height="34"
                                             VerticalAlignment="Bottom"
                                             BorderBrush="{DynamicResource HighlightedBackgroundBrush}"
                                             Grid.Column="1"
-                                            ToolTip="Add new tab">
+                                            ToolTip.Tip="Add new tab">
                                         <Path Width="25" 
                                               Height="15"
                                               Data="{StaticResource AddGeometry}"
@@ -126,37 +125,32 @@
                                             BorderThickness="{TemplateBinding BorderThickness}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             KeyboardNavigation.TabNavigation="Local"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
                                             KeyboardNavigation.TabIndex="2"
                                             Grid.Row="1">
                             <ContentPresenter x:Name="PART_SelectedContentHost"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                               Margin="{TemplateBinding Padding}"
-                                              ContentSource="SelectedContent"/>
+                                              Content="{TemplateBinding SelectedContent}"
+                                              ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
                         </Border>
                     </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" 
-                                 Value="false">
-                            <Setter Property="Opacity" 
-                                    Value=".5"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:TabItemEx}">
+    <ControlTheme TargetType="{x:Type local:TabItemEx}" x:Key="{x:Type local:TabItemEx}">
         <Setter Property="Background" 
                 Value="{DynamicResource BackgroundBrush}"/>
         <Setter Property="Foreground"
                 Value="{DynamicResource ForegroundBrush}"/>
-        <Setter Property="RenderTransform">
-            <Setter.Value>
-                <ScaleTransform ScaleY="0"/>
-            </Setter.Value>
-        </Setter>
+        <!-- <Setter Property="RenderTransform"> -->
+        <!--     <Setter.Value> -->
+        <!--         <ScaleTransform ScaleY="0"/> -->
+        <!--     </Setter.Value> -->
+        <!-- </Setter> -->
         <Setter Property="RenderTransformOrigin" 
                 Value="1 1"/>
         <Setter Property="VerticalAlignment" 
@@ -182,12 +176,12 @@
                                 <Button x:Name="mCloseBtn" 
                                         Command="{TemplateBinding CloseTabCommand}" 
                                         CommandParameter="{TemplateBinding CloseTabCommandParameter}" 
-                                        Visibility="Hidden"
+                                        Opacity="0"
                                         Margin="5 0 0 0" 
                                         Background="{DynamicResource HighlightedBackgroundBrush}"
                                         BorderBrush="{DynamicResource BackgroundBrush}"
-                                        Style="{StaticResource IconButton}"
-                                        ToolTip="Close Tab">
+                                        Theme="{StaticResource IconButton}"
+                                        ToolTip.Tip="Close Tab">
                                     <Path Width="16"
                                           Height="8"
                                           Data="{StaticResource CloseGeometry}" 
@@ -197,46 +191,44 @@
                             </StackPanel>
                         </Grid>
                     </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Visibility" 
-                                    Value="Visible" 
-                                    TargetName="mCloseBtn"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="TextElement.FontWeight" 
-                                    Value="Bold"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
-                            <Setter Property="Padding"
-                                    Value="8"/>
-                            <Setter Property="Visibility" 
-                                    Value="Visible" 
-                                    TargetName="mCloseBtn"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <EventTrigger RoutedEvent="Loaded">
-                <BeginStoryboard>
-                    <Storyboard>
-                        <DoubleAnimation Duration="0:0:.5"
-                                         From="0"
-                                         To="1" 
-                                         Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)">
-                            <DoubleAnimation.EasingFunction>
-                                <ElasticEase Oscillations="1"
-                                             Springiness="3"
-                                             EasingMode="EaseOut"/>
-                            </DoubleAnimation.EasingFunction>
-                        </DoubleAnimation>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
-        </Style.Triggers>
-    </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" 
+                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
+        </Style>
+        <Style Selector="^:pointerover /template/ Button#mCloseBtn">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" 
+                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
+            <Setter Property="Padding"
+                    Value="8"/>
+            <Setter Property="TextElement.FontWeight" 
+                    Value="Bold"/>
+        </Style>
+        <Style Selector="^:selected /template/ Button#mCloseBtn">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <!-- <Style.Triggers> -->
+        <!--     <EventTrigger RoutedEvent="Loaded"> -->
+        <!--         <BeginStoryboard> -->
+        <!--             <Storyboard> -->
+        <!--                 <DoubleAnimation Duration="0:0:.5" -->
+        <!--                                  From="0" -->
+        <!--                                  To="1"  -->
+        <!--                                  Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"> -->
+        <!--                     <DoubleAnimation.EasingFunction> -->
+        <!--                         <ElasticEase Oscillations="1" -->
+        <!--                                      Springiness="3" -->
+        <!--                                      EasingMode="EaseOut"/> -->
+        <!--                     </DoubleAnimation.EasingFunction> -->
+        <!--                 </DoubleAnimation> -->
+        <!--             </Storyboard> -->
+        <!--         </BeginStoryboard> -->
+        <!--     </EventTrigger> -->
+        <!-- </Style.Triggers> -->
+    </ControlTheme>
 </ResourceDictionary>

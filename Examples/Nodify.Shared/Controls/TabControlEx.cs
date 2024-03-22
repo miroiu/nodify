@@ -9,12 +9,12 @@ namespace Nodify
     {
         private const string ElementScrollViewer = "PART_ScrollViewer";
 
-        public static readonly DependencyProperty AddTabCommandProperty = DependencyProperty.Register(nameof(AddTabCommand), typeof(ICommand), typeof(TabControlEx), new PropertyMetadata(null));
-        public static readonly DependencyProperty AutoScrollToEndProperty = DependencyProperty.Register(nameof(AutoScrollToEnd), typeof(bool), typeof(TabControlEx), new PropertyMetadata(false));
+        public static readonly StyledProperty<ICommand?> AddTabCommandProperty = AvaloniaProperty.Register<TabControlEx, ICommand?>(nameof(AddTabCommand));
+        public static readonly StyledProperty<bool> AutoScrollToEndProperty = AvaloniaProperty.Register<TabControlEx, bool>(nameof(AutoScrollToEnd));
 
-        public ICommand AddTabCommand
+        public ICommand? AddTabCommand
         {
-            get { return (ICommand)GetValue(AddTabCommandProperty); }
+            get { return (ICommand?)GetValue(AddTabCommandProperty); }
             set { SetValue(AddTabCommandProperty, value); }
         }
         public bool AutoScrollToEnd
@@ -30,28 +30,33 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TabControlEx), new FrameworkPropertyMetadata(typeof(TabControlEx)));
         }
 
-        public override void OnApplyTemplate()
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(e);
 
-            ScrollViewer =  GetTemplateChild(ElementScrollViewer) as ScrollViewer;
+            ScrollViewer = e.NameScope.Find<ScrollViewer>(ElementScrollViewer);
             if(ScrollViewer != null)
             {
                 ScrollViewer.ScrollChanged += OnScrollChanged;
             }
         }
 
-        private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
-            if(e.ExtentWidthChange > 0 && e.ViewportWidth < e.ExtentWidth && AutoScrollToEnd)
+            if(e.ExtentDelta.X > 0 && ScrollViewer.Viewport.Width < ScrollViewer.Extent.Width && AutoScrollToEnd)
             {
-                ScrollViewer?.ScrollToRightEnd();
+                ScrollViewer?.ScrollToEnd();
             }
         }
 
-        protected override DependencyObject GetContainerForItemOverride()
+        protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
         {
             return new TabItemEx();
+        }
+
+        protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
+        {
+            return NeedsContainer<TabItemEx>(item, out recycleKey);
         }
     }
 }

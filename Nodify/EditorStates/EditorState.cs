@@ -39,7 +39,7 @@ namespace Nodify
 
         /// <summary>Called when <see cref="NodifyEditor.PushState(EditorState)"/> is called.</summary>
         /// <param name="from">The state we enter from (is null for root state).</param>
-        public virtual void Enter(EditorState? from) { }
+        public virtual void Enter(EditorState? from, MouseEventArgs e) { }
 
         /// <summary>Called when <see cref="NodifyEditor.PopState"/> is called.</summary>
         public virtual void Exit() { }
@@ -50,7 +50,7 @@ namespace Nodify
 
         /// <summary>Pushes a new state into the stack.</summary>
         /// <param name="newState">The new state.</param>
-        public virtual void PushState(EditorState newState) => Editor.PushState(newState);
+        public virtual void PushState(EditorState newState, MouseEventArgs e) => Editor.PushState(newState, e);
 
         /// <summary>Pops the current state from the stack.</summary>
         public virtual void PopState() => Editor.PopState();

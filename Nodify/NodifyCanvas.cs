@@ -19,7 +19,7 @@ namespace Nodify
     /// <summary>A canvas like panel that works with <see cref="INodifyCanvasItem"/>s.</summary>
     public class NodifyCanvas : Panel
     {
-        public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(NodifyCanvas), new FrameworkPropertyMetadata(BoxValue.Rect));
+        public static readonly StyledProperty<Rect> ExtentProperty = AvaloniaProperty.Register<NodifyCanvas, Rect>(nameof(Extent), BoxValue.Rect);
 
         /// <summary>The area covered by the children of this panel.</summary>
         public Rect Extent
@@ -37,13 +37,13 @@ namespace Nodify
             double maxX = double.MinValue;
             double maxY = double.MinValue;
 
-            UIElementCollection children = InternalChildren;
+            UIElementCollection children = Children;
             for (int i = 0; i < children.Count; i++)
             {
                 var item = (INodifyCanvasItem)children[i];
                 item.Arrange(new Rect(item.Location, item.DesiredSize));
 
-                Size size = children[i].RenderSize;
+                Size size = children[i].DesiredSize;
 
                 if (item.Location.X < minX)
                 {
@@ -79,7 +79,7 @@ namespace Nodify
         protected override Size MeasureOverride(Size constraint)
         {
             var availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
-            UIElementCollection children = InternalChildren;
+            UIElementCollection children = Children;
 
             for (int i = 0; i < children.Count; i++)
             {
