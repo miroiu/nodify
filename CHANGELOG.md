@@ -4,6 +4,11 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 5.2.0**
+
+> - Features:
 >	- Added Text to BaseConnection, allowing displaying of text on connections
 >	- Added Foreground, FontSize, FontWeight, FontStyle, FontStretch and FontFamily to BaseConnection, allowing styling the displaying text
 > - Bugfixes:
