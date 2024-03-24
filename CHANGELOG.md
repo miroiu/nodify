@@ -7,6 +7,7 @@
 >	- Added Text to BaseConnection, allowing displaying of text on connections
 >	- Added Foreground, FontSize, FontWeight, FontStyle, FontStretch and FontFamily to BaseConnection, allowing styling the displaying text
 > - Bugfixes:
+>   - Fixed MouseCapture not being released when EnableStickyConnections is enabled and the PendingConnection is canceled by a key gesture 
 
 #### **Version 5.1.0**
 

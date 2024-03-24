@@ -379,6 +379,7 @@ namespace Nodify
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);
+                ReleaseMouseCapture();
             }
         }
 
