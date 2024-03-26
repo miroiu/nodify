@@ -84,8 +84,8 @@ public class WpfShape : Panel
     /// </summary>
     public IBrush? Fill
     {
-      get => this.GetValue<IBrush?>(Shape.FillProperty);
-      set => this.SetValue<IBrush?>(Shape.FillProperty, value);
+      get => this.GetValue<IBrush?>(FillProperty);
+      set => this.SetValue<IBrush?>(FillProperty, value);
     }
 
     /// <summary>
@@ -93,8 +93,8 @@ public class WpfShape : Panel
     /// </summary>
     public Stretch Stretch
     {
-      get => this.GetValue<Stretch>(Shape.StretchProperty);
-      set => this.SetValue<Stretch>(Shape.StretchProperty, value);
+      get => this.GetValue<Stretch>(StretchProperty);
+      set => this.SetValue<Stretch>(StretchProperty, value);
     }
 
     /// <summary>
@@ -120,15 +120,15 @@ public class WpfShape : Panel
     /// </summary>
     public double StrokeDashOffset
     {
-      get => this.GetValue<double>(Shape.StrokeDashOffsetProperty);
-      set => this.SetValue<double>(Shape.StrokeDashOffsetProperty, value);
+      get => this.GetValue<double>(StrokeDashOffsetProperty);
+      set => this.SetValue<double>(StrokeDashOffsetProperty, value);
     }
 
     /// <summary>Gets or sets the width of the shape outline.</summary>
     public double StrokeThickness
     {
-      get => this.GetValue<double>(Shape.StrokeThicknessProperty);
-      set => this.SetValue<double>(Shape.StrokeThicknessProperty, value);
+      get => this.GetValue<double>(StrokeThicknessProperty);
+      set => this.SetValue<double>(StrokeThicknessProperty, value);
     }
 
     /// <summary>
@@ -136,8 +136,8 @@ public class WpfShape : Panel
     /// </summary>
     public PenLineCap StrokeLineCap
     {
-      get => this.GetValue<PenLineCap>(Shape.StrokeLineCapProperty);
-      set => this.SetValue<PenLineCap>(Shape.StrokeLineCapProperty, value);
+      get => this.GetValue<PenLineCap>(StrokeLineCapProperty);
+      set => this.SetValue<PenLineCap>(StrokeLineCapProperty, value);
     }
 
     /// <summary>
@@ -145,8 +145,8 @@ public class WpfShape : Panel
     /// </summary>
     public PenLineJoin StrokeJoin
     {
-      get => this.GetValue<PenLineJoin>(Shape.StrokeJoinProperty);
-      set => this.SetValue<PenLineJoin>(Shape.StrokeJoinProperty, value);
+      get => this.GetValue<PenLineJoin>(StrokeJoinProperty);
+      set => this.SetValue<PenLineJoin>(StrokeJoinProperty, value);
     }
     
     private class InnerShape : Shape

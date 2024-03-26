@@ -68,9 +68,9 @@ namespace Nodify
                 }
             }
 
-            Extent = minX == double.MaxValue
+            SetCurrentValue(ExtentProperty, minX == double.MaxValue
                 ? new Rect(0, 0, 0, 0)
-                : new Rect(minX, minY, maxX - minX, maxY - minY);
+                : new Rect(minX, minY, maxX - minX, maxY - minY));
 
             return arrangeSize;
         }

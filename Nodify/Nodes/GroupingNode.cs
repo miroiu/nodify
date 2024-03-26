@@ -226,7 +226,7 @@ namespace Nodify
                 var prevMovementMode = MovementMode;
                 if (e.KeyModifiers == EditorGestures.GroupingNode.SwitchMovementMode)
                 {
-                    MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
+                    SetCurrentValue(MovementModeProperty, MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group);
                 }
 
                 // Select the content and move with it
@@ -263,7 +263,7 @@ namespace Nodify
                 }
 
                 // Switch the default movement mode back
-                MovementMode = prevMovementMode;
+                SetCurrentValue(MovementModeProperty, prevMovementMode);
             }
         }
 

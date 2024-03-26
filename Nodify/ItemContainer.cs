@@ -25,11 +25,11 @@ namespace Nodify
         public static readonly StyledProperty<Thickness> SelectedBorderThicknessProperty = AvaloniaProperty.Register<ItemContainer, Thickness>(nameof(SelectedBorderThickness), BoxValue.Thickness2);
         public static readonly StyledProperty<bool> IsSelectableProperty = AvaloniaProperty.Register<ItemContainer, bool>(nameof(IsSelectable), BoxValue.True);
         public static readonly StyledProperty<bool> IsSelectedProperty = SelectingItemsControl.IsSelectedProperty.AddOwner<ItemContainer>();
-        public static readonly StyledProperty<bool?> IsPreviewingSelectionProperty = AvaloniaProperty.Register<ItemContainer, bool?>(nameof(IsPreviewingSelection));
+        public static readonly DirectProperty<ItemContainer, bool?> IsPreviewingSelectionProperty = AvaloniaProperty.RegisterDirect<ItemContainer, bool?>(nameof(IsPreviewingSelection), x => x.IsPreviewingSelection);
         public static readonly StyledProperty<Point> LocationProperty = AvaloniaProperty.Register<ItemContainer, Point>(nameof(Location), BoxValue.Point, defaultBindingMode: BindingMode.TwoWay);
         public static readonly StyledProperty<Size> ActualSizeProperty = AvaloniaProperty.Register<ItemContainer, Size>(nameof(ActualSize), BoxValue.Size);
         public static readonly StyledProperty<Size?> DesiredSizeForSelectionProperty = AvaloniaProperty.Register<ItemContainer, Size?>(nameof(DesiredSizeForSelection), null); //, FrameworkPropertyMetadataOptions.NotDataBindable);
-        public static readonly StyledProperty<bool> IsPreviewingLocationProperty = AvaloniaProperty.Register<ItemContainer, bool>(nameof(IsPreviewingLocation));
+        public static readonly DirectProperty<ItemContainer, bool> IsPreviewingLocationProperty = AvaloniaProperty.RegisterDirect<ItemContainer, bool>(nameof(IsPreviewingLocation), x => x.IsPreviewingLocation);
         public static readonly StyledProperty<bool> IsDraggableProperty = AvaloniaProperty.Register<ItemContainer, bool>(nameof(IsDraggable), BoxValue.True);
 
         /// <summary>
@@ -78,13 +78,14 @@ namespace Nodify
             set => SetValue(IsSelectedProperty, value);
         }
 
+        private bool? isPreviewingSelection;
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemContainer"/> is about to change its <see cref="IsSelected"/> state.
         /// </summary>
         public bool? IsPreviewingSelection
         {
-            get => (bool?)GetValue(IsPreviewingSelectionProperty);
-            internal set => SetValue(IsPreviewingSelectionProperty, value);
+            get => isPreviewingSelection;
+            internal set => SetAndRaise(IsPreviewingSelectionProperty, ref isPreviewingSelection, value);
         }
 
         /// <summary>
@@ -96,13 +97,14 @@ namespace Nodify
             set => SetValue(IsSelectableProperty, value);
         }
 
+        private bool isPreviewingLocation;
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemContainer"/> is previewing a new location but didn't logically move there.
         /// </summary>
         public bool IsPreviewingLocation
         {
-            get => (bool)GetValue(IsPreviewingLocationProperty);
-            protected internal set => SetValue(IsPreviewingLocationProperty, value);
+            get => isPreviewingLocation;
+            internal set => SetAndRaise(IsPreviewingLocationProperty, ref isPreviewingLocation, value);
         }
 
         /// <summary>
@@ -312,7 +314,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnSizeChanged(SizeChangedInfo sizeInfo)
         {
-            ActualSize = sizeInfo.NewSize;
+            SetCurrentValue(ActualSizeProperty, sizeInfo.NewSize);
             base.OnSizeChanged(sizeInfo);
         }
 

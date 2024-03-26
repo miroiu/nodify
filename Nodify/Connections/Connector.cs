@@ -57,7 +57,7 @@ namespace Nodify
         public static readonly StyledProperty<Point> AnchorProperty = AvaloniaProperty.Register<Connector, Point>(nameof(Anchor), BoxValue.Point);
         public static readonly StyledProperty<bool> IsConnectedProperty = AvaloniaProperty.Register<Connector, bool>(nameof(IsConnected), BoxValue.False);
         public static readonly StyledProperty<ICommand> DisconnectCommandProperty = AvaloniaProperty.Register<Connector, ICommand>(nameof(DisconnectCommand));
-        public static readonly StyledProperty<bool> IsPendingConnectionProperty = AvaloniaProperty.Register<Connector, bool>(nameof(IsPendingConnection));
+        public static readonly DirectProperty<Connector, bool> IsPendingConnectionProperty = AvaloniaProperty.RegisterDirect<Connector, bool>(nameof(IsPendingConnection), x => x.IsPendingConnection);
 
         /// <summary>
         /// Gets the location where <see cref="Connection"/>s can be attached to. 
@@ -78,13 +78,14 @@ namespace Nodify
             set => SetValue(IsConnectedProperty, value);
         }
 
+        private bool isPendingConnection;
         /// <summary>
         /// Gets a value that indicates whether a <see cref="PendingConnection"/> is in progress for this <see cref="Connector"/>.
         /// </summary>
         public bool IsPendingConnection
         {
-            get => (bool)GetValue(IsPendingConnectionProperty);
-            protected set => SetValue(IsPendingConnectionProperty, value);
+            get => isPendingConnection;
+            private set => SetAndRaise(IsPendingConnectionProperty, ref isPendingConnection, value);
         }
 
         /// <summary>

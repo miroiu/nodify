@@ -73,7 +73,7 @@ namespace Nodify
         protected override void OnSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnSizeChanged(sizeInfo);
-            ActualSize = sizeInfo.NewSize;
+            SetCurrentValue(ActualSizeProperty, sizeInfo.NewSize);
         }
     }
 }

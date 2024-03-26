@@ -26,9 +26,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the template used to display the content of the control's header.
         /// </summary>
-        public DataTemplate HeaderTemplate
+        public IDataTemplate? HeaderTemplate
         {
-            get => (DataTemplate)GetValue(HeaderTemplateProperty);
+            get => GetValue(HeaderTemplateProperty);
             set => SetValue(HeaderTemplateProperty, value);
         }
 

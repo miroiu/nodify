@@ -254,12 +254,12 @@ namespace Nodify
             {
                 e.Handled = true;
                 e.Canceled = !StartedCommand?.CanExecute(e.SourceConnector) ?? false;
-                    
-                Target = null;
+
+                SetCurrentValue(TargetProperty, null);
                 IsVisible = !e.Canceled;
-                SourceAnchor = e.Anchor;
-                TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
-                Source = e.SourceConnector;
+                SetCurrentValue(SourceAnchorProperty, e.Anchor);
+                SetCurrentValue(TargetAnchorProperty, new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY));
+                SetCurrentValue(SourceProperty, e.SourceConnector);
 
                 if (!e.Canceled)
                 {
@@ -268,7 +268,7 @@ namespace Nodify
 
                 if(EnablePreview)
                 {
-                    PreviewTarget = e.SourceConnector;
+                    SetCurrentValue(PreviewTargetProperty, e.SourceConnector);
                 }
             }
         }
@@ -278,7 +278,7 @@ namespace Nodify
             if (!e.Handled && IsVisible)
             {
                 e.Handled = true;
-                TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
+                SetCurrentValue(TargetAnchorProperty, new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY));
 
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
@@ -289,7 +289,7 @@ namespace Nodify
                     if (EnableSnapping && connector is Connector target)
                     {
                         target.UpdateAnchor();
-                        TargetAnchor = target.Anchor;
+                        SetCurrentValue(TargetAnchorProperty, target.Anchor);
                     }
 
                     // If it's not the same connector
@@ -309,7 +309,7 @@ namespace Nodify
                         // Update the preview target if enabled
                         if (EnablePreview)
                         {
-                            PreviewTarget = connector?.DataContext;
+                            SetCurrentValue(PreviewTargetProperty, connector?.DataContext);
                         }
 
                         _previousConnector = connector;
@@ -333,7 +333,7 @@ namespace Nodify
 
                 if (!e.Canceled)
                 {
-                    Target = e.TargetConnector;
+                    SetCurrentValue(TargetProperty, e.TargetConnector);
 
                     // Invoke the CompletedCommand if event is not handled
                     if (CompletedCommand?.CanExecute(Target) ?? false)
@@ -344,7 +344,7 @@ namespace Nodify
 
                 if(EnablePreview)
                 {
-                    PreviewTarget = null;
+                    SetCurrentValue(PreviewTargetProperty, null);
                 }
             }
         }

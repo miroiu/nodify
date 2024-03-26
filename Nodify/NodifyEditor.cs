@@ -36,11 +36,11 @@ namespace Nodify
         public static readonly StyledProperty<Size> ViewportSizeProperty = AvaloniaProperty.Register<NodifyEditor, Size>(nameof(ViewportSize), BoxValue.Size);
         public static readonly StyledProperty<Rect> ItemsExtentProperty = AvaloniaProperty.Register<NodifyEditor, Rect>(nameof(ItemsExtent), BoxValue.Rect);
         public static readonly StyledProperty<Rect> DecoratorsExtentProperty = AvaloniaProperty.Register<NodifyEditor, Rect>(nameof(DecoratorsExtent), BoxValue.Rect);
-        public static readonly StyledProperty<bool> IsMouseCaptureWithinProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(IsMouseCaptureWithin));
+        public static readonly DirectProperty<NodifyEditor, bool> IsMouseCaptureWithinProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsMouseCaptureWithin), x => x.IsMouseCaptureWithin);
         
-        protected internal static readonly StyledProperty<Transform> ViewportTransformProperty = AvaloniaProperty.Register<NodifyEditor, Transform>(nameof(ViewportTransform), new TransformGroup());
+        public static readonly StyledProperty<Transform> ViewportTransformProperty = AvaloniaProperty.Register<NodifyEditor, Transform>(nameof(ViewportTransform), new TransformGroup());
         /// https://github.com/AvaloniaUI/Avalonia/issues/11959 workaround
-        protected internal static readonly StyledProperty<Transform> DpiScaledViewportTransformProperty = AvaloniaProperty.Register<NodifyEditor, Transform>(nameof(DpiScaledViewportTransform), new TransformGroup());
+        public static readonly StyledProperty<Transform> DpiScaledViewportTransformProperty = AvaloniaProperty.Register<NodifyEditor, Transform>(nameof(DpiScaledViewportTransform), new TransformGroup());
  
         #region Callbacks
 
@@ -255,14 +255,15 @@ namespace Nodify
             get => (Rect)GetValue(DecoratorsExtentProperty);
             set => SetValue(DecoratorsExtentProperty, value);
         }
-        
+
+        private bool isMouseCaptureWithin;
         /// <summary>
         /// Gets a value that indicates whether the mouse is captured to the <see cref="NodifyEditor"/>.
         /// </summary>
         public bool IsMouseCaptureWithin
         {
-            get => (bool)GetValue(IsMouseCaptureWithinProperty);
-            protected set => SetValue(IsMouseCaptureWithinProperty, value);
+            get => isMouseCaptureWithin;
+            protected set => SetAndRaise(IsMouseCaptureWithinProperty, ref isMouseCaptureWithin, value);
         }
 
         #endregion
@@ -408,13 +409,13 @@ namespace Nodify
 
         #region Readonly Dependency Properties
 
-        public static readonly StyledProperty<Rect> SelectedAreaProperty = AvaloniaProperty.Register<NodifyEditor, Rect>(nameof(SelectedArea));
+        public static readonly DirectProperty<NodifyEditor, Rect> SelectedAreaProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Rect>(nameof(SelectedArea), x => x.SelectedArea);
 
-        public static readonly StyledProperty<bool> IsSelectingProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(IsSelecting));
+        public static readonly DirectProperty<NodifyEditor, bool> IsSelectingProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsSelecting), x => x.IsSelecting);
 
-        public static readonly StyledProperty<bool> IsPanningProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(IsPanning));
+        public static readonly DirectProperty<NodifyEditor, bool> IsPanningProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsPanning), x => x.IsPanning);
 
-        public static readonly StyledProperty<Point> MouseLocationProperty = AvaloniaProperty.Register<NodifyEditor, Point>(nameof(MouseLocation));
+        public static readonly DirectProperty<NodifyEditor, Point> MouseLocationProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Point>(nameof(MouseLocation), x => x.MouseLocation);
 
         private static void OnIsSelectingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -437,40 +438,44 @@ namespace Nodify
                 ItemsSelectStartedCommand.Execute(null);
         }
 
+        private Rect selectedArea;
         /// <summary>
         /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
         /// </summary>
         public Rect SelectedArea
         {
-            get => (Rect)GetValue(SelectedAreaProperty);
-            internal set => SetValue(SelectedAreaProperty, value);
+            get => selectedArea;
+            internal set => SetAndRaise(SelectedAreaProperty, ref selectedArea, value);
         }
 
+        private bool isSelecting;
         /// <summary>
         /// Gets a value that indicates whether a selection operation is in progress.
         /// </summary>
         public bool IsSelecting
         {
-            get => (bool)GetValue(IsSelectingProperty);
-            internal set => SetValue(IsSelectingProperty, value);
+            get => isSelecting;
+            internal set => SetAndRaise(IsSelectingProperty, ref isSelecting, value);
         }
 
+        private bool isPanning;
         /// <summary>
         /// Gets a value that indicates whether a panning operation is in progress.
         /// </summary>
         public bool IsPanning
         {
-            get => (bool)GetValue(IsPanningProperty);
-            protected internal set => SetValue(IsPanningProperty, value);
+            get => isPanning;
+            protected internal set => SetAndRaise(IsPanningProperty, ref isPanning, value);
         }
 
+        private Point mouseLocation;
         /// <summary>
         /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
         /// </summary>
         public Point MouseLocation
         {
-            get => (Point)GetValue(MouseLocationProperty);
-            protected set => SetValue(MouseLocationProperty, value);
+            get => mouseLocation;
+            protected set => SetAndRaise(MouseLocationProperty, ref mouseLocation, value);
         }
 
         /// <summary>
@@ -483,7 +488,7 @@ namespace Nodify
         #region Dependency Properties
 
         public static readonly StyledProperty<IEnumerable> ConnectionsProperty = AvaloniaProperty.Register<NodifyEditor, IEnumerable>(nameof(Connections));
-        public static readonly StyledProperty<IList> SelectedItemsProperty = AvaloniaProperty.Register<NodifyEditor, IList>(nameof(SelectedItems));
+        public new static readonly StyledProperty<IList> SelectedItemsProperty = AvaloniaProperty.Register<NodifyEditor, IList>(nameof(SelectedItems));
         public static readonly StyledProperty<object> PendingConnectionProperty = AvaloniaProperty.Register<NodifyEditor, object>(nameof(PendingConnection));
         public static readonly StyledProperty<uint> GridCellSizeProperty = AvaloniaProperty.Register<NodifyEditor, uint>(nameof(GridCellSize), BoxValue.UInt1, coerce: OnCoerceGridCellSize);
         public static readonly StyledProperty<bool> DisableZoomingProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(DisableZooming), BoxValue.False);
@@ -876,8 +881,8 @@ namespace Nodify
             if (animated && newLocation != ViewportLocation)
             {
                 IsPanning = true;
-                DisablePanning = true;
-                DisableZooming = true;
+                SetCurrentValue(DisablePanningProperty, true);
+                SetCurrentValue(DisableZoomingProperty, true);
 
                 double distance = (newLocation - ViewportLocation).Length();
                 double duration = distance / (BringIntoViewSpeed + (distance / 10)) * ViewportZoom;
@@ -886,15 +891,15 @@ namespace Nodify
                 this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
                     IsPanning = false;
-                    DisablePanning = false;
-                    DisableZooming = false;
+                    SetCurrentValue(DisablePanningProperty, false);
+                    SetCurrentValue(DisableZoomingProperty, false);
 
                     onFinish?.Invoke();
                 });
             }
             else
             {
-                ViewportLocation = newLocation;
+                SetCurrentValue(ViewportLocationProperty, newLocation);
                 onFinish?.Invoke();
             }
         }
@@ -953,7 +958,7 @@ namespace Nodify
                     y += autoPanSpeed;
                 }
 
-                ViewportLocation = new Point(x, y);
+                SetCurrentValue(ViewportLocationProperty, new Point(x, y));
 
                 State.HandleAutoPanning(null);
             }
@@ -1424,7 +1429,7 @@ namespace Nodify
             base.OnSizeChanged(sizeInfo);
 
             double zoom = ViewportZoom;
-            ViewportSize = new Size(Bounds.Width / zoom, Bounds.Height / zoom);
+            SetCurrentValue(ViewportSizeProperty, new Size(Bounds.Width / zoom, Bounds.Height / zoom));
 
             OnViewportUpdated();
         }

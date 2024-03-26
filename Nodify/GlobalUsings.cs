@@ -6,7 +6,6 @@ global using Avalonia.Interactivity;
 global using Avalonia.Input;
 global using Avalonia.Controls.Metadata;
 global using Avalonia.Controls.Shapes;
-global using Avalonia.Controls.Metadata;
 global using Avalonia.Controls.Documents;
 global using Avalonia.Data;
 global using Avalonia.Layout;

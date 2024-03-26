@@ -40,9 +40,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the template used to display the content of the control's header.
         /// </summary>
-        public DataTemplate ContentTemplate
+        public IDataTemplate? ContentTemplate
         {
-            get => (DataTemplate)GetValue(ContentTemplateProperty);
+            get => GetValue(ContentTemplateProperty);
             set => SetValue(ContentTemplateProperty, value);
         }
         

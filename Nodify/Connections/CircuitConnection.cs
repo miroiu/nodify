@@ -11,7 +11,7 @@ namespace Nodify
     {
         protected const double Degrees = Math.PI / 180.0d;
 
-        public static readonly StyledProperty<double> AngleProperty = AvaloniaProperty.Register<LineConnection, double>(nameof(Angle), BoxValue.Double45);
+        public static readonly StyledProperty<double> AngleProperty = AvaloniaProperty.Register<CircuitConnection, double>(nameof(Angle), BoxValue.Double45);
 
         /// <summary>
         /// The angle of the connection in degrees.
