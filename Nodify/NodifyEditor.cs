@@ -1144,7 +1144,9 @@ namespace Nodify
                 ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
 
                 // Handle it for nested editors
-                if (e.Source is NodifyEditor)
+                // in Avalonia e.Source is equivalent of e.OriginalSource in WPF
+                // in this case we can safely ignore the source and always handle the event
+                // if (e.Source is NodifyEditor)
                 {
                     e.Handled = true;
                 }
