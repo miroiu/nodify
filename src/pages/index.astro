@@ -1,0 +1,197 @@
+---
+import './index.css';
+
+import { apps } from '../apps';
+import GitHubButton from '../components/GitHubButton.astro';
+import ApplicationCard from '../components/ApplicationCard.astro';
+import Feature from '../components/Feature.astro';
+
+import plusIcon from '../../public/img/plus.svg';
+import Image from 'astro/components/Image.astro';
+
+const features = [
+  {
+    title: '⭐ Built for MVMM',
+    description: 'Designed from the ground up to work with MVVM',
+  },
+  {
+    title: '⭐ Performant',
+    description: 'Optimized for interaction with hundreds of nodes at once',
+  },
+  {
+    title: '⭐ Customizable',
+    description:
+      'Use the built-in themes or create your own with the power of XAML',
+  },
+  {
+    title: '⭐ Featureful',
+    description: 'Fully featured navigation, zoom and area selection system',
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="nodify/favicon.svg" />
+    <meta
+      name="description"
+      content="Nodify is a performant and modular controls library for node-based editors designed for data-binding and MVVM."
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Build highly performant node-based editors quickly | Nodify</title>
+  </head>
+  <body>
+    <div>
+      <div
+        class="py-1 px-4 text-center absolute z-10 w-full bg-secondary bg-opacity-50"
+      >
+        🚀 There is now a fantastic Avalonia port available! You can check it
+        out <a
+          href="https://github.com/BAndysc/nodify-avalonia"
+          class="text-primary hover:text-primary-darker">here</a
+        >.
+      </div>
+
+      <div class="max-w-screen-lg mx-auto px-4">
+        <section
+          class="h-screen flex flex-col items-center justify-center gap-8 relative"
+        >
+          <div class="flex gap-20">
+            <div class="flex flex-col gap-16 text-center sm:text-left">
+              <div class="flex flex-col gap-4">
+                <h2
+                  class="relative uppercase text-4xl text-secondary font-extrabold mx-auto sm:mx-0"
+                >
+                  Nodify
+                  <span
+                    class="absolute top-1 left-1 uppercase text-4xl text-card font-extrabold -z-10"
+                  >
+                    Nodify
+                  </span>
+                </h2>
+                <h1 class="text-5xl sm:text-6xl tracking-tight font-extrabold">
+                  Build <span class="text-primary">node-based</span> editors quickly,
+                  focus on your business{' '}
+                  <span class="text-primary">logic</span>.
+                </h1>
+              </div>
+
+              <div class="flex gap-6 items-center flex-col sm:flex-row">
+                <a
+                  class="hover:bg-primary bg-primary-darker transition-colors duration-200 ease-in-out py-4 px-6 font-bold text-3xl uppercase rounded-lg shadow-sm"
+                  href="https://github.com/miroiu/nodify/wiki/Getting-Started"
+                >
+                  Get started
+                </a>
+                <GitHubButton />
+              </div>
+            </div>
+
+            <img
+              src="nodify/favicon.svg"
+              alt="Nodify logo"
+              class="w-64 h-64 hover:scale-105 transition-all duration-200 ease-in-out hidden sm:block"
+            />
+            <div
+              class="absolute bottom-0 w-full flex flex-col justify-center items-center sm:py-12"
+            >
+              <a
+                href="#showcase"
+                class="flex flex-col items-center justify-center group"
+              >
+                <p
+                  class="text-xl mb-2 font-semibold opacity-75 group-hover:opacity-100 transition-opacity duration-200 ease-in-out"
+                >
+                  Take a look
+                </p>
+                <img
+                  src="nodify/img/carret.svg"
+                  alt="Scroll to featured projects"
+                  class="h-12 w-12 animate-bounce"
+                />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="showcase"
+          class="scroll-m-4 pt-10 sm:pt-28 flex flex-col gap-28"
+        >
+          <main
+            class="relative flex flex-col gap-4 sm:grid sm:grid-cols-4 sm:gap-6"
+          >
+            {
+              features.map(feature => (
+                <Feature
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))
+            }
+          </main>
+
+          <div class="sm:grid sm:grid-cols-2 flex flex-col gap-8">
+            {apps.map(app => <ApplicationCard {...app} />)}
+            <div
+              class="rounded-lg bg-gradient-to-t from-secondary via-secondary to-primary p-1 shadow-2xl overflow-hidden flex flex-col"
+            >
+              <a
+                href="https://github.com/miroiu/nodify/edit/docs/src/apps.ts"
+                target="_blank"
+                class="h-full bg-secondary opacity-90 flex justify-center items-center group"
+              >
+                <Image
+                  src={plusIcon}
+                  alt="Add your own project"
+                  class="w-16 h-16 my-6 sm:group-hover:w-20 sm:group-hover:h-20 transition-all"
+                  loading="lazy"
+                />
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer
+        class="flex flex-col gap-4 justify-center items-center py-12 mt-32 bg-card"
+      >
+        <div class="flex gap-2 font-semibold uppercase">
+          <a
+            href="https://github.com/miroiu/nodify/wiki"
+            class="hover:text-primary-darker"
+          >
+            Docs
+          </a>
+          ·
+          <a
+            href="https://github.com/miroiu/nodify"
+            class="hover:text-primary-darker"
+          >
+            Github
+          </a>
+          ·
+          <a
+            href="https://www.nuget.org/packages/Nodify"
+            target="_blank"
+            class="hover:text-primary-darker"
+          >
+            Nuget
+          </a>
+        </div>
+        <p class="text-primary">Copyright © 2022 Emanuel Miroiu</p>
+        <p class="text-sm">
+          Designed with ❤️ by{' '}
+          <a
+            class="text-primary hover:text-primary-darker"
+            href="https://github.com/MiroiuGabriel"
+            target="_blank"
+          >
+            MiroiuGabriel
+          </a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

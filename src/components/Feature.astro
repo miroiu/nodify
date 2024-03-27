@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const feature = Astro.props;
+---
+
+<section
+  class="px-2 py-4 rounded-lg bg-gradient-to-r from-primary-darker to-secondary shadow-lg flex justify-center group cursor-feature hover:via-secondary"
+>
+  <h1 class="text-xl font-semibold uppercase">
+    {feature.title}
+  </h1>
+  <p
+    class="bg-secondary absolute top-full mt-2 rounded-lg w-full left-0 flex items-center text-center p-4 [clip-path:polygon(0_0,_100%_0,_100%_0,_0_0)] group-hover:[clip-path:polygon(0_0,_100%_0,_100%_100%,_0_100%)] transition-all duration-200"
+  >
+    {feature.description}
+  </p>
+</section>

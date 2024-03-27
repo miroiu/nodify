@@ -1,0 +1,50 @@
+---
+import Image from 'astro/components/Image.astro';
+import type { ApplicationInfo } from '../apps';
+import externalLink from '../../public/img/external-link.svg';
+
+type Props = ApplicationInfo;
+
+const app = Astro.props;
+---
+
+<div
+  class="rounded-lg bg-gradient-to-t from-secondary via-secondary to-primary p-1 shadow-2xl overflow-hidden flex flex-col"
+>
+  <div class="relative group">
+    <Image
+      src={app.preview}
+      alt={app.title}
+      class="w-full h-64 object-center object-cover rounded-t-md"
+      loading="eager"
+    />
+    {
+      app.website && (
+        <div>
+          <span class="flex h-4 w-4 absolute top-2 right-2 group-hover:opacity-0 transition-opacity duration-200">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+            <span class="relative inline-flex rounded-full h-4 w-4 bg-primary" />
+          </span>
+          <a
+            href={app.website}
+            target="_blank"
+            class="absolute top-0 right-0 w-full h-full [clip-path:circle(0%_at_100%_0)] group-hover:[clip-path:circle(150%_at_100%_0)] motion-safe:transition-all duration-200 bg-secondary opacity-90 flex justify-center items-center"
+          >
+            <Image
+              src={externalLink}
+              alt="Go to project website"
+              class="w-12 h-12"
+              loading="eager"
+            />
+          </a>
+        </div>
+      )
+    }
+  </div>
+  <div
+    class="bg-card backdrop-blur flex flex-col p-4 rounded-tr-md rounded-br-md grow"
+  >
+    <p class="text-xl font-extrabold mb-2">{app.title}</p>
+    {app.description && <p>{app.description}</p>}
+  </div>
+</div>

@@ -1,0 +1,23 @@
+---
+const res = await fetch(`https://api.github.com/repos/miroiu/nodify`);
+const data = await res.json();
+const stars = data.stargazers_count || 1024;
+---
+
+<a
+  class="flex bg-white hover:bg-slate-100 transition-colors duration-200 ease-in-out w-fit text-black px-3 py-2 rounded-full gap-2 cursor-pointer font-medium"
+  href="https://github.com/miroiu/nodify"
+>
+  <img src="nodify/img/github_logo.svg" class="w-6 h-6" alt="Github" />
+  Star
+  <span id="github-stars" class="border-l min-w-[45px] px-2">{stars}</span>
+</a>
+
+<script>
+  const res = await fetch(`https://api.github.com/repos/miroiu/nodify`);
+  const data = await res.json();
+  const stars = data.stargazers_count;
+
+  const elem = document.getElementById('github-stars');
+  elem!.innerText = stars || 1024;
+</script>
