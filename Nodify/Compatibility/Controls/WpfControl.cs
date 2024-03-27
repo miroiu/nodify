@@ -7,7 +7,7 @@ namespace Nodify.Compatibility
 {
     public class WpfControl : TemplatedControl
     {
-        private PointerEventArgs? currentPointerArgs;
+        protected PointerEventArgs? currentPointerArgs;
         
         protected override void OnPointerEntered(PointerEventArgs e)
         {

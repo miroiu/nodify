@@ -23,7 +23,7 @@ namespace Nodify
                 capturedMouse.Dispose();
                 capturedMouse = null;
             }
-            else
+            else if (currentPointerArgs != null)
                 base.ReleaseMouseCapture();
         }
     }
