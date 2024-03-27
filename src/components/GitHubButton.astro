@@ -1,4 +1,7 @@
 ---
+import Image from 'astro/components/Image.astro';
+import githubLogo from '../../public/img/github_logo.svg';
+
 const res = await fetch(`https://api.github.com/repos/miroiu/nodify`);
 const data = await res.json();
 const stars = data.stargazers_count || 1024;
@@ -8,7 +11,7 @@ const stars = data.stargazers_count || 1024;
   class="flex bg-white hover:bg-slate-100 transition-colors duration-200 ease-in-out w-fit text-black px-3 py-2 rounded-full gap-2 cursor-pointer font-medium"
   href="https://github.com/miroiu/nodify"
 >
-  <img src="nodify/img/github_logo.svg" class="w-6 h-6" alt="Github" />
+  <Image src={githubLogo} class="w-6 h-6" alt="Github" loading="eager" />
   Star
   <span id="github-stars" class="border-l min-w-[45px] px-2">{stars}</span>
 </a>

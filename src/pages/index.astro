@@ -7,6 +7,8 @@ import ApplicationCard from '../components/ApplicationCard.astro';
 import Feature from '../components/Feature.astro';
 
 import plusIcon from '../../public/img/plus.svg';
+import favIcon from '../../public/favicon.svg';
+import caretIcon from '../../public/img/carret.svg';
 import Image from 'astro/components/Image.astro';
 
 const features = [
@@ -33,7 +35,7 @@ const features = [
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="nodify/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta
       name="description"
       content="Nodify is a performant and modular controls library for node-based editors designed for data-binding and MVVM."
@@ -89,10 +91,11 @@ const features = [
               </div>
             </div>
 
-            <img
-              src="nodify/favicon.svg"
+            <Image
+              src={favIcon}
               alt="Nodify logo"
               class="w-64 h-64 hover:scale-105 transition-all duration-200 ease-in-out hidden sm:block"
+              loading="eager"
             />
             <div
               class="absolute bottom-0 w-full flex flex-col justify-center items-center sm:py-12"
@@ -106,10 +109,11 @@ const features = [
                 >
                   Take a look
                 </p>
-                <img
-                  src="nodify/img/carret.svg"
+                <Image
+                  src={caretIcon}
                   alt="Scroll to featured projects"
                   class="h-12 w-12 animate-bounce"
+                  loading="eager"
                 />
               </a>
             </div>
