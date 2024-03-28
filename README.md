@@ -12,6 +12,9 @@ This is a direct port of [Nodify by miroiu](https://github.com/miroiu/nodify) to
 
 The goal of the port is to keep the codebase as similar to the original code as possible, to the point, where merges from the upstream are not a problem.
 
+> [!TIP]
+> There is now a fantastic Avalonia port available! You can check it out [here](https://github.com/BAndysc/nodify-avalonia). Huge thanks to [BAndysc](https://github.com/BAndysc) who made this possible!
+
 ## 🚀 Examples of node-based applications
 
 🎨 A playground application where you can try all the available settings.
