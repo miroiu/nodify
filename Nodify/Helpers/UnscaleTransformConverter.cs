@@ -9,8 +9,9 @@ namespace Nodify
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Transform result = new MatrixTransform(((TransformGroup)value).Children[0].Value.Invert());
-            return result;
+            if (value is TransformGroup transformGroup)
+                return new MatrixTransform(transformGroup.Children[0].Value.Invert());
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,8 +24,9 @@ namespace Nodify
     {
         public object Convert(IList<object?> values, Type targetType, object parameter, CultureInfo culture)
         {
-            double result = (double)values[0] * (double)values[1];
-            return result;
+            if (values.Count == 2 && values[0] is double d1 && values[1] is double d2)
+                return d1 * d2;
+            return null;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
