@@ -15,8 +15,18 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/BAndysc/nodify-avalonia</RepositoryUrl>
     <PackageTags>avalonia mvvm node-editor controls</PackageTags>
-    <Version>5.2.0</Version>
+    <Version>5.2.0.1</Version>
     <PackageReleaseNotes>
+      > 5.2.0.1:
+      > - Bugfixes:
+      >   - Fixed Zooming into nested editors should not zoom the parent editors
+      >   - Fixed Cancelling a pending connection via a hot key will no longer throw an exception
+      >   - Fixed Exceptions in UnscaleTransformConverter and UnscaleDoubleConverter
+      >   - Fixed Cannot use marquee selection and pan at the same time
+      >   - Fixed Selection clear on items collection reset
+      >   - Fixed Cannot use marquee selection inside comment nodes
+      >
+      > 5.2.0:
       > - Features:
       >	  - Added Text to BaseConnection, allowing displaying of text on connections
       >  	- Added Foreground, FontSize, FontWeight, FontStyle, FontStretch and FontFamily to BaseConnection, allowing styling the displaying text
