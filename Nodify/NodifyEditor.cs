@@ -940,19 +940,23 @@ namespace Nodify
                 if (mousePosition.X <= edgeDistance)
                 {
                     x -= autoPanSpeed;
+                    mouseLocation -= new Vector(autoPanSpeed, 0);
                 }
                 else if (mousePosition.X >= Bounds.Width - edgeDistance)
                 {
                     x += autoPanSpeed;
+                    mouseLocation += new Vector(autoPanSpeed, 0);
                 }
 
                 if (mousePosition.Y <= edgeDistance)
                 {
                     y -= autoPanSpeed;
+                    mouseLocation -= new Vector(0, autoPanSpeed);
                 }
                 else if (mousePosition.Y >= Bounds.Height - edgeDistance)
                 {
                     y += autoPanSpeed;
+                    mouseLocation += new Vector(0, autoPanSpeed);
                 }
 
                 SetCurrentValue(ViewportLocationProperty, new Point(x, y));
