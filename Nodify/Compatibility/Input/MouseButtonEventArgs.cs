@@ -4,20 +4,23 @@ public class MouseButtonEventArgs : MouseEventArgs
 {
     private readonly RoutedEventArgs args;
 
-    internal MouseButtonEventArgs(PointerPressedEventArgs pressedEventArgs)
+    internal MouseButtonEventArgs(PointerEventArgs pointerArgs)
     {
-        this.args = pressedEventArgs;
-        var point = pressedEventArgs.GetCurrentPoint(null);
+        this.args = pointerArgs;
+        var point = pointerArgs.GetCurrentPoint(null);
         ChangedButton = point.Properties.PointerUpdateKind switch
         {
             PointerUpdateKind.LeftButtonPressed => MouseButton.Left,
+            PointerUpdateKind.LeftButtonReleased => MouseButton.Left,
             PointerUpdateKind.RightButtonPressed => MouseButton.Right,
+            PointerUpdateKind.RightButtonReleased => MouseButton.Right,
             PointerUpdateKind.MiddleButtonPressed => MouseButton.Middle,
+            PointerUpdateKind.MiddleButtonReleased => MouseButton.Middle,
             _ => MouseButton.None
         };
-        ClickCount = pressedEventArgs.ClickCount;
-        Source = pressedEventArgs.Source;
-        KeyModifiers = pressedEventArgs.KeyModifiers;
+        ClickCount = pointerArgs is PointerPressedEventArgs pressedArgs ? pressedArgs.ClickCount : 1;
+        Source = pointerArgs.Source;
+        KeyModifiers = pointerArgs.KeyModifiers;
         ButtonState = MouseButtonState.Pressed;
         RightButton = point.Properties.IsRightButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
     }
@@ -118,13 +121,9 @@ public class MouseButtonEventArgs : MouseEventArgs
 
     public override Point GetPosition(Visual? relativeTo)
     {
-        if (args is PointerPressedEventArgs pressed)
+        if (args is PointerEventArgs pointerArgs)
         {
-            return pressed.GetPosition(relativeTo);
-        }
-        else if (args is PointerReleasedEventArgs released)
-        {
-            return released.GetPosition(relativeTo);
+            return pointerArgs.GetPosition(relativeTo);
         }
         return default;
     }

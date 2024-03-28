@@ -1127,6 +1127,21 @@ namespace Nodify
             MouseLocation = e.GetPosition(ItemsHost);
             RelativeMouseLocation = e.GetPosition(this);
             State.HandleMouseMove(new MouseMoveEventArgs(e));
+
+            // Avalonia here works like UWP rather than WPF
+            // https://github.com/AvaloniaUI/Avalonia/issues/14777
+            // that means when a mouse button is pressed, other pointer pressed events are not raised.
+            // Instead, only the mouse move event is raised with appropriate PointerUpdateKind
+            // So here I am transforming the pointer move event to a pointer pressed event to mimic WPF
+            var pointerUpdateKind = e.GetCurrentPoint(this).Properties.PointerUpdateKind;
+            if (pointerUpdateKind is PointerUpdateKind.RightButtonPressed or PointerUpdateKind.LeftButtonPressed or PointerUpdateKind.MiddleButtonPressed)
+            {
+                State.HandleMouseDown(new MouseButtonEventArgs(e));
+            }
+            else if (pointerUpdateKind is PointerUpdateKind.RightButtonReleased or PointerUpdateKind.LeftButtonReleased or PointerUpdateKind.MiddleButtonReleased)
+            {
+                State.HandleMouseUp(new MouseButtonEventArgs(e));
+            }
         }
 
         /// <inheritdoc />
