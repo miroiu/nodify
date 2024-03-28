@@ -742,7 +742,7 @@ namespace Nodify
         {
             get
             {
-                IList selectedItems = base.SelectedItems;
+                var selectedItems = Selection.SelectedItems;
                 var selectedContainers = new List<ItemContainer>(selectedItems.Count);
 
                 for (var i = 0; i < selectedItems.Count; i++)
@@ -797,6 +797,7 @@ namespace Nodify
             _states.Push(GetInitialState());
 
             CanSelectMultipleItems = true;
+            Selection.SourceReset += OnSourceReset;
         }
 
         /// <inheritdoc />
@@ -1190,15 +1191,15 @@ namespace Nodify
                 nc.CollectionChanged += OnSelectedItemsChanged;
             }
 
-            IList selectedItems = base.SelectedItems;
+            var selectedItems = Selection.SelectedItems;
 
             BeginUpdateSelectedItems();
-            selectedItems.Clear();
+            Selection.Clear();
             if (newValue != null)
             {
                 for (var i = 0; i < newValue.Count; i++)
                 {
-                    selectedItems.Add(newValue[i]);
+                    Selection.Select(Items.IndexOf(newValue[i]));
                 }
             }
             EndUpdateSelectedItems();
@@ -1206,6 +1207,9 @@ namespace Nodify
 
         private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            if (inOnSelectedItemsChanged)
+                return;
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Reset:
@@ -1239,6 +1243,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnSelectionChanged(SelectionModelSelectionChangedEventArgs e)
         {
+            inOnSelectedItemsChanged = true;
             IList? selected = SelectedItems;
             if (selected != null)
             {
@@ -1258,6 +1263,8 @@ namespace Nodify
                     selected.Remove(removed[i]);
                 }
             }
+
+            inOnSelectedItemsChanged = false;
         }
 
         #endregion

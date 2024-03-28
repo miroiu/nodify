@@ -9,6 +9,8 @@ public partial class NodifyEditor
             PseudoClasses.Set(":connections-on-top", DisplayConnectionsOnTop);
     }
 
+    private bool inOnSelectedItemsChanged;
+
     /// <summary>
     /// On WPF single mouse wheel delta is 120, on Avalonia it is 0.6 (at least on macOS)
     /// </summary>
@@ -31,5 +33,10 @@ public partial class NodifyEditor
                 e.Handled = true;
             }
         }
+    }
+
+    private void OnSourceReset(object sender, EventArgs e)
+    {
+        SelectedItems?.Clear();
     }
 }
