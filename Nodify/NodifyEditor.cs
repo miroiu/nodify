@@ -729,8 +729,6 @@ namespace Nodify
         /// </summary>
         protected internal ItemsPresenter ItemsHost { get; private set; }
 
-        private Border MainBorderPart { get; set; }
-
         private IDraggingStrategy? _draggingStrategy;
         private DispatcherTimer? _autoPanningTimer;
 
@@ -806,8 +804,6 @@ namespace Nodify
             base.OnApplyTemplate(e);
 
             ItemsHost = e.NameScope.Find<ItemsPresenter>("PART_ItemsPresenter") ?? throw new InvalidOperationException("PART_ItemsHost is missing or is not of type Panel.");
-
-            MainBorderPart = e.NameScope.Get<Border>("PART_MainBorder");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
 
@@ -1086,8 +1082,13 @@ namespace Nodify
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             // Needed to not steal mouse capture from children
-            if (e.Pointer.Captured == null || ReferenceEquals(e.Pointer.Captured, this) 
-                                           || ReferenceEquals(e.Pointer.Captured, MainBorderPart)) // <-- this is a hack. Apparently Avalonia captures the pointer before I am even able to do anything. Is there any better way?
+            // This check doesn't work in Avalonia, because contrary to WPF, Captured element is set
+            // automatically to the OriginalSource. Because of that IsMouseCaptured is never true, because
+            // the pointer is captured either by some visual descendant (i.e. Border) or even worse - a visual descendant
+            // of a nested NodifyEditor.
+            // In general, this check was in place to avoid stealing mouse capture from children - ItemContainers.
+            // To solve this in Avalonia, I set e.Handled to true in ItemContainer so this check is not needed.
+            // if (Mouse.Captured == null || IsMouseCaptured)
             {
                 Focus();
                 e.Pointer.Capture(this);
@@ -1095,6 +1096,9 @@ namespace Nodify
 
                 MouseLocation = e.GetPosition(ItemsHost);
                 State.HandleMouseDown(new MouseButtonEventArgs(e));
+
+                // this wasn't needed in WPF, because of the commented if above
+                e.Handled = true;
             }
         }
 

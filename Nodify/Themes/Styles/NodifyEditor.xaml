@@ -51,8 +51,7 @@
                 <ControlTemplate TargetType="{x:Type local:NodifyEditor}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            x:Name="PART_MainBorder">
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <Canvas RenderTransform="{TemplateBinding ViewportTransform}" RenderTransformOrigin="0,0">
                             <ItemsPresenter Name="PART_ItemsPresenter">
                                 <ItemsPresenter.ItemsPanel>

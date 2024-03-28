@@ -399,6 +399,9 @@ namespace Nodify
                 e.Pointer.Capture(this);
 
                 State.HandleMouseDown(new MouseButtonEventArgs(e));
+
+                // this wasn't needed in WPF, because in WPF Mouse.Capture was checked in parent NodifyEditor
+                e.Handled = true;
             }
         }
 

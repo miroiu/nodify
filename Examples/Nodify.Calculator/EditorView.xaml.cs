@@ -10,7 +10,7 @@ namespace Nodify.Calculator
         {
             InitializeComponent();
 
-            PointerPressedEvent.AddClassHandler<NodifyEditor>(CloseOperationsMenuPointerPressed);
+            PointerPressedEvent.AddClassHandler<NodifyEditor>(CloseOperationsMenuPointerPressed, RoutingStrategies.Tunnel);
             ItemContainer.DragStartedEvent.AddClassHandler<ItemContainer>(CloseOperationsMenu);
             PointerReleasedEvent.AddClassHandler<NodifyEditor>(OpenOperationsMenu);
             Editor.AddHandler(DragDrop.DropEvent, OnDropNode);
