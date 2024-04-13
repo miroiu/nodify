@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Nodify
@@ -50,6 +51,13 @@ namespace Nodify
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
             var arrowOffset = new Vector(ArrowSize.Width * direction, 0d);
+
+            if (Orientation == Orientation.Vertical)
+            {
+                (spacing.X, spacing.Y) = (spacing.Y, spacing.X);
+                (arrowOffset.X, arrowOffset.Y) = (arrowOffset.Y, arrowOffset.X);
+            }
+
             Point endPoint = Spacing > 0 ? target - arrowOffset : target;
 
             Point p1 = source + spacing;

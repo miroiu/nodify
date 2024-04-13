@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Nodify
@@ -23,6 +24,12 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
+
+            if(Orientation == Orientation.Vertical)
+            {
+                (spacing.X, spacing.Y) = (spacing.Y, spacing.X);
+            }
+
             Point startPoint = source + spacing;
             Point endPoint = target - spacing;
 
@@ -38,6 +45,11 @@ namespace Nodify
             offset = Math.Min(_baseOffset + Math.Sqrt(width * _offsetGrowthRate), offset);
 
             var controlPoint = new Vector(offset * direction, 0d);
+
+            if (Orientation == Orientation.Vertical)
+            {
+                (controlPoint.X, controlPoint.Y) = (controlPoint.Y, controlPoint.X);
+            }
 
             context.BeginFigure(source, false, false);
             context.LineTo(startPoint, true, true);
