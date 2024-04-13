@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added Orientation to BaseConnection to support vertical connections
 > - Bugfixes:
 
 #### **Version 5.2.0**
