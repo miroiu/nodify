@@ -39,4 +39,14 @@ public partial class NodifyEditor
     {
         SelectedItems?.Clear();
     }
+
+    private void OnPreviewPointerPressed(object sender, PointerPressedEventArgs e)
+    {
+        // Avalonia, contrary to WPF, automatically captures the pointer when pressed
+        // this interferes with Nodify behaviour, so here's the workaround:
+        // OnPreviewPointerPressed is a tunneled handler, meaning it is called BEFORE any other mouse handler
+        // basically we release the pointer capture as soon as it is captured, so that later it can be manually captured
+        // in correct places
+        e.Pointer.Capture(null);
+    }
 }

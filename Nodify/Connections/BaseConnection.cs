@@ -544,6 +544,7 @@ namespace Nodify
             Focus();
 
             e.Pointer.Capture(this);
+            this.PropagateMouseCapturedWithin(true);
 
             if (EditorGestures.Connection.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
             {
@@ -594,6 +595,7 @@ namespace Nodify
             if (ReferenceEquals(e.Pointer.Captured, this))
             {
                 e.Pointer.Capture(null);
+                this.PropagateMouseCapturedWithin(false);
             }
         }
         

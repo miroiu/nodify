@@ -383,7 +383,6 @@ namespace Nodify
             
             // Avalonia hack: Avalonia contrary to WPF automatically releases mouse capture on mouse up
             // and there is no way to prevent it. So we need to capture it again if we are still dragging
-            // Question: maybe EnableStickyConnections should not be available in Avalonia?
             if (!releaseMouseCapture && EnableStickyConnections && IsPendingConnection)
             {
                 ignoreNextOnPointerCaptureLost = true;

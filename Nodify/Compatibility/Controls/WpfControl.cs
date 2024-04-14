@@ -78,7 +78,8 @@ namespace Nodify.Compatibility
         {
             if (currentPointerArgs == null)
                 throw new InvalidOperationException($"You may only call {nameof(ReleaseMouseCapture)} from within a {nameof(OnMouseUp)} or {nameof(OnMouseDown)} event handler.");
-            currentPointerArgs.Pointer.Capture(this);            
+            currentPointerArgs.Pointer.Capture(this);
+            this.PropagateMouseCapturedWithin(true);
         }
         
         protected virtual void ReleaseMouseCapture()
@@ -86,6 +87,7 @@ namespace Nodify.Compatibility
             if (currentPointerArgs == null)
                 throw new InvalidOperationException($"You may only call {nameof(ReleaseMouseCapture)} from within a {nameof(OnMouseUp)} or {nameof(OnMouseDown)} event handler.");
             currentPointerArgs.Pointer.Capture(null);
+            this.PropagateMouseCapturedWithin(false);
         }
         
         public bool IsMouseCaptured

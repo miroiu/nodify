@@ -397,11 +397,9 @@ namespace Nodify
                 Focus();
 
                 e.Pointer.Capture(this);
+                this.PropagateMouseCapturedWithin(true);
 
                 State.HandleMouseDown(new MouseButtonEventArgs(e));
-
-                // this wasn't needed in WPF, because in WPF Mouse.Capture was checked in parent NodifyEditor
-                e.Handled = true;
             }
         }
 
@@ -417,6 +415,7 @@ namespace Nodify
             if (ReferenceEquals(e.Pointer.Captured, this) && e.GetCurrentPoint(this).Properties is { IsLeftButtonPressed: false, IsMiddleButtonPressed: false, IsRightButtonPressed: false })
             {
                 e.Pointer.Capture(null);
+                this.PropagateMouseCapturedWithin(false);
             }
         }
 

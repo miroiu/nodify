@@ -83,11 +83,13 @@ public class MouseButtonEventArgs : MouseEventArgs
         if (args is PointerPressedEventArgs e)
         {
             e.Pointer.Capture(element);
+            element.PropagateMouseCapturedWithin(true);
             return new ReleaseMouseCaptureOperation(e.Pointer, element);
         }
         else if (args is PointerReleasedEventArgs r)
         {
             r.Pointer.Capture(element);
+            element.PropagateMouseCapturedWithin(true);
             return new ReleaseMouseCaptureOperation(r.Pointer, element);
         }
 
@@ -97,9 +99,9 @@ public class MouseButtonEventArgs : MouseEventArgs
     private struct ReleaseMouseCaptureOperation : IDisposable
     {
         private readonly IPointer pointer;
-        private readonly IInputElement? element;
+        private readonly IInputElement element;
 
-        public ReleaseMouseCaptureOperation(IPointer pointer, IInputElement? element)
+        public ReleaseMouseCaptureOperation(IPointer pointer, IInputElement element)
         {
             this.pointer = pointer;
             this.element = element;
@@ -108,7 +110,10 @@ public class MouseButtonEventArgs : MouseEventArgs
         public void Dispose()
         {
             if (pointer.Captured == element)
+            {
                 pointer.Capture(null);
+                element.PropagateMouseCapturedWithin(false);
+            }
         }
     }
         

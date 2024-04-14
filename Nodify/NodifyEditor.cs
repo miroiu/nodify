@@ -263,7 +263,7 @@ namespace Nodify
         public bool IsMouseCaptureWithin
         {
             get => isMouseCaptureWithin;
-            protected set => SetAndRaise(IsMouseCaptureWithinProperty, ref isMouseCaptureWithin, value);
+            internal set => SetAndRaise(IsMouseCaptureWithinProperty, ref isMouseCaptureWithin, value);
         }
 
         #endregion
@@ -790,6 +790,8 @@ namespace Nodify
             AddHandler(ItemContainer.DragCompletedEvent, OnItemsDragCompleted);
             AddHandler(ItemContainer.DragDeltaEvent, OnItemsDragDelta);
 
+            AddHandler(PointerPressedEvent, OnPreviewPointerPressed, RoutingStrategies.Tunnel);
+
             UpdateViewportTransform(this);
             
             _states.Push(GetInitialState());
@@ -1086,23 +1088,14 @@ namespace Nodify
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             // Needed to not steal mouse capture from children
-            // This check doesn't work in Avalonia, because contrary to WPF, Captured element is set
-            // automatically to the OriginalSource. Because of that IsMouseCaptured is never true, because
-            // the pointer is captured either by some visual descendant (i.e. Border) or even worse - a visual descendant
-            // of a nested NodifyEditor.
-            // In general, this check was in place to avoid stealing mouse capture from children - ItemContainers.
-            // To solve this in Avalonia, I set e.Handled to true in ItemContainer so this check is not needed.
-            // if (Mouse.Captured == null || IsMouseCaptured)
+            if (e.Pointer.Captured == null)
             {
                 Focus();
                 e.Pointer.Capture(this);
-                IsMouseCaptureWithin = true;
+                this.PropagateMouseCapturedWithin(true);
 
                 MouseLocation = e.GetPosition(ItemsHost);
                 State.HandleMouseDown(new MouseButtonEventArgs(e));
-
-                // this wasn't needed in WPF, because of the commented if above
-                e.Handled = true;
             }
         }
 
@@ -1117,10 +1110,10 @@ namespace Nodify
             State.HandleMouseUp(new MouseButtonEventArgs(e));
 
             // Release the mouse capture if all the mouse buttons are released
-            if (/*ReferenceEquals(e.Pointer.Captured, this) &&*/e.GetCurrentPoint(this) is { Properties: { IsLeftButtonPressed: false, IsRightButtonPressed: false, IsMiddleButtonPressed: false} })
+            if (ReferenceEquals(e.Pointer.Captured, this) && e.GetCurrentPoint(this) is { Properties: { IsLeftButtonPressed: false, IsRightButtonPressed: false, IsMiddleButtonPressed: false} })
             {
                 e.Pointer.Capture(null);
-                IsMouseCaptureWithin = false;
+                this.PropagateMouseCapturedWithin(false);
             }
 
             // Disable context menu if selecting
