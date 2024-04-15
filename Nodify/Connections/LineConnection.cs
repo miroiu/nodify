@@ -19,14 +19,10 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
 
-            if (Orientation == Orientation.Vertical)
-            {
-                (spacing.X, spacing.Y) = (spacing.Y, spacing.X);
-            }
-
-            Point p1 = source + spacing;
-            Point p2 = target - spacing;
+            Point p1 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            Point p2 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
 
             context.BeginFigure(source, false, false);
             context.LineTo(p1, true, true);
