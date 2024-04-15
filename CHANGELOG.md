@@ -4,7 +4,7 @@
 
 > - Breaking Changes:
 > - Features:
->	- Added Orientation to BaseConnection to support vertical connections
+>	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical ports (vertical/mixed connection orientation)
 > - Bugfixes:
 
 #### **Version 5.2.0**
