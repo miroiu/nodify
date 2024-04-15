@@ -50,18 +50,18 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
             var arrowOffset = new Vector(ArrowSize.Width * direction, 0d);
 
-            if (Orientation == Orientation.Vertical)
+            if (TargetOrientation == Orientation.Vertical)
             {
-                (spacing.X, spacing.Y) = (spacing.Y, spacing.X);
                 (arrowOffset.X, arrowOffset.Y) = (arrowOffset.Y, arrowOffset.X);
             }
 
             Point endPoint = Spacing > 0 ? target - arrowOffset : target;
 
-            Point p1 = source + spacing;
-            Point p3 = endPoint - spacing;
+            Point p1 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            Point p3 = endPoint - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
             Point p2 = GetControlPoint(p1, p3);
 
             return (p1, p2, p3);

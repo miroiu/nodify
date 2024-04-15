@@ -117,8 +117,9 @@ namespace Nodify
         public static readonly DependencyProperty TargetOffsetProperty = DependencyProperty.Register(nameof(TargetOffset), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ConnectionOffset, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SourceOffsetModeProperty = DependencyProperty.Register(nameof(SourceOffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(ConnectionOffsetMode.Static, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty TargetOffsetModeProperty = DependencyProperty.Register(nameof(TargetOffsetMode), typeof(ConnectionOffsetMode), typeof(BaseConnection), new FrameworkPropertyMetadata(ConnectionOffsetMode.Static, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty SourceOrientationProperty = DependencyProperty.Register(nameof(SourceOrientation), typeof(Orientation), typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty TargetOrientationProperty = DependencyProperty.Register(nameof(TargetOrientation), typeof(Orientation), typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty OrientationProperty = StackPanel.OrientationProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -131,7 +132,7 @@ namespace Nodify
         public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontStretchtProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
 
         /// <summary>
         /// Gets or sets the start point of this connection.
@@ -188,21 +189,30 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets the orientation in which this connection is flowing.
+        /// </summary>
+        public Orientation SourceOrientation
+        {
+            get => (Orientation)GetValue(SourceOrientationProperty);
+            set => SetValue(SourceOrientationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the orientation in which this connection is flowing.
+        /// </summary>
+        public Orientation TargetOrientation
+        {
+            get => (Orientation)GetValue(TargetOrientationProperty);
+            set => SetValue(TargetOrientationProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the direction in which this connection is oriented.
         /// </summary>
         public ConnectionDirection Direction
         {
             get => (ConnectionDirection)GetValue(DirectionProperty);
             set => SetValue(DirectionProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the orientation in which this connection is flowing.
-        /// </summary>
-        public Orientation Orientation
-        {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
         }
 
         /// <summary>
@@ -311,8 +321,8 @@ namespace Nodify
         /// <inheritdoc cref="TextElement.FontStretch" />
         public FontStretch FontStretch
         {
-            get => (FontStretch)GetValue(FontStretchtProperty);
-            set => SetValue(FontStretchtProperty, value);
+            get => (FontStretch)GetValue(FontStretchProperty);
+            set => SetValue(FontStretchProperty, value);
         }
 
         #endregion
@@ -363,14 +373,14 @@ namespace Nodify
                         switch (ArrowEnds)
                         {
                             case ArrowHeadEnds.Start:
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, Orientation);
+                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, SourceOrientation);
                                 break;
                             case ArrowHeadEnds.End:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, Orientation);
+                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, TargetOrientation);
                                 break;
                             case ArrowHeadEnds.Both:
-                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, Orientation);
-                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, Orientation);
+                                DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, TargetOrientation);
+                                DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, SourceOrientation);
                                 break;
                             case ArrowHeadEnds.None:
                             default:
@@ -512,9 +522,13 @@ namespace Nodify
             var sourceOffset = GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection);
             var targetOffset = GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection);
 
-            if (Orientation == Orientation.Vertical)
+            if (SourceOrientation == Orientation.Vertical)
             {
                 (sourceOffset.X, sourceOffset.Y) = (sourceOffset.Y, sourceOffset.X);
+            }
+
+            if (TargetOrientation == Orientation.Vertical)
+            {
                 (targetOffset.X, targetOffset.Y) = (targetOffset.Y, targetOffset.X);
             }
 
