@@ -131,7 +131,7 @@ namespace Nodify
         public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty FontStretchtProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
 
         /// <summary>
         /// Gets or sets the start point of this connection.
@@ -311,8 +311,8 @@ namespace Nodify
         /// <inheritdoc cref="TextElement.FontStretch" />
         public FontStretch FontStretch
         {
-            get => (FontStretch)GetValue(FontStretchtProperty);
-            set => SetValue(FontStretchtProperty, value);
+            get => (FontStretch)GetValue(FontStretchProperty);
+            set => SetValue(FontStretchProperty, value);
         }
 
         #endregion
