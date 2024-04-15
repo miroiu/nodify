@@ -3,8 +3,9 @@
 #### **In development**
 
 > - Breaking Changes:
+>	- Added a parameter for the orientation to DrawArrowGeometry, DrawDefaultArrowhead, DrawRectangleArrowhead and DrawEllipseArrowhead in BaseConnection
 > - Features:
->	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical ports (vertical/mixed connection orientation)
+>	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
 > - Bugfixes:
 
 #### **Version 5.2.0**
