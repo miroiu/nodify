@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Nodify
@@ -23,8 +24,10 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
-            Point startPoint = source + spacing;
-            Point endPoint = target - spacing;
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
+
+            Point startPoint = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            Point endPoint = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
 
             Vector delta = target - source;
             double height = Math.Abs(delta.Y);
@@ -39,9 +42,21 @@ namespace Nodify
 
             var controlPoint = new Vector(offset * direction, 0d);
 
+            // Avoid sharp bend if orientation different (when close to each other)
+            if (TargetOrientation != SourceOrientation)
+            {
+                controlPoint *= 0.5;
+            }
+
+            var controlPointVertical = new Vector(controlPoint.Y, controlPoint.X);
+
             using var _ = context.BeginFigure(source, false, false);
             context.LineTo(startPoint, true, true);
-            context.BezierTo(startPoint + controlPoint, endPoint - controlPoint, endPoint, true, true);
+            context.BezierTo(
+                startPoint + (SourceOrientation == Orientation.Vertical ? controlPointVertical : controlPoint),
+                endPoint - (TargetOrientation == Orientation.Vertical ? controlPointVertical : controlPoint),
+                endPoint,
+                true, true);
             context.LineTo(target, true, true);
 
             return ((target, source), (source, target));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Nodify
@@ -18,9 +19,10 @@ namespace Nodify
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
 
-            Point p1 = source + spacing;
-            Point p2 = target - spacing;
+            Point p1 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            Point p2 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
 
             using var _ = context.BeginFigure(source, false, false);
             context.LineTo(p1, true, true);
@@ -30,7 +32,7 @@ namespace Nodify
             return ((target, source), (source, target));
         }
 
-        protected override void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+        protected override void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, Orientation orientation = Orientation.Horizontal)
         {
             if (Spacing < 1d)
             {
@@ -51,7 +53,7 @@ namespace Nodify
             }
             else
             {
-                base.DrawDefaultArrowhead(context, source, target, arrowDirection);
+                base.DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
             }
         }
     }

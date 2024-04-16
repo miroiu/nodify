@@ -117,6 +117,8 @@ namespace Nodify
         public static readonly StyledProperty<Size> TargetOffsetProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(TargetOffset), BoxValue.ConnectionOffset);
         public static readonly StyledProperty<ConnectionOffsetMode> SourceOffsetModeProperty = AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(SourceOffsetMode), ConnectionOffsetMode.Static);
         public static readonly StyledProperty<ConnectionOffsetMode> TargetOffsetModeProperty = AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(TargetOffsetMode), ConnectionOffsetMode.Static);
+        public static readonly StyledProperty<Orientation> SourceOrientationProperty = AvaloniaProperty.Register<BaseConnection, Orientation>(nameof(SourceOrientation), Orientation.Horizontal);
+        public static readonly StyledProperty<Orientation> TargetOrientationProperty = AvaloniaProperty.Register<BaseConnection, Orientation>(nameof(TargetOrientation), Orientation.Horizontal);
         public static readonly StyledProperty<ConnectionDirection> DirectionProperty = AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
         public static readonly StyledProperty<double> SpacingProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
         public static readonly StyledProperty<Size> ArrowSizeProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
@@ -130,14 +132,14 @@ namespace Nodify
         public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<BaseConnection>();
         public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<BaseConnection>();
         public static readonly StyledProperty<FontStyle> FontStyleProperty = TextElement.FontStyleProperty.AddOwner<BaseConnection>();
-        public static readonly StyledProperty<FontStretch> FontStretchtProperty = TextElement.FontStretchProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<FontStretch> FontStretchProperty = TextElement.FontStretchProperty.AddOwner<BaseConnection>();
 
         static BaseConnection()
         {
             AffectsRender<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
                 SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty);
             AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty);
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, SourceOrientationProperty, TargetOrientationProperty);
         }
         
         /// <summary>
@@ -192,6 +194,24 @@ namespace Nodify
         {
             get => (ConnectionOffsetMode)GetValue(TargetOffsetModeProperty);
             set => SetValue(TargetOffsetModeProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the orientation in which this connection is flowing.
+        /// </summary>
+        public Orientation SourceOrientation
+        {
+            get => (Orientation)GetValue(SourceOrientationProperty);
+            set => SetValue(SourceOrientationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the orientation in which this connection is flowing.
+        /// </summary>
+        public Orientation TargetOrientation
+        {
+            get => (Orientation)GetValue(TargetOrientationProperty);
+            set => SetValue(TargetOrientationProperty, value);
         }
 
         /// <summary>
@@ -309,8 +329,8 @@ namespace Nodify
         /// <inheritdoc cref="TextElement.FontStretch" />
         public FontStretch FontStretch
         {
-            get => (FontStretch)GetValue(FontStretchtProperty);
-            set => SetValue(FontStretchtProperty, value);
+            get => (FontStretch)GetValue(FontStretchProperty);
+            set => SetValue(FontStretchProperty, value);
         }
 
         #endregion
@@ -358,14 +378,14 @@ namespace Nodify
                     switch (ArrowEnds)
                     {
                         case ArrowHeadEnds.Start:
-                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, SourceOrientation);
                             break;
                         case ArrowHeadEnds.End:
-                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, TargetOrientation);
                             break;
                         case ArrowHeadEnds.Both:
-                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
-                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape, TargetOrientation);
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape, SourceOrientation);
                             break;
                         case ArrowHeadEnds.None:
                         default:
@@ -379,61 +399,97 @@ namespace Nodify
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
-        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead)
+        protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead, Orientation orientation = Orientation.Horizontal)
         {
             switch (shape)
             {
                 case ArrowHeadShape.Ellipse:
-                    DrawEllipseArrowhead(context, source, target, arrowDirection);
+                    DrawEllipseArrowhead(context, source, target, arrowDirection, orientation);
                     break;
                 case ArrowHeadShape.Rectangle:
-                    DrawRectangleArrowhead(context, source, target, arrowDirection);
+                    DrawRectangleArrowhead(context, source, target, arrowDirection, orientation);
                     break;
                 case ArrowHeadShape.Arrowhead:
                 default:
-                    DrawDefaultArrowhead(context, source, target, arrowDirection);
+                    DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
                     break;
             }
         }
 
-        protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+        protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, Orientation orientation = Orientation.Horizontal)
         {
-            double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height / 2;
-
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
-            var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
-            var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
 
-            using var _ = context.BeginFigure(target, true, true);
-            context.LineTo(from, true, true);
-            context.LineTo(to, true, true);
+            if (orientation == Orientation.Horizontal)
+            {
+                double headWidth = ArrowSize.Width;
+                double headHeight = ArrowSize.Height / 2;
+
+                var from = new Point(target.X - headWidth * direction, target.Y + headHeight);
+                var to = new Point(target.X - headWidth * direction, target.Y - headHeight);
+
+                using var _ = context.BeginFigure(target, true, true);
+                context.LineTo(from, true, true);
+                context.LineTo(to, true, true);
+            }
+            else
+            {
+                double headWidth = ArrowSize.Width / 2;
+                double headHeight = ArrowSize.Height;
+
+                var from = new Point(target.X - headWidth, target.Y - headHeight * direction);
+                var to = new Point(target.X + headWidth, target.Y - headHeight * direction);
+
+                using var _ = context.BeginFigure(target, true, true);
+                context.LineTo(from, true, true);
+                context.LineTo(to, true, true);
+            }
         }
 
-        protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+        protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, Orientation orientation = Orientation.Horizontal)
         {
-            double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height / 2;
-
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
-            var bottomRight = new Point(target.X, target.Y + headHeight);
-            var bottomLeft = new Point(target.X - headWidth * direction, target.Y + headHeight);
-            var topLeft = new Point(target.X - headWidth * direction, target.Y - headHeight);
-            var topRight = new Point(target.X, target.Y - headHeight);
 
-            using var _ = context.BeginFigure(target, true, true);
-            context.LineTo(bottomRight, true, true);
-            context.LineTo(bottomLeft, true, true);
-            context.LineTo(topLeft, true, true);
-            context.LineTo(topRight, true, true);
+            if (orientation == Orientation.Horizontal)
+            {
+                double headWidth = ArrowSize.Width;
+                double headHeight = ArrowSize.Height / 2;
+                var bottomRight = new Point(target.X, target.Y + headHeight);
+                var bottomLeft = new Point(target.X - headWidth * direction, target.Y + headHeight);
+                var topLeft = new Point(target.X - headWidth * direction, target.Y - headHeight);
+                var topRight = new Point(target.X, target.Y - headHeight);
+
+                using var _ = context.BeginFigure(target, true, true);
+                context.LineTo(bottomRight, true, true);
+                context.LineTo(bottomLeft, true, true);
+                context.LineTo(topLeft, true, true);
+                context.LineTo(topRight, true, true);
+            }
+            else
+            {
+                double headWidth = ArrowSize.Width / 2;
+                double headHeight = ArrowSize.Height;
+                var bottomLeft = new Point(target.X - headWidth, target.Y);
+                var topLeft = new Point(target.X - headWidth, target.Y - headHeight * direction);
+                var topRight = new Point(target.X + headWidth, target.Y - headHeight * direction);
+                var bottomRight = new Point(target.X + headWidth, target.Y);
+
+                using var _ = context.BeginFigure(target, true, true);
+                context.LineTo(bottomLeft, true, true);
+                context.LineTo(topLeft, true, true);
+                context.LineTo(topRight, true, true);
+                context.LineTo(bottomRight, true, true);
+            }
         }
 
-        protected virtual void DrawEllipseArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+        protected virtual void DrawEllipseArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, Orientation orientation = Orientation.Horizontal)
         {
             const double ControlPointRatio = 0.55228474983079356; // (Math.Sqrt(2) - 1) * 4 / 3;
 
             double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
-            var targetLocation = new Point(target.X - ArrowSize.Width / 2 * direction, target.Y);
+            var targetLocation = orientation == Orientation.Horizontal
+                ? new Point(target.X - ArrowSize.Width / 2 * direction, target.Y)
+                : new Point(target.X, target.Y - ArrowSize.Height / 2 * direction);
 
             double headWidth = ArrowSize.Width / 2;
             double headHeight = ArrowSize.Height / 2;
@@ -467,7 +523,20 @@ namespace Nodify
             Vector targetDelta = Source - Target;
             double arrowDirection = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
-            return (GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection), GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection));
+            var sourceOffset = GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection);
+            var targetOffset = GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection);
+
+            if (SourceOrientation == Orientation.Vertical)
+            {
+                sourceOffset = new Vector(sourceOffset.Y, sourceOffset.X);
+            }
+
+            if (TargetOrientation == Orientation.Vertical)
+            {
+                targetOffset = new Vector(targetOffset.Y, targetOffset.X);
+            }
+
+            return (sourceOffset, targetOffset);
 
             static Vector GetOffset(ConnectionOffsetMode mode, Vector delta, Size currentOffset, double arrowDirection) => mode switch
             {
