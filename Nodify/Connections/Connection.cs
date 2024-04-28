@@ -15,12 +15,45 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
-        // ReSharper disable once InconsistentNaming
         private const double _baseOffset = 100d;
-        // ReSharper disable once InconsistentNaming
         private const double _offsetGrowthRate = 25d;
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+        {
+            var (p0, p1, p2, p3) = GetBezierControlPoints(source, target);
+
+            context.BeginFigure(source, false, false);
+            context.LineTo(p0, true, true);
+            context.BezierTo(p1, p2, p3, true, true);
+            context.LineTo(target, true, true);
+
+            return ((target, source), (source, target));
+        }
+
+        protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
+        {
+            var (p0, p1, p2, p3) = GetBezierControlPoints(source, target);
+
+            double spacing = 1d / (DirectionalArrowsCount + 1);
+            for (int i = 1; i <= DirectionalArrowsCount; i++)
+            {
+                double t = spacing * i;
+                var from = InterpolateCubicBezier(p0, p1, p2, p3, t - 0.01);
+                var to = InterpolateCubicBezier(p0, p1, p2, p3, t);
+
+                var direction = from - to;
+                base.DrawDirectionalArrowheadGeometry(context, direction, to);
+            }
+        }
+
+        protected override Point GetTextPosition(FormattedText text, Point source, Point target)
+        {
+            var (p0, p1, p2, p3) = GetBezierControlPoints(source, target);
+            var textCenter = new Vector(text.Width / 2, text.Height / 2);
+            return InterpolateCubicBezier(p0, p1, p2, p3, 0.5) - textCenter;
+        }
+
+        private (Point P0, Point P1, Point P2, Point P3) GetBezierControlPoints(Point source, Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
@@ -41,6 +74,7 @@ namespace Nodify
             offset = Math.Min(_baseOffset + Math.Sqrt(width * _offsetGrowthRate), offset);
 
             var controlPoint = new Vector(offset * direction, 0d);
+            var controlPointVertical = new Vector(controlPoint.Y, controlPoint.X);
 
             // Avoid sharp bend if orientation different (when close to each other)
             if (TargetOrientation != SourceOrientation)
@@ -48,18 +82,22 @@ namespace Nodify
                 controlPoint *= 0.5;
             }
 
-            var controlPointVertical = new Vector(controlPoint.Y, controlPoint.X);
+            Point p0 = startPoint;
+            Point p1 = startPoint + (SourceOrientation == Orientation.Vertical ? controlPointVertical : controlPoint);
+            Point p2 = endPoint - (TargetOrientation == Orientation.Vertical ? controlPointVertical : controlPoint);
+            Point p3 = endPoint;
 
-            context.BeginFigure(source, false, false);
-            context.LineTo(startPoint, true, true);
-            context.BezierTo(
-                startPoint + (SourceOrientation == Orientation.Vertical ? controlPointVertical : controlPoint),
-                endPoint - (TargetOrientation == Orientation.Vertical ? controlPointVertical : controlPoint),
-                endPoint,
-                true, true);
-            context.LineTo(target, true, true);
+            return (p0, p1, p2, p3);
+        }
 
-            return ((target, source), (source, target));
+        protected static Point InterpolateCubicBezier(Point P0, Point P1, Point P2, Point P3, double t)
+        {
+            // B = (1 − t)^3 * P0 + 3 * t * (1 − t)^2 * P1 + 3 * t^2 * (1 − t) * P2 + t^3 * P3
+            return (Point)
+                 ((Vector)P0 * (1 - t) * (1 - t) * (1 - t)
+                + (Vector)P1 * 3 * t * (1 - t) * (1 - t)
+                + (Vector)P2 * 3 * t * t * (1 - t)
+                + (Vector)P3 * t * t * t);
         }
     }
 }

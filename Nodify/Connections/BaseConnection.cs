@@ -120,6 +120,7 @@ namespace Nodify
         public static readonly DependencyProperty SourceOrientationProperty = DependencyProperty.Register(nameof(SourceOrientation), typeof(Orientation), typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty TargetOrientationProperty = DependencyProperty.Register(nameof(TargetOrientation), typeof(Orientation), typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty DirectionalArrowsCountProperty = DependencyProperty.Register(nameof(DirectionalArrowsCount), typeof(uint), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.UInt0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -207,12 +208,21 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the direction in which this connection is oriented.
+        /// Gets or sets the direction in which this connection is flowing.
         /// </summary>
         public ConnectionDirection Direction
         {
             get => (ConnectionDirection)GetValue(DirectionProperty);
             set => SetValue(DirectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets of sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
+        /// </summary>
+        public uint DirectionalArrowsCount
+        {
+            get => (uint)GetValue(DirectionalArrowsCountProperty);
+            set => SetValue(DirectionalArrowsCountProperty, value);
         }
 
         /// <summary>
@@ -386,6 +396,11 @@ namespace Nodify
                             default:
                                 break;
                         }
+
+                        if (DirectionalArrowsCount > 0)
+                        {
+                            DrawDirectionalArrowsGeometry(context, Source + sourceOffset, Target + targetOffset);
+                        }
                     }
                 }
 
@@ -394,6 +409,25 @@ namespace Nodify
         }
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+
+        protected virtual void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target) { }
+
+        protected virtual void DrawDirectionalArrowheadGeometry(StreamGeometryContext context, Vector direction, Point location)
+        {
+            double headWidth = ArrowSize.Width;
+            double headHeight = ArrowSize.Height / 2;
+
+            double angle = Math.Atan2(direction.Y, direction.X);
+            double sinT = Math.Sin(angle);
+            double cosT = Math.Cos(angle);
+
+            var from = new Point(location.X + (headWidth * cosT - headHeight * sinT), location.Y + (headWidth * sinT + headHeight * cosT));
+            var to = new Point(location.X + (headWidth * cosT + headHeight * sinT), location.Y - (headHeight * cosT - headWidth * sinT));
+
+            context.BeginFigure(location, true, true);
+            context.LineTo(from, true, true);
+            context.LineTo(to, true, true);
+        }
 
         protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead, Orientation orientation = Orientation.Horizontal)
         {
@@ -595,13 +629,16 @@ namespace Nodify
             }
         }
 
-        protected virtual Point GetTextPosition(FormattedText text)
+        protected virtual Point GetTextPosition(FormattedText text, Point source, Point target)
         {
-            (Vector sourceOffset, Vector targetOffset) = GetOffset();
-            Point source = Source + sourceOffset;
-            Point target = Target + targetOffset;
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
 
-            return new Point((source.X + target.X - text.Width) / 2, (source.Y + target.Y - text.Height) / 2);
+            var p0 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            var p1 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
+
+            return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -672,7 +709,8 @@ namespace Nodify
                 var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
                 var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke, dpi);
 
-                drawingContext.DrawText(text, GetTextPosition(text));
+                (Vector sourceOffset, Vector targetOffset) = GetOffset();
+                drawingContext.DrawText(text, GetTextPosition(text, Source + sourceOffset, Target + targetOffset));
             }
         }
     }
