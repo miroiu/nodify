@@ -10,7 +10,7 @@
 >	- Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
 >	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to allow customizing the directional arrows
 > - Bugfixes:
->	- Fixed BaseConnection.Text not always displaying in the center of connection
+>	- Fixed BaseConnection.Text not always displaying in the center of the connection
 
 #### **Version 5.2.0**
 
