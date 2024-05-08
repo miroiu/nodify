@@ -52,7 +52,8 @@ Avalonia version compatibility chart:
 
 | Nodify version | Avalonia version |
 | -------------- | ---------------- |
-| 5.2.0          | 11.1.0-beta      |
+| 5.3.0          | 11.1.0-beta-2    |
+| 5.2.0          | 11.1.0-beta-1    |
 
 ## ⭐️ Features
  

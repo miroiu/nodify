@@ -95,9 +95,8 @@
                                                                     Value="True">
                                                 <PropertySetter Property="Stroke"
                                                                 Value="{DynamicResource ActiveStateBrush}" />
-                                                <!-- Avalonia bug? it crashes (at least on mac) -->
-                                                <!-- <PropertySetter Property="StrokeThickness" -->
-                                                <!--                 Value="6" /> -->
+                                                <PropertySetter Property="StrokeThickness"
+                                                                Value="6" />
                                             </DataTrigger>
                                         </BehaviorCollection>
                                     </BehaviorCollectionTemplate>
