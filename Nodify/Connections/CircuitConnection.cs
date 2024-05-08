@@ -69,7 +69,7 @@ namespace Nodify
             Vector deltaSource = p1 - p0;
             Vector deltaTarget = p2 - p1;
 
-            double lengthRatio = deltaTarget.LengthSquared / (deltaSource.LengthSquared + deltaTarget.LengthSquared);
+            double lengthRatio = deltaTarget.SquaredLength / (deltaSource.SquaredLength + deltaTarget.SquaredLength);
 
             int segment1ArrowCount = (int)Math.Round(DirectionalArrowsCount * (1 - lengthRatio));
             DrawDirectionalArrowsToSegment(context, p0, p1, segment1ArrowCount);

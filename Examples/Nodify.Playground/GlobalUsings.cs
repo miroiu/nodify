@@ -7,3 +7,4 @@ global using Avalonia.Interactivity;
 global using Avalonia.Controls.ApplicationLifetimes;
 global using Avalonia.Media;
 global using Avalonia.Threading;
+global using Avalonia.Layout;
