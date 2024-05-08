@@ -13,25 +13,19 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/BAndysc/nodify-avalonia</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/BAndysc/nodify-avalonia</RepositoryUrl>
-    <PackageTags>avalonia mvvm node-editor controls</PackageTags>
-    <Version>5.2.0.1</Version>
+    <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
+    <PackageTags>wpf mvvm node-editor controls</PackageTags>
+    <Version>5.3.0</Version>
     <PackageReleaseNotes>
-      > 5.2.0.1:
-      > - Bugfixes:
-      >   - Fixed Zooming into nested editors should not zoom the parent editors
-      >   - Fixed Cancelling a pending connection via a hot key will no longer throw an exception
-      >   - Fixed Exceptions in UnscaleTransformConverter and UnscaleDoubleConverter
-      >   - Fixed Cannot use marquee selection and pan at the same time
-      >   - Fixed Selection clear on items collection reset
-      >   - Fixed Cannot use marquee selection inside comment nodes
-      >
-      > 5.2.0:
+      > - Breaking Changes:
+      >	  - Added a parameter for the orientation to DrawArrowGeometry, DrawDefaultArrowhead, DrawRectangleArrowhead and DrawEllipseArrowhead in BaseConnection
+      >	  - Added source and target parameters to GetTextPosition in BaseConnection
       > - Features:
-      >	  - Added Text to BaseConnection, allowing displaying of text on connections
-      >  	- Added Foreground, FontSize, FontWeight, FontStyle, FontStretch and FontFamily to BaseConnection, allowing styling the displaying text
+      >	  - Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
+      >	  - Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
+      >	  - Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to BaseConnection to allow customizing the directional arrows
       > - Bugfixes:
-      >   - Fixed MouseCapture not being released when EnableStickyConnections is enabled and the PendingConnection is canceled by a key gesture
+      >	  - Fixed BaseConnection.Text not always displaying in the center of the connection
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

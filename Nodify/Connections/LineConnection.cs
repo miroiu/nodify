@@ -17,16 +17,11 @@ namespace Nodify
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
-            var spacing = new Vector(Spacing * direction, 0d);
-            var spacingVertical = new Vector(spacing.Y, spacing.X);
-
-            Point p1 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
-            Point p2 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            var (p0, p1) = GetLinePoints(source, target);
 
             using var _ = context.BeginFigure(source, false, false);
+            context.LineTo(p0, true, true);
             context.LineTo(p1, true, true);
-            context.LineTo(p2, true, true);
             context.LineTo(target, true, true);
 
             return ((target, source), (source, target));
@@ -55,6 +50,38 @@ namespace Nodify
             {
                 base.DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
             }
+        }
+
+        protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
+        {
+            var (p0, p1) = GetLinePoints(source, target);
+            var direction = p0 - p1;
+
+            double spacing = 1d / (DirectionalArrowsCount + 1);
+            for (int i = 1; i <= DirectionalArrowsCount; i++)
+            {
+                double t = spacing * i;
+                var to = InterpolateLineSegment(p0, p1, t);
+
+                base.DrawDirectionalArrowheadGeometry(context, direction, to);
+            }
+        }
+
+        private (Point P0, Point P1) GetLinePoints(Point source, Point target)
+        {
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
+
+            var p0 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            var p1 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
+
+            return (p0, p1);
+        }
+
+        protected static Point InterpolateLineSegment(Point p0, Point p1, double t)
+        {
+            return (Point)((1 - t) * (Vector)p0 + t * (Vector)p1);
         }
     }
 }

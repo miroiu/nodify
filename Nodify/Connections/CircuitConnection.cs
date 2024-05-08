@@ -31,23 +31,67 @@ namespace Nodify
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p1, p2, p3) = GetLinePoints(source, target);
+            var (p0, p1, p2) = GetLinePoints(source, target);
 
             using var _ = context.BeginFigure(source, false, false);
+            context.LineTo(p0, true, true);
             context.LineTo(p1, true, true);
             context.LineTo(p2, true, true);
-            context.LineTo(p3, true, true);
             context.LineTo(target, true, true);
 
             if (Spacing < 1d)
             {
-                return ((p2, source), (p2, target));
+                return ((p1, source), (p1, target));
             }
 
-            return ((p1, source), (p2, target));
+            return ((p0, source), (p1, target));
         }
 
-        private (Point P1, Point P2, Point P3) GetLinePoints(in Point source, in Point target)
+        protected override Point GetTextPosition(FormattedText text, Point source, Point target)
+        {
+            var (p0, p1, p2) = GetLinePoints(source, target);
+
+            Vector deltaSource = p1 - p0;
+            Vector deltaTarget = p2 - p1;
+
+            if (deltaSource.SquaredLength > deltaTarget.SquaredLength)
+            {
+                return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
+            }
+
+            return new Point((p2.X + p1.X - text.Width) / 2, (p2.Y + p1.Y - text.Height) / 2);
+        }
+
+        protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
+        {
+            var (p0, p1, p2) = GetLinePoints(source, target);
+
+            Vector deltaSource = p1 - p0;
+            Vector deltaTarget = p2 - p1;
+
+            double lengthRatio = deltaTarget.LengthSquared / (deltaSource.LengthSquared + deltaTarget.LengthSquared);
+
+            int segment1ArrowCount = (int)Math.Round(DirectionalArrowsCount * (1 - lengthRatio));
+            DrawDirectionalArrowsToSegment(context, p0, p1, segment1ArrowCount);
+
+            int segment2ArrowCount = (int)DirectionalArrowsCount - segment1ArrowCount;
+            DrawDirectionalArrowsToSegment(context, p1, p2, segment2ArrowCount);
+        }
+
+        private void DrawDirectionalArrowsToSegment(StreamGeometryContext context, Point p0, Point p1, int arrowsCount)
+        {
+            double spacing = 1d / (arrowsCount + 1);
+            for (int i = 1; i <= arrowsCount; i++)
+            {
+                var direction = p0 - p1;
+                double t = spacing * i;
+                var to = InterpolateLineSegment(p0, p1, t);
+
+                base.DrawDirectionalArrowheadGeometry(context, direction, to);
+            }
+        }
+
+        private (Point P0, Point P1, Point P2) GetLinePoints(in Point source, in Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
@@ -99,22 +143,6 @@ namespace Nodify
             }
 
             return new Point(target.X, source.Y - slopeHeight);
-        }
-
-        protected override Point GetTextPosition(FormattedText text)
-        {
-            (Vector sourceOffset, Vector targetOffset) = GetOffset();
-            var (p1, p2, p3) = GetLinePoints(Source + sourceOffset, Target + targetOffset);
-
-            Vector deltaSource = p1 - p2;
-            Vector deltaTarget = p3 - p2;
-
-            if (deltaSource.SquaredLength > deltaTarget.SquaredLength)
-            {
-                return new Point((p1.X + p2.X - text.Width) / 2, (p1.Y + p2.Y - text.Height) / 2);
-            }
-
-            return new Point((p3.X + p2.X - text.Width) / 2, (p3.Y + p2.Y - text.Height) / 2);
         }
     }
 }

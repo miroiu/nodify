@@ -108,6 +108,11 @@ namespace Nodify.Playground
                     val => Instance.ConnectionArrowSize = val,
                     "Connection arrowhead size: ",
                     "The size of the arrowhead."),
+                new ProxySettingViewModel<uint>(
+                    () => Instance.DirectionalArrowsCount,
+                    val => Instance.DirectionalArrowsCount = val,
+                    "Directional arrows count: ",
+                    "The number of arrowheads to draw on the line flowing in the direction of the connection."),
                 new ProxySettingViewModel<ArrowHeadEnds>(
                     () => Instance.ArrowHeadEnds,
                     val => Instance.ArrowHeadEnds = val,
@@ -400,6 +405,13 @@ namespace Nodify.Playground
         {
             get => _connectionTargetOffset;
             set => SetProperty(ref _connectionTargetOffset, value);
+        }
+
+        private uint _directionalArrowsCount;
+        public uint DirectionalArrowsCount
+        {
+            get => _directionalArrowsCount;
+            set => SetProperty(ref _directionalArrowsCount, value);
         }
 
         private PointEditor _connectionArrowSize = new PointEditor { X = 8, Y = 8 };

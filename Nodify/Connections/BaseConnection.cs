@@ -120,6 +120,7 @@ namespace Nodify
         public static readonly StyledProperty<Orientation> SourceOrientationProperty = AvaloniaProperty.Register<BaseConnection, Orientation>(nameof(SourceOrientation), Orientation.Horizontal);
         public static readonly StyledProperty<Orientation> TargetOrientationProperty = AvaloniaProperty.Register<BaseConnection, Orientation>(nameof(TargetOrientation), Orientation.Horizontal);
         public static readonly StyledProperty<ConnectionDirection> DirectionProperty = AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
+        public static readonly StyledProperty<uint> DirectionalArrowsCountProperty = AvaloniaProperty.Register<BaseConnection, uint>(nameof(DirectionalArrowsCount), BoxValue.UInt0);
         public static readonly StyledProperty<double> SpacingProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
         public static readonly StyledProperty<Size> ArrowSizeProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
         public static readonly StyledProperty<ArrowHeadEnds> ArrowEndsProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadEnds>(nameof(ArrowEnds), ArrowHeadEnds.End);
@@ -137,7 +138,7 @@ namespace Nodify
         static BaseConnection()
         {
             AffectsRender<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty);
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty, DirectionalArrowsCountProperty);
             AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
                 SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, SourceOrientationProperty, TargetOrientationProperty);
         }
@@ -215,12 +216,21 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the direction in which this connection is oriented.
+        /// Gets or sets the direction in which this connection is flowing.
         /// </summary>
         public ConnectionDirection Direction
         {
             get => (ConnectionDirection)GetValue(DirectionProperty);
             set => SetValue(DirectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets of sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
+        /// </summary>
+        public uint DirectionalArrowsCount
+        {
+            get => (uint)GetValue(DirectionalArrowsCountProperty);
+            set => SetValue(DirectionalArrowsCountProperty, value);
         }
 
         /// <summary>
@@ -391,6 +401,11 @@ namespace Nodify
                         default:
                             break;
                     }
+
+                    if (DirectionalArrowsCount > 0)
+                    {
+                        DrawDirectionalArrowsGeometry(context, Source + sourceOffset, Target + targetOffset);
+                    }
                 }
             }
 
@@ -398,6 +413,25 @@ namespace Nodify
         }
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+
+        protected virtual void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target) { }
+
+        protected virtual void DrawDirectionalArrowheadGeometry(StreamGeometryContext context, Vector direction, Point location)
+        {
+            double headWidth = ArrowSize.Width;
+            double headHeight = ArrowSize.Height / 2;
+
+            double angle = Math.Atan2(direction.Y, direction.X);
+            double sinT = Math.Sin(angle);
+            double cosT = Math.Cos(angle);
+
+            var from = new Point(location.X + (headWidth * cosT - headHeight * sinT), location.Y + (headWidth * sinT + headHeight * cosT));
+            var to = new Point(location.X + (headWidth * cosT + headHeight * sinT), location.Y - (headHeight * cosT - headWidth * sinT));
+
+            context.BeginFigure(location, true, true);
+            context.LineTo(from, true, true);
+            context.LineTo(to, true, true);
+        }
 
         protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead, Orientation orientation = Orientation.Horizontal)
         {
@@ -599,13 +633,16 @@ namespace Nodify
             }
         }
 
-        protected virtual Point GetTextPosition(FormattedText text)
+        protected virtual Point GetTextPosition(FormattedText text, Point source, Point target)
         {
-            (Vector sourceOffset, Vector targetOffset) = GetOffset();
-            Point source = Source + sourceOffset;
-            Point target = Target + targetOffset;
+            double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
+            var spacing = new Vector(Spacing * direction, 0d);
+            var spacingVertical = new Vector(spacing.Y, spacing.X);
 
-            return new Point((source.X + target.X - text.Width) / 2, (source.Y + target.Y - text.Height) / 2);
+            var p0 = source + (SourceOrientation == Orientation.Vertical ? spacingVertical : spacing);
+            var p1 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
+
+            return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
         }
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -676,8 +713,9 @@ namespace Nodify
             {
                 var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
                 var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke);
-        
-                drawingContext.DrawText(text, GetTextPosition(text));
+
+                (Vector sourceOffset, Vector targetOffset) = GetOffset();
+                drawingContext.DrawText(text, GetTextPosition(text, Source + sourceOffset, Target + targetOffset));
             }
         }
     }

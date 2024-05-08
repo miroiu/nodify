@@ -18,6 +18,7 @@ namespace Nodify
         public static readonly int Int0 = 0;
         public static readonly int Int1 = 1;
         public static readonly uint UInt1 = 1u;
+        public static readonly uint UInt0 = 0u;
 
         public static readonly Thickness Thickness2 = new Thickness(2);
         public static readonly Size ArrowSize = new Size(8, 8);

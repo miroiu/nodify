@@ -4,9 +4,13 @@
 
 > - Breaking Changes:
 >	- Added a parameter for the orientation to DrawArrowGeometry, DrawDefaultArrowhead, DrawRectangleArrowhead and DrawEllipseArrowhead in BaseConnection
+>	- Added source and target parameters to GetTextPosition in BaseConnection
 > - Features:
 >	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
+>	- Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
+>	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to BaseConnection to allow customizing the directional arrows
 > - Bugfixes:
+>	- Fixed BaseConnection.Text not always displaying in the center of the connection
 
 #### **Version 5.2.0**
 
