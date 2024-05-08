@@ -95,6 +95,9 @@
             <Setter Property="ArrowShape" Value="{Binding ArrowHeadShape, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Spacing" Value="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Direction" Value="{Binding Output.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
+            <Setter Property="SourceOrientation" Value="{Binding Output.Node.Orientation}" />
+            <Setter Property="TargetOrientation" Value="{Binding Input.Node.Orientation}" />
+            <Setter Property="DirectionalArrowsCount" Value="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
         </Style>
 
@@ -239,6 +242,9 @@
                                     <nodify:Connection Source="{TemplateBinding SourceAnchor}"
                                                        Target="{TemplateBinding TargetAnchor}"
                                                        Direction="{TemplateBinding Direction}"
+                                                       SourceOrientation="{Binding Source.Node.Orientation}"
+                                                       TargetOrientation="{Binding TargetOrientation}"
+                                                       DirectionalArrowsCount="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}"
                                                        StrokeThickness="{TemplateBinding StrokeThickness}"
                                                        SourceOffset="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
                                                        TargetOffset="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}"
@@ -378,6 +384,58 @@
                     <nodify:Node Input="{Binding Input}"
                                  Output="{Binding Output}"
                                  Header="{Binding Title}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:VerticalNodeViewModel}">
+                    <nodify:Node Header="{Binding Input}"
+                                 Footer="{Binding Output}"
+                                 Content="{Binding Title}">
+                        <nodify:Node.ContentTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Margin="5" />
+                            </DataTemplate>
+                        </nodify:Node.ContentTemplate>
+                        <nodify:Node.HeaderTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                            <StackPanel Orientation="Vertical" Margin="5 0 5 0">
+                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
+                                                <TextBlock Text="{Binding Title}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </nodify:Node.HeaderTemplate>
+                        <nodify:Node.FooterTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="5 0 5 0">
+                                                <TextBlock Text="{Binding Title}" />
+                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Center" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </nodify:Node.FooterTemplate>
+                    </nodify:Node>
                 </DataTemplate>
             </nodify:NodifyEditor.Resources>
 
