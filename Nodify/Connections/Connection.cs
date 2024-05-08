@@ -39,8 +39,8 @@ namespace Nodify
             {
                 double t = spacing * i;
                 var to = InterpolateCubicBezier(p0, p1, p2, p3, t);
-
                 var direction = GetBezierTangent(p0, p1, p2, p3, t);
+
                 base.DrawDirectionalArrowheadGeometry(context, direction, to);
             }
         }

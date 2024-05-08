@@ -8,7 +8,7 @@
 > - Features:
 >	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
 >	- Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
->	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to allow customizing the directional arrows
+>	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to BaseConnection to allow customizing the directional arrows
 > - Bugfixes:
 >	- Fixed BaseConnection.Text not always displaying in the center of the connection
 
