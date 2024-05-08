@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace Nodify
 {
     /// <summary>
-    /// Represents a quadratic curve.
+    /// Represents a cubic bezier curve.
     /// </summary>
     public class Connection : BaseConnection
     {
@@ -38,10 +38,9 @@ namespace Nodify
             for (int i = 1; i <= DirectionalArrowsCount; i++)
             {
                 double t = spacing * i;
-                var from = InterpolateCubicBezier(p0, p1, p2, p3, t - 0.01);
                 var to = InterpolateCubicBezier(p0, p1, p2, p3, t);
 
-                var direction = from - to;
+                var direction = GetBezierTangent(p0, p1, p2, p3, t);
                 base.DrawDirectionalArrowheadGeometry(context, direction, to);
             }
         }
@@ -88,6 +87,15 @@ namespace Nodify
             Point p3 = endPoint;
 
             return (p0, p1, p2, p3);
+        }
+
+        private static Vector GetBezierTangent(Point P0, Point P1, Point P2, Point P3, double t)
+        {
+            // Calculate the derivatives of the Bezier curve equation and negate the result
+            return -(-3 * (1 - t) * (1 - t) * (Vector)P0 +
+                    (3 * (1 - t) * (1 - t) * (Vector)P1 - 6 * t * (1 - t) * (Vector)P1) +
+                    (6 * t * (1 - t) * (Vector)P2 - 3 * t * t * (Vector)P2) +
+                    3 * t * t * (Vector)P3);
         }
 
         protected static Point InterpolateCubicBezier(Point P0, Point P1, Point P2, Point P3, double t)
