@@ -63,7 +63,7 @@ namespace Nodify.Playground
             Editor.Selection.Apply(new SelectionGestures(MouseAction.RightClick));
             // comment to drag with right click - we copy the default gestures of the item container which uses left click for selection
             ItemContainer.Drag.Value = new AnyGesture(ItemContainer.Selection.Replace.Value, ItemContainer.Selection.Remove.Value, ItemContainer.Selection.Append.Value, ItemContainer.Selection.Invert.Value);
-            ItemContainer.Selection.Apply(new SelectionGestures(MouseAction.RightClick));
+            ItemContainer.Selection.Apply(Editor.Selection);
         }
     }
 }

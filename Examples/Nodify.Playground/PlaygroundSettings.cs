@@ -64,14 +64,16 @@ namespace Nodify.Playground
         public EditorInputMappings EditorInputMappings
         {
             get => _editorInputMappings;
-            set => SetProperty(ref _editorInputMappings, value);
+            set => SetProperty(ref _editorInputMappings, value)
+                .Then(() => EditorGestures.Mappings.Apply(value));
         }
 
         private EditorInputMode _editorInputMode;
         public EditorInputMode EditorInputMode
         {
             get => _editorInputMode;
-            set => SetProperty(ref _editorInputMode, value);
+            set => SetProperty(ref _editorInputMode, value)
+                .Then(() => EditorGestures.Mappings.Apply(value));
         }
 
         private bool _shouldConnectNodes = true;
