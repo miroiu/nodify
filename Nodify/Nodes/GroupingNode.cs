@@ -218,25 +218,26 @@ namespace Nodify
 
         private void OnHeaderMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Container != null && Editor != null && EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
+            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+            if (Container != null && Editor != null && gestures.Drag.Matches(e.Source, e))
             {
                 // Switch the default movement mode if necessary
                 var prevMovementMode = MovementMode;
-                if (Keyboard.Modifiers == EditorGestures.GroupingNode.SwitchMovementMode)
+                if (Keyboard.Modifiers == EditorGestures.Mappings.GroupingNode.SwitchMovementMode)
                 {
                     MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
 
                 // Select the content and move with it
-                if (EditorGestures.Selection.Append.Matches(e.Source, e))
+                if (gestures.Selection.Append.Matches(e.Source, e))
                 {
                     Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
                 }
-                else if (EditorGestures.Selection.Remove.Matches(e.Source, e))
+                else if (gestures.Selection.Remove.Matches(e.Source, e))
                 {
                     Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
                 }
-                else if (EditorGestures.Selection.Invert.Matches(e.Source, e))
+                else if (gestures.Selection.Invert.Matches(e.Source, e))
                 {
                     if (Container.IsSelected)
                     {
@@ -248,7 +249,7 @@ namespace Nodify
                         Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
                     }
                 }
-                else if (EditorGestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
+                else if (gestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.Mappings.ItemContainer.Drag.Matches(e.Source, e))
                 {
                     Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
                 }

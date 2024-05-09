@@ -1055,7 +1055,7 @@ namespace Nodify
         {
             State.HandleMouseWheel(e);
 
-            if (!e.Handled && EditorGestures.Zoom == Keyboard.Modifiers)
+            if (!e.Handled && EditorGestures.Mappings.Editor.Zoom == Keyboard.Modifiers)
             {
                 double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                 ZoomAtPosition(zoom, e.GetPosition(ItemsHost));

@@ -19,12 +19,27 @@ namespace Nodify.Playground
 
             BindingOperations.EnableCollectionSynchronization(GraphViewModel.Nodes, GraphViewModel.Nodes);
             BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, GraphViewModel.Connections);
+
+            Settings.PropertyChanged += OnSettingsChanged;
+        }
+
+        private void OnSettingsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlaygroundSettings.EditorInputMappings))
+            {
+                EditorGestures.Mappings.Apply(Settings.EditorInputMappings);
+            }
+            else if (e.PropertyName == nameof(PlaygroundSettings.EditorInputMode))
+            {
+                EditorGestures.Mappings.Apply(Settings.EditorInputMode);
+            }
         }
 
         public ICommand GenerateRandomNodesCommand { get; }
         public ICommand PerformanceTestCommand { get; }
         public ICommand ToggleConnectionsCommand { get; }
         public ICommand ResetCommand { get; }
+
         public PlaygroundSettings Settings => PlaygroundSettings.Instance;
 
         private void ResetGraph()

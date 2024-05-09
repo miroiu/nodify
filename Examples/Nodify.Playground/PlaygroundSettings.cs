@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Nodify.Playground
@@ -12,6 +11,14 @@ namespace Nodify.Playground
         {
             Settings = new ObservableCollection<ISettingViewModel>()
             {
+                new ProxySettingViewModel<EditorInputMappings>(
+                    () => Instance.EditorInputMappings,
+                    val => Instance.EditorInputMappings = val,
+                    "Editor input mappings"),
+                new ProxySettingViewModel<EditorInputMode>(
+                    () => Instance.EditorInputMode,
+                    val => Instance.EditorInputMode = val,
+                    "Editor input mode"),
                 new ProxySettingViewModel<bool>(
                     () => Instance.ShowGridLines,
                     val => Instance.ShowGridLines = val,
@@ -52,6 +59,20 @@ namespace Nodify.Playground
         }
 
         public static PlaygroundSettings Instance { get; } = new PlaygroundSettings();
+
+        private EditorInputMappings _editorInputMappings;
+        public EditorInputMappings EditorInputMappings
+        {
+            get => _editorInputMappings;
+            set => SetProperty(ref _editorInputMappings, value);
+        }
+
+        private EditorInputMode _editorInputMode;
+        public EditorInputMode EditorInputMode
+        {
+            get => _editorInputMode;
+            set => SetProperty(ref _editorInputMode, value);
+        }
 
         private bool _shouldConnectNodes = true;
         public bool ShouldConnectNodes

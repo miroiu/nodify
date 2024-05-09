@@ -5,12 +5,17 @@
 > - Breaking Changes:
 >	- Added a parameter for the orientation to DrawArrowGeometry, DrawDefaultArrowhead, DrawRectangleArrowhead and DrawEllipseArrowhead in BaseConnection
 >	- Added source and target parameters to GetTextPosition in BaseConnection
+>	- EditorGestures is now a singleton instead of a static class (can be inherited to create custom mappings)
+>	- Selection gestures for ItemContainer and GroupingNode are now separated from the NodifyEditor selection gestures
 > - Features:
 >	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
 >	- Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
 >	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to BaseConnection to allow customizing the directional arrows
+>	- Improved EditorGestures to allow changing input gestures at runtime
+>	- Added new gesture types: AnyGesture, AllGestures and InputGestureRef
 > - Bugfixes:
 >	- Fixed BaseConnection.Text not always displaying in the center of the connection
+>	- Fixed a bug where the item container would incorrectly transition to the dragging state on mouse over
 
 #### **Version 5.2.0**
 

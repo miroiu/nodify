@@ -47,7 +47,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (!Editor.DisablePanning && EditorGestures.Pan.Matches(e.Source, e))
+            if (!Editor.DisablePanning && EditorGestures.Mappings.Editor.Pan.Matches(e.Source, e))
             {
                 PushState(new EditorPanningState(Editor));
             }
@@ -56,8 +56,10 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            bool canCancel = EditorGestures.Selection.Cancel.Matches(e.Source, e);
-            bool canComplete = EditorGestures.Select.Matches(e.Source, e);
+            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
+
+            bool canCancel = gestures.Cancel.Matches(e.Source, e);
+            bool canComplete = gestures.Select.Matches(e.Source, e);
             if (canCancel || canComplete)
             {
                 _canceled = !canComplete && canCancel;
@@ -71,7 +73,7 @@ namespace Nodify
 
         public override void HandleKeyUp(KeyEventArgs e)
         {
-            if (EditorGestures.Selection.Cancel.Matches(e.Source, e))
+            if (EditorGestures.Mappings.Editor.Selection.Cancel.Matches(e.Source, e))
             {
                 _canceled = true;
                 PopState();

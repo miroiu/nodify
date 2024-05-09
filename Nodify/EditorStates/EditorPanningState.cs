@@ -40,7 +40,8 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            if (EditorGestures.Pan.Matches(e.Source, e))
+            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+            if (gestures.Pan.Matches(e.Source, e))
             {
                 // Handle right click if panning and moved the mouse more than threshold so context menu doesn't open
                 if (e.ChangedButton == MouseButton.Right)
@@ -54,7 +55,7 @@ namespace Nodify
 
                 PopState();
             }
-            else if (EditorGestures.Select.Matches(e.Source, e) && Editor.IsSelecting)
+            else if (gestures.Selection.Select.Matches(e.Source, e) && Editor.IsSelecting)
             {
                 PopState();
                 // Cancel selection and continue panning
