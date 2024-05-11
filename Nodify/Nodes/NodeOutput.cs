@@ -13,7 +13,8 @@ namespace Nodify
         public static readonly DependencyProperty HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner(typeof(NodeOutput));
         public static readonly DependencyProperty HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner(typeof(NodeOutput));
         public static readonly DependencyProperty ConnectorTemplateProperty = NodeInput.ConnectorTemplateProperty.AddOwner(typeof(NodeOutput));
-        
+        public static readonly DependencyProperty OrientationProperty = NodeInput.OrientationProperty.AddOwner(typeof(NodeOutput), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsMeasure));
+
         /// <summary>
         /// Gets of sets the data used for the control's header.
         /// </summary>
@@ -39,6 +40,13 @@ namespace Nodify
         {
             get => (ControlTemplate)GetValue(ConnectorTemplateProperty);
             set => SetValue(ConnectorTemplateProperty, value);
+        }
+
+        /// <inheritdoc cref="StackPanel.Orientation" />
+        public Orientation Orientation
+        {
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
         }
 
         #endregion
