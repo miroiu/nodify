@@ -16,7 +16,7 @@
 >	- Added new gesture types: AnyGesture, AllGestures, and InputGestureRef
 >	- Added Orientation dependency property to NodeInput and NodeOutput
 >	- Added DirectionalArrowsOffset dependency property to BaseConnection
->   - Added StartAnimation and StopAnimation methods to BaseConnection
+>	- Added StartAnimation and StopAnimation methods to BaseConnection
 > - Bugfixes:
 >	- Fixed BaseConnection.Text not always displaying in the center of the connection
 >	- Fixed a bug where the item container would incorrectly transition to the dragging state on mouse over

@@ -651,6 +651,8 @@ namespace Nodify
             return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
         }
 
+        /// <summary>Starts animating the directional arrows.</summary>
+        /// <param name="duration">The duration for moving an arrowhead from <see cref="Source"/> to <see cref="Target"/>.</param>
         public void StartAnimation(double duration = 1.5d)
         {
             if (DirectionalArrowsCount > 0)
@@ -659,6 +661,7 @@ namespace Nodify
             }
         }
 
+        /// <summary>Stops the animation started by <see cref="StartAnimation(double)"/></summary>
         public void StopAnimation()
         {
             this.CancelAnimation(DirectionalArrowsOffsetProperty);

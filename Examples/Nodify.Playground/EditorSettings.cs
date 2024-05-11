@@ -116,7 +116,7 @@ namespace Nodify.Playground
                     () => Instance.DirectionalArrowsOffset,
                     val => Instance.DirectionalArrowsOffset = val,
                     "Directional arrows offset: ",
-                    "The offset of the directional arrowheads flowing in the direction of the connection (value is between 0 and 1)."),
+                    "Used to animate the directional arrowheads flowing in the direction of the connection (value is between 0 and 1)."),
                 new ProxySettingViewModel<ArrowHeadEnds>(
                     () => Instance.ArrowHeadEnds,
                     val => Instance.ArrowHeadEnds = val,
@@ -411,7 +411,7 @@ namespace Nodify.Playground
             set => SetProperty(ref _connectionTargetOffset, value);
         }
 
-        private uint _directionalArrowsCount;
+        private uint _directionalArrowsCount = 3;
         public uint DirectionalArrowsCount
         {
             get => _directionalArrowsCount;
