@@ -9,17 +9,17 @@ namespace Nodify.Playground
         SelectOnly
     }
 
-    public enum EditorInputMappings
+    public enum EditorGesturesMappings
     {
         Default,
-        Blender3D
+        Custom
     }
 
     public static class EditorInputModeExtensions
     {
         public static void Apply(this EditorGestures mappings, EditorInputMode inputMode)
         {
-            mappings.Apply(PlaygroundSettings.Instance.EditorInputMappings.ToInputMappings());
+            mappings.Apply(PlaygroundSettings.Instance.EditorGesturesMappings.ToGesturesMappings());
 
             switch (inputMode)
             {
@@ -39,25 +39,25 @@ namespace Nodify.Playground
             }
         }
 
-        public static void Apply(this EditorGestures value, EditorInputMappings mappings)
+        public static void Apply(this EditorGestures value, EditorGesturesMappings mappings)
         {
-            var newMappings = mappings.ToInputMappings();
+            var newMappings = mappings.ToGesturesMappings();
             value.Apply(newMappings);
         }
 
-        public static EditorGestures ToInputMappings(this EditorInputMappings mappings)
+        public static EditorGestures ToGesturesMappings(this EditorGesturesMappings mappings)
         {
             return mappings switch
             {
-                EditorInputMappings.Blender3D => new Blender3DInputMappings(),
+                EditorGesturesMappings.Custom => new CustomGesturesMappings(),
                 _ => new EditorGestures()
             };
         }
     }
 
-    public class Blender3DInputMappings : EditorGestures
+    public class CustomGesturesMappings : EditorGestures
     {
-        public Blender3DInputMappings()
+        public CustomGesturesMappings()
         {
             Editor.Pan.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new MouseGesture(MouseAction.MiddleClick));
             Editor.Selection.Apply(new SelectionGestures(MouseAction.RightClick));

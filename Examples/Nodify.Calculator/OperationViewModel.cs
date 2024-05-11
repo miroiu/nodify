@@ -20,7 +20,7 @@ namespace Nodify.Calculator
             });
         }
 
-        private void OnInputValueChanged(object sender, PropertyChangedEventArgs e)
+        private void OnInputValueChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ConnectorViewModel.Value))
             {

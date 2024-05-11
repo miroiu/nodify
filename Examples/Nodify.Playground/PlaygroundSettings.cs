@@ -11,9 +11,9 @@ namespace Nodify.Playground
         {
             Settings = new ObservableCollection<ISettingViewModel>()
             {
-                new ProxySettingViewModel<EditorInputMappings>(
-                    () => Instance.EditorInputMappings,
-                    val => Instance.EditorInputMappings = val,
+                new ProxySettingViewModel<EditorGesturesMappings>(
+                    () => Instance.EditorGesturesMappings,
+                    val => Instance.EditorGesturesMappings = val,
                     "Editor input mappings"),
                 new ProxySettingViewModel<EditorInputMode>(
                     () => Instance.EditorInputMode,
@@ -60,11 +60,11 @@ namespace Nodify.Playground
 
         public static PlaygroundSettings Instance { get; } = new PlaygroundSettings();
 
-        private EditorInputMappings _editorInputMappings;
-        public EditorInputMappings EditorInputMappings
+        private EditorGesturesMappings _editorGesturesMappings;
+        public EditorGesturesMappings EditorGesturesMappings
         {
-            get => _editorInputMappings;
-            set => SetProperty(ref _editorInputMappings, value)
+            get => _editorGesturesMappings;
+            set => SetProperty(ref _editorGesturesMappings, value)
                 .Then(() => EditorGestures.Mappings.Apply(value));
         }
 
