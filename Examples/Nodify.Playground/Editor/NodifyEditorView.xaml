@@ -47,74 +47,74 @@
 
         <UIElement x:Key="ConnectionAnimationPlaceholder" Opacity="1" />
 
-<Storyboard x:Key="HighlightConnection">
-    <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" 
-                     Duration="0:0:0.3" From="3" To="6"  />
-    <DoubleAnimation Storyboard.Target="{StaticResource ConnectionAnimationPlaceholder}"
-                     Storyboard.TargetProperty="(UIElement.Opacity)" 
-                     Duration="0:0:0.3" From="1" To="0.3"  />
-</Storyboard>
+        <Storyboard x:Key="HighlightConnection">
+            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" 
+                             Duration="0:0:0.3" From="3" To="6"  />
+            <DoubleAnimation Storyboard.Target="{StaticResource ConnectionAnimationPlaceholder}"
+                             Storyboard.TargetProperty="(UIElement.Opacity)" 
+                             Duration="0:0:0.3" From="1" To="0.3"  />
+        </Storyboard>
 
-<Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
-    <Style.Triggers>
-        <DataTrigger Binding="{Binding Input.Shape}" 
-                     Value="{x:Static local:ConnectorShape.Square}">
-            <Setter Property="Stroke" Value="{StaticResource SquareConnectorColor}"/>
-            <Setter Property="Fill" Value="{StaticResource SquareConnectorColor}"/>
-        </DataTrigger>
-        <DataTrigger Binding="{Binding Input.Shape}" 
-                     Value="{x:Static local:ConnectorShape.Triangle}">
-            <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"/>
-            <Setter Property="Fill" Value="{StaticResource TriangleConnectorColor}"/>
-        </DataTrigger>
-        <Trigger Property="IsMouseDirectlyOver" Value="True">
-            <Trigger.EnterActions>
-                <BeginStoryboard Name="HighlightConnection" Storyboard="{StaticResource HighlightConnection}" />
-            </Trigger.EnterActions>
-            <Trigger.ExitActions>
-                <RemoveStoryboard BeginStoryboardName="HighlightConnection" />
-            </Trigger.ExitActions>
-            <Setter Property="Opacity" Value="1" />
-        </Trigger>
-    </Style.Triggers>
-    <Setter Property="Opacity" Value="{Binding Source={StaticResource ConnectionAnimationPlaceholder}, Path=Opacity}" />
-    <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
-    <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="ToolTip" Value="Double click to split"/>
-    <Setter Property="Source" Value="{Binding Output.Anchor}" />
-    <Setter Property="Target" Value="{Binding Input.Anchor}" />
-    <Setter Property="SplitCommand" Value="{Binding SplitCommand}" />
-    <Setter Property="DisconnectCommand" Value="{Binding DisconnectCommand}" />
-    <Setter Property="SourceOffsetMode" Value="{Binding ConnectionSourceOffsetMode, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="TargetOffsetMode" Value="{Binding ConnectionTargetOffsetMode, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="SourceOffset" Value="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="TargetOffset" Value="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="ArrowSize" Value="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="ArrowEnds" Value="{Binding ArrowHeadEnds, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="ArrowShape" Value="{Binding ArrowHeadShape, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="Spacing" Value="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="Direction" Value="{Binding Output.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
-    <Setter Property="SourceOrientation" Value="{Binding Output.Node.Orientation}" />
-    <Setter Property="TargetOrientation" Value="{Binding Input.Node.Orientation}" />
-    <Setter Property="DirectionalArrowsCount" Value="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}" />
-    <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
-</Style>
+        <Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Input.Shape}" 
+                             Value="{x:Static local:ConnectorShape.Square}">
+                    <Setter Property="Stroke" Value="{StaticResource SquareConnectorColor}"/>
+                    <Setter Property="Fill" Value="{StaticResource SquareConnectorColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Input.Shape}" 
+                             Value="{x:Static local:ConnectorShape.Triangle}">
+                    <Setter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"/>
+                    <Setter Property="Fill" Value="{StaticResource TriangleConnectorColor}"/>
+                </DataTrigger>
+                <Trigger Property="IsMouseDirectlyOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard Name="HighlightConnection" Storyboard="{StaticResource HighlightConnection}" />
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <RemoveStoryboard BeginStoryboardName="HighlightConnection" />
+                    </Trigger.ExitActions>
+                    <Setter Property="Opacity" Value="1" />
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Opacity" Value="{Binding Source={StaticResource ConnectionAnimationPlaceholder}, Path=Opacity}" />
+            <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
+            <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="ToolTip" Value="Double click to split"/>
+            <Setter Property="Source" Value="{Binding Output.Anchor}" />
+            <Setter Property="Target" Value="{Binding Input.Anchor}" />
+            <Setter Property="SplitCommand" Value="{Binding SplitCommand}" />
+            <Setter Property="DisconnectCommand" Value="{Binding DisconnectCommand}" />
+            <Setter Property="SourceOffsetMode" Value="{Binding ConnectionSourceOffsetMode, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="TargetOffsetMode" Value="{Binding ConnectionTargetOffsetMode, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="SourceOffset" Value="{Binding ConnectionSourceOffset.Size, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="TargetOffset" Value="{Binding ConnectionTargetOffset.Size, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="ArrowSize" Value="{Binding ConnectionArrowSize.Size, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="ArrowEnds" Value="{Binding ArrowHeadEnds, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="ArrowShape" Value="{Binding ArrowHeadShape, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="Spacing" Value="{Binding ConnectionSpacing, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="Direction" Value="{Binding Output.Flow, Converter={StaticResource FlowToDirectionConverter}}" />
+            <Setter Property="SourceOrientation" Value="{Binding Output.Node.Orientation}" />
+            <Setter Property="TargetOrientation" Value="{Binding Input.Node.Orientation}" />
+            <Setter Property="DirectionalArrowsCount" Value="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
+        </Style>
 
-<DataTemplate x:Key="CircuitConnectionTemplate">
-    <nodify:CircuitConnection Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
-                              Style="{StaticResource ConnectionStyle}" />
-</DataTemplate>
+        <DataTemplate x:Key="CircuitConnectionTemplate">
+            <nodify:CircuitConnection Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
+                                      Style="{StaticResource ConnectionStyle}" />
+        </DataTemplate>
 
-<DataTemplate x:Key="ConnectionTemplate">
-    <nodify:Connection Style="{StaticResource ConnectionStyle}" />
-</DataTemplate>
+        <DataTemplate x:Key="ConnectionTemplate">
+            <nodify:Connection Style="{StaticResource ConnectionStyle}" />
+        </DataTemplate>
 
-<DataTemplate x:Key="LineConnectionTemplate">
-    <nodify:LineConnection Style="{StaticResource ConnectionStyle}" />
-</DataTemplate>
+        <DataTemplate x:Key="LineConnectionTemplate">
+            <nodify:LineConnection Style="{StaticResource ConnectionStyle}" />
+        </DataTemplate>
 
-<ControlTemplate x:Key="SquareConnector" TargetType="Control">
+        <ControlTemplate x:Key="SquareConnector" TargetType="Control">
             <Rectangle Width="14"
                        Height="14"
                        StrokeDashCap="Round"
@@ -141,7 +141,7 @@
 
         <Storyboard x:Key="MarchingAnts">
             <DoubleAnimation RepeatBehavior="Forever"
-                             Storyboard.TargetProperty="StrokeDashOffset"
+                             Storyboard.TargetProperty="StrokeDashOffset" 
                              BeginTime="00:00:00"
                              Duration="0:3:0"
                              From="1000"
@@ -299,7 +299,7 @@
                 <Style TargetType="{x:Type nodify:NodeInput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Shape}"
+                        <DataTrigger Binding="{Binding Shape}" 
                                      Value="{x:Static local:ConnectorShape.Square}">
                             <Setter Property="ConnectorTemplate" Value="{StaticResource SquareConnector}" />
                             <Setter Property="BorderBrush" Value="{StaticResource SquareConnectorColor}"/>
@@ -314,7 +314,7 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Shape}"
+                        <DataTrigger Binding="{Binding Shape}" 
                                      Value="{x:Static local:ConnectorShape.Triangle}">
                             <Setter Property="ConnectorTemplate" Value="{StaticResource TriangleConnector}" />
                             <Setter Property="BorderBrush" Value="{StaticResource TriangleConnectorColor}"/>
@@ -350,7 +350,7 @@
                 <Style TargetType="{x:Type nodify:NodeOutput}"
                        BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Shape}"
+                        <DataTrigger Binding="{Binding Shape}" 
                                      Value="{x:Static local:ConnectorShape.Square}">
                             <Setter Property="ConnectorTemplate" Value="{StaticResource SquareConnector}" />
                             <Setter Property="BorderBrush" Value="{StaticResource SquareConnectorColor}"/>
