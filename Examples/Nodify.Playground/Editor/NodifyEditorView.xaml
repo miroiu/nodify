@@ -98,6 +98,7 @@
             <Setter Property="SourceOrientation" Value="{Binding Output.Node.Orientation}" />
             <Setter Property="TargetOrientation" Value="{Binding Input.Node.Orientation}" />
             <Setter Property="DirectionalArrowsCount" Value="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="DirectionalArrowsOffset" Value="{Binding DirectionalArrowsOffset, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
         </Style>
 

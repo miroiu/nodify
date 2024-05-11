@@ -93,6 +93,23 @@ namespace Nodify
             animatableElement.BeginAnimation(dependencyProperty, animation);
         }
 
+        public static void StartLoopingAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, double toValue, double durationInSeconds)
+        {
+            var fromValue = (double)animatableElement.GetValue(dependencyProperty);
+
+            var animation = new DoubleAnimation
+            {
+                From = fromValue,
+                To = toValue,
+                Duration = TimeSpan.FromSeconds(durationInSeconds)
+            };
+
+            animation.RepeatBehavior = RepeatBehavior.Forever;
+
+            animation.Freeze();
+            animatableElement.BeginAnimation(dependencyProperty, animation);
+        }
+
         public static void CancelAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty)
             => animatableElement.BeginAnimation(dependencyProperty, null);
 

@@ -121,6 +121,7 @@ namespace Nodify
         public static readonly DependencyProperty TargetOrientationProperty = DependencyProperty.Register(nameof(TargetOrientation), typeof(Orientation), typeof(BaseConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionalArrowsCountProperty = DependencyProperty.Register(nameof(DirectionalArrowsCount), typeof(uint), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.UInt0, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty DirectionalArrowsOffsetProperty = DependencyProperty.Register(nameof(DirectionalArrowsOffset), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -217,12 +218,21 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets of sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
+        /// Gets or sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
         /// </summary>
         public uint DirectionalArrowsCount
         {
             get => (uint)GetValue(DirectionalArrowsCountProperty);
             set => SetValue(DirectionalArrowsCountProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the offset of the arrows drawn by the <see cref="DirectionalArrowsCount"/> (value is clamped between 0 and 1).
+        /// </summary>
+        public double DirectionalArrowsOffset
+        {
+            get => (double)GetValue(DirectionalArrowsOffsetProperty);
+            set => SetValue(DirectionalArrowsOffsetProperty, value);
         }
 
         /// <summary>
@@ -639,6 +649,19 @@ namespace Nodify
             var p1 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
 
             return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
+        }
+
+        public void StartAnimation(double duration = 1.5d)
+        {
+            if (DirectionalArrowsCount > 0)
+            {
+                this.StartLoopingAnimation(DirectionalArrowsOffsetProperty, DirectionalArrowsOffset + 1d, duration);
+            }
+        }
+
+        public void StopAnimation()
+        {
+            this.CancelAnimation(DirectionalArrowsOffsetProperty);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
