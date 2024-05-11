@@ -75,6 +75,10 @@
                             ToolTip="Scales the viewport to fit all nodes if that's possible."
                             CommandTarget="{Binding EditorInstance, ElementName=EditorView}"
                             Style="{StaticResource HollowButton}" />
+                    <Button Command="{Binding GraphViewModel.CommentSelectionCommand}"
+                            Content="COMMENT SELECTION"
+                            ToolTip="Creates a comment node containing the selected nodes."
+                            Style="{StaticResource HollowButton}" />
                     <Button Click="AnimateConnections_Click"
                             Content="TOGGLE CONNECTIONS ANIMATION"
                             ToolTip="Starts or stops animating the directional arrows on all connections (see DirectionalArrowsCount)"
