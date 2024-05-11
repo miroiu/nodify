@@ -323,10 +323,7 @@
                                     <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Title}" Margin="0 0 5 0" VerticalAlignment="Center" />
-                                            <ComboBox DisplayMemberPath="Name"
-                                                      SelectedValuePath="Value"
-                                                      SelectedValue="{Binding Shape}"
-                                                      ItemsSource="{Binding Shape, Converter={shared:EnumValuesConverter}}" />
+                                            <CheckBox />
                                         </StackPanel>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -346,6 +343,8 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="Background"
+                            Value="Transparent" />
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
@@ -368,6 +367,8 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="Background"
+                            Value="Transparent" />
                 </Style>
 
                 <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
@@ -400,10 +401,7 @@
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
-                                            <StackPanel Orientation="Vertical" Margin="5 0 5 0">
-                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
-                                                <TextBlock Text="{Binding Title}" />
-                                            </StackPanel>
+                                            <nodify:NodeInput Orientation="Vertical" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>
@@ -419,11 +417,7 @@
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
-                                            <StackPanel Orientation="Vertical"
-                                                        Margin="5 0 5 0">
-                                                <TextBlock Text="{Binding Title}" />
-                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
-                                            </StackPanel>
+                                            <nodify:NodeOutput Orientation="Vertical" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>

@@ -44,7 +44,7 @@
                                 OpacityMask="{StaticResource FadeOpacityMask}"
                                 Background="{TemplateBinding BorderBrush}" />
 
-                        <StackPanel Orientation="Horizontal"
+                        <StackPanel Orientation="{TemplateBinding Orientation}"
                                     HorizontalAlignment="Right"
                                     Margin="{TemplateBinding Padding}">
 
@@ -60,6 +60,13 @@
                         </StackPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation"
+                                 Value="Vertical">
+                            <Setter TargetName="PART_Connector"
+                                    Property="Margin"
+                                    Value="0 5 0 0" />
+                        </Trigger>
+
                         <Trigger Property="IsConnected"
                                  Value="True">
                             <Setter TargetName="PART_Connector"
