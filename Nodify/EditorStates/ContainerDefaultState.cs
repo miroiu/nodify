@@ -31,12 +31,13 @@ namespace Nodify
         {
             _canceled = false;
 
-            if (EditorGestures.ItemContainer.Drag.Matches(e.Source, e))
+            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+            if (gestures.Drag.Matches(e.Source, e))
             {
                 _canBeDragging = Container.IsDraggable;
 
                 // Clear the selection if dragging an item that is not part of the selection will not add it to the selection
-                if (_canBeDragging && !Container.IsSelected && !EditorGestures.Selection.Append.Matches(e.Source, e) && !EditorGestures.Selection.Invert.Matches(e.Source, e))
+                if (_canBeDragging && !Container.IsSelected && !gestures.Selection.Append.Matches(e.Source, e) && !gestures.Selection.Invert.Matches(e.Source, e))
                 {
                     Editor.UnselectAll();
                 }
@@ -46,17 +47,18 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            if (!_canceled && EditorGestures.ItemContainer.Select.Matches(e.Source, e))
+            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+            if (!_canceled && gestures.Selection.Select.Matches(e.Source, e))
             {
-                if (EditorGestures.Selection.Append.Matches(e.Source, e))
+                if (gestures.Selection.Append.Matches(e.Source, e))
                 {
                     Container.IsSelected = true;
                 }
-                else if (EditorGestures.Selection.Invert.Matches(e.Source, e))
+                else if (gestures.Selection.Invert.Matches(e.Source, e))
                 {
                     Container.IsSelected = !Container.IsSelected;
                 }
-                else if (EditorGestures.Selection.Remove.Matches(e.Source, e))
+                else if (gestures.Selection.Remove.Matches(e.Source, e))
                 {
                     Container.IsSelected = false;
                 }
@@ -71,6 +73,11 @@ namespace Nodify
                     Container.IsSelected = true;
                 }
 
+                _canBeDragging = false;
+            }
+
+            if(!_canceled && gestures.Drag.Matches(e.Source, e))
+            {
                 _canBeDragging = false;
             }
 

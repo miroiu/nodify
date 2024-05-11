@@ -5,10 +5,12 @@ namespace Nodify
     /// <summary>Combines multiple input gestures.</summary>
     public class MultiGesture : InputGesture
     {
+        public static readonly MultiGesture None = new MultiGesture(Match.Any);
+
         /// <summary>The strategy used by <see cref="Matches(object, InputEventArgs)"/>.</summary>
         public enum Match
         {
-            /// <summary>Any gesture can match.</summary>
+            /// <summary>At least one gesture must match.</summary>
             Any,
             /// <summary>All gestures must match.</summary>
             All
@@ -62,5 +64,47 @@ namespace Nodify
 
             return false;
         }
+    }
+
+    /// <inheritdoc cref="MultiGesture.Match.Any" />
+    public sealed class AnyGesture : MultiGesture
+    {
+        public AnyGesture(params InputGesture[] gestures) : base(Match.Any, gestures)
+        {
+        }
+    }
+
+    /// <inheritdoc cref="MultiGesture.Match.All" />
+    public sealed class AllGestures : MultiGesture
+    {
+        public AllGestures(params InputGesture[] gestures) : base(Match.All, gestures)
+        {
+        }
+    }
+
+    /// <summary>
+    /// An input gesture that allows changing its logic at runtime without changing its reference.
+    /// Useful for classes that capture the object reference without the posibility of updating it. (e.g. <see cref="EditorCommands"/>)
+    /// </summary>
+    public sealed class InputGestureRef : InputGesture
+    {
+        /// <summary>The referenced gesture.</summary>
+        public InputGesture Value { get; set; } = MultiGesture.None;
+
+        private InputGestureRef() { }
+
+        public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
+        {
+            return Value.Matches(targetElement, inputEventArgs);
+        }
+
+        public static implicit operator InputGestureRef(MouseGesture gesture)
+            => new InputGestureRef { Value = gesture };
+
+        public static implicit operator InputGestureRef(KeyGesture gesture)
+            => new InputGestureRef { Value = gesture };
+
+        public static implicit operator InputGestureRef(MultiGesture gesture)
+            => new InputGestureRef { Value = gesture };
     }
 }

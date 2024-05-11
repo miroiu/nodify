@@ -664,7 +664,7 @@ namespace Nodify
         /// <summary>
         /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
-        protected internal Panel ItemsHost { get; private set; }
+        protected internal Panel ItemsHost { get; private set; } = default!;
 
         private IDraggingStrategy? _draggingStrategy;
         private DispatcherTimer? _autoPanningTimer;
@@ -1055,7 +1055,7 @@ namespace Nodify
         {
             State.HandleMouseWheel(e);
 
-            if (!e.Handled && EditorGestures.Zoom == Keyboard.Modifiers)
+            if (!e.Handled && EditorGestures.Mappings.Editor.ZoomModifierKey == Keyboard.Modifiers)
             {
                 double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                 ZoomAtPosition(zoom, e.GetPosition(ItemsHost));

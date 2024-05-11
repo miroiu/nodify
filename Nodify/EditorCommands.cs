@@ -28,7 +28,7 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand ZoomIn { get; } = new RoutedUICommand("Zoom in", nameof(ZoomIn), typeof(EditorCommands), new InputGestureCollection
         {
-           EditorGestures.ZoomIn 
+           EditorGestures.Mappings.Editor.ZoomIn
         });
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand ZoomOut { get; } = new RoutedUICommand("Zoom out", nameof(ZoomOut), typeof(EditorCommands), new InputGestureCollection
         {
-            EditorGestures.ZoomOut
+            EditorGestures.Mappings.Editor.ZoomOut
         });
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand BringIntoView { get; } = new RoutedUICommand("Bring location into view", nameof(BringIntoView), typeof(EditorCommands), new InputGestureCollection
         {
-            EditorGestures.ResetViewportLocation
+            EditorGestures.Mappings.Editor.ResetViewportLocation
         });
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand FitToScreen { get; } = new RoutedUICommand("Fit to screen", nameof(FitToScreen), typeof(EditorCommands), new InputGestureCollection
         {
-            EditorGestures.FitToScreen
+            EditorGestures.Mappings.Editor.FitToScreen
         });
 
         /// <summary>

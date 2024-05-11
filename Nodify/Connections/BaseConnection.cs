@@ -647,7 +647,8 @@ namespace Nodify
 
             this.CaptureMouseSafe();
 
-            if (EditorGestures.Connection.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
+            EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
+            if (gestures.Split.Matches(e.Source, e) && (SplitCommand?.CanExecute(this) ?? false))
             {
                 Point splitLocation = e.GetPosition(this);
                 object? connection = DataContext;
@@ -668,7 +669,7 @@ namespace Nodify
 
                 e.Handled = true;
             }
-            else if (EditorGestures.Connection.Disconnect.Matches(e.Source, e) && (DisconnectCommand?.CanExecute(this) ?? false))
+            else if (gestures.Disconnect.Matches(e.Source, e) && (DisconnectCommand?.CanExecute(this) ?? false))
             {
                 Point splitLocation = e.GetPosition(this);
                 object? connection = DataContext;
