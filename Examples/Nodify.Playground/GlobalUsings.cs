@@ -8,3 +8,5 @@ global using Avalonia.Controls.ApplicationLifetimes;
 global using Avalonia.Media;
 global using Avalonia.Threading;
 global using Avalonia.Layout;
+global using ModifierKeys = Avalonia.Input.KeyModifiers;
+global using Nodify.Compatibility;

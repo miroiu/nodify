@@ -334,11 +334,12 @@ namespace Nodify
 
             e.Handled = true;
 
-            if (EditorGestures.Connector.Disconnect.Matches(e.Source, e))
+            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+            if (gestures.Disconnect.Matches(e.Source, e))
             {
                 OnDisconnect();
             }
-            else if (EditorGestures.Connector.Connect.Matches(e.Source, e))
+            else if (gestures.Connect.Matches(e.Source, e))
             {
                 if (EnableStickyConnections && IsPendingConnection)
                 {
@@ -359,12 +360,13 @@ namespace Nodify
             // Don't select the ItemContainer when starting a pending connecton for sticky connections
             e.Handled = EnableStickyConnections && IsPendingConnection;
 
-            if (!EnableStickyConnections && EditorGestures.Connector.Connect.Matches(e.Source, e))
+            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+            if (!EnableStickyConnections && gestures.Connect.Matches(e.Source, e))
             {
                 OnConnectorDragCompleted(e: e);
                 e.Handled = true;
             }
-            else if (AllowPendingConnectionCancellation && IsPendingConnection && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
+            else if (AllowPendingConnectionCancellation && IsPendingConnection && gestures.CancelAction.Matches(e.Source, e))
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true, e: e);
@@ -397,7 +399,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (AllowPendingConnectionCancellation && EditorGestures.Connector.CancelAction.Matches(e.Source, e))
+            if (AllowPendingConnectionCancellation && EditorGestures.Mappings.Connector.CancelAction.Matches(e.Source, e))
             {
                 // Cancel pending connection
                 OnConnectorDragCompleted(cancel: true);

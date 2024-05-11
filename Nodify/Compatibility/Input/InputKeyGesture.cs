@@ -3,7 +3,7 @@ using Avalonia.Input;
 
 namespace Nodify.Compatibility;
 
-internal class InputKeyGesture : InputGesture
+public class InputKeyGesture : InputGesture
 {
     private KeyGesture keyGesture;
         
@@ -11,7 +11,12 @@ internal class InputKeyGesture : InputGesture
     {
         keyGesture = new KeyGesture(key, modifiers);
     }
-        
+
+    public InputKeyGesture(KeyGesture gesture)
+    {
+        keyGesture = gesture;
+    }
+
     public override bool Matches(object targetElement, EventArgs inputEventArgs)
     {
         return keyGesture.Matches(inputEventArgs as KeyEventArgs);

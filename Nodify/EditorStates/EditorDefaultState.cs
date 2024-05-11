@@ -30,13 +30,14 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (EditorGestures.Select.Matches(e.Source, e))
+            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+            if (gestures.Selection.Select.Matches(e.Source, e))
             {
                 SelectionType selectionType = GetSelectionType(e);
                 var selecting = new EditorSelectingState(Editor, selectionType);
                 PushState(selecting, e);
             }
-            else if (!Editor.DisablePanning && EditorGestures.Pan.Matches(e.Source, e))
+            else if (!Editor.DisablePanning && gestures.Pan.Matches(e.Source, e))
             {
                 PushState(new EditorPanningState(Editor), e);
             }
@@ -44,17 +45,18 @@ namespace Nodify
 
         private static SelectionType GetSelectionType(MouseButtonEventArgs e)
         {
-            if (EditorGestures.Selection.Append.Matches(e.Source, e))
+            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
+            if (gestures.Append.Matches(e.Source, e))
             {
                 return SelectionType.Append;
             }
 
-            if (EditorGestures.Selection.Invert.Matches(e.Source, e))
+            if (gestures.Invert.Matches(e.Source, e))
             {
                 return SelectionType.Invert;
             }
 
-            if (EditorGestures.Selection.Remove.Matches(e.Source, e))
+            if (gestures.Remove.Matches(e.Source, e))
             {
                 return SelectionType.Remove;
             }

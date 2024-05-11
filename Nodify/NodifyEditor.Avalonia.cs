@@ -22,7 +22,7 @@ public partial class NodifyEditor
     {
         State.HandleMouseWheel(new MouseWheelEventArgs());
 
-        if (!e.Handled && EditorGestures.Zoom == e.KeyModifiers)
+        if (!e.Handled && EditorGestures.Mappings.Editor.ZoomModifierKey == e.KeyModifiers)
         {
             double zoom = Math.Pow(2.0, e.Delta.Y / 3.0 / MouseWheelDeltaForOneLine * MouseWheelAvaloniaToWpfScale * PointerTouchGestureMagnifyScale);
             ZoomAtPosition(zoom, e.GetPosition(ItemsHost));

@@ -60,8 +60,10 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            bool canCancel = EditorGestures.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
-            bool canComplete = EditorGestures.ItemContainer.Drag.Matches(e.Source, e);
+            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+
+            bool canCancel = gestures.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
+            bool canComplete = gestures.Drag.Matches(e.Source, e);
             if (canCancel || canComplete)
             {
                 // Prevent canceling if drag and cancel are bound to the same mouse action
@@ -84,7 +86,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleKeyUp(KeyEventArgs e)
         {
-            Canceled = EditorGestures.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
+            Canceled = EditorGestures.Mappings.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
             if (Canceled)
             {
                 PopState();

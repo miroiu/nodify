@@ -4,7 +4,7 @@ using Avalonia.Input;
 
 namespace Nodify.Compatibility;
 
-internal class MouseGesture : InputGesture
+public class MouseGesture : InputGesture
 {
     //------------------------------------------------------
     //
