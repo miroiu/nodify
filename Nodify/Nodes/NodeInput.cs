@@ -6,13 +6,14 @@ namespace Nodify
     /// <summary>
     /// Represents the default control for the <see cref="Node.InputConnectorTemplate"/>.
     /// </summary>
-    public class NodeInput : Connector
+    public partial class NodeInput : Connector
     {
         #region Dependency Properties
 
         public static readonly StyledProperty<object?> HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner<NodeInput>();
         public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner<NodeInput>();
         public static readonly StyledProperty<ControlTemplate> ConnectorTemplateProperty = AvaloniaProperty.Register<NodeInput, ControlTemplate>(nameof(ConnectorTemplate));
+        public static readonly StyledProperty<Orientation> OrientationProperty = StackPanel.OrientationProperty.AddOwner<NodeInput>();
 
         /// <summary>
         /// Gets of sets the data used for the control's header.
@@ -41,11 +42,20 @@ namespace Nodify
             set => SetValue(ConnectorTemplateProperty, value);
         }
 
+        /// <inheritdoc cref="StackPanel.Orientation" />
+        public Orientation Orientation
+        {
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
+        }
+
         #endregion
 
         static NodeInput()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodeInput), new FrameworkPropertyMetadata(typeof(NodeInput)));
+            AffectsMeasure<NodeInput>(OrientationProperty);
+            OrientationProperty.OverrideDefaultValue<NodeInput>(Orientation.Horizontal);
         }
     }
 }

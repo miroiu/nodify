@@ -334,10 +334,7 @@
                                             <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Title}" Margin="0 0 5 0" VerticalAlignment="Center" />
-                                                    <local:WpfComboBox DisplayMemberBinding="{Binding Name}"
-                                                              SelectedValueBinding="{Binding Value}"
-                                                              SelectedValue="{Binding Shape}"
-                                                              ItemsSource="{Binding Shape, Converter={shared:EnumValuesConverter}}" />
+                                                    <CheckBox />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </PropertySetter.Value>
@@ -359,6 +356,8 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="Background"
+                            Value="Transparent" />
                 </ControlTheme>
 
                 <ControlTheme TargetType="{x:Type nodify:NodeOutput}" x:Key="{x:Type nodify:NodeOutput}"
@@ -385,9 +384,11 @@
                             Value="{Binding Anchor, Mode=OneWayToSource}" />
                     <Setter Property="IsConnected"
                             Value="{Binding IsConnected}" />
+                    <Setter Property="Background"
+                            Value="Transparent" />
                 </ControlTheme>
             </nodify:NodifyEditor.Resources>
-            
+
             <nodify:NodifyEditor.DataTemplates>
                 <DataTemplate DataType="{x:Type local:KnotNodeViewModel}">
                     <nodify:KnotNode Content="{Binding Connector}" />
@@ -419,10 +420,7 @@
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
-                                            <StackPanel Orientation="Vertical" Margin="5 0 5 0">
-                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
-                                                <TextBlock Text="{Binding Title}" />
-                                            </StackPanel>
+                                            <nodify:NodeInput Orientation="Vertical" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>
@@ -438,11 +436,7 @@
                                 <ItemsControl ItemsSource="{Binding}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
-                                            <StackPanel Orientation="Vertical"
-                                                        Margin="5 0 5 0">
-                                                <TextBlock Text="{Binding Title}" />
-                                                <nodify:Connector Anchor="{Binding Anchor, Mode=OneWayToSource}" />
-                                            </StackPanel>
+                                            <nodify:NodeOutput Orientation="Vertical" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.ItemsPanel>

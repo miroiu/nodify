@@ -6,14 +6,15 @@ namespace Nodify
     /// <summary>
     /// Represents the default control for the <see cref="Node.OutputConnectorTemplate"/>.
     /// </summary>
-    public class NodeOutput : Connector
+    public partial class NodeOutput : Connector
     {
         #region Dependency Properties
         
         public static readonly StyledProperty<object?> HeaderProperty = HeaderedContentControl.HeaderProperty.AddOwner<NodeOutput>();
         public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty = HeaderedContentControl.HeaderTemplateProperty.AddOwner<NodeOutput>();
         public static readonly StyledProperty<ControlTemplate> ConnectorTemplateProperty = NodeInput.ConnectorTemplateProperty.AddOwner<NodeOutput>();
-        
+        public static readonly StyledProperty<Orientation> OrientationProperty = StackPanel.OrientationProperty.AddOwner<NodeOutput>();
+
         /// <summary>
         /// Gets of sets the data used for the control's header.
         /// </summary>
@@ -41,11 +42,20 @@ namespace Nodify
             set => SetValue(ConnectorTemplateProperty, value);
         }
 
+        /// <inheritdoc cref="StackPanel.Orientation" />
+        public Orientation Orientation
+        {
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
+        }
+
         #endregion
 
         static NodeOutput()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodeOutput), new FrameworkPropertyMetadata(typeof(NodeOutput)));
+            AffectsMeasure<NodeOutput>(OrientationProperty);
+            OrientationProperty.OverrideDefaultValue<NodeOutput>(Orientation.Horizontal);
         }
     }
 }

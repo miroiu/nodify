@@ -44,12 +44,11 @@
                                 OpacityMask="{StaticResource InputFadeOpacityMask}"
                                 Background="{TemplateBinding BorderBrush}" />
 
-                        <StackPanel Orientation="Horizontal"
+                        <StackPanel Orientation="{TemplateBinding Orientation}"
                                     Margin="{TemplateBinding Padding}">
 
                             <TemplatedControl x:Name="PART_Connector"
                                      Focusable="False"
-                                     Margin="0 0 5 0"
                                      VerticalAlignment="Center"
                                      Background="Transparent"
                                      BorderBrush="{TemplateBinding BorderBrush}"
@@ -61,6 +60,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style Selector="^ /template/ TemplatedControl#PART_Connector">
+            <Setter Property="Margin"
+                    Value="0 0 5 0" />
+        </Style>
+        <Style Selector="^:vertical /template/ TemplatedControl#PART_Connector">
+            <Setter Property="Margin"
+                    Value="0 0 0 5" />
+        </Style>
         <Style Selector="^:connected /template/ TemplatedControl#PART_Connector">
             <Setter Property="Background"
                     Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />

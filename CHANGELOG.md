@@ -14,6 +14,7 @@
 >	- Added DrawDirectionalArrowsGeometry and DrawDirectionalArrowheadGeometry to BaseConnection to allow customizing the directional arrows
 >	- Improved EditorGestures to allow changing input gestures at runtime
 >	- Added new gesture types: AnyGesture, AllGestures, and InputGestureRef
+>	- Added Orientation dependency property to NodeInput and NodeOutput
 > - Bugfixes:
 >	- Fixed BaseConnection.Text not always displaying in the center of the connection
 >	- Fixed a bug where the item container would incorrectly transition to the dragging state on mouse over
