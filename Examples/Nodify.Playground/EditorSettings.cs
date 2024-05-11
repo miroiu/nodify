@@ -89,7 +89,7 @@ namespace Nodify.Playground
                     () => Instance.ConnectionStyle,
                     val => Instance.ConnectionStyle = val,
                     "Connection style: "),
-                new ProxySettingViewModel<string>(
+                new ProxySettingViewModel<string?>(
                     () => Instance.ConnectionText,
                     val => Instance.ConnectionText = val,
                     "Connection text: "),
@@ -344,8 +344,8 @@ namespace Nodify.Playground
             set => SetProperty(ref _connectionStyle, value);
         }
 
-        private string _connectionText;
-        public string ConnectionText
+        private string? _connectionText;
+        public string? ConnectionText
         {
             get => _connectionText;
             set => SetProperty(ref _connectionText, value);

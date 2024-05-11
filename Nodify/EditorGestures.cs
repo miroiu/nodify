@@ -111,7 +111,7 @@ namespace Nodify
             {
                 Selection = new SelectionGestures();
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
-                Zoom = ModifierKeys.None;
+                ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
                 ZoomOut = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ResetViewportLocation = new KeyGesture(Key.Home);
@@ -127,7 +127,7 @@ namespace Nodify
 
             /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
-            public ModifierKeys Zoom { get; set; }
+            public ModifierKeys ZoomModifierKey { get; set; }
 
             /// <summary>Gesture used to zoom in.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="Key.OemPlus"/>.</remarks>
@@ -151,7 +151,7 @@ namespace Nodify
             {
                 Selection.Apply(gestures.Selection);
                 Pan.Value = gestures.Pan.Value;
-                Zoom = gestures.Zoom;
+                ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
                 ZoomOut.Value = gestures.ZoomOut.Value;
                 ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;

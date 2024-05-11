@@ -7,6 +7,7 @@
 >	- Added source and target parameters to GetTextPosition in BaseConnection
 >	- EditorGestures is now a singleton instead of a static class (can be inherited to create custom mappings)
 >	- Selection gestures for ItemContainer and GroupingNode are now separated from the NodifyEditor selection gestures
+>	- Renamed EditorGestures.Editor.Zoom to ZoomModifierKey
 > - Features:
 >	- Added SourceOrientation and TargetOrientation to BaseConnection to support vertical connectors (vertical/mixed connection orientation)
 >	- Added DirectionalArrowsCount to BaseConnection to allow drawing multipe arrows on a connection flowing in the connection direction
