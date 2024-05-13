@@ -14,6 +14,15 @@
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
         <shared:ToStringConverter x:Key="ToStringConverter" />
+
+        <!-- <Storyboard RepeatBehavior="Forever" -->
+        <!--             x:Key="{x:Static local:MainWindow.AnimateDirectionalArrowsStoryboardKey}"> -->
+        <!--     <DoubleAnimation Duration="0:0:2" -->
+        <!--                      From="0" -->
+        <!--                      To="1" -->
+        <!--                      Storyboard.Target="{Binding .,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" -->
+        <!--                      Storyboard.TargetProperty="DirectionalArrowsOffset" /> -->
+        <!-- </Storyboard> -->
     </Window.Resources>
 
     <Window.DataContext>
@@ -42,16 +51,16 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding GenerateRandomNodesCommand}"
-                            Content="GENERATE RANDOM NODES"
+                            Content="GENERATE NODES"
                             ToolTip.Tip="Generate nodes using the specified settings."
+                            Theme="{StaticResource HollowButton}" />
+                    <Button Command="{Binding ToggleConnectionsCommand}"
+                            Content="{Binding ConnectNodesText}"
+                            ToolTip.Tip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes."
                             Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding PerformanceTestCommand}"
                             Content="PERFORMANCE TEST"
                             ToolTip.Tip="You will encounter rendering performance issues. Try disabling the connections to see the difference."
-                            Theme="{StaticResource HollowButton}" />
-                    <Button Command="{Binding ToggleConnectionsCommand}"
-                            Content="CONNECT / DISCONNECT"
-                            ToolTip.Tip="Will add new connections if Connect Nodes is checked, otherwise it will disconnect nodes."
                             Theme="{StaticResource HollowButton}" />
                     <Button Command="{Binding ResetCommand}"
                             Content="RESET PLAYGROUND"
@@ -69,6 +78,10 @@
                     <Button Command="{Binding GraphViewModel.CommentSelectionCommand}"
                             Content="COMMENT SELECTION"
                             ToolTip.Tip="Creates a comment node containing the selected nodes."
+                            Theme="{StaticResource HollowButton}" />
+                    <Button Click="AnimateConnections_Click"
+                            Content="TOGGLE CONNECTIONS ANIMATION"
+                            ToolTip.Tip="Starts or stops animating the directional arrows on all connections (see DirectionalArrowsCount)"
                             Theme="{StaticResource HollowButton}" />
                 </StackPanel>
 

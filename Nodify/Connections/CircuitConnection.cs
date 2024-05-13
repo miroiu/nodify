@@ -84,7 +84,7 @@ namespace Nodify
             for (int i = 1; i <= arrowsCount; i++)
             {
                 var direction = p0 - p1;
-                double t = spacing * i;
+                double t = (spacing * i + DirectionalArrowsOffset).WrapToRange(0d, 1d);
                 var to = InterpolateLineSegment(p0, p1, t);
 
                 base.DrawDirectionalArrowheadGeometry(context, direction, to);

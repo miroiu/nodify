@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Nodify.Playground
@@ -113,6 +112,11 @@ namespace Nodify.Playground
                     val => Instance.DirectionalArrowsCount = val,
                     "Directional arrows count: ",
                     "The number of arrowheads to draw on the line flowing in the direction of the connection."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.DirectionalArrowsOffset,
+                    val => Instance.DirectionalArrowsOffset = val,
+                    "Directional arrows offset: ",
+                    "Used to animate the directional arrowheads flowing in the direction of the connection (value is between 0 and 1)."),
                 new ProxySettingViewModel<ArrowHeadEnds>(
                     () => Instance.ArrowHeadEnds,
                     val => Instance.ArrowHeadEnds = val,
@@ -407,11 +411,18 @@ namespace Nodify.Playground
             set => SetProperty(ref _connectionTargetOffset, value);
         }
 
-        private uint _directionalArrowsCount;
+        private uint _directionalArrowsCount = 3;
         public uint DirectionalArrowsCount
         {
             get => _directionalArrowsCount;
             set => SetProperty(ref _directionalArrowsCount, value);
+        }
+
+        private double _directionalArrowsOffset;
+        public double DirectionalArrowsOffset
+        {
+            get => _directionalArrowsOffset;
+            set => SetProperty(ref _directionalArrowsOffset, value);
         }
 
         private PointEditor _connectionArrowSize = new PointEditor { X = 8, Y = 8 };

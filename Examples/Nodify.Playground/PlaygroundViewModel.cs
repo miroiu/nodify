@@ -19,6 +19,14 @@ namespace Nodify.Playground
 
             //BindingOperations.EnableCollectionSynchronization(GraphViewModel.Nodes, GraphViewModel.Nodes);
             //BindingOperations.EnableCollectionSynchronization(GraphViewModel.Connections, GraphViewModel.Connections);
+
+            Settings.PropertyChanged += OnSettingsChanged;
+        }
+
+        private void OnSettingsChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlaygroundSettings.ShouldConnectNodes))
+                OnPropertyChanged(nameof(ConnectNodesText));
         }
 
         public ICommand GenerateRandomNodesCommand { get; }
@@ -26,6 +34,8 @@ namespace Nodify.Playground
         public ICommand ToggleConnectionsCommand { get; }
         public ICommand ResetCommand { get; }
         public PlaygroundSettings Settings => PlaygroundSettings.Instance;
+
+        public string ConnectNodesText => Settings.ShouldConnectNodes ? "CONNECT NODES" : "DISCONNECT NODES";
 
         private void ResetGraph()
         {

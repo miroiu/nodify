@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Nodify.Playground
 {
@@ -46,6 +48,27 @@ namespace Nodify.Playground
     public partial class MainWindow : Window
     {
         private readonly Random _rand = new Random();
+        private bool _connectionAnimationsPlaying;
+
+        public static string AnimateDirectionalArrowsStoryboardKey = "AnimateDirectionalArrows";
+
+        public static StyledProperty<double> DirectionalArrowsOffsetProperty = BaseConnection.DirectionalArrowsOffsetProperty.AddOwner<MainWindow>();
+
+        private static void DirectionalArrowsOffsetChanged(Control d, AvaloniaPropertyChangedEventArgs e)
+        {
+            EditorSettings.Instance.DirectionalArrowsOffset = (double)e.NewValue;
+        }
+
+        public double DirectionalArrowsOffset
+        {
+            get => (double)GetValue(DirectionalArrowsOffsetProperty);
+            set => SetValue(DirectionalArrowsOffsetProperty, value);
+        }
+
+        static MainWindow()
+        {
+            DirectionalArrowsOffsetProperty.Changed.AddClassHandler<Control>(DirectionalArrowsOffsetChanged);
+        }
 
         public MainWindow()
         {
@@ -75,6 +98,25 @@ namespace Nodify.Playground
                     EditorCommands.BringIntoView.Execute(node.Location, EditorView.Editor);
                 }
             }
+        }
+
+        private CancellationTokenSource? _animationTokenSource;
+
+        private void AnimateConnections_Click(object sender, RoutedEventArgs e)
+        {
+            if (_connectionAnimationsPlaying)
+            {
+                _animationTokenSource?.Cancel();
+                _animationTokenSource = null;
+            }
+            else
+            {
+                _animationTokenSource?.Cancel();
+                _animationTokenSource = new();
+                this.StartLoopingAnimation(DirectionalArrowsOffsetProperty, 1, 2, _animationTokenSource.Token);
+            }
+
+            _connectionAnimationsPlaying = !_connectionAnimationsPlaying;
         }
 
         public override void Render(DrawingContext context)

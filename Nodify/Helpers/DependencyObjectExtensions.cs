@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -86,8 +87,31 @@ namespace Nodify
             completedEvent?.Invoke(animatableElement, EventArgs.Empty);
         }
 
-        //public static void CancelAnimation(this Control animatableElement, DependencyProperty dependencyProperty)
-        //    => animatableElement.BeginAnimation(dependencyProperty, null);
+        public static void StartLoopingAnimation<T>(this UIElement animatableElement, StyledProperty<T> dependencyProperty, T toValue, double durationInSeconds, CancellationToken token)
+        {
+            var fromValue = (T)animatableElement.GetValue(dependencyProperty);
+
+            var keyframe1 = new KeyFrame()
+            {
+                Setters = { new Setter(dependencyProperty, fromValue), }, KeyTime = TimeSpan.FromSeconds(0)
+            };
+
+            var keyframe2 = new KeyFrame()
+            {
+                Setters = { new Setter(dependencyProperty, toValue), }, KeyTime = TimeSpan.FromSeconds(durationInSeconds)
+            };
+
+            var animation = new Avalonia.Animation.Animation()
+            {
+                Duration = TimeSpan.FromSeconds(durationInSeconds), Children = { keyframe1, keyframe2 },
+                IterationCount = IterationCount.Infinite
+            };
+
+            animation.RunAsync(animatableElement, token);
+        }
+
+        public static void CancelAnimation<T>(this UIElement animatableElement, StyledProperty<T> dependencyProperty, CancellationTokenSource? tokenSource)
+            => tokenSource?.Cancel();
 
         #endregion
     }

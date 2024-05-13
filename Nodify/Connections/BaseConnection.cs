@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -107,7 +108,7 @@ namespace Nodify
     /// <summary>
     /// Represents the base class for shapes that are drawn from a <see cref="Source"/> point to a <see cref="Target"/> point.
     /// </summary>
-    public abstract class BaseConnection : WpfShape
+    public abstract partial class BaseConnection : WpfShape
     {
         #region Dependency Properties
 
@@ -121,6 +122,7 @@ namespace Nodify
         public static readonly StyledProperty<Orientation> TargetOrientationProperty = AvaloniaProperty.Register<BaseConnection, Orientation>(nameof(TargetOrientation), Orientation.Horizontal);
         public static readonly StyledProperty<ConnectionDirection> DirectionProperty = AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
         public static readonly StyledProperty<uint> DirectionalArrowsCountProperty = AvaloniaProperty.Register<BaseConnection, uint>(nameof(DirectionalArrowsCount), BoxValue.UInt0);
+        public static readonly StyledProperty<double> DirectionalArrowsOffsetProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(DirectionalArrowsOffset), BoxValue.Double0);
         public static readonly StyledProperty<double> SpacingProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
         public static readonly StyledProperty<Size> ArrowSizeProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
         public static readonly StyledProperty<ArrowHeadEnds> ArrowEndsProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadEnds>(nameof(ArrowEnds), ArrowHeadEnds.End);
@@ -138,9 +140,9 @@ namespace Nodify
         static BaseConnection()
         {
             AffectsRender<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty, DirectionalArrowsCountProperty);
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty, DirectionalArrowsCountProperty, DirectionalArrowsOffsetProperty);
             AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, SourceOrientationProperty, TargetOrientationProperty, DirectionalArrowsCountProperty);
+                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, SourceOrientationProperty, TargetOrientationProperty, DirectionalArrowsCountProperty, DirectionalArrowsOffsetProperty);
         }
         
         /// <summary>
@@ -225,12 +227,21 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets of sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
+        /// Gets or sets the number of arrows to be drawn on the line in the direction of the connection (see <see cref="Direction"/>).
         /// </summary>
         public uint DirectionalArrowsCount
         {
             get => (uint)GetValue(DirectionalArrowsCountProperty);
             set => SetValue(DirectionalArrowsCountProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the offset of the arrows drawn by the <see cref="DirectionalArrowsCount"/> (value is clamped between 0 and 1).
+        /// </summary>
+        public double DirectionalArrowsOffset
+        {
+            get => (double)GetValue(DirectionalArrowsOffsetProperty);
+            set => SetValue(DirectionalArrowsOffsetProperty, value);
         }
 
         /// <summary>
@@ -643,6 +654,24 @@ namespace Nodify
             var p1 = target - (TargetOrientation == Orientation.Vertical ? spacingVertical : spacing);
 
             return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
+        }
+
+        /// <summary>Starts animating the directional arrows.</summary>
+        /// <param name="duration">The duration for moving an arrowhead from <see cref="Source"/> to <see cref="Target"/>.</param>
+        public void StartAnimation(double duration = 1.5d)
+        {
+            if (DirectionalArrowsCount > 0)
+            {
+                animationTokenSource?.Cancel();
+                animationTokenSource = new CancellationTokenSource();
+                this.StartLoopingAnimation(DirectionalArrowsOffsetProperty, DirectionalArrowsOffset + 1d, duration, animationTokenSource.Token);
+            }
+        }
+
+        /// <summary>Stops the animation started by <see cref="StartAnimation(double)"/></summary>
+        public void StopAnimation()
+        {
+            this.CancelAnimation(DirectionalArrowsOffsetProperty, animationTokenSource);
         }
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)
