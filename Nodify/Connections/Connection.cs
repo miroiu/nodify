@@ -37,7 +37,7 @@ namespace Nodify
             double spacing = 1d / (DirectionalArrowsCount + 1);
             for (int i = 1; i <= DirectionalArrowsCount; i++)
             {
-                double t = spacing * i;
+                double t = (spacing * i + DirectionalArrowsOffset).WrapToRange(0d, 1d);
                 var to = InterpolateCubicBezier(p0, p1, p2, p3, t);
                 var direction = GetBezierTangent(p0, p1, p2, p3, t);
 

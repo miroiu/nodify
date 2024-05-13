@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Nodify.Playground
 {
@@ -48,6 +49,22 @@ namespace Nodify.Playground
     public partial class MainWindow : Window
     {
         private readonly Random _rand = new Random();
+        private bool _connectionAnimationsPlaying;
+
+        public static string AnimateDirectionalArrowsStoryboardKey = "AnimateDirectionalArrows";
+
+        public static DependencyProperty DirectionalArrowsOffsetProperty = BaseConnection.DirectionalArrowsOffsetProperty.AddOwner(typeof(MainWindow), new FrameworkPropertyMetadata(0d, DirectionalArrowsOffsetChanged));
+
+        private static void DirectionalArrowsOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            EditorSettings.Instance.DirectionalArrowsOffset = (double)e.NewValue;
+        }
+
+        public double DirectionalArrowsOffset
+        {
+            get => (double)GetValue(DirectionalArrowsOffsetProperty);
+            set => SetValue(DirectionalArrowsOffsetProperty, value);
+        }
 
         public MainWindow()
         {
@@ -74,6 +91,22 @@ namespace Nodify.Playground
                     EditorCommands.BringIntoView.Execute(node.Location, EditorView.Editor);
                 }
             }
+        }
+
+        private void AnimateConnections_Click(object sender, RoutedEventArgs e)
+        {
+            var storyboard = (Storyboard)FindResource(AnimateDirectionalArrowsStoryboardKey);
+
+            if (_connectionAnimationsPlaying)
+            {
+                storyboard.Stop();
+            }
+            else
+            {
+                storyboard.Begin();
+            }
+
+            _connectionAnimationsPlaying = !_connectionAnimationsPlaying;
         }
     }
 }
