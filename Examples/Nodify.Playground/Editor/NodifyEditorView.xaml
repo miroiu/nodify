@@ -401,12 +401,6 @@
                                          MovementMode="{Binding GroupingNodeMovement, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"/>
                 </DataTemplate>
 
-                <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
-                    <nodify:Node Input="{Binding Input}"
-                                 Output="{Binding Output}"
-                                 Header="{Binding Title}" />
-                </DataTemplate>
-
                 <DataTemplate DataType="{x:Type local:VerticalNodeViewModel}">
                     <nodify:Node Header="{Binding Input}"
                                  Footer="{Binding Output}"
@@ -450,6 +444,12 @@
                             </DataTemplate>
                         </nodify:Node.FooterTemplate>
                     </nodify:Node>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:FlowNodeViewModel}">
+                    <nodify:Node Input="{Binding Input}"
+                                 Output="{Binding Output}"
+                                 Header="{Binding Title}" />
                 </DataTemplate>
             </nodify:NodifyEditor.DataTemplates>
             

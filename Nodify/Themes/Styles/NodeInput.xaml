@@ -12,8 +12,8 @@
     </ControlTemplate>
 
     <LinearGradientBrush x:Key="InputFadeOpacityMask"
-                         StartPoint="0 0"
-                         EndPoint="1 0">
+                         StartPoint="0% 0%"
+                         EndPoint="100% 0%">
         <GradientStop Color="#22FFFFFF"
                       Offset="0" />
         <GradientStop Color="#88FFFFFF"
