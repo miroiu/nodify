@@ -3,6 +3,12 @@
 #### **In development**
 
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+	
+#### **Version 6.0.0**
+
+> - Breaking Changes:
 >	- Added a parameter for the orientation to DrawArrowGeometry, DrawDefaultArrowhead, DrawRectangleArrowhead and DrawEllipseArrowhead in BaseConnection
 >	- Added source and target parameters to GetTextPosition in BaseConnection
 >	- EditorGestures is now a singleton instead of a static class (can be inherited to create custom mappings)
@@ -31,7 +37,6 @@
 
 #### **Version 5.1.0**
 
-> - Breaking Changes:
 > - Features:
 >   - Added ItemContainer.SelectedBorderThickness dependency property
 >   - Added NodifyEditor.GetLocationInsideEditor
@@ -69,7 +74,6 @@
 >   - Added BaseConnection.ArrowShape dependency property to allow configurable arrowhead shape
 >   - Added NodifyEditor.EnableDraggingContainersOptimizations to allow receiving ItemContainer.Location updates in realtime
 >   - Added ConnectionOffsetMode.Static to allow offsetting the source and target points of the connection on the X and the Y axis without revolving around the source or target points
-> - Bugfixes:
 
 #### **Version 4.1.0**
 
