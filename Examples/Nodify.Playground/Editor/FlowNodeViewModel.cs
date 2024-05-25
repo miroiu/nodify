@@ -14,8 +14,6 @@ namespace Nodify.Playground
         public NodifyObservableCollection<ConnectorViewModel> Input { get; } = new NodifyObservableCollection<ConnectorViewModel>();
         public NodifyObservableCollection<ConnectorViewModel> Output { get; } = new NodifyObservableCollection<ConnectorViewModel>();
 
-        public Orientation Orientation { get; protected set; }
-
         public FlowNodeViewModel()
         {
             Orientation = Orientation.Horizontal;
