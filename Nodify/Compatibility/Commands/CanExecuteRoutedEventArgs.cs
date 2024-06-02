@@ -1,6 +1,6 @@
 namespace Nodify.Compatibility;
 
-internal sealed class CanExecuteRoutedEventArgs : RoutedEventArgs
+public sealed class CanExecuteRoutedEventArgs : RoutedEventArgs
 {
     public ICommand Command { get; }
 
@@ -8,7 +8,7 @@ internal sealed class CanExecuteRoutedEventArgs : RoutedEventArgs
 
     public bool CanExecute { get; set; }
 
-    internal CanExecuteRoutedEventArgs(ICommand command, object? parameter)
+    public CanExecuteRoutedEventArgs(ICommand command, object? parameter)
     {
         Command = command ?? throw new ArgumentNullException(nameof(command));
         Parameter = parameter;

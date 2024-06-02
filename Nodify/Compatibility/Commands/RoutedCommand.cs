@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Avalonia.Input;
-using Avalonia.Interactivity;
-
 namespace Nodify.Compatibility;
 
 // Ported from https://github.com/AvaloniaUI/AvaloniaEdit/blob/master/src/AvaloniaEdit/RoutedCommand.cs
-internal class RoutedCommand : ICommand
+public class RoutedCommand : ICommand
 {
     private static IInputElement? _focusedElement;
 

@@ -1,6 +1,6 @@
 namespace Nodify.Compatibility;
 
-internal class RoutedUICommand : RoutedCommand
+public class RoutedUICommand : RoutedCommand
 {
     public string Text { get; }
     

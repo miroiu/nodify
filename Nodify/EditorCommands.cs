@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    internal static class EditorCommands
+    public static class EditorCommands
     {
         /// <summary>
         /// Specifies the possible alignment values used by the <see cref="Align"/> command.

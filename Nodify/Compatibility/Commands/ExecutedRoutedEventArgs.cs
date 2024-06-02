@@ -1,6 +1,6 @@
 namespace Nodify.Compatibility;
 
-internal sealed class ExecutedRoutedEventArgs : RoutedEventArgs
+public sealed class ExecutedRoutedEventArgs : RoutedEventArgs
 {
     public ICommand Command { get; }
 
