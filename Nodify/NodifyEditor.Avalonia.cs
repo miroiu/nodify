@@ -53,6 +53,10 @@ public partial class NodifyEditor
         if (e.Source is Thumb || e.Source is Control sourceControl && sourceControl.FindAncestorOfType<Thumb>() != null)
             return;
 
-        e.Pointer.Capture(null);
+        // this check is required for StickyConnections to work
+        // when IsMouseCaptureWithin is true, then the pointer is actually captured by an explicit call to Capture
+        // so we don't wanna interrupt it
+        if (!IsMouseCaptureWithin)
+            e.Pointer.Capture(null);
     }
 }
