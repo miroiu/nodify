@@ -1102,10 +1102,6 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
-            base.OnPointerReleased(e);
-            if (e.Handled)
-                return;
-            
             MouseLocation = e.GetPosition(ItemsHost);
             State.HandleMouseUp(new MouseButtonEventArgs(e));
 
@@ -1121,6 +1117,11 @@ namespace Nodify
             {
                 e.Handled = true;
             }
+
+            if (e.Handled)
+                return;
+
+            base.OnPointerReleased(e);
         }
 
         /// <inheritdoc />
