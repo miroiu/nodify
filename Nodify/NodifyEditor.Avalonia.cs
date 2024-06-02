@@ -47,6 +47,12 @@ public partial class NodifyEditor
         // OnPreviewPointerPressed is a tunneled handler, meaning it is called BEFORE any other mouse handler
         // basically we release the pointer capture as soon as it is captured, so that later it can be manually captured
         // in correct places
+
+        // However, the above interferes with Thumb behaviour, which does not capture the pointer in OnPointerPressed,
+        // because it assumes the pointer is captured automatically. RIP
+        if (e.Source is Thumb || e.Source is Control sourceControl && sourceControl.FindAncestorOfType<Thumb>() != null)
+            return;
+
         e.Pointer.Capture(null);
     }
 }
