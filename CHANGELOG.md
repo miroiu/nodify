@@ -4,7 +4,10 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added new built-in connection type: StepConnection
 > - Bugfixes:
+>	- Fixed CircuitConnection directional arrows not interpolating correctly
+>	- Fixed style not applying to the default Connection template outside App.xaml
 	
 #### **Version 6.0.0**
 

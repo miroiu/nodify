@@ -7,7 +7,8 @@ namespace Nodify.Playground
     {
         Default,
         Line,
-        Circuit
+        Circuit,
+        Step
     }
 
     public class EditorSettings : ObservableObject
