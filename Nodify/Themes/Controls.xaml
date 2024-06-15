@@ -39,9 +39,9 @@
         <Setter Property="SelectedBrush"
                 Value="{StaticResource ItemContainer.SelectedBrush}" />
     </Style>
-    
+
     <!--DECORATOR CONTAINER-->
-    
+
     <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
 
     <Style TargetType="{x:Type local:DecoratorContainer}"
@@ -179,6 +179,16 @@
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
+    </Style>
+
+    <!--STEP CONNECTION-->
+
+    <Style TargetType="{x:Type local:StepConnection}"
+           BasedOn="{StaticResource {x:Type local:StepConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
     </Style>
 
     <!--PENDING CONNECTION-->
