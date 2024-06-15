@@ -8,6 +8,7 @@
 > - Bugfixes:
 >	- Fixed CircuitConnection directional arrows not interpolating correctly
 >	- Fixed style not applying to the default Connection template outside App.xaml
+>	- Fixed BaseConnection SplitEvent and DisconnectEvent not being raised if the corresponding command is null
 	
 #### **Version 6.0.0**
 
