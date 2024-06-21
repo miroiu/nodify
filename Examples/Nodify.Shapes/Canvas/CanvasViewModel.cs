@@ -47,7 +47,7 @@ namespace Nodify.Shapes.Canvas
             SelectShapesStartedCommand = new DelegateCommand(SelectShapesStartedHandler);
             SelectShapesCompletedCommand = new DelegateCommand(SelectShapesCompletedHandler);
 
-            DeleteSelectionCommand = new DelegateCommand(DeleteSelection);
+            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => !CanvasToolbar.Locked);
 
             CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(
                 ((object Source, object Target) pendingConnection) => AddConnection((ConnectorViewModel)pendingConnection.Source, (ConnectorViewModel)pendingConnection.Target),
