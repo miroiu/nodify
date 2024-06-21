@@ -25,6 +25,8 @@
                 Value="Center" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Stretch" />
+        <Setter Property="Cursor"
+                Value="IBeam" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:EditableTextBlock}">
@@ -84,19 +86,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:TabControlEx}">
-                    <Grid KeyboardNavigation.TabNavigation="Local" 
+                    <Grid KeyboardNavigation.TabNavigation="Local"
                           SnapsToDevicePixels="true"
                           ClipToBounds="true">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Grid Panel.ZIndex ="1"
+                        <Grid Panel.ZIndex="1"
                               Margin="2,2,2,0"
                               Background="{TemplateBinding Background}"
                               KeyboardNavigation.TabIndex="1">
-                            <ScrollViewer x:Name="PART_ScrollViewer" 
-                                          HorizontalScrollBarVisibility="Auto" 
+                            <ScrollViewer x:Name="PART_ScrollViewer"
+                                          HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -104,7 +106,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Horizontal"
-                                                IsItemsHost="True"/>
+                                                IsItemsHost="True" />
                                     <Button Style="{StaticResource IconButton}"
                                             Command="{TemplateBinding AddTabCommand}"
                                             Height="34"
@@ -112,34 +114,34 @@
                                             BorderBrush="{DynamicResource HighlightedBackgroundBrush}"
                                             Grid.Column="1"
                                             ToolTip="Add new tab">
-                                        <Path Width="25" 
+                                        <Path Width="25"
                                               Height="15"
                                               Data="{StaticResource AddGeometry}"
-                                              Fill="{TemplateBinding Foreground}" 
-                                              Stretch="Uniform"/>
+                                              Fill="{TemplateBinding Foreground}"
+                                              Stretch="Uniform" />
                                     </Button>
                                 </Grid>
                             </ScrollViewer>
                         </Grid>
                         <Border x:Name="ContentPanel"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            KeyboardNavigation.TabNavigation="Local"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
-                                            KeyboardNavigation.TabIndex="2"
-                                            Grid.Row="1">
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                KeyboardNavigation.TabNavigation="Local"
+                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                KeyboardNavigation.TabIndex="2"
+                                Grid.Row="1">
                             <ContentPresenter x:Name="PART_SelectedContentHost"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                               Margin="{TemplateBinding Padding}"
-                                              ContentSource="SelectedContent"/>
+                                              ContentSource="SelectedContent" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" 
+                        <Trigger Property="IsEnabled"
                                  Value="false">
-                            <Setter Property="Opacity" 
-                                    Value=".5"/>
+                            <Setter Property="Opacity"
+                                    Value=".5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -148,73 +150,75 @@
     </Style>
 
     <Style TargetType="{x:Type local:TabItemEx}">
-        <Setter Property="Background" 
-                Value="{DynamicResource BackgroundBrush}"/>
+        <Setter Property="Background"
+                Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="Foreground"
-                Value="{DynamicResource ForegroundBrush}"/>
+                Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="RenderTransform">
             <Setter.Value>
-                <ScaleTransform ScaleY="0"/>
+                <ScaleTransform ScaleY="0" />
             </Setter.Value>
         </Setter>
-        <Setter Property="RenderTransformOrigin" 
-                Value="1 1"/>
-        <Setter Property="VerticalAlignment" 
-                Value="Bottom"/>
-        <Setter Property="VerticalContentAlignment" 
-                Value="Stretch"/>
-        <Setter Property="HorizontalContentAlignment" 
-                Value="Stretch"/>
-        <Setter Property="Padding" 
-                Value="7"/>
+        <Setter Property="RenderTransformOrigin"
+                Value="1 1" />
+        <Setter Property="VerticalAlignment"
+                Value="Bottom" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="Padding"
+                Value="7" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:TabItemEx}">
                     <Border x:Name="mBorder"
-                            BorderThickness="1" 
+                            BorderThickness="1"
                             CornerRadius="5 5 0 0"
-                            Background="{TemplateBinding Background}"  
+                            Background="{TemplateBinding Background}"
                             Padding="{TemplateBinding Padding}">
                         <Grid>
                             <StackPanel Orientation="Horizontal">
                                 <local:EditableTextBlock Text="{TemplateBinding Header}"
-                                                         Foreground="{TemplateBinding Foreground}"/>
-                                <Button x:Name="mCloseBtn" 
-                                        Command="{TemplateBinding CloseTabCommand}" 
-                                        CommandParameter="{TemplateBinding CloseTabCommandParameter}" 
+                                                         Foreground="{TemplateBinding Foreground}" />
+                                <Button x:Name="mCloseBtn"
+                                        Command="{TemplateBinding CloseTabCommand}"
+                                        CommandParameter="{TemplateBinding CloseTabCommandParameter}"
                                         Visibility="Hidden"
-                                        Margin="5 0 0 0" 
+                                        Margin="5 0 0 0"
                                         Background="{DynamicResource HighlightedBackgroundBrush}"
                                         BorderBrush="{DynamicResource BackgroundBrush}"
                                         Style="{StaticResource IconButton}"
                                         ToolTip="Close Tab">
                                     <Path Width="16"
                                           Height="8"
-                                          Data="{StaticResource CloseGeometry}" 
-                                          Fill="{TemplateBinding Foreground}" 
-                                          Stretch="Uniform"/>
+                                          Data="{StaticResource CloseGeometry}"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Stretch="Uniform" />
                                 </Button>
                             </StackPanel>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Visibility" 
-                                    Value="Visible" 
-                                    TargetName="mCloseBtn"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Visible"
+                                    TargetName="mCloseBtn" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource HighlightedBackgroundBrush}" />
                         </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="TextElement.FontWeight" 
-                                    Value="Bold"/>
-                            <Setter Property="Background" 
-                                    Value="{DynamicResource HighlightedBackgroundBrush}"/>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="TextElement.FontWeight"
+                                    Value="Bold" />
+                            <Setter Property="Background"
+                                    Value="{DynamicResource HighlightedBackgroundBrush}" />
                             <Setter Property="Padding"
-                                    Value="8"/>
-                            <Setter Property="Visibility" 
-                                    Value="Visible" 
-                                    TargetName="mCloseBtn"/>
+                                    Value="8" />
+                            <Setter Property="Visibility"
+                                    Value="Visible"
+                                    TargetName="mCloseBtn" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -226,17 +230,75 @@
                     <Storyboard>
                         <DoubleAnimation Duration="0:0:.5"
                                          From="0"
-                                         To="1" 
+                                         To="1"
                                          Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)">
                             <DoubleAnimation.EasingFunction>
                                 <ElasticEase Oscillations="1"
                                              Springiness="3"
-                                             EasingMode="EaseOut"/>
+                                             EasingMode="EaseOut" />
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type local:Swatches}">
+        <Style.Resources>
+            <local:MultiValueEqualityConverter x:Key="MultiValueEqualityConverter" />
+            <local:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Swatches">
+                    <Border Background="#1e293b"
+                            CornerRadius="8"
+                            Padding="6"
+                            VerticalAlignment="Top">
+                        <ItemsControl ItemsSource="{TemplateBinding Colors}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="50"
+                                            Padding="1"
+                                            Margin="3">
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="Background"
+                                                        Value="Transparent" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Value="True">
+                                                        <DataTrigger.Binding>
+                                                            <MultiBinding Converter="{StaticResource MultiValueEqualityConverter}">
+                                                                <Binding RelativeSource="{RelativeSource AncestorType=local:Swatches}"
+                                                                         Path="SelectedColor"
+                                                                         Mode="OneWay" />
+                                                                <Binding Mode="OneWay" />
+                                                            </MultiBinding>
+                                                        </DataTrigger.Binding>
+                                                        <Setter Property="Background"
+                                                                Value="White" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Ellipse Width="24"
+                                                 Height="24"
+                                                 Stroke="#1e293b"
+                                                 Fill="{Binding ., Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                                 Cursor="Hand"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

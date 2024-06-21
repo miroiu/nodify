@@ -1,0 +1,475 @@
+﻿<UserControl x:Class="Nodify.Shapes.Canvas.CanvasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nodify.Shapes.Canvas"
+             xmlns:nodify="https://miroiu.github.io/nodify"
+             xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
+             xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+             mc:Ignorable="d"
+             Background="#0f172a"
+             Foreground="white"
+             d:DataContext="{d:DesignInstance Type=local:CanvasViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <shared:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <shared:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+
+            <VisualBrush x:Key="GridDrawingBrush"
+                         TileMode="Tile"
+                         Viewport="0 0 30 30"
+                         ViewportUnits="Absolute"
+                         Viewbox="0 0 30 30"
+                         ViewboxUnits="Absolute"
+                         o:Freeze="True"
+                         Transform="{Binding ViewportTransform, ElementName=Editor}">
+                <VisualBrush.Visual>
+                    <Rectangle Width="1"
+                               Height="1"
+                               Fill="White" />
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Grid.Resources>
+
+        <nodify:NodifyEditor ItemsSource="{Binding Shapes}"
+                             SelectedItems="{Binding SelectedShapes}"
+                             Connections="{Binding Connections}"
+                             Decorators="{Binding Decorators}"
+                             Background="{StaticResource GridDrawingBrush}"
+                             ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
+                             ItemsDragStartedCommand="{Binding MoveShapesStartedCommand}"
+                             ItemsDragCompletedCommand="{Binding MoveShapesCompletedCommand}"
+                             ItemsSelectStartedCommand="{Binding SelectShapesStartedCommand}"
+                             ItemsSelectCompletedCommand="{Binding SelectShapesCompletedCommand}"
+                             RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
+                             GridCellSize="10"
+                             x:Name="Editor">
+            <nodify:NodifyEditor.Resources>
+                <DataTemplate DataType="{x:Type local:EllipseViewModel}">
+                    <Ellipse Stretch="Fill"
+                             Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                             Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                             StrokeThickness="2"
+                             Opacity="0.8" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:RectangleViewModel}">
+                    <Rectangle Stretch="Fill"
+                               Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                               Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                               StrokeThickness="2"
+                               Opacity="0.8" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:ShapeToolbarViewModel}">
+                    <Canvas Visibility="{Binding Shape, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <shared:Swatches SelectedColor="{Binding Shape.Color}"
+                                         Colors="{x:Static local:ShapeViewModel.Colors}"
+                                         Canvas.Top="-70"
+                                         Panel.ZIndex="1">
+                            <shared:Swatches.Effect>
+                                <DropShadowEffect ShadowDepth="1" />
+                            </shared:Swatches.Effect>
+                        </shared:Swatches>
+                    </Canvas>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:UserCursorViewModel}">
+                    <StackPanel IsHitTestVisible="False">
+                        <Viewbox Width="24"
+                                 Height="24"
+                                 Margin="-10 0 0 5"
+                                 Stretch="Fill"
+                                 HorizontalAlignment="Left">
+                            <Path Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                  Stroke="White"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Data="M.256.255a.874.874 0 0 0-.18.974l4.753 17.114a.875.875 0 0 0 1.603-.012L10 10l8.334-3.57a.875.875 0 0 0 .01-1.601L1.23.075a.874.874 0 0 0-.974.18Z" />
+                        </Viewbox>
+                        <Border CornerRadius="3"
+                                Background="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}, ConverterParameter=0.7}"
+                                Padding="6 2">
+                            <TextBlock Text="{Binding Name}" />
+                        </Border>
+                    </StackPanel>
+                </DataTemplate>
+
+                <Style TargetType="{x:Type nodify:PendingConnection}"
+                       BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
+                    <Setter Property="Direction"
+                            Value="{Binding Source.Direction}" />
+                    <Setter Property="Stroke">
+                        <Setter.Value>
+                            <SolidColorBrush Color="White"
+                                             Opacity="0.7" />
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </nodify:NodifyEditor.Resources>
+
+            <nodify:NodifyEditor.ConnectionTemplate>
+                <DataTemplate DataType="{x:Type local:ConnectionViewModel}">
+                    <nodify:StepConnection Source="{Binding Source.Anchor}"
+                                           Target="{Binding Target.Anchor}"
+                                           SourcePosition="{Binding Source.Position}"
+                                           TargetPosition="{Binding Target.Position}"
+                                           Cursor="Hand"
+                                           Fill="Transparent"
+                                           StrokeThickness="3">
+                        <nodify:StepConnection.Stroke>
+                            <SolidColorBrush Color="White"
+                                             Opacity="0.7" />
+                        </nodify:StepConnection.Stroke>
+                    </nodify:StepConnection>
+                </DataTemplate>
+            </nodify:NodifyEditor.ConnectionTemplate>
+
+            <nodify:NodifyEditor.DecoratorContainerStyle>
+                <Style TargetType="{x:Type nodify:DecoratorContainer}"
+                       BasedOn="{StaticResource {x:Type nodify:DecoratorContainer}}">
+                    <Setter Property="Location"
+                            Value="{Binding Location}" />
+                </Style>
+            </nodify:NodifyEditor.DecoratorContainerStyle>
+
+            <nodify:NodifyEditor.ItemContainerStyle>
+                <Style TargetType="{x:Type nodify:ItemContainer}"
+                       BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                    <Style.Resources>
+                        <Style TargetType="{x:Type nodify:Connector}"
+                               BasedOn="{StaticResource {x:Type nodify:Connector}}">
+                            <Setter Property="BorderBrush"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
+                            <Setter Property="Background"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Center" />
+                            <Setter Property="VerticalContentAlignment"
+                                    Value="Center" />
+                            <Setter Property="IsConnected"
+                                    Value="True" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Grid Background="Transparent">
+                                            <Ellipse x:Name="PART_Connector"
+                                                     Width="14"
+                                                     Height="14"
+                                                     Stroke="{TemplateBinding BorderBrush}"
+                                                     Fill="{TemplateBinding Background}"
+                                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Style.Resources>
+                    <Setter Property="Location"
+                            Value="{Binding Location}" />
+                    <Setter Property="IsSelected"
+                            Value="{Binding IsSelected}" />
+                    <Setter Property="Padding"
+                            Value="3" />
+                    <Setter Property="SelectedBrush"
+                            Value="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}" />
+                    <Setter Property="SelectedBorderThickness"
+                            Value="1" />
+                    <Setter Property="BorderBrush"
+                            Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type nodify:ItemContainer}">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Padding="{TemplateBinding Padding}"
+                                        x:Name="Border"
+                                        CornerRadius="3">
+                                    <Grid Height="150"
+                                          Width="150">
+
+                                        <ContentPresenter Cursor="Hand" />
+
+                                        <shared:EditableTextBlock Text="{Binding Text}"
+                                                                  HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"
+                                                                  HorizontalContentAlignment="Center"
+                                                                  FontSize="16"
+                                                                  ToolTip="Double click to edit" />
+
+                                        <DockPanel LastChildFill="False">
+                                            <nodify:Connector DataContext="{Binding LeftConnector}"
+                                                              Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                                              DockPanel.Dock="Left"
+                                                              HorizontalContentAlignment="Left"
+                                                              Margin="-11 0 0 0"
+                                                              Visibility="Hidden"
+                                                              Height="Auto"
+                                                              Width="25"
+                                                              x:Name="LeftConnector" />
+
+                                            <nodify:Connector DataContext="{Binding RightConnector}"
+                                                              Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                                              DockPanel.Dock="Right"
+                                                              HorizontalContentAlignment="Right"
+                                                              Margin="0 0 -11 0"
+                                                              Visibility="Hidden"
+                                                              Height="Auto"
+                                                              Width="25"
+                                                              x:Name="RightConnector" />
+
+                                            <nodify:Connector DataContext="{Binding TopConnector}"
+                                                              Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                                              DockPanel.Dock="Top"
+                                                              VerticalContentAlignment="Top"
+                                                              Margin="0 -11 0 0"
+                                                              Visibility="Hidden"
+                                                              Width="Auto"
+                                                              Height="25"
+                                                              x:Name="TopConnector" />
+
+                                            <nodify:Connector DataContext="{Binding BottomConnector}"
+                                                              Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                                              DockPanel.Dock="Bottom"
+                                                              VerticalContentAlignment="Bottom"
+                                                              Margin="0 0 0 -11"
+                                                              Visibility="Hidden"
+                                                              Width="Auto"
+                                                              Height="25"
+                                                              x:Name="BottomConnector" />
+                                        </DockPanel>
+                                    </Grid>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected"
+                                                       Value="True" />
+                                            <Condition Property="IsPreviewingSelection"
+                                                       Value="{x:Null}" />
+                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger.Setters>
+                                            <Setter Property="Visibility"
+                                                    TargetName="LeftConnector"
+                                                    Value="Visible" />
+                                            <Setter Property="Visibility"
+                                                    TargetName="RightConnector"
+                                                    Value="Visible" />
+                                            <Setter Property="Visibility"
+                                                    TargetName="TopConnector"
+                                                    Value="Visible" />
+                                            <Setter Property="Visibility"
+                                                    TargetName="BottomConnector"
+                                                    Value="Visible" />
+                                        </MultiTrigger.Setters>
+                                    </MultiTrigger>
+                                    <Trigger Property="IsPreviewingSelection"
+                                             Value="True">
+                                        <Setter Property="Visibility"
+                                                TargetName="LeftConnector"
+                                                Value="Visible" />
+                                        <Setter Property="Visibility"
+                                                TargetName="RightConnector"
+                                                Value="Visible" />
+                                        <Setter Property="Visibility"
+                                                TargetName="TopConnector"
+                                                Value="Visible" />
+                                        <Setter Property="Visibility"
+                                                TargetName="BottomConnector"
+                                                Value="Visible" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Panel.ZIndex"
+                                    Value="1" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </nodify:NodifyEditor.ItemContainerStyle>
+        </nodify:NodifyEditor>
+
+        <!--TOOLBARS-->
+
+        <Border VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Margin="0 0 0 50"
+                CornerRadius="3"
+                Background="#1e293b">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" />
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource IconButton}">
+                        <Setter Property="Margin"
+                                Value="2" />
+                        <Setter Property="Width"
+                                Value="32" />
+                        <Setter Property="Height"
+                                Value="32" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <ListBox BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin"
+                                    Value="2" />
+                            <Setter Property="Width"
+                                    Value="32" />
+                            <Setter Property="Height"
+                                    Value="32" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Padding="0">
+                        <Border CornerRadius="3"
+                                Padding="5">
+                            <ContentPresenter Content="{StaticResource CursorIcon}" />
+                        </Border>
+                    </ListBoxItem>
+                    <ListBoxItem Padding="0">
+                        <Border CornerRadius="3"
+                                Padding="5">
+                            <ContentPresenter Content="{StaticResource CircleIcon}" />
+                        </Border>
+                    </ListBoxItem>
+                    <ListBoxItem Padding="0">
+                        <Border CornerRadius="3"
+                                Padding="5">
+                            <ContentPresenter Content="{StaticResource SquareIcon}" />
+                        </Border>
+                    </ListBoxItem>
+                    <ListBoxItem Padding="0">
+                        <Border CornerRadius="3"
+                                Padding="5">
+                            <ContentPresenter Content="{StaticResource TriangleIcon}" />
+                        </Border>
+                    </ListBoxItem>
+                </ListBox>
+
+                <Button Command="{Binding UndoCommand}"
+                        CommandTarget="{Binding ElementName=Editor}"
+                        Content="{StaticResource ArrowBackIcon}"
+                        Padding="1" />
+
+                <Button Command="{Binding RedoCommand}"
+                        CommandTarget="{Binding ElementName=Editor}"
+                        Content="{StaticResource ArrowForwardIcon}"
+                        Padding="1" />
+
+            </StackPanel>
+        </Border>
+
+        <Border VerticalAlignment="Bottom"
+                HorizontalAlignment="Left"
+                Margin="50 0 0 50"
+                CornerRadius="3"
+                Background="#1e293b">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" />
+            </Border.Effect>
+
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource IconButton}">
+                        <Setter Property="Margin"
+                                Value="2" />
+                        <Setter Property="Width"
+                                Value="32" />
+                        <Setter Property="Height"
+                                Value="32" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <Button Command="{x:Static nodify:EditorCommands.ZoomIn}"
+                        CommandTarget="{Binding ElementName=Editor}"
+                        Content="{StaticResource PlusIcon}" />
+
+                <Button Command="{x:Static nodify:EditorCommands.ZoomOut}"
+                        CommandTarget="{Binding ElementName=Editor}"
+                        Content="{StaticResource MinusIcon}" />
+
+                <Button Command="{x:Static nodify:EditorCommands.FitToScreen}"
+                        CommandTarget="{Binding ElementName=Editor}"
+                        Content="{StaticResource MaximizeIcon}" />
+
+                <Button Command="{Binding ToggleLockCommand}"
+                        DataContext="{Binding CanvasToolbar}">
+                    <Button.Style>
+                        <Style TargetType="Button"
+                               BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content"
+                                    Value="{StaticResource LockOpenIcon}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Locked}"
+                                             Value="True">
+                                    <Setter Property="Content"
+                                            Value="{StaticResource LockIcon}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <Border VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0 0 50 50"
+                Height="38"
+                CornerRadius="3">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" />
+            </Border.Effect>
+
+            <ItemsControl ItemsSource="{Binding Cursors}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:UserCursorViewModel}">
+                        <Border CornerRadius="50"
+                                Height="28"
+                                Width="28"
+                                Margin="-3"
+                                Background="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                Padding="6 2">
+                            <Button Command="{x:Static nodify:EditorCommands.BringIntoView}"
+                                    CommandParameter="{Binding Location}"
+                                    CommandTarget="{Binding ElementName=Editor}"
+                                    Style="{StaticResource IconButton}"
+                                    ToolTip="{Binding Name}"
+                                    Content="{Binding Name[0]}"
+                                    Foreground="White"
+                                    Margin="-6 -2"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+    </Grid>
+</UserControl>
