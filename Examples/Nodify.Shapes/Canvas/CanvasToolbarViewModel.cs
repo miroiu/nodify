@@ -1,9 +1,21 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Nodify.Shapes.Canvas
 {
+    public enum CanvasTool
+    {
+        None,
+        Ellipse,
+        Rectangle,
+        Triangle
+    }
+
     public class CanvasToolbarViewModel : PropertyChangedBase
     {
+        public static readonly CanvasTool[] AvailableTools = Enum.GetValues(typeof(CanvasTool)).Cast<CanvasTool>().ToArray();
+
         private static readonly EditorGestures EditorGestures;
 
         private bool _locked;
@@ -21,6 +33,13 @@ namespace Nodify.Shapes.Canvas
         }
 
         public ICommand ToggleLockCommand { get; set; }
+
+        private CanvasTool _selectedTool = CanvasTool.None;
+        public CanvasTool SelectedTool
+        {
+            get => _selectedTool;
+            set => SetProperty(ref _selectedTool, value);
+        }
 
         public CanvasViewModel Canvas { get; }
 

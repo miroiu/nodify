@@ -324,47 +324,85 @@
                 </StackPanel.Resources>
 
                 <ListBox BorderThickness="0"
-                         Background="Transparent">
+                         Background="Transparent"
+                         ItemsSource="{x:Static local:CanvasToolbarViewModel.AvailableTools}"
+                         SelectedValue="{Binding CanvasToolbar.SelectedTool}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Margin"
                                     Value="2" />
+                            <Setter Property="Padding"
+                                    Value="0" />
                             <Setter Property="Width"
                                     Value="32" />
                             <Setter Property="Height"
                                     Value="32" />
                         </Style>
                     </ListBox.ItemContainerStyle>
+
+                    <ListBox.Resources>
+                        <DataTemplate x:Key="Cursor">
+                            <Border CornerRadius="3"
+                                    Padding="5">
+                                <ContentPresenter Content="{StaticResource CursorIcon}" />
+                            </Border>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Circle">
+                            <Border CornerRadius="3"
+                                    Padding="5">
+                                <ContentPresenter Content="{StaticResource CircleIcon}" />
+                            </Border>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Square">
+                            <Border CornerRadius="3"
+                                    Padding="5">
+                                <ContentPresenter Content="{StaticResource SquareIcon}" />
+                            </Border>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Triangle">
+                            <Border CornerRadius="3"
+                                    Padding="5">
+                                <ContentPresenter Content="{StaticResource TriangleIcon}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.Resources>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding}">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Setter Property="ContentTemplate"
+                                                Value="{StaticResource Cursor}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding}"
+                                                         Value="{x:Static local:CanvasTool.Ellipse}">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource Circle}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding}"
+                                                         Value="{x:Static local:CanvasTool.Rectangle}">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource Square}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding}"
+                                                         Value="{x:Static local:CanvasTool.Triangle}">
+                                                <Setter Property="ContentTemplate"
+                                                        Value="{StaticResource Triangle}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"
                                         IsItemsHost="True" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
-                    <ListBoxItem Padding="0">
-                        <Border CornerRadius="3"
-                                Padding="5">
-                            <ContentPresenter Content="{StaticResource CursorIcon}" />
-                        </Border>
-                    </ListBoxItem>
-                    <ListBoxItem Padding="0">
-                        <Border CornerRadius="3"
-                                Padding="5">
-                            <ContentPresenter Content="{StaticResource CircleIcon}" />
-                        </Border>
-                    </ListBoxItem>
-                    <ListBoxItem Padding="0">
-                        <Border CornerRadius="3"
-                                Padding="5">
-                            <ContentPresenter Content="{StaticResource SquareIcon}" />
-                        </Border>
-                    </ListBoxItem>
-                    <ListBoxItem Padding="0">
-                        <Border CornerRadius="3"
-                                Padding="5">
-                            <ContentPresenter Content="{StaticResource TriangleIcon}" />
-                        </Border>
-                    </ListBoxItem>
                 </ListBox>
 
                 <Button Command="{Binding UndoCommand}"
@@ -465,7 +503,7 @@
                                     ToolTip="{Binding Name}"
                                     Content="{Binding Name[0]}"
                                     Foreground="White"
-                                    Margin="-6 -2"/>
+                                    Margin="-6 -2" />
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
