@@ -9,21 +9,40 @@ namespace Nodify.Playground
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ConnectorViewModel connector)
+            if (value is ConnectionViewModel connection)
             {
-                if (connector.Node.Orientation == Orientation.Horizontal)
+                var connector = parameter is "Input" ? connection.Input : connection.Output;
+
+                if (connector.Node is KnotNodeViewModel)
                 {
-                    return connector.Flow == ConnectorFlow.Output
-                        ? ConnectorPosition.Right
-                        : ConnectorPosition.Left;
+                    var otherConnector = connection.Input == connector ? connection.Output : connection.Input;
+
+                    if (otherConnector.Node is KnotNodeViewModel)
+                    {
+                        return ToPosition(connector == connection.Input ? ConnectorFlow.Input : ConnectorFlow.Output, connector.Node.Orientation);
+                    }
+
+                    return ToPosition(otherConnector.Flow == ConnectorFlow.Output ? ConnectorFlow.Input : ConnectorFlow.Output, connector.Node.Orientation);
                 }
 
-                return connector.Flow == ConnectorFlow.Output
-                    ? ConnectorPosition.Bottom
-                    : ConnectorPosition.Top;
+                return ToPosition(connector.Flow, connector.Node.Orientation);
             }
 
             return value;
+        }
+
+        private ConnectorPosition ToPosition(ConnectorFlow flow, Orientation orientation)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return flow == ConnectorFlow.Output
+                    ? ConnectorPosition.Right
+                    : ConnectorPosition.Left;
+            }
+
+            return flow == ConnectorFlow.Output
+                ? ConnectorPosition.Bottom
+                : ConnectorPosition.Top;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
