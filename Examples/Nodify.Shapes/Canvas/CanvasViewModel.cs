@@ -200,6 +200,9 @@ namespace Nodify.Shapes.Canvas
 
         public void DeleteSelection()
         {
+            if (SelectedShapes.Count == 0)
+                return;
+
             using (UndoRedo.Batch("Delete selection"))
             {
                 var selection = SelectedShapes.ToList();
