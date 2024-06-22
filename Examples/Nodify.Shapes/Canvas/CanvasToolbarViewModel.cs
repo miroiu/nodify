@@ -16,7 +16,7 @@ namespace Nodify.Shapes.Canvas
     {
         public static readonly CanvasTool[] AvailableTools = Enum.GetValues(typeof(CanvasTool)).Cast<CanvasTool>().ToArray();
 
-        private static readonly EditorGestures EditorGestures;
+        internal static readonly EditorGestures EditorGestures;
 
         private bool _locked;
         public bool Locked
@@ -26,8 +26,14 @@ namespace Nodify.Shapes.Canvas
             {
                 if (SetProperty(ref _locked, value))
                 {
-                    var newMappings = _locked ? UnboundGestureMappings.Instance : EditorGestures;
+                    var newMappings = _locked ? LockedGestureMappings.Instance : EditorGestures;
                     EditorGestures.Mappings.Apply(newMappings);
+
+                    if(_locked)
+                    {
+                        _selectedTool = CanvasTool.None;
+                        OnPropertyChanged(nameof(SelectedTool));
+                    }
                 }
             }
         }
@@ -38,7 +44,14 @@ namespace Nodify.Shapes.Canvas
         public CanvasTool SelectedTool
         {
             get => _selectedTool;
-            set => SetProperty(ref _selectedTool, value);
+            set
+            {
+                if (SetProperty(ref _selectedTool, Locked ? CanvasTool.None : value))
+                {
+                    var newMappings = _selectedTool == CanvasTool.None ? EditorGestures : DrawingGesturesMappings.Instance;
+                    EditorGestures.Mappings.Apply(newMappings);
+                }
+            }
         }
 
         public CanvasViewModel Canvas { get; }
@@ -64,10 +77,31 @@ namespace Nodify.Shapes.Canvas
         public UnboundGestureMappings()
         {
             Editor.Selection.Apply(SelectionGestures.None);
-            Editor.Pan.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
             ItemContainer.Selection.Apply(SelectionGestures.None);
             Connection.Disconnect.Value = MultiGesture.None;
             Connector.Connect.Value = MultiGesture.None;
+        }
+    }
+
+    public class LockedGestureMappings : EditorGestures
+    {
+        public static readonly LockedGestureMappings Instance = new LockedGestureMappings();
+
+        public LockedGestureMappings()
+        {
+            Apply(UnboundGestureMappings.Instance);
+
+            Editor.Pan.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
+        }
+    }
+
+    public class DrawingGesturesMappings : EditorGestures
+    {
+        public static readonly DrawingGesturesMappings Instance = new DrawingGesturesMappings();
+
+        public DrawingGesturesMappings()
+        {
+            Apply(UnboundGestureMappings.Instance);
         }
     }
 }

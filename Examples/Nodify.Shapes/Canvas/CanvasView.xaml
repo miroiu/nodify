@@ -8,7 +8,7 @@
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              mc:Ignorable="d"
-             Background="#0f172a"
+             Background="#0a172a"
              Foreground="white"
              d:DataContext="{d:DesignInstance Type=local:CanvasViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="450"
@@ -47,6 +47,21 @@
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
                              GridCellSize="10"
                              x:Name="Editor">
+            <nodify:NodifyEditor.Style>
+                <Style TargetType="{x:Type nodify:NodifyEditor}"
+                       BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">
+                    <Setter Property="Cursor"
+                            Value="Cross" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CanvasToolbar.SelectedTool}"
+                                     Value="{x:Static local:CanvasTool.None}">
+                            <Setter Property="Cursor"
+                                    Value="Arrow" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </nodify:NodifyEditor.Style>
+
             <nodify:NodifyEditor.Resources>
                 <DataTemplate DataType="{x:Type local:EllipseViewModel}">
                     <Ellipse Stretch="Fill"
@@ -313,7 +328,7 @@
 
         <Border VerticalAlignment="Bottom"
                 HorizontalAlignment="Center"
-                Margin="0 0 0 50"
+                Margin="0 0 0 20"
                 CornerRadius="3"
                 Background="#1e293b">
             <Border.Effect>
@@ -431,7 +446,7 @@
 
         <Border VerticalAlignment="Bottom"
                 HorizontalAlignment="Left"
-                Margin="50 0 0 50"
+                Margin="20 0 0 20"
                 CornerRadius="3"
                 Background="#1e293b">
             <Border.Effect>
@@ -485,7 +500,7 @@
 
         <Border VerticalAlignment="Bottom"
                 HorizontalAlignment="Right"
-                Margin="0 0 50 50"
+                Margin="0 0 20 20"
                 Height="38"
                 CornerRadius="3">
 
