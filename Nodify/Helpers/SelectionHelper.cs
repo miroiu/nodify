@@ -121,7 +121,7 @@ namespace Nodify
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(SelectionType));
+                    throw new NotImplementedException(nameof(SelectionType));
             }
         }
 
@@ -166,7 +166,7 @@ namespace Nodify
             }
         }
 
-        private void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
+        private static void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
         {
             for (var i = 0; i < containers.Count; i++)
             {
