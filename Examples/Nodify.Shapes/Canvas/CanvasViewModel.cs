@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Nodify.Shapes.Canvas
 {
-    public class CanvasViewModel : PropertyChangedBase
+    public class CanvasViewModel : ObservableObject
     {
         public NodifyObservableCollection<ShapeViewModel> Shapes { get; } = new NodifyObservableCollection<ShapeViewModel>();
         public NodifyObservableCollection<ShapeViewModel> SelectedShapes { get; } = new NodifyObservableCollection<ShapeViewModel>();

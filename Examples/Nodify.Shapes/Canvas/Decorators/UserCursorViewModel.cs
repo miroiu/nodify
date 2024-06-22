@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace Nodify.Shapes.Canvas
 {
-    public class UserCursorViewModel : PropertyChangedBase, ICanvasDecorator
+    public class UserCursorViewModel : ObservableObject, ICanvasDecorator
     {
         private Point _location;
         public Point Location

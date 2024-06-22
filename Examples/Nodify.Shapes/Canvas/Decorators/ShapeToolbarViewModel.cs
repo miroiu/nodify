@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Nodify.Shapes.Canvas
 {
-    public class ShapeToolbarViewModel : PropertyChangedBase, ICanvasDecorator
+    public class ShapeToolbarViewModel : ObservableObject, ICanvasDecorator
     {
         private ShapeViewModel? _shape;
         public ShapeViewModel? Shape

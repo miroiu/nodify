@@ -13,7 +13,7 @@ namespace Nodify.UndoRedo
         Enable = 1
     }
 
-    public abstract class Undoable : PropertyChangedBase
+    public abstract class Undoable : ObservableObject
     {
         private readonly HashSet<string> _trackedProperties = new HashSet<string>();
 

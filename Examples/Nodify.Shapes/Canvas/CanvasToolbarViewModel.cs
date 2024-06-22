@@ -12,7 +12,7 @@ namespace Nodify.Shapes.Canvas
         Triangle
     }
 
-    public class CanvasToolbarViewModel : PropertyChangedBase
+    public class CanvasToolbarViewModel : ObservableObject
     {
         public static readonly CanvasTool[] AvailableTools = Enum.GetValues(typeof(CanvasTool)).Cast<CanvasTool>().ToArray();
 

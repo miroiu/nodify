@@ -2,7 +2,7 @@
 
 namespace Nodify.Shapes.Canvas
 {
-    public class ConnectorViewModel : PropertyChangedBase
+    public class ConnectorViewModel : ObservableObject
     {
         public ConnectorViewModel(ConnectorPosition position)
         {
