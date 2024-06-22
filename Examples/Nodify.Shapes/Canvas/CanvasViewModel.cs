@@ -146,11 +146,16 @@ namespace Nodify.Shapes.Canvas
             };
             Shapes.Add(rectangle2);
 
-            Connections.Add(new ConnectionViewModel(ellipse2.BottomConnector, rectangle2.TopConnector));
+            var triangle = new TriangleViewModel
+            {
+                Location = new Point(800, 200)
+            };
+            Shapes.Add(triangle);
 
+            Connections.Add(new ConnectionViewModel(ellipse2.BottomConnector, rectangle2.TopConnector));
             Connections.Add(new ConnectionViewModel(rectangle.RightConnector, rectangle2.RightConnector));
 
-            SelectedShapes.Add(rectangle);
+            SelectedShapes.Add(triangle);
 
             Decorators.Add(ShapeToolbar);
             Decorators.AddRange(Cursors);

@@ -64,6 +64,15 @@
                                Opacity="0.8" />
                 </DataTemplate>
 
+                <DataTemplate DataType="{x:Type local:TriangleViewModel}">
+                    <Polygon Points="0,100 50,0 100,100"
+                             Stretch="Fill"
+                             Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                             Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                             StrokeThickness="2"
+                             Opacity="0.8" />
+                </DataTemplate>
+
                 <DataTemplate DataType="{x:Type local:ShapeToolbarViewModel}">
                     <Canvas Visibility="{Binding Shape, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <shared:Swatches SelectedColor="{Binding Shape.Color}"
@@ -479,9 +488,6 @@
                 Margin="0 0 50 50"
                 Height="38"
                 CornerRadius="3">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="1" />
-            </Border.Effect>
 
             <ItemsControl ItemsSource="{Binding Cursors}">
                 <ItemsControl.ItemsPanel>
@@ -498,6 +504,9 @@
                                 Margin="-3"
                                 Background="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                                 Padding="6 2">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="1" />
+                            </Border.Effect>
                             <Button Command="{x:Static nodify:EditorCommands.BringIntoView}"
                                     CommandParameter="{Binding Location}"
                                     CommandTarget="{Binding ElementName=Editor}"
