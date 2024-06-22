@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Nodify.Shapes.UndoRedo
+namespace Nodify.UndoRedo
 {
     public interface IPropertyAccessor
     {

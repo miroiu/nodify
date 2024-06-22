@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace Nodify.Shapes
+namespace Nodify
 {
     /// <summary>
     /// Base class for things which can raise PropertyChanged events

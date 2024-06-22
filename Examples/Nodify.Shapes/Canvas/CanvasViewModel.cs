@@ -1,5 +1,5 @@
 ﻿using Nodify.Shapes.Canvas.UndoRedo;
-using Nodify.Shapes.UndoRedo;
+using Nodify.UndoRedo;
 using System;
 using System.Linq;
 using System.Windows;
@@ -108,7 +108,8 @@ namespace Nodify.Shapes.Canvas
             // Disable undo redo to avoid recording object construction
             UndoRedo.IsEnabled = false;
 
-            for (int i = 0; i < 5; i++)
+            var cursorCount = _rand.Next(3, 6);
+            for (int i = 0; i < cursorCount; i++)
             {
                 var color = ShapeViewModel.Colors[_rand.Next(0, ShapeViewModel.Colors.Count)];
                 Cursors.Add(new UserCursorViewModel

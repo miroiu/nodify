@@ -408,11 +408,13 @@
                 <Button Command="{Binding UndoCommand}"
                         CommandTarget="{Binding ElementName=Editor}"
                         Content="{StaticResource ArrowBackIcon}"
+                        ToolTip="CTRL+Z"
                         Padding="1" />
 
                 <Button Command="{Binding RedoCommand}"
                         CommandTarget="{Binding ElementName=Editor}"
                         Content="{StaticResource ArrowForwardIcon}"
+                        ToolTip="CTRL+SHIFT+z"
                         Padding="1" />
 
             </StackPanel>

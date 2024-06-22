@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Expression = System.Linq.Expressions.Expression;
 
-namespace Nodify.Shapes.UndoRedo
+namespace Nodify.UndoRedo
 {
     [Flags]
     public enum PropertyFlags

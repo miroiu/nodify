@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nodify.Shapes.UndoRedo
+namespace Nodify.UndoRedo
 {
     public class DelegateAction : IAction
     {

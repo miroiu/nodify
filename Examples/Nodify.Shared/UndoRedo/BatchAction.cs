@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Nodify.Shapes.UndoRedo
+namespace Nodify.UndoRedo
 {
     public class BatchAction : IAction
     {
