@@ -215,8 +215,8 @@
                                         Padding="{TemplateBinding Padding}"
                                         x:Name="Border"
                                         CornerRadius="3">
-                                    <Grid Height="150"
-                                          Width="150">
+                                    <Grid Height="{Binding Size.Height}"
+                                          Width="{Binding Size.Width}">
 
                                         <ContentPresenter Cursor="Hand" />
 
@@ -330,7 +330,8 @@
                 HorizontalAlignment="Center"
                 Margin="0 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b">
+                Background="#1e293b"
+                MouseDown="Toolbar_MouseDown">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -448,7 +449,8 @@
                 HorizontalAlignment="Left"
                 Margin="20 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b">
+                Background="#1e293b"
+                MouseDown="Toolbar_MouseDown">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -502,7 +504,8 @@
                 HorizontalAlignment="Right"
                 Margin="0 0 20 20"
                 Height="38"
-                CornerRadius="3">
+                CornerRadius="3"
+                MouseDown="Toolbar_MouseDown">
 
             <ItemsControl ItemsSource="{Binding Cursors}">
                 <ItemsControl.ItemsPanel>

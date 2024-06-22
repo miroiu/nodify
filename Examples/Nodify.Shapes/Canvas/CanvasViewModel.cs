@@ -1,6 +1,7 @@
 ﻿using Nodify.Shapes.Canvas.UndoRedo;
 using Nodify.UndoRedo;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -9,7 +10,8 @@ namespace Nodify.Shapes.Canvas
 {
     public class CanvasViewModel : ObservableObject
     {
-        public NodifyObservableCollection<ShapeViewModel> Shapes { get; } = new NodifyObservableCollection<ShapeViewModel>();
+        private readonly NodifyObservableCollection<ShapeViewModel> _shapes = new NodifyObservableCollection<ShapeViewModel>();
+        public IReadOnlyCollection<ShapeViewModel> Shapes => _shapes;
         public NodifyObservableCollection<ShapeViewModel> SelectedShapes { get; } = new NodifyObservableCollection<ShapeViewModel>();
 
         public NodifyObservableCollection<ICanvasDecorator> Decorators { get; } = new NodifyObservableCollection<ICanvasDecorator>();
@@ -122,35 +124,40 @@ namespace Nodify.Shapes.Canvas
 
             var ellipse = new EllipseViewModel
             {
-                Location = new Point(100, 50)
+                Location = new Point(100, 50),
+                Size = new Size(150, 150)
             };
-            Shapes.Add(ellipse);
+            _shapes.Add(ellipse);
 
             var rectangle = new RectangleViewModel
             {
-                Location = new Point(400, 100)
+                Location = new Point(400, 100),
+                Size = new Size(150, 150)
             };
-            Shapes.Add(rectangle);
+            _shapes.Add(rectangle);
 
             Connections.Add(new ConnectionViewModel(ellipse.RightConnector, rectangle.LeftConnector));
 
             var ellipse2 = new EllipseViewModel
             {
-                Location = new Point(100, 250)
+                Location = new Point(100, 250),
+                Size = new Size(150, 150)
             };
-            Shapes.Add(ellipse2);
+            _shapes.Add(ellipse2);
 
             var rectangle2 = new RectangleViewModel
             {
-                Location = new Point(450, 400)
+                Location = new Point(450, 400),
+                Size = new Size(150, 150)
             };
-            Shapes.Add(rectangle2);
+            _shapes.Add(rectangle2);
 
             var triangle = new TriangleViewModel
             {
-                Location = new Point(800, 200)
+                Location = new Point(800, 200),
+                Size = new Size(150, 150)
             };
-            Shapes.Add(triangle);
+            _shapes.Add(triangle);
 
             Connections.Add(new ConnectionViewModel(ellipse2.BottomConnector, rectangle2.TopConnector));
             Connections.Add(new ConnectionViewModel(rectangle.RightConnector, rectangle2.RightConnector));
@@ -162,6 +169,12 @@ namespace Nodify.Shapes.Canvas
 
             // Re-enable undo redo
             UndoRedo.IsEnabled = true;
+        }
+
+        public void AddShape(ShapeViewModel shape)
+        {
+            var action = new DelegateAction(() => _shapes.Add(shape), () => _shapes.Remove(shape), "Add shape");
+            UndoRedo.ExecuteAction(action);
         }
 
         private void AddConnection(ConnectorViewModel source, ConnectorViewModel target)
@@ -191,7 +204,7 @@ namespace Nodify.Shapes.Canvas
             {
                 var selection = SelectedShapes.ToList();
 
-                var action = new DelegateAction(() => Shapes.RemoveRange(selection), () => Shapes.AddRange(selection), "Delete shapes");
+                var action = new DelegateAction(() => _shapes.RemoveRange(selection), () => _shapes.AddRange(selection), "Delete shapes");
                 UndoRedo.ExecuteAction(action);
 
                 foreach (var shape in selection)

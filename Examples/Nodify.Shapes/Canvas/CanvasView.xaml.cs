@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Nodify.Shapes.Canvas
@@ -56,5 +57,54 @@ namespace Nodify.Shapes.Canvas
                 user.Location = newLocation;
             }
         }
+
+        #region Drawing shapes
+
+        private ShapeViewModel? _drawingShape;
+        private Point _initialLocation;
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            var toolbarVm = ((CanvasViewModel)DataContext).CanvasToolbar;
+            if (toolbarVm.SelectedTool != CanvasTool.None && DrawingGesturesMappings.Instance.Draw.Matches(this, e))
+            {
+                _initialLocation = Editor.MouseLocation;
+                _drawingShape = toolbarVm.CreateShapeAtLocation(Editor.MouseLocation);
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (_drawingShape != null)
+            {
+                double width = Math.Abs(Editor.MouseLocation.X - _initialLocation.X);
+                double height = Math.Abs(Editor.MouseLocation.Y - _initialLocation.Y);
+
+                _drawingShape.Size = new Size(width, height);
+
+                if (Editor.MouseLocation.X < _initialLocation.X)
+                {
+                    _drawingShape.Location = new Point(Editor.MouseLocation.X, _drawingShape.Location.Y);
+                }
+
+                if (Editor.MouseLocation.Y < _initialLocation.Y)
+                {
+                    _drawingShape.Location = new Point(_drawingShape.Location.X, Editor.MouseLocation.Y);
+                }
+            }
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            _drawingShape = null;
+        }
+
+        private void Toolbar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // prevent creating shape by clicking on the toolbar
+            e.Handled = true;
+        }
+
+        #endregion
     }
 }

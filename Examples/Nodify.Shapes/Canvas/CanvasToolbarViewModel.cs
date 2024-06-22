@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Shapes.Canvas
@@ -29,7 +30,7 @@ namespace Nodify.Shapes.Canvas
                     var newMappings = _locked ? LockedGestureMappings.Instance : EditorGestures;
                     EditorGestures.Mappings.Apply(newMappings);
 
-                    if(_locked)
+                    if (_locked)
                     {
                         _selectedTool = CanvasTool.None;
                         OnPropertyChanged(nameof(SelectedTool));
@@ -63,6 +64,30 @@ namespace Nodify.Shapes.Canvas
 
             ToggleLockCommand = new DelegateCommand(() => Locked = !Locked);
             Canvas = canvas;
+        }
+
+        public ShapeViewModel CreateShapeAtLocation(Point location)
+        {
+            using (Canvas.UndoRedo.Batch("Create shape"))
+            {
+                ShapeViewModel shape = SelectedTool switch
+                {
+                    CanvasTool.Ellipse => new EllipseViewModel(),
+                    CanvasTool.Rectangle => new RectangleViewModel(),
+                    CanvasTool.Triangle => new TriangleViewModel(),
+                    CanvasTool.None => throw new InvalidOperationException("Cannot draw in this state"),
+                    _ => throw new NotImplementedException(nameof(CanvasTool)),
+                };
+
+                shape.Location = location;
+                shape.Text = "Double click to edit";
+
+                Canvas.AddShape(shape);
+                Canvas.SelectedShapes.Clear();
+                Canvas.SelectedShapes.Add(shape);
+
+                return shape;
+            }
         }
     }
 }
