@@ -1,3 +1,6 @@
+| [English](https://github.com/WYihei/nodify/wiki/Home) | [简体中文](https://github.com/WYihei/nodify/wiki/主页)
+| --- | --- |
+***
 ## [Home](Home)
 
 [Getting Started](Getting-Started)
