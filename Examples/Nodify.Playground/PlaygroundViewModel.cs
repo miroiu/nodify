@@ -23,7 +23,7 @@ namespace Nodify.Playground
             Settings.PropertyChanged += OnSettingsChanged;
         }
 
-        private void OnSettingsChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnSettingsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(PlaygroundSettings.ShouldConnectNodes))
                 OnPropertyChanged(nameof(ConnectNodesText));
