@@ -34,5 +34,4 @@ namespace Nodify
             return values.All(o => o == null);
         }
     }
-
 }
