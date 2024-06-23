@@ -154,6 +154,12 @@
     <SolidColorBrush x:Key="CircuitConnection.StrokeBrush"
                      Color="{DynamicResource CircuitConnection.StrokeColor}" />
 
+    <!--STEP CONNECTION-->
+
+    <SolidColorBrush x:Key="StepConnection.StrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource StepConnection.StrokeColor}" />
+
     <!--PENDING CONNECTION-->
     
     <SolidColorBrush x:Key="PendingConnection.StrokeBrush"

@@ -66,27 +66,13 @@ namespace Nodify
         {
             var (p0, p1, p2) = GetLinePoints(source, target);
 
-            Vector deltaSource = p1 - p0;
-            Vector deltaTarget = p2 - p1;
-
-            double lengthRatio = deltaTarget.SquaredLength / (deltaSource.SquaredLength + deltaTarget.SquaredLength);
-
-            int segment1ArrowCount = (int)Math.Round(DirectionalArrowsCount * (1 - lengthRatio));
-            DrawDirectionalArrowsToSegment(context, p0, p1, segment1ArrowCount);
-
-            int segment2ArrowCount = (int)DirectionalArrowsCount - segment1ArrowCount;
-            DrawDirectionalArrowsToSegment(context, p1, p2, segment2ArrowCount);
-        }
-
-        private void DrawDirectionalArrowsToSegment(StreamGeometryContext context, Point p0, Point p1, int arrowsCount)
-        {
-            double spacing = 1d / (arrowsCount + 1);
-            for (int i = 1; i <= arrowsCount; i++)
+            double spacing = 1d / (DirectionalArrowsCount + 1);
+            for (int i = 1; i <= DirectionalArrowsCount; i++)
             {
-                var direction = p0 - p1;
                 double t = (spacing * i + DirectionalArrowsOffset).WrapToRange(0d, 1d);
-                var to = InterpolateLineSegment(p0, p1, t);
+                var (segment, to) = InterpolateLine(p0, p1, p2, t);
 
+                var direction = segment.SegmentStart - segment.SegmentEnd;
                 base.DrawDirectionalArrowheadGeometry(context, direction, to);
             }
         }

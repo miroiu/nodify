@@ -41,13 +41,9 @@
     </ControlTheme>
     
     <!--DECORATOR CONTAINER-->
-    
-    <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
 
     <ControlTheme TargetType="{x:Type local:DecoratorContainer}" x:Key="{x:Type local:DecoratorContainer}"
                   BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
-        <Setter Property="RenderTransform"
-                Value="{Binding ViewportTransform, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}, Converter={StaticResource UnscaleTransformConverter}}" />
         <Setter Property="RenderTransformOrigin"
                 Value="0,0" />
     </ControlTheme>
@@ -179,6 +175,16 @@
         <Setter Property="Fill"
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
     </ControlTheme>
+
+    <!--STEP CONNECTION-->
+
+    <Style TargetType="{x:Type local:StepConnection}"
+           BasedOn="{StaticResource {x:Type local:StepConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
+    </Style>
 
     <!--PENDING CONNECTION-->
 

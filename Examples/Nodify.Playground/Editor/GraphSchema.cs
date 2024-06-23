@@ -79,12 +79,10 @@ namespace Nodify.Playground
 
         public void SplitConnection(ConnectionViewModel connection, Point location)
         {
-            var connector = connection.Output;
-
-            var knot = new KnotNodeViewModel
+            var knot = new KnotNodeViewModel(connection.Output.Node.Orientation)
             {
                 Location = location,
-                Flow = connector.Flow,
+                Flow = connection.Output.Flow,
                 Connector = new ConnectorViewModel
                 {
                     MaxConnections = connection.Output.MaxConnections + connection.Input.MaxConnections,
@@ -93,7 +91,7 @@ namespace Nodify.Playground
             };
             connection.Graph.Nodes.Add(knot);
 
-            AddConnection(connector, knot.Connector);
+            AddConnection(connection.Output, knot.Connector);
             AddConnection(knot.Connector, connection.Input);
 
             connection.Remove();

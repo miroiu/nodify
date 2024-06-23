@@ -83,5 +83,47 @@ namespace Nodify
         {
             return (Point)((1 - t) * (Vector)p0 + t * (Vector)p1);
         }
+
+        protected static ((Point SegmentStart, Point SegmentEnd), Point InterpolatedPoint) InterpolateLine(Point p0, Point p1, Point p2, Point p3, double t)
+        {
+            double length1 = (p1 - p0).Length;
+            double length2 = (p2 - p1).Length;
+            double length3 = (p3 - p2).Length;
+            double totalLength = length1 + length2 + length3;
+
+            double ratio1 = length1 / totalLength;
+            double ratio2 = length2 / totalLength;
+            double ratio3 = length3 / totalLength;
+
+            // Interpolate within the appropriate segment based on t
+            if (t <= ratio1)
+            {
+                return ((p0, p1), InterpolateLineSegment(p0, p1, t / ratio1));
+            }
+            else if (t <= ratio1 + ratio2)
+            {
+                return ((p1, p2), InterpolateLineSegment(p1, p2, (t - ratio1) / ratio2));
+            }
+
+            return ((p2, p3), InterpolateLineSegment(p2, p3, (t - ratio1 - ratio2) / ratio3));
+        }
+
+        protected static ((Point SegmentStart, Point SegmentEnd), Point InterpolatedPoint) InterpolateLine(Point p0, Point p1, Point p2, double t)
+        {
+            double length1 = (p1 - p0).Length;
+            double length2 = (p2 - p1).Length;
+            double totalLength = length1 + length2;
+
+            double ratio1 = length1 / totalLength;
+            double ratio2 = length2 / totalLength;
+
+            // Interpolate within the appropriate segment based on t
+            if (t <= ratio1)
+            {
+                return ((p0, p1), InterpolateLineSegment(p0, p1, t / ratio1));
+            }
+
+            return ((p1, p2), InterpolateLineSegment(p1, p2, (t - ratio1) / ratio2));
+        }
     }
 }

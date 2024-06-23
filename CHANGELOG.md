@@ -4,7 +4,12 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added new built-in connection type: StepConnection
 > - Bugfixes:
+>	- Fixed CircuitConnection directional arrows not interpolating correctly
+>	- Fixed BaseConnection SplitEvent and DisconnectEvent not being raised if the corresponding command is null
+>	- Fixed DecoratorContainer scaling with zoom when not referencing a theme in App.xaml
+>	- Fixed style not applying to the default Connection template outside App.xaml
 	
 #### **Version 6.0.0**
 

@@ -62,6 +62,9 @@
     <!--CIRCUIT CONNECTION-->
     <Color x:Key="CircuitConnection.StrokeColor">#5CA2C9</Color>
 
+    <!--STEP CONNECTION-->
+    <Color x:Key="StepConnection.StrokeColor">#5CA2C9</Color>
+
     <!--PENDING CONNECTION-->
     <Color x:Key="PendingConnection.StrokeColor">#5CA2C9</Color>
     <Color x:Key="PendingConnection.BorderColor">Black</Color>
