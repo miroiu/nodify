@@ -15,8 +15,8 @@ namespace Nodify
 
     public class StepConnection : LineConnection
     {
-        public static readonly DependencyProperty SourcePositionProperty = DependencyProperty.Register(nameof(SourcePosition), typeof(ConnectorPosition), typeof(StepConnection), new FrameworkPropertyMetadata(ConnectorPosition.Right, FrameworkPropertyMetadataOptions.AffectsRender, OnConnectorPositionChanged));
-        public static readonly DependencyProperty TargetPositionProperty = DependencyProperty.Register(nameof(TargetPosition), typeof(ConnectorPosition), typeof(StepConnection), new FrameworkPropertyMetadata(ConnectorPosition.Left, FrameworkPropertyMetadataOptions.AffectsRender, OnConnectorPositionChanged));
+        public static readonly AvaloniaProperty<ConnectorPosition> SourcePositionProperty = AvaloniaProperty.Register<StepConnection, ConnectorPosition>(nameof(SourcePosition), ConnectorPosition.Right);
+        public static readonly AvaloniaProperty<ConnectorPosition> TargetPositionProperty = AvaloniaProperty.Register<StepConnection, ConnectorPosition>(nameof(TargetPosition), ConnectorPosition.Left);
 
         private static void OnConnectorPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -28,12 +28,15 @@ namespace Nodify
 
         static StepConnection()
         {
-            SourceOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceSourceOrientation));
-            TargetOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceTargetOrientation));
-            DirectionProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(ConnectionDirection.Forward, null, CoerceConnectionDirection));
+            SourcePositionProperty.Changed.AddClassHandler<StepConnection>(OnConnectorPositionChanged);
+            TargetPositionProperty.Changed.AddClassHandler<StepConnection>(OnConnectorPositionChanged);
+            AffectsRender<StepConnection>(SourcePositionProperty, TargetPositionProperty);
+            SourceOrientationProperty.OverrideMetadata<StepConnection>(new StyledPropertyMetadata<Orientation>(defaultValue: Orientation.Horizontal, coerce: CoerceSourceOrientation));
+            TargetOrientationProperty.OverrideMetadata<StepConnection>(new StyledPropertyMetadata<Orientation>(defaultValue: Orientation.Horizontal, coerce: CoerceTargetOrientation));
+            DirectionProperty.OverrideMetadata<StepConnection>(new StyledPropertyMetadata<ConnectionDirection>(defaultValue: ConnectionDirection.Forward, coerce: CoerceConnectionDirection));
         }
 
-        private static object CoerceSourceOrientation(DependencyObject d, object baseValue)
+        private static Orientation CoerceSourceOrientation(DependencyObject d, Orientation baseValue)
         {
             var connection = (StepConnection)d;
             return connection.SourcePosition == ConnectorPosition.Left || connection.SourcePosition == ConnectorPosition.Right
@@ -41,7 +44,7 @@ namespace Nodify
                 : Orientation.Vertical;
         }
 
-        private static object CoerceTargetOrientation(DependencyObject d, object baseValue)
+        private static Orientation CoerceTargetOrientation(DependencyObject d, Orientation baseValue)
         {
             var connection = (StepConnection)d;
             return connection.TargetPosition == ConnectorPosition.Left || connection.TargetPosition == ConnectorPosition.Right
@@ -49,7 +52,7 @@ namespace Nodify
                 : Orientation.Vertical;
         }
 
-        private static object CoerceConnectionDirection(DependencyObject d, object baseValue)
+        private static ConnectionDirection CoerceConnectionDirection(DependencyObject d, ConnectionDirection baseValue)
         {
             var connection = (StepConnection)d;
             return connection.TargetPosition == ConnectorPosition.Left || connection.TargetPosition == ConnectorPosition.Top
@@ -116,7 +119,7 @@ namespace Nodify
             return new Point((p3.X + p2.X - text.Width) / 2, (p3.Y + p2.Y - text.Height) / 2);
 
             static Vector GetMax(in Vector a, in Vector b)
-                => a.LengthSquared > b.LengthSquared ? a : b;
+                => a.SquaredLength > b.SquaredLength ? a : b;
         }
 
         protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)

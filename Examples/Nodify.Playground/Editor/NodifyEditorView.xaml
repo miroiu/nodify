@@ -110,7 +110,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="StepConnectionTemplate">
-            <nodify:StepConnection Style="{StaticResource ConnectionStyle}"
+            <nodify:StepConnection Theme="{StaticResource ConnectionStyle}"
                                    SourcePosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Output}"
                                    TargetPosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Input}" />
         </DataTemplate>

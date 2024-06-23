@@ -86,9 +86,9 @@ namespace Nodify
 
         protected static ((Point SegmentStart, Point SegmentEnd), Point InterpolatedPoint) InterpolateLine(Point p0, Point p1, Point p2, Point p3, double t)
         {
-            double length1 = (p1 - p0).Length;
-            double length2 = (p2 - p1).Length;
-            double length3 = (p3 - p2).Length;
+            double length1 = (p1 - p0).Length();
+            double length2 = (p2 - p1).Length();
+            double length3 = (p3 - p2).Length();
             double totalLength = length1 + length2 + length3;
 
             double ratio1 = length1 / totalLength;
@@ -110,8 +110,8 @@ namespace Nodify
 
         protected static ((Point SegmentStart, Point SegmentEnd), Point InterpolatedPoint) InterpolateLine(Point p0, Point p1, Point p2, double t)
         {
-            double length1 = (p1 - p0).Length;
-            double length2 = (p2 - p1).Length;
+            double length1 = (p1 - p0).Length();
+            double length2 = (p2 - p1).Length();
             double totalLength = length1 + length2;
 
             double ratio1 = length1 / totalLength;

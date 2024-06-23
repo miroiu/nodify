@@ -35,7 +35,7 @@
                 Value="30" />
     </ControlTheme>
 
-    <Style TargetType="{x:Type local:StepConnection}">
+    <ControlTheme TargetType="{x:Type local:StepConnection}" x:Key="{x:Type local:StepConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -44,6 +44,6 @@
                 Value="DodgerBlue" />
         <Setter Property="Spacing"
                 Value="30" />
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

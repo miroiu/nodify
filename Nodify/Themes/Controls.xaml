@@ -178,13 +178,13 @@
 
     <!--STEP CONNECTION-->
 
-    <Style TargetType="{x:Type local:StepConnection}"
-           BasedOn="{StaticResource {x:Type local:StepConnection}}">
+    <ControlTheme TargetType="{x:Type local:StepConnection}" x:Key="{x:Type local:StepConnection}"
+                  BasedOn="{StaticResource {x:Type local:StepConnection}}">
         <Setter Property="Stroke"
                 Value="{StaticResource StepConnection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource StepConnection.StrokeBrush}" />
-    </Style>
+    </ControlTheme>
 
     <!--PENDING CONNECTION-->
 

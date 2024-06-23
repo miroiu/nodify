@@ -157,7 +157,6 @@
     <!--STEP CONNECTION-->
 
     <SolidColorBrush x:Key="StepConnection.StrokeBrush"
-                     o:Freeze="True"
                      Color="{DynamicResource StepConnection.StrokeColor}" />
 
     <!--PENDING CONNECTION-->
