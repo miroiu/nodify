@@ -125,8 +125,6 @@
 
                 <Style TargetType="{x:Type nodify:PendingConnection}"
                        BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
-                    <Setter Property="Direction"
-                            Value="{Binding Source.Direction}" />
                     <Setter Property="Stroke">
                         <Setter.Value>
                             <SolidColorBrush Color="White"
@@ -369,25 +367,25 @@
                         <DataTemplate x:Key="Cursor">
                             <Border CornerRadius="3"
                                     Padding="5">
-                                <ContentPresenter Content="{StaticResource CursorIcon}" />
+                                <ContentPresenter ContentTemplate="{StaticResource CursorIcon}" />
                             </Border>
                         </DataTemplate>
                         <DataTemplate x:Key="Circle">
                             <Border CornerRadius="3"
                                     Padding="5">
-                                <ContentPresenter Content="{StaticResource CircleIcon}" />
+                                <ContentPresenter ContentTemplate="{StaticResource CircleIcon}" />
                             </Border>
                         </DataTemplate>
                         <DataTemplate x:Key="Square">
                             <Border CornerRadius="3"
                                     Padding="5">
-                                <ContentPresenter Content="{StaticResource SquareIcon}" />
+                                <ContentPresenter ContentTemplate="{StaticResource SquareIcon}" />
                             </Border>
                         </DataTemplate>
                         <DataTemplate x:Key="Triangle">
                             <Border CornerRadius="3"
                                     Padding="5">
-                                <ContentPresenter Content="{StaticResource TriangleIcon}" />
+                                <ContentPresenter ContentTemplate="{StaticResource TriangleIcon}" />
                             </Border>
                         </DataTemplate>
                     </ListBox.Resources>
@@ -432,13 +430,13 @@
 
                 <Button Command="{Binding UndoCommand}"
                         CommandTarget="{Binding ElementName=Editor}"
-                        Content="{StaticResource ArrowBackIcon}"
+                        ContentTemplate="{StaticResource ArrowBackIcon}"
                         ToolTip="CTRL+Z"
                         Padding="1" />
 
                 <Button Command="{Binding RedoCommand}"
                         CommandTarget="{Binding ElementName=Editor}"
-                        Content="{StaticResource ArrowForwardIcon}"
+                        ContentTemplate="{StaticResource ArrowForwardIcon}"
                         ToolTip="CTRL+SHIFT+z"
                         Padding="1" />
 
@@ -470,27 +468,27 @@
 
                 <Button Command="{x:Static nodify:EditorCommands.ZoomIn}"
                         CommandTarget="{Binding ElementName=Editor}"
-                        Content="{StaticResource PlusIcon}" />
+                        ContentTemplate="{StaticResource PlusIcon}" />
 
                 <Button Command="{x:Static nodify:EditorCommands.ZoomOut}"
                         CommandTarget="{Binding ElementName=Editor}"
-                        Content="{StaticResource MinusIcon}" />
+                        ContentTemplate="{StaticResource MinusIcon}" />
 
                 <Button Command="{x:Static nodify:EditorCommands.FitToScreen}"
                         CommandTarget="{Binding ElementName=Editor}"
-                        Content="{StaticResource MaximizeIcon}" />
+                        ContentTemplate="{StaticResource MaximizeIcon}" />
 
                 <Button Command="{Binding ToggleLockCommand}"
                         DataContext="{Binding CanvasToolbar}">
                     <Button.Style>
                         <Style TargetType="Button"
                                BasedOn="{StaticResource {x:Type Button}}">
-                            <Setter Property="Content"
+                            <Setter Property="ContentTemplate"
                                     Value="{StaticResource LockOpenIcon}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Locked}"
                                              Value="True">
-                                    <Setter Property="Content"
+                                    <Setter Property="ContentTemplate"
                                             Value="{StaticResource LockIcon}" />
                                 </DataTrigger>
                             </Style.Triggers>
