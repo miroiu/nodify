@@ -35,11 +35,18 @@ namespace Nodify.Shapes.Canvas
             set => SetProperty(ref _location, value);
         }
 
-        private Size _size;
-        public Size Size
+        private double _width;
+        public double Width
         {
-            get => _size;
-            set => SetProperty(ref _size, value);
+            get => _width;
+            set => SetProperty(ref _width, value);
+        }
+
+        private double _height;
+        public double Height
+        {
+            get => _height;
+            set => SetProperty(ref _height, value);
         }
 
         private Color _color;

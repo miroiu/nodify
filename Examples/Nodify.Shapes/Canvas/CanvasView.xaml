@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Nodify.Shapes.Canvas"
              xmlns:nodify="https://miroiu.github.io/nodify"
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
+             xmlns:controls="clr-namespace:Nodify.Shapes.Controls"
              xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              mc:Ignorable="d"
              Background="#0a172a"
@@ -45,7 +46,7 @@
                              ItemsSelectStartedCommand="{Binding SelectShapesStartedCommand}"
                              ItemsSelectCompletedCommand="{Binding SelectShapesCompletedCommand}"
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
-                             GridCellSize="10"
+                             GridCellSize="5"
                              x:Name="Editor">
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
@@ -191,13 +192,30 @@
                                 </Setter.Value>
                             </Setter>
                         </Style>
+
+                        <Style TargetType="{x:Type shared:Resizer}"
+                               BasedOn="{StaticResource {x:Type shared:Resizer}}">
+                            <Setter Property="Background"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
+                        </Style>
+
+                        <!--For some reason, the designer doesn't like having these bindings on the element itself but in a style-->
+                        <Style TargetType="{x:Type controls:ResizableContainer}"
+                               BasedOn="{StaticResource {x:Type shared:ResizablePanel}}">
+                            <Setter Property="BorderBrush"
+                                    Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
+                            <Setter Property="Padding"
+                                    Value="3" />
+                            <Setter Property="ResizeStartedCommand"
+                                    Value="{Binding DataContext.ResizeShapeStartedCommand, ElementName=Editor}" />
+                            <Setter Property="ResizeCompletedCommand"
+                                    Value="{Binding DataContext.ResizeShapeCompletedCommand, ElementName=Editor}" />
+                        </Style>
                     </Style.Resources>
                     <Setter Property="Location"
                             Value="{Binding Location}" />
                     <Setter Property="IsSelected"
                             Value="{Binding IsSelected}" />
-                    <Setter Property="Padding"
-                            Value="3" />
                     <Setter Property="SelectedBrush"
                             Value="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}" />
                     <Setter Property="SelectedBorderThickness"
@@ -207,15 +225,11 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type nodify:ItemContainer}">
-                                <Border Background="{TemplateBinding Background}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        Padding="{TemplateBinding Padding}"
-                                        x:Name="Border"
-                                        CornerRadius="3">
-                                    <Grid Height="{Binding Size.Height}"
-                                          Width="{Binding Size.Width}">
-
+                                <controls:ResizableContainer Height="{Binding Height, Mode=TwoWay}"
+                                                             Width="{Binding Width, Mode=TwoWay}"
+                                                             Directions="Corners"
+                                                             GridCellSize="5">
+                                    <Grid>
                                         <ContentPresenter Cursor="Hand" />
 
                                         <shared:EditableTextBlock Text="{Binding Text}"
@@ -267,7 +281,7 @@
                                                               x:Name="BottomConnector" />
                                         </DockPanel>
                                     </Grid>
-                                </Border>
+                                </controls:ResizableContainer>
 
                                 <ControlTemplate.Triggers>
                                     <MultiTrigger>

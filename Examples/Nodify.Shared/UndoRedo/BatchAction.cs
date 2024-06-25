@@ -7,7 +7,7 @@ namespace Nodify.UndoRedo
     {
         public BatchAction(string? label, IEnumerable<IAction> history)
         {
-            History = history.ToList();
+            History = history.Reverse().ToList();
             Label = label;
         }
 
@@ -17,7 +17,7 @@ namespace Nodify.UndoRedo
 
         public void Execute()
         {
-            for (int i = 0; i < History.Count; i++)
+            for (int i = History.Count - 1; i >= 0; i--)
             {
                 History[i].Execute();
             }
@@ -25,7 +25,7 @@ namespace Nodify.UndoRedo
 
         public void Undo()
         {
-            for (int i = History.Count - 1; i >= 0; i--)
+            for (int i = 0; i < History.Count; i++)
             {
                 History[i].Undo();
             }

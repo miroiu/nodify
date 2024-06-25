@@ -24,6 +24,8 @@ namespace Nodify.Shapes.Canvas
         public ICommand MoveShapesCompletedCommand { get; }
         public ICommand SelectShapesStartedCommand { get; }
         public ICommand SelectShapesCompletedCommand { get; }
+        public ICommand ResizeShapeStartedCommand { get; }
+        public ICommand ResizeShapeCompletedCommand { get; }
         public ICommand CreateConnectionCommand { get; }
         public ICommand RemoveConnectionCommand { get; }
         public ICommand DeleteSelectionCommand { get; }
@@ -48,6 +50,9 @@ namespace Nodify.Shapes.Canvas
 
             SelectShapesStartedCommand = new DelegateCommand(SelectShapesStartedHandler);
             SelectShapesCompletedCommand = new DelegateCommand(SelectShapesCompletedHandler);
+
+            ResizeShapeStartedCommand = new DelegateCommand(ResizeShapeStartedHandler);
+            ResizeShapeCompletedCommand = new DelegateCommand(ResizeShapeCompletedHandler);
 
             DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => !CanvasToolbar.Locked);
 
@@ -105,6 +110,19 @@ namespace Nodify.Shapes.Canvas
             //}
         }
 
+        private void ResizeShapeStartedHandler()
+        {
+            UndoRedo.ExecuteAction(new ResizeShapesAction(this));
+        }
+
+        private void ResizeShapeCompletedHandler()
+        {
+            if (UndoRedo.Current is ResizeShapesAction resizeShapes)
+            {
+                resizeShapes.SaveSizes();
+            }
+        }
+
         private void FillCanvasWithShapes()
         {
             // Disable undo redo to avoid recording object construction
@@ -125,14 +143,16 @@ namespace Nodify.Shapes.Canvas
             var ellipse = new EllipseViewModel
             {
                 Location = new Point(100, 50),
-                Size = new Size(150, 150)
+                Width = 150,
+                Height = 150
             };
             _shapes.Add(ellipse);
 
             var rectangle = new RectangleViewModel
             {
                 Location = new Point(400, 100),
-                Size = new Size(150, 150)
+                Width = 150,
+                Height = 150
             };
             _shapes.Add(rectangle);
 
@@ -141,21 +161,24 @@ namespace Nodify.Shapes.Canvas
             var ellipse2 = new EllipseViewModel
             {
                 Location = new Point(100, 250),
-                Size = new Size(150, 150)
+                Width = 150,
+                Height = 150
             };
             _shapes.Add(ellipse2);
 
             var rectangle2 = new RectangleViewModel
             {
                 Location = new Point(450, 400),
-                Size = new Size(150, 150)
+                Width = 150,
+                Height = 150
             };
             _shapes.Add(rectangle2);
 
             var triangle = new TriangleViewModel
             {
                 Location = new Point(800, 200),
-                Size = new Size(150, 150)
+                Width = 150,
+                Height = 150
             };
             _shapes.Add(triangle);
 

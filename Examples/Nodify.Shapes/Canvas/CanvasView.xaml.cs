@@ -77,10 +77,8 @@ namespace Nodify.Shapes.Canvas
         {
             if (_drawingShape != null)
             {
-                double width = Math.Abs(Editor.MouseLocation.X - _initialLocation.X);
-                double height = Math.Abs(Editor.MouseLocation.Y - _initialLocation.Y);
-
-                _drawingShape.Size = new Size(width, height);
+                _drawingShape.Width = Math.Abs(Editor.MouseLocation.X - _initialLocation.X);
+                _drawingShape.Height = Math.Abs(Editor.MouseLocation.Y - _initialLocation.Y);
 
                 if (Editor.MouseLocation.X < _initialLocation.X)
                 {
