@@ -17,6 +17,7 @@
     <Grid>
         <Grid.Resources>
             <shared:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <shared:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <shared:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
 
             <VisualBrush x:Key="GridDrawingBrush"
@@ -93,6 +94,7 @@
                     <Canvas Visibility="{Binding Shape, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <shared:Swatches SelectedColor="{Binding Shape.Color}"
                                          Colors="{x:Static local:ShapeViewModel.Colors}"
+                                         IsEnabled="{Binding DataContext.CanvasToolbar.Locked, ElementName=Editor, Converter={StaticResource InverseBooleanConverter}}"
                                          Canvas.Top="-70"
                                          Panel.ZIndex="1">
                             <shared:Swatches.Effect>
@@ -233,6 +235,7 @@
                                         <ContentPresenter Cursor="Hand" />
 
                                         <shared:EditableTextBlock Text="{Binding Text}"
+                                                                  IsEnabled="{Binding DataContext.CanvasToolbar.Locked, ElementName=Editor, Converter={StaticResource InverseBooleanConverter}}"
                                                                   HorizontalAlignment="Center"
                                                                   VerticalAlignment="Center"
                                                                   HorizontalContentAlignment="Center"

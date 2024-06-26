@@ -42,8 +42,8 @@ namespace Nodify.Shapes.Canvas
         {
             CanvasToolbar = new CanvasToolbarViewModel(this);
 
-            UndoCommand = new RequeryCommand(UndoRedo.Undo, () => UndoRedo.CanUndo);
-            RedoCommand = new RequeryCommand(UndoRedo.Redo, () => UndoRedo.CanRedo);
+            UndoCommand = new RequeryCommand(UndoRedo.Undo, () => UndoRedo.CanUndo && !CanvasToolbar.Locked);
+            RedoCommand = new RequeryCommand(UndoRedo.Redo, () => UndoRedo.CanRedo && !CanvasToolbar.Locked);
 
             MoveShapesStartedCommand = new DelegateCommand(MoveShapesStartedHandler);
             MoveShapesCompletedCommand = new DelegateCommand(MoveShapesCompletedHandler);
