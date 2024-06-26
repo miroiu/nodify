@@ -199,6 +199,8 @@
                                BasedOn="{StaticResource {x:Type shared:Resizer}}">
                             <Setter Property="Background"
                                     Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
+                            <Setter Property="IsEnabled"
+                                    Value="{Binding DataContext.CanvasToolbar.Locked, ElementName=Editor, Converter={StaticResource InverseBooleanConverter}}" />
                         </Style>
 
                         <!--For some reason, the designer doesn't like having these bindings on the element itself but in a style-->
