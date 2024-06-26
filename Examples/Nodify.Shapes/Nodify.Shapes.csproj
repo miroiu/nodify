@@ -6,12 +6,10 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(TargetFramework)'=='net472' OR '$(TargetFramework)'=='net48'">
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="StringMath" Version="4.1.2" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Nodify\Nodify.csproj" />
