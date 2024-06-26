@@ -128,9 +128,9 @@ namespace Nodify.StateMachine
                 IsEditable = false
             });
 
-            var currentDelayKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "Current Delay");
-            var originalDelayKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "Original Delay");
-            var welcomeKey = Blackboard.Keys.FirstOrDefault(k => k.Name == "Welcome");
+            var currentDelayKey = Blackboard.Keys.First(k => k.Name == "Current Delay");
+            var originalDelayKey = Blackboard.Keys.First(k => k.Name == "Original Delay");
+            var welcomeKey = Blackboard.Keys.First(k => k.Name == "Welcome");
 
             States.Add(new StateViewModel
             {

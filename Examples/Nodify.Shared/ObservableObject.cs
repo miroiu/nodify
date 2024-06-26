@@ -1,40 +1,51 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Nodify
 {
     public class ObservableObject : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Gets or sets the dispatcher to use to dispatch PropertyChanged events. Defaults to UI thread.
+        /// </summary>
+        public virtual Action<Action> PropertyChangedDispatcher { get; set; } = Application.Current.Dispatcher.Invoke;
+
+        /// <summary>
+        /// Occurs when a property value changes
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private bool _isDirty;
-        public bool IsDirty
+        /// <summary>
+        /// Fires the PropertyChanged notification.
+        /// </summary>
+        /// <remarks>Specially named so that Fody.PropertyChanged calls it</remarks>
+        /// <param name="propertyName">Name of the property to raise the notification for</param>
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            get => _isDirty;
-            protected set
-            {
-                if (_isDirty != value)
-                {
-                    _isDirty = value;
-                    OnPropertyChanged();
-                }
-            }
+            PropertyChangedDispatcher(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
         }
 
-        public bool SetProperty<T>(ref T reference, T value, [CallerMemberName] in string propertyName = default!)
+        /// <summary>
+        /// Takes, by reference, a field, and its new value. If field != value, will set field = value and raise a PropertyChanged notification
+        /// </summary>
+        /// <typeparam name="T">Type of field being set and notified</typeparam>
+        /// <param name="field">Field to assign</param>
+        /// <param name="value">Value to assign to the field, if it differs</param>
+        /// <param name="propertyName">Name of the property to notify for. Defaults to the calling property</param>
+        /// <returns>True if field != value and a notification was raised; false otherwise</returns>
+        protected virtual bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
-            if (!Equals(reference, value))
+            if (!EqualityComparer<T>.Default.Equals(field, value))
             {
-                reference = value;
-                IsDirty = true;
+                field = value;
                 OnPropertyChanged(propertyName);
                 return true;
             }
 
             return false;
         }
-
-        protected void OnPropertyChanged([CallerMemberName] in string? propertyName = default)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
