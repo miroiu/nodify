@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Nodify.Playground
 {
@@ -17,5 +18,7 @@ namespace Nodify.Playground
             get => _location;
             set => SetProperty(ref _location, value);
         }
+
+        public Orientation Orientation { get; protected set; }
     }
 }

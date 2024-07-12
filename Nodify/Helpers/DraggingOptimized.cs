@@ -12,7 +12,7 @@ namespace Nodify
     {
         private readonly NodifyEditor _editor;
         private Vector _dragAccumulator;
-        private readonly IList<ItemContainer> _selectedContainers;
+        private readonly List<ItemContainer> _selectedContainers;
 
         public DraggingOptimized(NodifyEditor editor)
         {

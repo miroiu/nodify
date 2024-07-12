@@ -7,7 +7,7 @@
     <local:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
 
     <DataTemplate x:Key="ConnectionTemplate">
-        <local:Connection />
+        <local:Connection Style="{DynamicResource {x:Type local:Connection}}" />
     </DataTemplate>
 
     <DataTemplate x:Key="PendingConnectionTemplate">

@@ -18,6 +18,7 @@
     <UserControl.Resources>
         <shared:RandomBrushConverter x:Key="RandomBrushConverter" />
         <local:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
+        <local:FlowToConnectorPositionConverter x:Key="FlowToConnectorPositionConverter" />
 
         <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
@@ -105,6 +106,12 @@
         <DataTemplate x:Key="CircuitConnectionTemplate">
             <nodify:CircuitConnection Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
                                       Style="{StaticResource ConnectionStyle}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="StepConnectionTemplate">
+            <nodify:StepConnection Style="{StaticResource ConnectionStyle}"
+                                   SourcePosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Output}"
+                                   TargetPosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Input}" />
         </DataTemplate>
 
         <DataTemplate x:Key="ConnectionTemplate">
@@ -203,6 +210,11 @@
                                      Value="Circuit">
                             <Setter Property="ConnectionTemplate"
                                     Value="{StaticResource CircuitConnectionTemplate}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                     Value="Step">
+                            <Setter Property="ConnectionTemplate"
+                                    Value="{StaticResource StepConnectionTemplate}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

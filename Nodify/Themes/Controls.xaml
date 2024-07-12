@@ -39,16 +39,11 @@
         <Setter Property="SelectedBrush"
                 Value="{StaticResource ItemContainer.SelectedBrush}" />
     </Style>
-    
+
     <!--DECORATOR CONTAINER-->
-    
-    <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
 
     <Style TargetType="{x:Type local:DecoratorContainer}"
-           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
-        <Setter Property="RenderTransform"
-                Value="{Binding ViewportTransform, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}, Converter={StaticResource UnscaleTransformConverter}}" />
-    </Style>
+           BasedOn="{StaticResource {x:Type local:DecoratorContainer}}" />
 
     <!--NODE-->
 
@@ -179,6 +174,16 @@
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource CircuitConnection.StrokeBrush}" />
+    </Style>
+
+    <!--STEP CONNECTION-->
+
+    <Style TargetType="{x:Type local:StepConnection}"
+           BasedOn="{StaticResource {x:Type local:StepConnection}}">
+        <Setter Property="Stroke"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource StepConnection.StrokeBrush}" />
     </Style>
 
     <!--PENDING CONNECTION-->
