@@ -4,6 +4,11 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 6.1.0**
+
+> - Features:
 >	- Added new built-in connection type: StepConnection
 > - Bugfixes:
 >	- Fixed CircuitConnection directional arrows not interpolating correctly
