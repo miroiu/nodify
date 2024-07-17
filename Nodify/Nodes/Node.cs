@@ -23,6 +23,9 @@ namespace Nodify
         public static readonly DependencyProperty OutputConnectorTemplateProperty = DependencyProperty.Register(nameof(OutputConnectorTemplate), typeof(DataTemplate), typeof(Node));
         public static readonly DependencyProperty InputProperty = DependencyProperty.Register(nameof(Input), typeof(IEnumerable), typeof(Node));
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register(nameof(Output), typeof(IEnumerable), typeof(Node));
+        public static readonly DependencyProperty ContentContainerStyleProperty = DependencyProperty.Register(nameof(ContentContainerStyle), typeof(Style), typeof(Node));
+        public static readonly DependencyProperty HeaderContainerStyleProperty = DependencyProperty.Register(nameof(HeaderContainerStyle), typeof(Style), typeof(Node));
+        public static readonly DependencyProperty FooterContainerStyleProperty = DependencyProperty.Register(nameof(FooterContainerStyle), typeof(Style), typeof(Node));
 
         /// <summary>
         /// Gets or sets the brush used for the background of the <see cref="ContentControl.Content"/> of this <see cref="Node"/>.
@@ -103,6 +106,33 @@ namespace Nodify
         {
             get => (IEnumerable)GetValue(OutputProperty);
             set => SetValue(OutputProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the content container.
+        /// </summary>
+        public Style ContentContainerStyle
+        {
+            get => (Style)GetValue(ContentContainerStyleProperty);
+            set => SetValue(ContentContainerStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the header container.
+        /// </summary>
+        public Style HeaderContainerStyle
+        {
+            get => (Style)GetValue(HeaderContainerStyleProperty);
+            set => SetValue(HeaderContainerStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the footer container.
+        /// </summary>
+        public Style FooterContainerStyle
+        {
+            get => (Style)GetValue(FooterContainerStyleProperty);
+            set => SetValue(FooterContainerStyleProperty, value);
         }
 
         /// <summary>

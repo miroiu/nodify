@@ -4,7 +4,9 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added ContentContainerStyle, HeaderContainerStyle and FooterContainerStyle dependency properties to Node
 > - Bugfixes:
+>	- Fixed hover effect and padding of NodeInput and NodeOutput for vertical orientation
 
 #### **Version 6.1.0**
 
