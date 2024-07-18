@@ -375,14 +375,14 @@ namespace Nodify
 
         private void OnItemSelectCompleted()
         {
-            if (ItemsSelectCompletedCommand?.CanExecute(null) ?? false)
-                ItemsSelectCompletedCommand.Execute(null);
+            if (ItemsSelectCompletedCommand?.CanExecute(DataContext) ?? false)
+                ItemsSelectCompletedCommand.Execute(DataContext);
         }
 
         private void OnItemsSelectStarted()
         {
-            if (ItemsSelectStartedCommand?.CanExecute(null) ?? false)
-                ItemsSelectStartedCommand.Execute(null);
+            if (ItemsSelectStartedCommand?.CanExecute(DataContext) ?? false)
+                ItemsSelectStartedCommand.Execute(DataContext);
         }
 
         /// <summary>
@@ -827,6 +827,13 @@ namespace Nodify
                 onFinish?.Invoke();
             }
         }
+
+        /// <summary>
+        /// Moves the viewport center at the center of the specified area.
+        /// </summary>
+        /// <param name="area">The location in graph space coordinates.</param>
+        public new void BringIntoView(Rect area)
+            => BringIntoView(new Point(area.X + area.Width / 2, area.Y + area.Height / 2));
 
         /// <summary>
         /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.
@@ -1315,9 +1322,9 @@ namespace Nodify
                 ItemsHost.InvalidateArrange();
             }
 
-            if (ItemsDragCompletedCommand?.CanExecute(null) ?? false)
+            if (ItemsDragCompletedCommand?.CanExecute(DataContext) ?? false)
             {
-                ItemsDragCompletedCommand.Execute(null);
+                ItemsDragCompletedCommand.Execute(DataContext);
             }
         }
 
@@ -1338,9 +1345,9 @@ namespace Nodify
 
             if (selectedItems.Count > 0)
             {
-                if (ItemsDragStartedCommand?.CanExecute(null) ?? false)
+                if (ItemsDragStartedCommand?.CanExecute(DataContext) ?? false)
                 {
-                    ItemsDragStartedCommand.Execute(null);
+                    ItemsDragStartedCommand.Execute(DataContext);
                 }
 
                 e.Handled = true;
