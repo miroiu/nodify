@@ -9,6 +9,7 @@
 >	- Added the NodifyEditor's DataContext as the parameter of the ItemsSelectStartedCommand, ItemsSelectCompletedCommand, ItemsDragStartedCommand and ItemsDragCompletedCommand commands
 > - Bugfixes:
 >	- Fixed hover effect and padding of NodeInput and NodeOutput for vertical orientation
+>	- Fixed ItemContainers being selected sometimes when double clicking the canvas
 
 #### **Version 6.1.0**
 
