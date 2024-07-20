@@ -241,7 +241,7 @@ namespace Nodify
                 DragViewport = new MouseGesture(MouseAction.LeftClick);
             }
 
-            /// <summary>Gesture to move the viewport inside the <see cref="Minimap">.</summary>
+            /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
             public InputGestureRef DragViewport { get; }
 
             /// <summary>Copies from the specified gestures.</summary>
