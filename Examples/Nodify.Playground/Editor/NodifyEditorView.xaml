@@ -472,6 +472,33 @@
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Visibility="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
               Panel.ZIndex="-2" />
+        
+        <nodify:Minimap ItemsSource="{Binding Nodes}"
+                        ViewportSize="{Binding ViewportSize, ElementName=Editor}"
+                        ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
+                        Visibility="{Binding ShowMinimap, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Width="300"
+                        Height="200"
+                        Margin="5 40">
+            <nodify:Minimap.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:NodeViewModel}">
+                    <Grid />
+                </DataTemplate>
+            </nodify:Minimap.ItemTemplate>
+            <nodify:Minimap.ItemContainerStyle>
+                <Style TargetType="{x:Type nodify:MinimapItem}"
+                       BasedOn="{StaticResource {x:Type nodify:MinimapItem}}">
+                    <Setter Property="Location"
+                            Value="{Binding Location}" />
+                    <Setter Property="Width"
+                            Value="150" />
+                    <Setter Property="Height"
+                            Value="130" />
+                </Style>
+            </nodify:Minimap.ItemContainerStyle>
+        </nodify:Minimap>
     </Grid>
 
 </UserControl>

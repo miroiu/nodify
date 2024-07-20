@@ -15,5 +15,8 @@
         <ResourceDictionary Source="ItemContainer.xaml" />
         <ResourceDictionary Source="DecoratorContainer.xaml" />
         <ResourceDictionary Source="NodifyEditor.xaml" />
+        
+        <!--WIDGETS-->
+        <ResourceDictionary Source="Minimap.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

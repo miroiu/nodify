@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added a Minimap control to Nodify
 >	- Added ContentContainerStyle, HeaderContainerStyle and FooterContainerStyle dependency properties to Node
 >	- Added BringIntoView that takes a Rect parameter to NodifyEditor
 >	- Added the NodifyEditor's DataContext as the parameter of the ItemsSelectStartedCommand, ItemsSelectCompletedCommand, ItemsDragStartedCommand and ItemsDragCompletedCommand commands

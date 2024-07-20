@@ -10,6 +10,8 @@ namespace Nodify.Shapes
         public MainWindow()
         {
             InitializeComponent();
+
+            NodifyEditor.EnableDraggingContainersOptimizations = false;
         }
     }
 }

@@ -20,6 +20,11 @@ namespace Nodify.Playground
                     val => Instance.EditorInputMode = val,
                     "Editor input mode"),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.ShowMinimap,
+                    val => Instance.ShowMinimap = val,
+                    "Show minimap",
+                    "Set Enable nodes dragging optimization to false for realtime updates"),
+                new ProxySettingViewModel<bool>(
                     () => Instance.ShowGridLines,
                     val => Instance.ShowGridLines = val,
                     "Show grid lines:"),
@@ -74,6 +79,13 @@ namespace Nodify.Playground
             get => _editorInputMode;
             set => SetProperty(ref _editorInputMode, value)
                 .Then(() => EditorGestures.Mappings.Apply(value));
+        }
+
+        private bool _showMinimap = true;
+        public bool ShowMinimap
+        {
+            get => _showMinimap;
+            set => SetProperty(ref _showMinimap, value);
         }
 
         private bool _shouldConnectNodes = true;

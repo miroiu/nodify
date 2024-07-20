@@ -146,7 +146,7 @@ namespace Nodify
         public Transform ViewportTransform => (Transform)GetValue(ViewportTransformProperty);
 
         /// <summary>
-        /// Gets the size of the viewport.
+        /// Gets the size of the viewport in graph space (scaled by the <see cref="ViewportZoom"/>).
         /// </summary>
         public Size ViewportSize
         {
@@ -162,7 +162,6 @@ namespace Nodify
             get => (Point)GetValue(ViewportLocationProperty);
             set => SetValue(ViewportLocationProperty, value);
         }
-
 
         /// <summary>
         /// Gets or sets the zoom factor of the viewport.
