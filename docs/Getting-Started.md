@@ -537,3 +537,54 @@ Use the `ViewportTransform` dependency property to have the grid move with the v
 ```
 
 > Tip: Right-click and drag the screen around to move the view and use the mouse wheel to zoom in and out.
+
+## Applying custom theme
+
+Firstly define the theme in your assembly, if you don't have custom `Brushes` or `Controls` in your assembly then ommit those from the `MergedDictionary`.
+
+Create the file in your project under `Themes/Custom.xaml`:
+
+```xml
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Brushes.xaml" />  
+        <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Controls.xaml" />  
+        <ResourceDictionary Source="Brushes.xaml" />
+        <ResourceDictionary Source="Controls.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- from shared -->
+    <Color x:Key="ForegroundColor">White</Color>
+
+</ResourceDictionary>
+```
+
+Redefine all colors you dislike by copying and them to your theme from:
+
+- `Nodify/Themes/Nodify.xaml`
+- `Nodify.Shared/Themes/Nodify.xaml`
+
+To load a custom theme inside your application (from the assembly where your theme is defined) call `ThemeManager.PreloadThemes`:
+
+```cs
+        // Preload now themes with correct assembly setup
+        ThemeManager.PreloadThemes(Assembly.GetExecutingAssembly()?.GetName().Name,
+            new string[]
+                {
+                    "Dark",
+                    "Light",
+                    "Nodify",
+                    "Custom",
+                }
+            ); // 
+```
+
+This will also add your theme to the theme cycle of the manager. If you want to remove the default themes from the cycle, ommit them from the preload call.
+
+Finally apply your theme:
+
+```cs
+ThemeManager.SetTheme("Custom");
+```
