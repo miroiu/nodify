@@ -44,6 +44,7 @@
                             <Grid>
                                 <local:MinimapPanel ViewportSize="{TemplateBinding ViewportSize}"
                                                     ViewportLocation="{TemplateBinding ViewportLocation}"
+                                                    ResizeToViewport="{TemplateBinding ResizeToViewport}"
                                                     Extent="{Binding Extent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
                                                     ItemsExtent="{Binding ItemsExtent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
                                                     IsItemsHost="True"
