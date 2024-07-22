@@ -6,10 +6,9 @@ namespace Nodify
     internal class MinimapPanel : Panel
     {
         public static readonly DependencyProperty ViewportLocationProperty = NodifyEditor.ViewportLocationProperty.AddOwner(typeof(MinimapPanel), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.AffectsMeasure));
-
         public static readonly DependencyProperty ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner(typeof(MinimapPanel), new FrameworkPropertyMetadata(BoxValue.Size, FrameworkPropertyMetadataOptions.AffectsMeasure));
-
         public static readonly DependencyProperty ExtentProperty = NodifyCanvas.ExtentProperty.AddOwner(typeof(MinimapPanel));
+        public static readonly DependencyProperty ItemsExtentProperty = Minimap.ItemsExtentProperty.AddOwner(typeof(MinimapPanel));
 
         /// <inheritdoc cref="Minimap.ViewportLocation" />
         public Point ViewportLocation
@@ -30,6 +29,13 @@ namespace Nodify
         {
             get => (Rect)GetValue(ExtentProperty);
             set => SetValue(ExtentProperty, value);
+        }
+
+        /// <inheritdoc cref="Minimap.Extent" />
+        public Rect ItemsExtent
+        {
+            get => (Rect)GetValue(ItemsExtentProperty);
+            set => SetValue(ItemsExtentProperty, value);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -74,6 +80,8 @@ namespace Nodify
             var itemsExtent = minX == double.MaxValue
                 ? new Rect(0, 0, 0, 0)
                 : new Rect(minX, minY, maxX - minX, maxY - minY);
+
+            ItemsExtent = itemsExtent;
 
             itemsExtent.Union(new Rect(ViewportLocation, ViewportSize));
 

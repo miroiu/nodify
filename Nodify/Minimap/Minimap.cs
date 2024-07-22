@@ -20,6 +20,8 @@ namespace Nodify
         public static readonly DependencyProperty ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner(typeof(Minimap));
         public static readonly DependencyProperty ViewportStyleProperty = DependencyProperty.Register(nameof(ViewportStyle), typeof(Style), typeof(Minimap));
         public static readonly DependencyProperty ExtentProperty = NodifyCanvas.ExtentProperty.AddOwner(typeof(Minimap));
+        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(Minimap));
+        public static readonly DependencyProperty MaxViewportOffsetProperty = DependencyProperty.Register(nameof(MaxViewportOffsetProperty), typeof(Size), typeof(Minimap), new FrameworkPropertyMetadata(new Size(2000, 2000)));
 
         public static readonly RoutedEvent ZoomEvent = EventManager.RegisterRoutedEvent(nameof(Zoom), RoutingStrategy.Bubble, typeof(ZoomEventHandler), typeof(Minimap));
 
@@ -53,6 +55,20 @@ namespace Nodify
             set => SetValue(ExtentProperty, value);
         }
 
+        /// <summary>The area covered by the <see cref="MinimapItem"/>s in graph space.</summary>
+        public Rect ItemsExtent
+        {
+            get => (Rect)GetValue(ItemsExtentProperty);
+            set => SetValue(ItemsExtentProperty, value);
+        }
+
+        /// <summary>The max position from the <see cref="NodifyEditor.ItemsExtent"/> that the viewport can move to.</summary>
+        public Size MaxViewportOffset
+        {
+            get => (Size)GetValue(MaxViewportOffsetProperty);
+            set => SetValue(MaxViewportOffsetProperty, value);
+        }
+
         /// <summary>Triggered when zooming in or out using the mouse wheel.</summary>
         public event ZoomEventHandler Zoom
         {
@@ -68,6 +84,7 @@ namespace Nodify
         static Minimap()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(typeof(Minimap)));
+            ClipToBoundsProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
         public override void OnApplyTemplate()
@@ -87,8 +104,7 @@ namespace Nodify
                 this.CaptureMouseSafe();
                 IsDragging = true;
 
-                var position = e.GetPosition(ItemsHost);
-                ViewportLocation = position - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
+                SetViewportLocation(e.GetPosition(ItemsHost));
 
                 e.Handled = true;
             }
@@ -98,9 +114,21 @@ namespace Nodify
         {
             if (IsDragging)
             {
-                var position = e.GetPosition(ItemsHost);
-                ViewportLocation = position - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
+                SetViewportLocation(e.GetPosition(ItemsHost));
             }
+        }
+
+        private void SetViewportLocation(Point location)
+        {
+            var position = location - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
+
+            if (MaxViewportOffset.Width != 0 || MaxViewportOffset.Height != 0)
+            {
+                position.X = position.X.Clamp(ItemsExtent.Left - ViewportSize.Width / 2 - MaxViewportOffset.Width, ItemsExtent.Right - ViewportSize.Width / 2 + MaxViewportOffset.Width);
+                position.Y = position.Y.Clamp(ItemsExtent.Top - ViewportSize.Height / 2 - MaxViewportOffset.Height, ItemsExtent.Bottom - ViewportSize.Height / 2 + MaxViewportOffset.Height);
+            }
+
+            ViewportLocation = position;
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
