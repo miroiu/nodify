@@ -99,7 +99,7 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
-            ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException($"{ElementItemsHost} is missing or is not of type Panel.");
+            ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException($"{ElementItemsHost} is missing or is not of type {nameof(Panel)}.");
         }
 
         protected bool IsDragging { get; private set; }
@@ -132,8 +132,11 @@ namespace Nodify
 
             if (MaxViewportOffset.Width != 0 || MaxViewportOffset.Height != 0)
             {
-                position.X = position.X.Clamp(ItemsExtent.Left - ViewportSize.Width / 2 - MaxViewportOffset.Width, ItemsExtent.Right - ViewportSize.Width / 2 + MaxViewportOffset.Width);
-                position.Y = position.Y.Clamp(ItemsExtent.Top - ViewportSize.Height / 2 - MaxViewportOffset.Height, ItemsExtent.Bottom - ViewportSize.Height / 2 + MaxViewportOffset.Height);
+                double maxRight = ResizeToViewport ? ItemsExtent.Right : Math.Max(ItemsExtent.Right, ItemsExtent.Left + ViewportSize.Width);
+                double maxBottom = ResizeToViewport ? ItemsExtent.Bottom : Math.Max(ItemsExtent.Bottom, ItemsExtent.Top + ViewportSize.Height);
+
+                position.X = position.X.Clamp(ItemsExtent.Left - ViewportSize.Width / 2 - MaxViewportOffset.Width, maxRight - ViewportSize.Width / 2 + MaxViewportOffset.Width);
+                position.Y = position.Y.Clamp(ItemsExtent.Top - ViewportSize.Height / 2 - MaxViewportOffset.Height, maxBottom - ViewportSize.Height / 2 + MaxViewportOffset.Height);
             }
 
             ViewportLocation = position;
