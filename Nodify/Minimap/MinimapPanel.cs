@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Nodify
@@ -98,7 +99,9 @@ namespace Nodify
 
             Extent = itemsExtent;
 
-            return itemsExtent.Size;
+            double width = Math.Max(itemsExtent.Size.Width, ViewportSize.Width);
+            double height = Math.Max(itemsExtent.Height, ViewportSize.Height);
+            return new Size(width, height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)

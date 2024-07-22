@@ -54,6 +54,9 @@ namespace Nodify.Playground
                 });
         }
 
+        public string XLabel { get; set; } = "x";
+        public string YLabel { get; set; } = "y";
+
         public static implicit operator PointEditor(Point point)
         {
             return new PointEditor
@@ -68,7 +71,9 @@ namespace Nodify.Playground
             return new PointEditor
             {
                 X = size.Width,
-                Y = size.Height
+                Y = size.Height,
+                XLabel = "w",
+                YLabel = "h"
             };
         }
     }

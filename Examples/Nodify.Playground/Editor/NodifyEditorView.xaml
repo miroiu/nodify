@@ -477,6 +477,8 @@
                         ViewportSize="{Binding ViewportSize, ElementName=Editor}"
                         ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
                         Visibility="{Binding ShowMinimap, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
+                        ResizeToViewport="{Binding ResizeToViewport, Source={x:Static local:PlaygroundSettings.Instance}}"
+                        MaxViewportOffset="{Binding MinimapMaxViewportOffset.Size, Source={x:Static local:PlaygroundSettings.Instance}}"
                         Zoom="Minimap_Zoom"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"

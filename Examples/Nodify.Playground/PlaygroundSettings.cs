@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Nodify.Playground
 {
@@ -24,6 +25,16 @@ namespace Nodify.Playground
                     val => Instance.ShowMinimap = val,
                     "Show minimap",
                     "Set Enable nodes dragging optimization to false for realtime updates"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.ResizeToViewport,
+                    val => Instance.ResizeToViewport = val,
+                    "Minimap resize to viewport",
+                    "Whether the minimap should resized to also display the viewport"),
+                new ProxySettingViewModel<PointEditor>(
+                    () => Instance.MinimapMaxViewportOffset,
+                    val => Instance.MinimapMaxViewportOffset = val,
+                    "Minimap max viewport offset",
+                    "The max position from the items extent that the viewport can move to"),
                 new ProxySettingViewModel<bool>(
                     () => Instance.ShowGridLines,
                     val => Instance.ShowGridLines = val,
@@ -86,6 +97,20 @@ namespace Nodify.Playground
         {
             get => _showMinimap;
             set => SetProperty(ref _showMinimap, value);
+        }
+
+        private bool _resizeToViewport = false;
+        public bool ResizeToViewport
+        {
+            get => _resizeToViewport;
+            set => SetProperty(ref _resizeToViewport, value);
+        }
+
+        private PointEditor _minimapViewportOffset = new Size(2000, 2000);
+        public PointEditor MinimapMaxViewportOffset
+        {
+            get => _minimapViewportOffset;
+            set => SetProperty(ref _minimapViewportOffset, value);
         }
 
         private bool _shouldConnectNodes = true;
