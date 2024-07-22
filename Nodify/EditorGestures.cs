@@ -239,16 +239,22 @@ namespace Nodify
             public MinimapGestures()
             {
                 DragViewport = new MouseGesture(MouseAction.LeftClick);
+                ZoomModifierKey = ModifierKeys.None;
             }
 
             /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
             public InputGestureRef DragViewport { get; }
+
+            /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
+            public ModifierKeys ZoomModifierKey { get; set; }
 
             /// <summary>Copies from the specified gestures.</summary>
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(MinimapGestures gestures)
             {
                 DragViewport.Value = gestures.DragViewport.Value;
+                ZoomModifierKey = gestures.ZoomModifierKey;
             }
         }
 

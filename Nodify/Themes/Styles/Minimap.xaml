@@ -47,7 +47,6 @@
                                                     Extent="{Binding Extent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
                                                     IsItemsHost="True"
                                                     x:Name="PART_ItemsHost" />
-
                                 <Canvas>
                                     <Rectangle  Style="{TemplateBinding ViewportStyle}"
                                                 Width="{Binding ViewportSize.Width, RelativeSource={RelativeSource TemplatedParent}}"

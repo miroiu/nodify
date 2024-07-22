@@ -384,7 +384,8 @@
 
                 <nodify:Minimap ItemsSource="{Binding Shapes}"
                                 ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
-                                ViewportSize="{Binding ViewportSize, ElementName=Editor}">
+                                ViewportSize="{Binding ViewportSize, ElementName=Editor}"
+                                Zoom="Minimap_Zoom">
                     <nodify:Minimap.Resources>
                         <DataTemplate DataType="{x:Type local:EllipseViewModel}">
                             <Ellipse Stretch="Fill"

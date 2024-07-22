@@ -6,6 +6,9 @@ using System.Windows.Shapes;
 
 namespace Nodify
 {
+    /// <summary>
+    /// A minimap control that can position the viewport, and zoom in and out.
+    /// </summary>
     [StyleTypedProperty(Property = nameof(ViewportStyle), StyleTargetType = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(MinimapItem))]
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
@@ -17,6 +20,8 @@ namespace Nodify
         public static readonly DependencyProperty ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner(typeof(Minimap));
         public static readonly DependencyProperty ViewportStyleProperty = DependencyProperty.Register(nameof(ViewportStyle), typeof(Style), typeof(Minimap));
         public static readonly DependencyProperty ExtentProperty = NodifyCanvas.ExtentProperty.AddOwner(typeof(Minimap));
+
+        public static readonly RoutedEvent ZoomEvent = EventManager.RegisterRoutedEvent(nameof(Zoom), RoutingStrategy.Bubble, typeof(ZoomEventHandler), typeof(Minimap));
 
         /// <inheritdoc cref="NodifyEditor.ViewportLocation" />
         public Point ViewportLocation
@@ -46,6 +51,13 @@ namespace Nodify
         {
             get => (Rect)GetValue(ExtentProperty);
             set => SetValue(ExtentProperty, value);
+        }
+
+        /// <summary>Triggered when zooming in or out using the mouse wheel.</summary>
+        public event ZoomEventHandler Zoom
+        {
+            add => AddHandler(ZoomEvent, value);
+            remove => RemoveHandler(ZoomEvent, value);
         }
 
         /// <summary>
@@ -102,6 +114,24 @@ namespace Nodify
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
+            }
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            if (!e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+            {
+                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+                var location = ViewportLocation + (Vector)ViewportSize / 2;
+
+                var args = new ZoomEventArgs(zoom, location)
+                {
+                    RoutedEvent = ZoomEvent,
+                    Source = this
+                };
+                RaiseEvent(args);
+
+                e.Handled = true;
             }
         }
 
