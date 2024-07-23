@@ -281,7 +281,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Splits the connection. Triggered by <see cref="EditorGestures.Connection.Split"/> gesture.
+        /// Splits the connection. Triggered by <see cref="EditorGestures.ConnectionGestures.Split"/> gesture.
         /// Parameter is the location where the splitting ocurred.
         /// </summary>
         public ICommand? SplitCommand
@@ -291,7 +291,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Removes this connection. Triggered by <see cref="EditorGestures.Connection.Disconnect"/> gesture.
+        /// Removes this connection. Triggered by <see cref="EditorGestures.ConnectionGestures.Disconnect"/> gesture.
         /// Parameter is the location where the disconnect ocurred.
         /// </summary>
         public ICommand? DisconnectCommand
@@ -361,14 +361,14 @@ namespace Nodify
         public static readonly RoutedEvent DisconnectEvent = RoutedEvent.Register<ConnectionEventArgs>(nameof(Disconnect), RoutingStrategies.Bubble, typeof(BaseConnection));
         public static readonly RoutedEvent SplitEvent = RoutedEvent.Register<ConnectionEventArgs>(nameof(Split), RoutingStrategies.Bubble, typeof(BaseConnection));
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Disconnect"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Disconnect"/> gesture.</summary>
         public event ConnectionEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
             remove => RemoveHandler(DisconnectEvent, value);
         }
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Split"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Split"/> gesture.</summary>
         public event ConnectionEventHandler Split
         {
             add => AddHandler(SplitEvent, value);

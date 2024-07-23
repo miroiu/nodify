@@ -200,4 +200,36 @@
                 Value="{StaticResource PendingConnection.BackgroundBrush}" />
     </ControlTheme>
 
+    <!--MINIMAP-->
+
+    <ControlTheme x:Key="Minimap.ViewportStyle" x:Key="{x:Type Rectangle}"
+           TargetType="Rectangle">
+        <Setter Property="Stroke"
+                Value="{StaticResource Minimap.ViewportStrokeBrush}" />
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="Fill"
+                Value="{StaticResource Minimap.ViewportBackgroundBrush}" />
+        <Setter Property="StrokeLineJoin"
+                Value="Round" />
+        <Setter Property="StrokeEndLineCap"
+                Value="Round" />
+        <Setter Property="StrokeStartLineCap"
+                Value="Round" />
+    </ControlTheme>
+
+    <ControlTheme TargetType="{x:Type local:Minimap}" x:Key="{x:Type local:Minimap}"
+           BasedOn="{StaticResource {x:Type local:Minimap}}">
+        <Setter Property="Background"
+                Value="{StaticResource Minimap.BackgroundBrush}" />
+        <Setter Property="ViewportStyle" 
+                Value="{StaticResource Minimap.ViewportStyle}"/>
+    </ControlTheme>
+
+    <ControlTheme TargetType="{x:Type local:MinimapItem}" x:Key="{x:Type local:MinimapItem}"
+           BasedOn="{StaticResource {x:Type local:MinimapItem}}">
+        <Setter Property="Background"
+                Value="{StaticResource MinimapItem.BackgroundBrush}" />
+    </ControlTheme>
+
 </ResourceDictionary>

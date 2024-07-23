@@ -355,6 +355,108 @@
             </nodify:NodifyEditor.ItemContainerTheme>
         </nodify:NodifyEditor>
 
+        <!--MINIMAP-->
+        <shared:ResizablePanel Directions="BottomLeft"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Right"
+                               Width="300"
+                               Height="200"
+                               MinWidth="250"
+                               MinHeight="150"
+                               BorderBrush="{x:Null}"
+                               Margin="20">
+            <shared:ResizablePanel.Resources>
+                <Style TargetType="{x:Type shared:Resizer}">
+                    <Setter Property="Cursor"
+                            Value="SizeNESW" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type shared:Resizer}">
+                                <Grid Margin="-3 -6 -6 -3" Background="Transparent">
+                                    <Rectangle Height="12"
+                                               Width="3"
+                                               Fill="#d2d4d7"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Bottom" />
+                                    <Rectangle Height="3"
+                                               Width="12"
+                                               Fill="#d2d4d7"
+                                               VerticalAlignment="Bottom"
+                                               HorizontalAlignment="Left" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </shared:ResizablePanel.Resources>
+            <Border CornerRadius="3"
+                    BorderBrush="#1e293b"
+                    BorderThickness="3">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="1" />
+                </Border.Effect>
+
+                <nodify:Minimap ItemsSource="{Binding ItemsSource, ElementName=Editor}"
+                                ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
+                                ViewportSize="{Binding ViewportSize, ElementName=Editor}"
+                                ResizeToViewport="True"
+                                Zoom="Minimap_Zoom">
+                    <nodify:Minimap.Resources>
+                        <DataTemplate DataType="{x:Type local:EllipseViewModel}">
+                            <Ellipse Stretch="Fill"
+                                     Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                     Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                     StrokeThickness="2"
+                                     Opacity="0.8" />
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:RectangleViewModel}">
+                            <Rectangle Stretch="Fill"
+                                       Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                       Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                       StrokeThickness="2"
+                                       Opacity="0.8" />
+                        </DataTemplate>
+
+                        <DataTemplate DataType="{x:Type local:TriangleViewModel}">
+                            <Polygon Points="0,100 50,0 100,100"
+                                     Stretch="Fill"
+                                     Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                     Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                     StrokeThickness="2"
+                                     Opacity="0.8" />
+                        </DataTemplate>
+                    </nodify:Minimap.Resources>
+                    <nodify:Minimap.Background>
+                        <SolidColorBrush Color="#111a2d"
+                                         Opacity="0.5" />
+                    </nodify:Minimap.Background>
+                    <nodify:Minimap.ItemContainerStyle>
+                        <Style TargetType="{x:Type nodify:MinimapItem}">
+                            <Setter Property="Location"
+                                    Value="{Binding Location}" />
+                            <Setter Property="Width"
+                                    Value="{Binding Width}" />
+                            <Setter Property="Height"
+                                    Value="{Binding Height}" />
+                        </Style>
+                    </nodify:Minimap.ItemContainerStyle>
+                    <nodify:Minimap.ViewportStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="StrokeThickness"
+                                    Value="3" />
+                            <Setter Property="Fill">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#445e87"
+                                                     Opacity="0.3" />
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </nodify:Minimap.ViewportStyle>
+                </nodify:Minimap>
+            </Border>
+        </shared:ResizablePanel>
+
         <!--TOOLBARS-->
 
         <Border VerticalAlignment="Bottom"

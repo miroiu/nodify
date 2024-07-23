@@ -193,7 +193,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets the size of the viewport.
+        /// Gets the size of the viewport in graph space (scaled by the <see cref="ViewportZoom"/>).
         /// </summary>
         public Size ViewportSize
         {
@@ -209,7 +209,6 @@ namespace Nodify
             get => viewportLocation;
             set => SetAndRaise(ViewportLocationProperty, ref viewportLocation, value);
         }
-
 
         /// <summary>
         /// Gets or sets the zoom factor of the viewport.

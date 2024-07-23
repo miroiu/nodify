@@ -15,5 +15,8 @@
         <MergeResourceInclude Source="/Themes/Styles/ItemContainer.xaml" />
         <MergeResourceInclude Source="/Themes/Styles/DecoratorContainer.xaml" />
         <MergeResourceInclude Source="/Themes/Styles/NodifyEditor.xaml" />
+        
+        <!--WIDGETS-->
+        <MergeResourceInclude Source="/Themes/Styles/Minimap.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

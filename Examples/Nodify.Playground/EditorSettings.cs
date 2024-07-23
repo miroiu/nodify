@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Nodify.Playground
 {
@@ -398,14 +399,14 @@ namespace Nodify.Playground
             set => SetProperty(ref _arrowHeadShape, value);
         }
 
-        private PointEditor _connectionSourceOffset = new PointEditor { X = 14, Y = 0 };
+        private PointEditor _connectionSourceOffset = new Size(14, 0);
         public PointEditor ConnectionSourceOffset
         {
             get => _connectionSourceOffset;
             set => SetProperty(ref _connectionSourceOffset, value);
         }
 
-        private PointEditor _connectionTargetOffset = new PointEditor { X = 14, Y = 0 };
+        private PointEditor _connectionTargetOffset = new Size(14, 0);
         public PointEditor ConnectionTargetOffset
         {
             get => _connectionTargetOffset;
@@ -426,7 +427,7 @@ namespace Nodify.Playground
             set => SetProperty(ref _directionalArrowsOffset, value);
         }
 
-        private PointEditor _connectionArrowSize = new PointEditor { X = 8, Y = 8 };
+        private PointEditor _connectionArrowSize = new Size(8, 8);
         public PointEditor ConnectionArrowSize
         {
             get => _connectionArrowSize;

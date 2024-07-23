@@ -234,6 +234,31 @@ namespace Nodify
             }
         }
 
+        /// <summary>Gestures used by the <see cref="Nodify.Minimap"/> control.</summary>
+        public class MinimapGestures
+        {
+            public MinimapGestures()
+            {
+                DragViewport = new MouseGesture(MouseAction.LeftClick);
+                ZoomModifierKey = ModifierKeys.None;
+            }
+
+            /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
+            public InputGestureRef DragViewport { get; }
+
+            /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
+            public ModifierKeys ZoomModifierKey { get; set; }
+
+            /// <summary>Copies from the specified gestures.</summary>
+            /// <param name="gestures">The gestures to copy.</param>
+            public void Apply(MinimapGestures gestures)
+            {
+                DragViewport.Value = gestures.DragViewport.Value;
+                ZoomModifierKey = gestures.ZoomModifierKey;
+            }
+        }
+
         /// <summary>Gestures for the editor.</summary>
         public NodifyEditorGestures Editor { get; } = new NodifyEditorGestures();
 
@@ -249,6 +274,9 @@ namespace Nodify
         /// <summary>Gestures for the grouping node.</summary>
         public GroupingNodeGestures GroupingNode { get; } = new GroupingNodeGestures();
 
+        /// <summary>Gestures for the minimap.</summary>
+        public MinimapGestures Minimap { get; } = new MinimapGestures();
+
         /// <summary>Copies from the specified gestures.</summary>
         /// <param name="gestures">The gestures to copy.</param>
         public void Apply(EditorGestures gestures)
@@ -258,6 +286,7 @@ namespace Nodify
             Connector.Apply(gestures.Connector);
             Connection.Apply(gestures.Connection);
             GroupingNode.Apply(gestures.GroupingNode);
+            Minimap.Apply(gestures.Minimap);
         }
     }
 }

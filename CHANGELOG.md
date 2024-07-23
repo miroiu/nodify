@@ -4,6 +4,12 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 6.2.0**
+
+> - Features:
+>	- Added a Minimap control and EditorGestures.Minimap
 >	- Added ContentContainerStyle, HeaderContainerStyle and FooterContainerStyle dependency properties to Node
 >	- Added BringIntoView that takes a Rect parameter to NodifyEditor
 >	- Added the NodifyEditor's DataContext as the parameter of the ItemsSelectStartedCommand, ItemsSelectCompletedCommand, ItemsDragStartedCommand and ItemsDragCompletedCommand commands

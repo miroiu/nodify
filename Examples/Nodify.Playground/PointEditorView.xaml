@@ -20,17 +20,21 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="X:"
-                   TextAlignment="Center"
-                   VerticalAlignment="Center" />
+        <TextBlock TextAlignment="Center"
+                   VerticalAlignment="Center">
+                <Run Text="{Binding XLabel}" />
+                <Run Text=":" />
+        </TextBlock>
         <TextBox Text="{Binding X, Mode=TwoWay}"
                  Grid.Column="1" />
 
-        <TextBlock Text="Y:"
-                   TextAlignment="Center"
+        <TextBlock TextAlignment="Center"
                    VerticalAlignment="Center"
                    Grid.Row="1"
-                   Margin="0 5 0 0" />
+                   Margin="0 5 0 0">
+                <Run Text="{Binding YLabel}" />
+                <Run Text=":" />
+        </TextBlock>
         <TextBox Text="{Binding Y, Mode=TwoWay}"
                  Margin="0 5 0 0"
                  Grid.Row="1"
