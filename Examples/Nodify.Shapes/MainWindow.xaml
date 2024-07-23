@@ -1,5 +1,5 @@
 ﻿<Window x:Class="Nodify.Shapes.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,20 +10,18 @@
         xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
         Title="Canvas"
         Height="650"
+        x:DataType="local:AppShellViewModel"
         Width="1200">
-    <Window.InputBindings>
+    <Window.KeyBindings>
         <KeyBinding Command="{Binding Canvas.RedoCommand}"
-                    Key="Y"
-                    Modifiers="Ctrl" />
+                    Gesture="Ctrl+Y"/>
         <KeyBinding Command="{Binding Canvas.RedoCommand}"
-                    Key="Z"
-                    Modifiers="Ctrl+Shift" />
+                    Gesture="Ctrl+Shift+Z" />
         <KeyBinding Command="{Binding Canvas.UndoCommand}"
-                    Key="Z"
-                    Modifiers="Ctrl" />
+                    Gesture="Ctrl+Z" />
         <KeyBinding Command="{Binding Canvas.DeleteSelectionCommand}"
-                    Key="Delete" />
-    </Window.InputBindings>
+                    Gesture="Delete" />
+    </Window.KeyBindings>
 
     <Window.DataContext>
         <local:AppShellViewModel />

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Avalonia.Controls.Primitives;
 
 namespace Nodify.Shapes.Canvas
 {
@@ -17,18 +18,18 @@ namespace Nodify.Shapes.Canvas
         public CanvasView()
         {
             InitializeComponent();
-            _moveToLocationTimer = new DispatcherTimer(TimeSpan.FromSeconds(1d / 60d), DispatcherPriority.Background, OnMoveToLocationTick, Dispatcher);
-            _generateLocationTimer = new DispatcherTimer(TimeSpan.FromSeconds(3), DispatcherPriority.Background, OnGenerateNewLocation, Dispatcher);
+            _moveToLocationTimer = new DispatcherTimer(TimeSpan.FromSeconds(1d / 60d), DispatcherPriority.Background, OnMoveToLocationTick);
+            _generateLocationTimer = new DispatcherTimer(TimeSpan.FromSeconds(3), DispatcherPriority.Background, OnGenerateNewLocation);
         }
 
-        public override void OnApplyTemplate()
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             _moveToLocationTimer.Start();
             _generateLocationTimer.Start();
 
             OnGenerateNewLocation(this, EventArgs.Empty);
 
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(e);
         }
 
         private void OnGenerateNewLocation(object? sender, EventArgs e)
@@ -63,7 +64,7 @@ namespace Nodify.Shapes.Canvas
         private ShapeViewModel? _drawingShape;
         private Point _initialLocation;
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             var toolbarVm = ((CanvasViewModel)DataContext).CanvasToolbar;
             if (toolbarVm.SelectedTool != CanvasTool.None && DrawingGesturesMappings.Instance.Draw.Matches(this, e))
@@ -73,7 +74,7 @@ namespace Nodify.Shapes.Canvas
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPointerMoved(PointerEventArgs e)
         {
             if (_drawingShape != null)
             {
@@ -92,12 +93,12 @@ namespace Nodify.Shapes.Canvas
             }
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             _drawingShape = null;
         }
 
-        private void Toolbar_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Toolbar_MouseDown(object sender, PointerPressedEventArgs e)
         {
             // prevent creating shape by clicking on the toolbar
             e.Handled = true;

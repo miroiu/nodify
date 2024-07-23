@@ -15,7 +15,7 @@ namespace Nodify.Shapes.Canvas
 
     public class CanvasToolbarViewModel : ObservableObject
     {
-        public static readonly CanvasTool[] AvailableTools = Enum.GetValues(typeof(CanvasTool)).Cast<CanvasTool>().ToArray();
+        public static readonly CanvasTool[] AvailableTools = Enum.GetValues<CanvasTool>().ToArray();
 
         internal static readonly EditorGestures EditorGestures = new EditorGestures();
 

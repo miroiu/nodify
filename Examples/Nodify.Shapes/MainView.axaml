@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Nodify.Shapes"
+             xmlns:canvas="clr-namespace:Nodify.Shapes.Canvas"
+             x:DataType="local:AppShellViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Nodify.Shapes.MainView">
+
+    <UserControl.KeyBindings>
+        <KeyBinding Command="{Binding Canvas.RedoCommand}"
+                    Gesture="Ctrl+Y"/>
+        <KeyBinding Command="{Binding Canvas.RedoCommand}"
+                    Gesture="Ctrl+Shift+Z" />
+        <KeyBinding Command="{Binding Canvas.UndoCommand}"
+                    Gesture="Ctrl+Z" />
+        <KeyBinding Command="{Binding Canvas.DeleteSelectionCommand}"
+                    Gesture="Delete" />
+    </UserControl.KeyBindings>
+
+    <UserControl.DataContext>
+        <local:AppShellViewModel />
+    </UserControl.DataContext>
+
+    <Grid>
+        <canvas:CanvasView DataContext="{Binding Canvas}" />
+    </Grid>
+</UserControl>

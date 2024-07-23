@@ -26,6 +26,7 @@ global using Avalonia.Controls.Mixins;
 global using Avalonia.Collections;
 global using System.Runtime.CompilerServices;
 global using System.Collections.Generic;
+global using System.Threading;
 
 global using FrameworkElement = Avalonia.Controls.Control;
 global using DependencyObject = Avalonia.AvaloniaObject;

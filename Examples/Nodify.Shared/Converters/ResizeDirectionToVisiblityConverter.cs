@@ -11,15 +11,15 @@ namespace Nodify
         {
             if (!(value is ResizeDirections resizeDirections))
             {
-                return Visibility.Collapsed;
+                return false;
             }
 
             if (Enum.TryParse(parameter.ToString(), out ResizeDirections direction))
             {
-                return resizeDirections.HasFlag(direction) ? Visibility.Visible : Visibility.Collapsed;
+                return resizeDirections.HasFlag(direction) ? true : false;
             }
 
-            return Visibility.Collapsed;
+            return false;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

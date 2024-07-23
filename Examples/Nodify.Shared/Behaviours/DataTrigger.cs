@@ -74,7 +74,7 @@ public class DataTrigger : Trigger
     protected override void OnAttached()
     {
         base.OnAttached();
-        this.Bind(BoundProperty, new Binding(Source == null && UseDataContext ? $"DataContext.{Property}" : Property) { Source = Source ?? AssociatedObject });
+        this.Bind(BoundProperty, new Binding(Source == null && UseDataContext ? (Property == "." ? "DataContext" : $"DataContext.{Property}") : Property) { Source = Source ?? AssociatedObject });
     }
 
     static DataTrigger()
@@ -92,7 +92,8 @@ public class DataTrigger : Trigger
     [RequiresUnreferencedCode("This functionality is not compatible with trimming.")]
     private static bool Compare(object? leftOperand, ComparisonConditionType operatorType, object? rightOperand)
     {
-        if (leftOperand is not null && rightOperand is not null)
+        if (leftOperand is not null && rightOperand is not null &&
+            leftOperand.GetType() != rightOperand.GetType())
         {
             var value = rightOperand.ToString();
             var destinationType = leftOperand.GetType();

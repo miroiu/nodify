@@ -27,6 +27,7 @@
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <WarningsAsErrors>$(WarningsAsErrors),AVP1000, AVP1001, AVP1002, AVP1010, AVP1011, AVP1012, AVP1013, AVP1020, AVP1021, AVP1022, AVP1030, AVP1031, AVP1032, AVP1040, AVA2001</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>

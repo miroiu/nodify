@@ -60,7 +60,7 @@ namespace Nodify
 
         #region Animation
 
-        public static async System.Threading.Tasks.Task StartAnimation<T>(this Control animatableElement, StyledProperty<T> dependencyProperty, T toValue, double animationDurationSeconds, EventHandler? completedEvent = null)
+        public static async System.Threading.Tasks.Task StartAnimation<T>(this Control animatableElement, AvaloniaProperty<T> dependencyProperty, T toValue, double animationDurationSeconds, CancellationToken token, EventHandler? completedEvent = null)
         {
             var fromValue = (T)animatableElement.GetValue(dependencyProperty);
 
@@ -79,12 +79,10 @@ namespace Nodify
                 Duration = TimeSpan.FromSeconds(animationDurationSeconds), Children = { keyframe1, keyframe2 },
             };
 
-            await animation.RunAsync(animatableElement);
-            
-            //animatableElement.SetValue(dependencyProperty, animatableElement.GetValue(dependencyProperty));
-            //CancelAnimation(animatableElement, dependencyProperty);
+            await animation.RunAsync(animatableElement, token);
 
-            completedEvent?.Invoke(animatableElement, EventArgs.Empty);
+            if (!token.IsCancellationRequested)
+                completedEvent?.Invoke(animatableElement, EventArgs.Empty);
         }
 
         public static void StartLoopingAnimation<T>(this UIElement animatableElement, StyledProperty<T> dependencyProperty, T toValue, double durationInSeconds, CancellationToken token)

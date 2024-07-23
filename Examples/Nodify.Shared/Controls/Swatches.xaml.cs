@@ -8,13 +8,13 @@ using Nodify.Shared;
 
 namespace Nodify
 {
-    public partial class Swatches : Control
+    public partial class Swatches : TemplatedControl
     {
-        public static readonly DependencyProperty SelectedColorProperty
-            = DependencyProperty.Register(nameof(SelectedColor), typeof(Color), typeof(Swatches), new FrameworkPropertyMetadata(default(Color), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly AvaloniaProperty<Color> SelectedColorProperty
+            = AvaloniaProperty.Register<Swatches, Color>(nameof(SelectedColor), defaultBindingMode: BindingMode.TwoWay);
 
-        public static readonly DependencyProperty ColorsProperty
-            = DependencyProperty.Register(nameof(Colors), typeof(IEnumerable<Color>), typeof(Swatches), new PropertyMetadata(Array.Empty<Color>()));
+        public static readonly AvaloniaProperty<IEnumerable<Color>> ColorsProperty
+            = AvaloniaProperty.Register<Swatches, IEnumerable<Color>>(nameof(Colors),  defaultValue: Array.Empty<Color>());
 
         public Color SelectedColor
         {
@@ -31,12 +31,12 @@ namespace Nodify
         static Swatches()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Swatches), new FrameworkPropertyMetadata(typeof(Swatches)));
-            FocusableProperty.OverrideMetadata(typeof(Swatches), new FrameworkPropertyMetadata(BoxValue.True));
+            FocusableProperty.OverrideDefaultValue<Swatches>(true);
         }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
-            var color = e.OriginalSource is FrameworkElement fe && fe.DataContext is Color c ? c : (Color?)null;
+            var color = e.Source is Control fe && fe.DataContext is Color c ? c : (Color?)null;
             if (color.HasValue)
             {
                 SelectedColor = color.Value;

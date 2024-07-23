@@ -32,7 +32,7 @@ namespace Nodify
         public static readonly StyledProperty<double> ViewportZoomProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(ViewportZoom), BoxValue.Double1, defaultBindingMode: BindingMode.TwoWay, coerce: ConstrainViewportZoomToRange);
         public static readonly StyledProperty<double> MinViewportZoomProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(MinViewportZoom), 0.1d, coerce: CoerceMinViewportZoom);
         public static readonly StyledProperty<double> MaxViewportZoomProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(MaxViewportZoom), BoxValue.Double2, coerce: CoerceMaxViewportZoom);
-        public static readonly StyledProperty<Point> ViewportLocationProperty = AvaloniaProperty.Register<NodifyEditor, Point>(nameof(ViewportLocation), BoxValue.Point, defaultBindingMode: BindingMode.TwoWay);
+        public static readonly DirectProperty<NodifyEditor, Point> ViewportLocationProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Point>(nameof(ViewportLocation), e => e.ViewportLocation, (e, v) => e.ViewportLocation = v, BoxValue.Point, defaultBindingMode: BindingMode.TwoWay);
         public static readonly StyledProperty<Size> ViewportSizeProperty = AvaloniaProperty.Register<NodifyEditor, Size>(nameof(ViewportSize), BoxValue.Size);
         public static readonly StyledProperty<Rect> ItemsExtentProperty = AvaloniaProperty.Register<NodifyEditor, Rect>(nameof(ItemsExtent), BoxValue.Rect);
         public static readonly StyledProperty<Rect> DecoratorsExtentProperty = AvaloniaProperty.Register<NodifyEditor, Rect>(nameof(DecoratorsExtent), BoxValue.Rect);
@@ -206,8 +206,8 @@ namespace Nodify
         /// </summary>
         public Point ViewportLocation
         {
-            get => (Point)GetValue(ViewportLocationProperty);
-            set => SetValue(ViewportLocationProperty, value);
+            get => viewportLocation;
+            set => SetAndRaise(ViewportLocationProperty, ref viewportLocation, value);
         }
 
 
@@ -875,6 +875,8 @@ namespace Nodify
         /// <remarks>Temporarily disables editor controls when animated.</remarks>
         public void BringIntoView(Point point, bool animated = true, Action? onFinish = null)
         {
+            bringToViewToken?.Cancel();
+
             Point newLocation = (Point)((Vector)point - ViewportSize.ToVector() / 2);
 
             if (animated && newLocation != ViewportLocation)
@@ -887,7 +889,8 @@ namespace Nodify
                 double duration = distance / (BringIntoViewSpeed + (distance / 10)) * ViewportZoom;
                 duration = Math.Max(0.1, Math.Min(duration, BringIntoViewMaxDuration));
 
-                this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
+                bringToViewToken = new CancellationTokenSource();
+                this.StartAnimation(ViewportLocationProperty, newLocation, duration, bringToViewToken.Token, (s, e) =>
                 {
                     IsPanning = false;
                     SetCurrentValue(DisablePanningProperty, false);
@@ -1199,8 +1202,6 @@ namespace Nodify
             {
                 nc.CollectionChanged += OnSelectedItemsChanged;
             }
-
-            var selectedItems = Selection.SelectedItems;
 
             BeginUpdateSelectedItems();
             Selection.Clear();

@@ -8,14 +8,14 @@ namespace Nodify
 {
     public class ResizablePanel : ContentControl
     {
-        internal static readonly object BoxedResizeDirection = ResizeDirections.All;
+        internal static readonly ResizeDirections BoxedResizeDirection = ResizeDirections.All;
 
-        public static readonly DependencyProperty DirectionsProperty
-            = DependencyProperty.Register(nameof(Directions), typeof(ResizeDirections), typeof(ResizablePanel), new FrameworkPropertyMetadata(BoxedResizeDirection));
+        public static readonly AvaloniaProperty<ResizeDirections> DirectionsProperty
+            = AvaloniaProperty.Register<ResizablePanel, ResizeDirections>(nameof(Directions), BoxedResizeDirection);
 
-        public static readonly DependencyProperty ResizeStartedCommandProperty = DependencyProperty.Register(nameof(ResizeStartedCommand), typeof(ICommand), typeof(ResizablePanel));
+        public static readonly AvaloniaProperty<ICommand> ResizeStartedCommandProperty = AvaloniaProperty.Register<ResizablePanel, ICommand>(nameof(ResizeStartedCommand));
 
-        public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(ResizablePanel));
+        public static readonly AvaloniaProperty<ICommand> ResizeCompletedCommandProperty = AvaloniaProperty.Register<ResizablePanel, ICommand>(nameof(ResizeCompletedCommand));
 
         public ResizeDirections Directions
         {
@@ -42,12 +42,12 @@ namespace Nodify
 
         public ResizablePanel()
         {
-            AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnResize));
-            AddHandler(Thumb.DragStartedEvent, new DragStartedEventHandler(OnDragStarted));
-            AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted));
+            AddHandler(Thumb.DragDeltaEvent, OnResize);
+            AddHandler(Thumb.DragStartedEvent, OnDragStarted);
+            AddHandler(Thumb.DragCompletedEvent, OnDragCompleted);
         }
 
-        private void OnDragStarted(object sender, DragStartedEventArgs e)
+        private void OnDragStarted(object sender, VectorEventArgs e)
         {
             if (ResizeStartedCommand?.CanExecute(null) ?? false)
             {
@@ -55,7 +55,7 @@ namespace Nodify
             }
         }
 
-        private void OnDragCompleted(object sender, DragCompletedEventArgs e)
+        private void OnDragCompleted(object sender, VectorEventArgs e)
         {
             if (ResizeCompletedCommand?.CanExecute(null) ?? false)
             {
@@ -63,9 +63,9 @@ namespace Nodify
             }
         }
 
-        private void OnResize(object sender, DragDeltaEventArgs e)
+        private void OnResize(object sender, VectorEventArgs e)
         {
-            if (e.OriginalSource is Resizer resizer)
+            if (e.Source is Resizer resizer)
             {
                 double resizeX = 0;
                 double resizeY = 0;
@@ -129,24 +129,24 @@ namespace Nodify
             }
         }
 
-        private double ResizeBottom(DragDeltaEventArgs e)
+        private double ResizeBottom(VectorEventArgs e)
         {
-            return Math.Min(-e.VerticalChange, ActualHeight - MinHeight);
+            return Math.Min(-e.Vector.Y, Bounds.Height - MinHeight);
         }
 
-        private double ResizeTop(DragDeltaEventArgs e)
+        private double ResizeTop(VectorEventArgs e)
         {
-            return Math.Min(e.VerticalChange, ActualHeight - MinHeight);
+            return Math.Min(e.Vector.Y, Bounds.Height - MinHeight);
         }
 
-        private double ResizeRight(DragDeltaEventArgs e)
+        private double ResizeRight(VectorEventArgs e)
         {
-            return Math.Min(-e.HorizontalChange, ActualWidth - MinWidth);
+            return Math.Min(-e.Vector.X, Bounds.Width - MinWidth);
         }
 
-        private double ResizeLeft(DragDeltaEventArgs e)
+        private double ResizeLeft(VectorEventArgs e)
         {
-            return Math.Min(e.HorizontalChange, ActualWidth - MinWidth);
+            return Math.Min(e.Vector.X, Bounds.Width - MinWidth);
         }
 
         protected virtual void OnMove(double x, double y)
@@ -162,8 +162,8 @@ namespace Nodify
 
     public class Resizer : Thumb
     {
-        public static readonly DependencyProperty DirectionProperty
-            = DependencyProperty.Register(nameof(Direction), typeof(ResizeDirections), typeof(Resizer), new FrameworkPropertyMetadata(ResizablePanel.BoxedResizeDirection));
+        public static readonly AvaloniaProperty<ResizeDirections> DirectionProperty
+            = AvaloniaProperty.Register<Resizer, ResizeDirections>(nameof(Direction), ResizablePanel.BoxedResizeDirection);
 
         public ResizeDirections Direction
         {

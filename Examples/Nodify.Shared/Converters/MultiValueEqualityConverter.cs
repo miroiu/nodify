@@ -8,7 +8,7 @@ namespace Nodify
 {
     public class MultiValueEqualityConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
         {
             if (values == null)
             {

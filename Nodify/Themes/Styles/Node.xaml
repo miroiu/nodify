@@ -16,7 +16,7 @@
                 Value="3 3 0 0" />
         <Setter Property="Padding"
                 Value="6 4 6 4" />
-    </Style>
+    </ControlTheme>
 
     <ControlTheme x:Key="DefaultFooterContainerStyle"
            TargetType="Border">
@@ -24,7 +24,7 @@
                 Value="0 0 3 3" />
         <Setter Property="Padding"
                 Value="6 4 6 4" />
-    </Style>
+    </ControlTheme>
 
     <ControlTheme TargetType="{x:Type local:Node}" x:Key="{x:Type local:Node}">
         <Setter Property="Background"

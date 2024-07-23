@@ -2,6 +2,10 @@ namespace Nodify;
 
 public partial class NodifyEditor
 {
+    private Point viewportLocation;
+
+    private CancellationTokenSource? bringToViewToken;
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -58,5 +62,19 @@ public partial class NodifyEditor
         // so we don't wanna interrupt it
         if (!IsMouseCaptureWithin)
             e.Pointer.Capture(null);
+    }
+
+    protected override void OnDataContextEndUpdate()
+    {
+        // Required to synchronize SelectedItems with the DataContext
+        base.OnDataContextEndUpdate();
+        Selection.Clear();
+        if (SelectedItems != null && SelectedItems.Count > 0)
+        {
+            for (var i = 0; i < SelectedItems.Count; i++)
+            {
+                Selection.Select(Items.IndexOf(SelectedItems[i]));
+            }
+        }
     }
 }

@@ -1,10 +1,11 @@
 ﻿<Application x:Class="Nodify.Shapes.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             xmlns:nodify="https://miroiu.github.io/nodify"
+             xmlns:controls="clr-namespace:Nodify.Shapes.Controls">
     <Application.Resources>
         <ResourceDictionary>
-            <Style x:Key="IconButton"
+            <ControlTheme x:Key="IconButton"
                    TargetType="Button"
                    BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="Background"
@@ -22,40 +23,35 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}"
                                     Padding="{TemplateBinding Padding}"
-                                    CornerRadius="3"
-                                    SnapsToDevicePixels="True">
+                                    CornerRadius="3">
                                 <ContentPresenter x:Name="contentPresenter"
                                                   Focusable="False"
                                                   Margin="{TemplateBinding Padding}"
-                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsEnabled"
-                             Value="False">
-                        <Setter Property="Opacity"
-                                Value="0.4" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+                <Style Selector="^:disabled">
+                    <Setter Property="Opacity"
+                            Value="0.4" />
+                </Style>
+            </ControlTheme>
 
             <!--ICONS-->
 
             <DataTemplate x:Key="MinusIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M5 12h14" />
                     </Grid>
                 </Viewbox>
@@ -64,14 +60,12 @@
             <DataTemplate x:Key="PlusIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M12 5v14M5 12h14" />
                     </Grid>
                 </Viewbox>
@@ -80,14 +74,12 @@
             <DataTemplate x:Key="MaximizeIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v2M16 20h2a2 2 0 0 0 2-2v-2" />
                     </Grid>
                 </Viewbox>
@@ -98,9 +90,8 @@
                          Margin="2">
                     <Path Stroke="White"
                           StrokeThickness="1"
-                          StrokeLineJoin="Round"
-                          StrokeStartLineCap="Round"
-                          StrokeEndLineCap="Round"
+                          StrokeJoin="Round"
+                          StrokeLineCap="Round"
                           Data="M.256.255a.874.874 0 0 0-.18.974l4.753 17.114a.875.875 0 0 0 1.603-.012L10 10l8.334-3.57a.875.875 0 0 0 .01-1.601L1.23.075a.874.874 0 0 0-.974.18Z" />
                 </Viewbox>
             </DataTemplate>
@@ -108,14 +99,12 @@
             <DataTemplate  x:Key="CircleIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
                     </Grid>
                 </Viewbox>
@@ -124,14 +113,12 @@
             <DataTemplate x:Key="SquareIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     </Grid>
                 </Viewbox>
@@ -140,14 +127,12 @@
             <DataTemplate x:Key="TriangleIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z" />
                     </Grid>
                 </Viewbox>
@@ -156,19 +141,16 @@
             <DataTemplate x:Key="ArrowBackIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="m9 14-4-4 4-4" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M5 10h11a4 4 0 1 1 0 8h-1" />
                     </Grid>
                 </Viewbox>
@@ -177,19 +159,16 @@
             <DataTemplate x:Key="ArrowForwardIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="m15 14 4-4-4-4" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M19 10H8a4 4 0 1 0 0 8h1" />
                     </Grid>
                 </Viewbox>
@@ -198,19 +177,16 @@
             <DataTemplate x:Key="LockIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M11 16a1 1 0 1 0 2 0 1 1 0 0 0-2 0M8 11V7a4 4 0 1 1 8 0v4" />
                     </Grid>
                 </Viewbox>
@@ -219,23 +195,50 @@
             <DataTemplate x:Key="LockOpenIcon">
                 <Viewbox Stretch="Fill">
                     <Grid>
-                        <Path StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                        <Path StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M0 0h24v24H0z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
                         <Path Stroke="White"
-                              StrokeLineJoin="Round"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
+                              StrokeJoin="Round"
+                              StrokeLineCap="Round"
                               Data="M11 16a1 1 0 1 0 2 0 1 1 0 1 0-2 0M8 11V6a4 4 0 0 1 8 0" />
                     </Grid>
                 </Viewbox>
             </DataTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Icons.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify.Shared/Themes/Dark.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Generic.xaml" />
+                <ResourceInclude Source="avares://Nodify/Themes/Dark.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme DensityStyle="Compact"/>
+        <Style Selector="Path">
+            <Setter Property="StrokeThickness" Value="1" /> <!-- WPF default -->
+        </Style>
+        <Style Selector="ItemsControl">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="nodify|DecoratorContainer">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="nodify|ItemContainer">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="nodify|Connector">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="controls|ResizableContainer">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+    </Application.Styles>
 </Application>

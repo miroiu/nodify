@@ -24,7 +24,7 @@
                       Offset="1" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="FadeOpacityMaskVertical"
+    <LinearGradientBrush x:Key="FadeOpacityMaskVerticalNodeOutput"
                          StartPoint="0% 0%"
                          EndPoint="0% 100%">
         <GradientStop Color="#22FFFFFF"
@@ -84,7 +84,7 @@
         </Style>
         <Style Selector="^:vertical /template/ Border#Highlight">
             <Setter Property="OpacityMask"
-                    Value="{StaticResource FadeOpacityMaskVertical}" />
+                    Value="{StaticResource FadeOpacityMaskVerticalNodeOutput}" />
         </Style>
         <Style Selector="^:connected /template/ TemplatedControl#PART_Connector">
             <Setter Property="Background"

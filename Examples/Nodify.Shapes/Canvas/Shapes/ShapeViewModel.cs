@@ -56,7 +56,7 @@ namespace Nodify.Shapes.Canvas
             set => SetProperty(ref _color, value).Then(x => OnPropertyChanged(nameof(BorderColor)));
         }
 
-        public Color BorderColor => Color * 1.5f;
+        public Color BorderColor => new Color((byte)Math.Clamp(Color.A * 1.5f, 0, 255), (byte)Math.Clamp(Color.R * 1.5f, 0, 255), (byte)Math.Clamp(Color.G * 1.5f, 0, 255), (byte)Math.Clamp(Color.B * 1.5f, 0, 255));
 
         private string? _text;
         public string? Text
