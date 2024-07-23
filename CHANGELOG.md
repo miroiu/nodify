@@ -4,6 +4,16 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added ContentContainerStyle, HeaderContainerStyle and FooterContainerStyle dependency properties to Node
+>	- Added BringIntoView that takes a Rect parameter to NodifyEditor
+>	- Added the NodifyEditor's DataContext as the parameter of the ItemsSelectStartedCommand, ItemsSelectCompletedCommand, ItemsDragStartedCommand and ItemsDragCompletedCommand commands
+> - Bugfixes:
+>	- Fixed hover effect and padding of NodeInput and NodeOutput for vertical orientation
+>	- Fixed ItemContainers being selected sometimes when double clicking the canvas
+
+#### **Version 6.1.0**
+
+> - Features:
 >	- Added new built-in connection type: StepConnection
 > - Bugfixes:
 >	- Fixed CircuitConnection directional arrows not interpolating correctly

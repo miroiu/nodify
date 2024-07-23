@@ -22,6 +22,9 @@ namespace Nodify
         public static readonly StyledProperty<DataTemplate> OutputConnectorTemplateProperty = AvaloniaProperty.Register<Node, DataTemplate>(nameof(OutputConnectorTemplate));
         public static readonly StyledProperty<IEnumerable> InputProperty = AvaloniaProperty.Register<Node, IEnumerable>(nameof(Input));
         public static readonly StyledProperty<IEnumerable> OutputProperty = AvaloniaProperty.Register<Node, IEnumerable>(nameof(Output));
+        public static readonly StyledProperty<ControlTheme> ContentContainerStyleProperty = AvaloniaProperty.Register<Node, ControlTheme>(nameof(ContentContainerStyle));
+        public static readonly StyledProperty<ControlTheme> HeaderContainerStyleProperty = AvaloniaProperty.Register<Node, ControlTheme>(nameof(HeaderContainerStyle));
+        public static readonly StyledProperty<ControlTheme> FooterContainerStyleProperty = AvaloniaProperty.Register<Node, ControlTheme>(nameof(FooterContainerStyle));
 
         /// <summary>
         /// Gets or sets the brush used for the background of the <see cref="ContentControl.Content"/> of this <see cref="Node"/>.
@@ -102,6 +105,33 @@ namespace Nodify
         {
             get => (IEnumerable)GetValue(OutputProperty);
             set => SetValue(OutputProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the content container.
+        /// </summary>
+        public ControlTheme ContentContainerStyle
+        {
+            get => GetValue(ContentContainerStyleProperty);
+            set => SetValue(ContentContainerStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the header container.
+        /// </summary>
+        public ControlTheme HeaderContainerStyle
+        {
+            get => GetValue(HeaderContainerStyleProperty);
+            set => SetValue(HeaderContainerStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for the footer container.
+        /// </summary>
+        public ControlTheme FooterContainerStyle
+        {
+            get => GetValue(FooterContainerStyleProperty);
+            set => SetValue(FooterContainerStyleProperty, value);
         }
 
         /// <summary>

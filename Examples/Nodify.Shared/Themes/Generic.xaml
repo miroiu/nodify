@@ -7,6 +7,8 @@
         <ResourceInclude Source="avares://Nodify.Shared/Themes/Icons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <local:ResizeDirectionToVisiblityConverter x:Key="ResizeDirectionToVisiblityConverter" />
+
     <ControlTheme x:Key="EditableTextBlockBaseStyle"
            TargetType="{x:Type local:EditableTextBlock}">
         <Setter Property="Background"
@@ -25,6 +27,8 @@
                 Value="Center" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Stretch" />
+        <Setter Property="Cursor"
+                Value="IBeam" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:EditableTextBlock}">
@@ -82,15 +86,15 @@
                     <Grid KeyboardNavigation.TabNavigation="Local" 
                           ClipToBounds="true">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Grid Panel.ZIndex ="1"
+                        <Grid Panel.ZIndex="1"
                               Margin="2,2,2,0"
                               Background="{TemplateBinding Background}"
                               KeyboardNavigation.TabIndex="1">
-                            <ScrollViewer x:Name="PART_ScrollViewer" 
-                                          HorizontalScrollBarVisibility="Auto" 
+                            <ScrollViewer x:Name="PART_ScrollViewer"
+                                          HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -114,8 +118,8 @@
                                         <Path Width="25" 
                                               Height="15"
                                               Data="{StaticResource AddGeometry}"
-                                              Fill="{TemplateBinding Foreground}" 
-                                              Stretch="Uniform"/>
+                                              Fill="{TemplateBinding Foreground}"
+                                              Stretch="Uniform" />
                                     </Button>
                                 </Grid>
                             </ScrollViewer>
@@ -130,7 +134,7 @@
                             <ContentPresenter x:Name="PART_SelectedContentHost"
                                               Margin="{TemplateBinding Padding}"
                                               Content="{TemplateBinding SelectedContent}"
-                                              ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+                                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
                         </Border>
                     </Grid>
                 </ControlTemplate>
@@ -143,36 +147,36 @@
 
     <ControlTheme TargetType="{x:Type local:TabItemEx}" x:Key="{x:Type local:TabItemEx}">
         <Setter Property="Background" 
-                Value="{DynamicResource BackgroundBrush}"/>
+                Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="Foreground"
-                Value="{DynamicResource ForegroundBrush}"/>
+                Value="{DynamicResource ForegroundBrush}" />
         <!-- <Setter Property="RenderTransform"> -->
         <!--     <Setter.Value> -->
         <!--         <ScaleTransform ScaleY="0"/> -->
         <!--     </Setter.Value> -->
         <!-- </Setter> -->
         <Setter Property="RenderTransformOrigin" 
-                Value="1 1"/>
+                Value="1 1" />
         <Setter Property="VerticalAlignment" 
-                Value="Bottom"/>
+                Value="Bottom" />
         <Setter Property="VerticalContentAlignment" 
-                Value="Stretch"/>
+                Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" 
-                Value="Stretch"/>
+                Value="Stretch" />
         <Setter Property="Padding" 
-                Value="7"/>
+                Value="7" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:TabItemEx}">
                     <Border x:Name="mBorder"
-                            BorderThickness="1" 
+                            BorderThickness="1"
                             CornerRadius="5 5 0 0"
-                            Background="{TemplateBinding Background}"  
+                            Background="{TemplateBinding Background}"
                             Padding="{TemplateBinding Padding}">
                         <Grid>
                             <StackPanel Orientation="Horizontal">
                                 <local:EditableTextBlock Text="{TemplateBinding Header}"
-                                                         Foreground="{TemplateBinding Foreground}"/>
+                                                         Foreground="{TemplateBinding Foreground}" />
                                 <Button x:Name="mCloseBtn" 
                                         Command="{TemplateBinding CloseTabCommand}" 
                                         CommandParameter="{TemplateBinding CloseTabCommandParameter}" 
@@ -184,9 +188,9 @@
                                         ToolTip.Tip="Close Tab">
                                     <Path Width="16"
                                           Height="8"
-                                          Data="{StaticResource CloseGeometry}" 
-                                          Fill="{TemplateBinding Foreground}" 
-                                          Stretch="Uniform"/>
+                                          Data="{StaticResource CloseGeometry}"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Stretch="Uniform" />
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -231,4 +235,210 @@
         <!--     </EventTrigger> -->
         <!-- </Style.Triggers> -->
     </ControlTheme>
+
+    <Style TargetType="{x:Type local:Swatches}">
+        <Style.Resources>
+            <local:MultiValueEqualityConverter x:Key="MultiValueEqualityConverter" />
+            <local:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+        </Style.Resources>
+        <Setter Property="Background"
+                Value="#1e293b" />
+        <Setter Property="Padding"
+                Value="6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Swatches">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="8">
+                        <ItemsControl ItemsSource="{TemplateBinding Colors}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="50"
+                                            Padding="1"
+                                            Margin="3">
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="Background"
+                                                        Value="Transparent" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Value="True">
+                                                        <DataTrigger.Binding>
+                                                            <MultiBinding Converter="{StaticResource MultiValueEqualityConverter}">
+                                                                <Binding RelativeSource="{RelativeSource AncestorType=local:Swatches}"
+                                                                         Path="SelectedColor"
+                                                                         Mode="OneWay" />
+                                                                <Binding Mode="OneWay" />
+                                                            </MultiBinding>
+                                                        </DataTrigger.Binding>
+                                                        <Setter Property="Background"
+                                                                Value="White" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Ellipse Width="24"
+                                                 Height="24"
+                                                 Stroke="#1e293b"
+                                                 Fill="{Binding ., Converter={StaticResource ColorToSolidColorBrushConverter}}"
+                                                 Cursor="Hand" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Opacity"
+                        Value="0.7" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type local:ResizablePanel}">
+        <Setter Property="BorderBrush"
+                Value="#1e293b" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ResizablePanel">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+
+                            <local:Resizer Direction="TopLeft"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=TopLeft}" />
+
+                            <local:Resizer Direction="TopRight"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Top"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=TopRight}" />
+
+                            <local:Resizer Direction="BottomLeft"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=BottomLeft}" />
+
+                            <local:Resizer Direction="BottomRight"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Bottom"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=BottomRight}" />
+
+                            <local:Resizer Direction="Left"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=Left}" />
+
+                            <local:Resizer Direction="Right"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=Right}" />
+
+                            <local:Resizer Direction="Top"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=Top}" />
+
+                            <local:Resizer Direction="Bottom"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Bottom"
+                                           Visibility="{TemplateBinding Directions, Converter={StaticResource ResizeDirectionToVisiblityConverter}, ConverterParameter=Bottom}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:Resizer}">
+        <Setter Property="Background"
+                Value="#1e293b" />
+        <Setter Property="Width"
+                Value="6" />
+        <Setter Property="Height"
+                Value="6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Resizer">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Direction"
+                                 Value="TopLeft">
+                            <Setter Property="Cursor"
+                                    Value="SizeNWSE" />
+                            <Setter Property="Margin"
+                                    Value="-4 -4 0 0" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="TopRight">
+                            <Setter Property="Cursor"
+                                    Value="SizeNESW" />
+                            <Setter Property="Margin"
+                                    Value="0 -4 -4 0" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="BottomLeft">
+                            <Setter Property="Cursor"
+                                    Value="SizeNESW" />
+                            <Setter Property="Margin"
+                                    Value="-4 0 0 -4" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="BottomRight">
+                            <Setter Property="Cursor"
+                                    Value="SizeNWSE" />
+                            <Setter Property="Margin"
+                                    Value="0 0 -4 -4" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="Left">
+                            <Setter Property="Cursor"
+                                    Value="SizeWE" />
+                            <Setter Property="Margin"
+                                    Value="-4 0 0 0" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="Right">
+                            <Setter Property="Cursor"
+                                    Value="SizeWE" />
+                            <Setter Property="Margin"
+                                    Value="0 0 -4 0" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="Top">
+                            <Setter Property="Cursor"
+                                    Value="SizeNS" />
+                            <Setter Property="Margin"
+                                    Value="0 -4 0 0" />
+                        </Trigger>
+                        <Trigger Property="Direction"
+                                 Value="Bottom">
+                            <Setter Property="Cursor"
+                                    Value="SizeNS" />
+                            <Setter Property="Margin"
+                                    Value="0 0 0 -4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

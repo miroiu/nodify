@@ -121,7 +121,7 @@ namespace Nodify
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(SelectionType));
+                    throw new NotImplementedException(nameof(SelectionType));
             }
         }
 
@@ -142,13 +142,16 @@ namespace Nodify
                 PreviewUnselectAll();
             }
 
-            ItemCollection items = _host.Items;
-            for (var i = 0; i < items.Count; i++)
+            if (area.X != 0 || area.Y != 0 || area.Width > 0 || area.Height > 0)
             {
-                var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
-                if (container.IsSelectableInArea(area, fit))
+                ItemCollection items = _host.Items;
+                for (var i = 0; i < items.Count; i++)
                 {
-                    container.IsPreviewingSelection = true;
+                    var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (container.IsSelectableInArea(area, fit))
+                    {
+                        container.IsPreviewingSelection = true;
+                    }
                 }
             }
         }
@@ -166,7 +169,7 @@ namespace Nodify
             }
         }
 
-        private void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
+        private static void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
         {
             for (var i = 0; i < containers.Count; i++)
             {

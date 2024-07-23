@@ -24,6 +24,19 @@
                       Offset="1" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="FadeOpacityMaskVertical"
+                         StartPoint="0% 0%"
+                         EndPoint="0% 100%">
+        <GradientStop Color="#22FFFFFF"
+                      Offset="0" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.3" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.7" />
+        <GradientStop Color="#22FFFFFF"
+                      Offset="1" />
+    </LinearGradientBrush>
+
     <ControlTheme TargetType="{x:Type local:NodeInput}" x:Key="{x:Type local:NodeInput}">
         <Setter Property="BorderBrush"
                 Value="DodgerBlue" />
@@ -64,9 +77,17 @@
             <Setter Property="Margin"
                     Value="0 0 5 0" />
         </Style>
+        <Style Selector="^:vertical">
+            <Setter Property="Padding"
+                    Value="2 4" />
+        </Style>
         <Style Selector="^:vertical /template/ TemplatedControl#PART_Connector">
             <Setter Property="Margin"
                     Value="0 0 0 5" />
+        </Style>
+        <Style Selector="^:vertical /template/ Border#Highlight">
+            <Setter Property="OpacityMask"
+                    Value="{StaticResource FadeOpacityMaskVertical}" />
         </Style>
         <Style Selector="^:connected /template/ TemplatedControl#PART_Connector">
             <Setter Property="Background"

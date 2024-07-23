@@ -113,14 +113,14 @@ namespace Nodify
 
         protected override void ClearItems()
         {
-            var items = new List<T>(this);
+            var items = _cleared.Count > 0 || _removed.Count > 0 ? new List<T>(this) : new List<T>();
             base.ClearItems();
 
             if (_cleared.Count > 0)
             {
                 NotifyOnItemsCleared(items);
             }
-            else
+            else if (_removed.Count > 0)
             {
                 for (int i = 0; i < items.Count; i++)
                 {

@@ -8,11 +8,17 @@
 
 This is a direct port of [Nodify by miroiu](https://github.com/miroiu/nodify) to Avalonia. 
 
-> A collection of highly performant controls for node based editors designed for MVVM.
+> A collection of highly performant controls for node-based editors designed for MVVM.
 
 The goal of the port is to keep the codebase as similar to the original code as possible, to the point, where merges from the upstream are not a problem.
 
 ## 🚀 Examples of node-based applications
+
+🔶 A canvas application where you can draw and connect shapes.
+
+> [Examples/Nodify.Shapes](Examples/Nodify.Shapes)
+
+![Canvas](https://github.com/miroiu/nodify/assets/12727904/78dd3dcc-ce46-48bb-92d8-c432eda90adf)
 
 🎨 A playground application where you can try all the available settings.
 
@@ -20,21 +26,20 @@ The goal of the port is to keep the codebase as similar to the original code as 
 
 ![Playground](https://i.imgur.com/jdAwDeh.gif)
 
-
-🌓 A state machine where each state represents an executable action, and each transition represents a condition for the next action to execute.
+🌓 A state machine where each state represents an executable action, and each transition represents a condition for executing the next action.
 
 > [Examples/Nodify.StateMachine](Examples/Nodify.StateMachine)
 
 ![StateMachine](https://i.imgur.com/UU0TQxe.gif)
 
-💻 A simple "real-time" calculator where each node represents an operation that takes input and feeds its output into other nodes input.
+💻 A simple "real-time" calculator where each node represents an operation that takes input and feeds its output into other node's input.
 
 > [Examples/Nodify.Calculator](Examples/Nodify.Calculator)
 
 ![Calculator](https://i.imgur.com/rup58xn.gif)
 
 ## 📥 Installation
-Use the nuget package manager to install `NodifyAvalonia`.
+Use the NuGet package manager to install `NodifyAvalonia`.
 
 ```
 Install-Package NodifyAvalonia
@@ -66,7 +71,7 @@ Avalonia version compatibility chart:
  - **Select**, **move** and **connect** nodes
  - Lots of **configurable** dependency properties
  - Ready for undo/redo
- - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator)
+ - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator), 🔶 [**Canvas**](Examples/Nodify.Shapes)
  
 ## 📝 Documentation
 

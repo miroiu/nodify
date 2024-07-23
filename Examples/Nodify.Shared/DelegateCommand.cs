@@ -21,10 +21,10 @@ namespace Nodify
             _condition = executeCondition;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
             => _condition?.Invoke() ?? true;
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
             => _action();
 
         public void RaiseCanExecuteChanged()
@@ -44,7 +44,7 @@ namespace Nodify
             _condition = executeCondition;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (parameter is T value)
             {
@@ -54,7 +54,7 @@ namespace Nodify
             return _condition?.Invoke(default!) ?? true;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             if (parameter is T value)
             {
