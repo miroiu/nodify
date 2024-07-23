@@ -827,7 +827,7 @@ namespace Nodify
 
         #region Methods
 
-        private const int MouseWheelDeltaForOneLine = 120;
+        internal const int MouseWheelDeltaForOneLine = 120;
         
         /// <summary>
         /// Zoom in at the viewports center

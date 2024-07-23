@@ -6,7 +6,7 @@ namespace Nodify
 {
     internal class SubtractConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
         {
             double result = (double)values[0] - (double)values[1];
             return result;

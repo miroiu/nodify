@@ -11,28 +11,28 @@ namespace Nodify
     /// A minimap control that can position the viewport, and zoom in and out.
     /// </summary>
     [StyleTypedProperty(Property = nameof(ViewportStyle), StyleTargetType = typeof(Rectangle))]
-    [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(MinimapItem))]
+    [StyleTypedProperty(Property = nameof(ItemContainerTheme), StyleTargetType = typeof(MinimapItem))]
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
-    public class Minimap : ItemsControl
+    public partial class Minimap : ItemsControl
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
 
-        public static readonly DependencyProperty ViewportLocationProperty = NodifyEditor.ViewportLocationProperty.AddOwner(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        public static readonly DependencyProperty ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner(typeof(Minimap));
-        public static readonly DependencyProperty ViewportStyleProperty = DependencyProperty.Register(nameof(ViewportStyle), typeof(Style), typeof(Minimap));
-        public static readonly DependencyProperty ExtentProperty = NodifyCanvas.ExtentProperty.AddOwner(typeof(Minimap));
-        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(Minimap));
-        public static readonly DependencyProperty MaxViewportOffsetProperty = DependencyProperty.Register(nameof(MaxViewportOffset), typeof(Size), typeof(Minimap), new FrameworkPropertyMetadata(new Size(2000, 2000)));
-        public static readonly DependencyProperty ResizeToViewportProperty = DependencyProperty.Register(nameof(ResizeToViewport), typeof(bool), typeof(Minimap));
-        public static readonly DependencyProperty IsReadOnlyProperty = TextBoxBase.IsReadOnlyProperty.AddOwner(typeof(Minimap));
+        public static readonly DirectProperty<Minimap, Point> ViewportLocationProperty = NodifyEditor.ViewportLocationProperty.AddOwner<Minimap>(e => e.ViewportLocation, (e, v) => e.ViewportLocation = v, default, BindingMode.TwoWay);
+        public static readonly StyledProperty<Size> ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner<Minimap>();
+        public static readonly StyledProperty<ControlTheme> ViewportStyleProperty = AvaloniaProperty.Register<Minimap, ControlTheme>(nameof(ViewportStyle));
+        public static readonly StyledProperty<Rect> ExtentProperty = NodifyCanvas.ExtentProperty.AddOwner<Minimap>();
+        public static readonly StyledProperty<Rect> ItemsExtentProperty = AvaloniaProperty.Register<Minimap, Rect>(nameof(ItemsExtent));
+        public static readonly StyledProperty<Size> MaxViewportOffsetProperty = AvaloniaProperty.Register<Minimap, Size>(nameof(MaxViewportOffset), new Size(2000, 2000));
+        public static readonly StyledProperty<bool> ResizeToViewportProperty = AvaloniaProperty.Register<Minimap, bool>(nameof(ResizeToViewport));
+        public static readonly StyledProperty<bool> IsReadOnlyProperty = TextBox.IsReadOnlyProperty.AddOwner<Minimap>();
 
-        public static readonly RoutedEvent ZoomEvent = EventManager.RegisterRoutedEvent(nameof(Zoom), RoutingStrategy.Bubble, typeof(ZoomEventHandler), typeof(Minimap));
+        public static readonly RoutedEvent ZoomEvent = RoutedEvent.Register<ZoomEventArgs>(nameof(Zoom), RoutingStrategies.Bubble, typeof(Minimap));
 
         /// <inheritdoc cref="NodifyEditor.ViewportLocation" />
         public Point ViewportLocation
         {
-            get => (Point)GetValue(ViewportLocationProperty);
-            set => SetValue(ViewportLocationProperty, value);
+            get => viewportLocation;
+            set => SetAndRaise(ViewportLocationProperty, ref viewportLocation, value);
         }
 
         /// <inheritdoc cref="NodifyEditor.ViewportSize" />
@@ -45,9 +45,9 @@ namespace Nodify
         /// <summary>
         /// Gets or sets the style to use for the viewport rectangle.
         /// </summary>
-        public Style ViewportStyle
+        public ControlTheme ViewportStyle
         {
-            get => (Style)GetValue(ViewportStyleProperty);
+            get => (ControlTheme)GetValue(ViewportStyleProperty);
             set => SetValue(ViewportStyleProperty, value);
         }
 
@@ -96,29 +96,30 @@ namespace Nodify
         /// <summary>
         /// Gets the panel that holds all the <see cref="MinimapItem"/>s.
         /// </summary>
-        protected internal Panel ItemsHost { get; private set; } = default!;
+        protected internal ItemsPresenter ItemsHost { get; private set; } = default!;
 
         static Minimap()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(typeof(Minimap)));
-            ClipToBoundsProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.True));
+            ClipToBoundsProperty.OverrideMetadata(typeof(Minimap), new StyledPropertyMetadata<bool>(BoxValue.True));
         }
 
-        public override void OnApplyTemplate()
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(e);
 
-            ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException($"{ElementItemsHost} is missing or is not of type {nameof(Panel)}.");
+            ItemsHost = e.NameScope.Get<ItemsPresenter>("PART_ItemsPresenter");
         }
 
         protected bool IsDragging { get; private set; }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             var gestures = EditorGestures.Mappings.Minimap;
             if (!IsReadOnly && gestures.DragViewport.Matches(this, e))
             {
-                this.CaptureMouseSafe();
+                e.Pointer.Capture(this);
+                this.PropagateMouseCapturedWithin(true);
                 IsDragging = true;
 
                 SetViewportLocation(e.GetPosition(ItemsHost));
@@ -127,7 +128,7 @@ namespace Nodify
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPointerMoved(PointerEventArgs e)
         {
             if (IsDragging)
             {
@@ -137,21 +138,23 @@ namespace Nodify
 
         private void SetViewportLocation(Point location)
         {
-            var position = location - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
+            var position = location - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Position;
 
             if (MaxViewportOffset.Width != 0 || MaxViewportOffset.Height != 0)
             {
                 double maxRight = ResizeToViewport ? ItemsExtent.Right : Math.Max(ItemsExtent.Right, ItemsExtent.Left + ViewportSize.Width);
                 double maxBottom = ResizeToViewport ? ItemsExtent.Bottom : Math.Max(ItemsExtent.Bottom, ItemsExtent.Top + ViewportSize.Height);
 
-                position.X = position.X.Clamp(ItemsExtent.Left - ViewportSize.Width / 2 - MaxViewportOffset.Width, maxRight - ViewportSize.Width / 2 + MaxViewportOffset.Width);
-                position.Y = position.Y.Clamp(ItemsExtent.Top - ViewportSize.Height / 2 - MaxViewportOffset.Height, maxBottom - ViewportSize.Height / 2 + MaxViewportOffset.Height);
+                position = new Point(
+                             position.X.Clamp(ItemsExtent.Left - ViewportSize.Width / 2 - MaxViewportOffset.Width, maxRight - ViewportSize.Width / 2 + MaxViewportOffset.Width),
+                             position.Y.Clamp(ItemsExtent.Top - ViewportSize.Height / 2 - MaxViewportOffset.Height, maxBottom - ViewportSize.Height / 2 + MaxViewportOffset.Height)
+                             );
             }
 
             ViewportLocation = position;
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             var gestures = EditorGestures.Mappings.Minimap;
             if (IsDragging && gestures.DragViewport.Matches(this, e))
@@ -159,18 +162,20 @@ namespace Nodify
                 IsDragging = false;
             }
 
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            var props = e.GetCurrentPoint(this).Properties;
+            if (/*IsMouseCaptured && */ !props.IsRightButtonPressed && !props.IsLeftButtonPressed && !props.IsMiddleButtonPressed)
             {
-                ReleaseMouseCapture();
+                e.Pointer.Capture(null);
+                this.PropagateMouseCapturedWithin(false);
             }
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
-            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == e.KeyModifiers)
             {
-                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-                var location = ViewportLocation + (Vector)ViewportSize / 2;
+                double zoom = Math.Pow(2.0, e.Delta.Length / 3.0 / NodifyEditor.MouseWheelDeltaForOneLine);
+                var location = ViewportLocation + ViewportSize.ToVector() / 2;
 
                 var args = new ZoomEventArgs(zoom, location)
                 {
@@ -183,10 +188,10 @@ namespace Nodify
             }
         }
 
-        protected override DependencyObject GetContainerForItemOverride()
+        protected DependencyObject GetContainerForItemOverride()
             => new MinimapItem();
 
-        protected override bool IsItemItsOwnContainerOverride(object item)
+        protected bool IsItemItsOwnContainerOverride(object item)
             => item is MinimapItem;
     }
 }

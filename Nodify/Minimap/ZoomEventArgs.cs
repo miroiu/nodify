@@ -33,8 +33,5 @@ namespace Nodify
         /// Gets the location where the editor should zoom in.
         /// </summary>
         public Point Location { get; }
-
-        protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget)
-            => ((ZoomEventHandler)genericHandler)(genericTarget, this);
     }
 }

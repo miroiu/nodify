@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
@@ -11,7 +11,7 @@
                      Color="#2D2D30"
                      Opacity="0.8" />
 
-    <Style x:Key="ViewportRectStyle"
+    <ControlTheme x:Key="ViewportRectStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
                 Value="DodgerBlue" />
@@ -23,9 +23,9 @@
                                  Opacity="0.2" />
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:Minimap}">
+    <ControlTheme TargetType="{x:Type local:Minimap}" x:Key="{x:Type local:Minimap}">
         <Setter Property="Padding"
                 Value="10" />
         <Setter Property="Background"
@@ -42,22 +42,27 @@
                         <Viewbox Stretch="Uniform"
                                  Margin="{TemplateBinding Padding}">
                             <Grid>
-                                <local:MinimapPanel ViewportSize="{TemplateBinding ViewportSize}"
-                                                    ViewportLocation="{TemplateBinding ViewportLocation}"
-                                                    ResizeToViewport="{TemplateBinding ResizeToViewport}"
-                                                    Extent="{Binding Extent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
-                                                    ItemsExtent="{Binding ItemsExtent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
-                                                    IsItemsHost="True"
-                                                    x:Name="PART_ItemsHost" />
+                                <ItemsPresenter Name="PART_ItemsPresenter">
+                                    <ItemsPresenter.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <local:MinimapPanel ViewportSize="{TemplateBinding ViewportSize}"
+                                                                ViewportLocation="{TemplateBinding ViewportLocation}"
+                                                                ResizeToViewport="{TemplateBinding ResizeToViewport}"
+                                                                Extent="{Binding Extent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}"
+                                                                ItemsExtent="{Binding ItemsExtent, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWayToSource}" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsPresenter.ItemsPanel>
+                                </ItemsPresenter>
+
                                 <Canvas>
-                                    <Rectangle  Style="{TemplateBinding ViewportStyle}"
+                                    <Rectangle  Theme="{TemplateBinding ViewportStyle}"
                                                 Width="{Binding ViewportSize.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                                 Height="{Binding ViewportSize.Height, RelativeSource={RelativeSource TemplatedParent}}">
                                         <Canvas.Top>
                                             <MultiBinding Converter="{StaticResource SubtractConverter}">
                                                 <Binding Path="ViewportLocation.Y"
                                                          RelativeSource="{RelativeSource TemplatedParent}" />
-                                                <Binding Path="Extent.Location.Y"
+                                                <Binding Path="Extent.Position.Y"
                                                          RelativeSource="{RelativeSource TemplatedParent}" />
                                             </MultiBinding>
                                         </Canvas.Top>
@@ -65,7 +70,7 @@
                                             <MultiBinding Converter="{StaticResource SubtractConverter}">
                                                 <Binding Path="ViewportLocation.X"
                                                          RelativeSource="{RelativeSource TemplatedParent}" />
-                                                <Binding Path="Extent.Location.X"
+                                                <Binding Path="Extent.Position.X"
                                                          RelativeSource="{RelativeSource TemplatedParent}" />
                                             </MultiBinding>
                                         </Canvas.Left>
@@ -77,9 +82,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
-    <Style TargetType="{x:Type local:MinimapItem}">
+    <ControlTheme TargetType="{x:Type local:MinimapItem}" x:Key="{x:Type local:MinimapItem}">
         <Setter Property="Background"
                 Value="{StaticResource MinimapItemBackground}" />
         <Setter Property="Template">
@@ -95,6 +100,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

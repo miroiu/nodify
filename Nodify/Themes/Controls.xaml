@@ -202,7 +202,7 @@
 
     <!--MINIMAP-->
 
-    <ControlTheme x:Key="Minimap.ViewportStyle" x:Key="{x:Type Rectangle}"
+    <ControlTheme x:Key="Minimap.ViewportStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
                 Value="{StaticResource Minimap.ViewportStrokeBrush}" />
@@ -210,11 +210,9 @@
                 Value="3" />
         <Setter Property="Fill"
                 Value="{StaticResource Minimap.ViewportBackgroundBrush}" />
-        <Setter Property="StrokeLineJoin"
+        <Setter Property="StrokeJoin"
                 Value="Round" />
-        <Setter Property="StrokeEndLineCap"
-                Value="Round" />
-        <Setter Property="StrokeStartLineCap"
+        <Setter Property="StrokeLineCap"
                 Value="Round" />
     </ControlTheme>
 

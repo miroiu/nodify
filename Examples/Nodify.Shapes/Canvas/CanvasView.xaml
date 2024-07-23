@@ -366,9 +366,9 @@
                                BorderBrush="{x:Null}"
                                Margin="20">
             <shared:ResizablePanel.Resources>
-                <Style TargetType="{x:Type shared:Resizer}">
+                <ControlTheme TargetType="{x:Type shared:Resizer}" BasedOn="{StaticResource {x:Type shared:Resizer}}" x:Key="{x:Type shared:Resizer}">
                     <Setter Property="Cursor"
-                            Value="SizeNESW" />
+                            Value="SizeAll" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type shared:Resizer}">
@@ -387,13 +387,13 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                </Style>
+                </ControlTheme>
             </shared:ResizablePanel.Resources>
             <Border CornerRadius="3"
                     BorderBrush="#1e293b"
                     BorderThickness="3">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="1" />
+                    <DropShadowDirectionEffect ShadowDepth="1" />
                 </Border.Effect>
 
                 <nodify:Minimap ItemsSource="{Binding ItemsSource, ElementName=Editor}"
@@ -401,7 +401,7 @@
                                 ViewportSize="{Binding ViewportSize, ElementName=Editor}"
                                 ResizeToViewport="True"
                                 Zoom="Minimap_Zoom">
-                    <nodify:Minimap.Resources>
+                    <nodify:Minimap.DataTemplates>
                         <DataTemplate DataType="{x:Type local:EllipseViewModel}">
                             <Ellipse Stretch="Fill"
                                      Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
@@ -426,23 +426,25 @@
                                      StrokeThickness="2"
                                      Opacity="0.8" />
                         </DataTemplate>
-                    </nodify:Minimap.Resources>
+                    </nodify:Minimap.DataTemplates>
                     <nodify:Minimap.Background>
                         <SolidColorBrush Color="#111a2d"
                                          Opacity="0.5" />
                     </nodify:Minimap.Background>
-                    <nodify:Minimap.ItemContainerStyle>
-                        <Style TargetType="{x:Type nodify:MinimapItem}">
+                    <nodify:Minimap.ItemContainerTheme>
+                        <ControlTheme TargetType="{x:Type nodify:MinimapItem}"
+                                      x:DataType="local:ShapeViewModel"
+                                      BasedOn="{StaticResource {x:Type nodify:MinimapItem}}">
                             <Setter Property="Location"
                                     Value="{Binding Location}" />
                             <Setter Property="Width"
                                     Value="{Binding Width}" />
                             <Setter Property="Height"
                                     Value="{Binding Height}" />
-                        </Style>
-                    </nodify:Minimap.ItemContainerStyle>
+                        </ControlTheme>
+                    </nodify:Minimap.ItemContainerTheme>
                     <nodify:Minimap.ViewportStyle>
-                        <Style TargetType="Rectangle">
+                        <ControlTheme TargetType="Rectangle">
                             <Setter Property="StrokeThickness"
                                     Value="3" />
                             <Setter Property="Fill">
@@ -451,7 +453,7 @@
                                                      Opacity="0.3" />
                                 </Setter.Value>
                             </Setter>
-                        </Style>
+                        </ControlTheme>
                     </nodify:Minimap.ViewportStyle>
                 </nodify:Minimap>
             </Border>
