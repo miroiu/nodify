@@ -472,8 +472,8 @@
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Visibility="{Binding ShowGridLines, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
               Panel.ZIndex="-2" />
-        
-        <nodify:Minimap ItemsSource="{Binding Nodes}"
+
+        <nodify:Minimap ItemsSource="{Binding ItemsSource, ElementName=Editor}"
                         ViewportSize="{Binding ViewportSize, ElementName=Editor}"
                         ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
                         Visibility="{Binding ShowMinimap, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"

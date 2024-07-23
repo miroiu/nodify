@@ -1,19 +1,29 @@
 Connections are created between two points. The `Source` and `Target` dependency properties are of type `Point` and are usually bound to a connector's `Anchor` point.
 
+## Table of contents
+
+- [Base connection](#base-connection)
+- [Line connection](#line-connection)
+- [Circuit connection](#circuit-connection)
+- [Bezier connection](#connection)
+- [Step connection](#step-connection)
+- [Pending connection](#pending-connection)
+
 ## Base connection
 
-The base class for all connections provided by the library is `BaseConnection` which derives from `Shape`. There's no restriction to derive from `BaseConnection` when you create a custom connection. 
+The base class for all connections provided by the library is `BaseConnection` which derives from `Shape`. There's no restriction to derive from `BaseConnection` when you create a custom connection.
 
 It exposes two commands with their corresponding events:
- - `DisconnectCommand`, respectively `DisconnectEvent` - fired when the connection is clicked while holding `ALT`
- - `SplitCommand`, respectively `SplitEvent` - fired when the connection is double-clicked
+
+- `DisconnectCommand`, respectively `DisconnectEvent` - fired when the connection is clicked while holding `ALT`
+- `SplitCommand`, respectively `SplitEvent` - fired when the connection is double-clicked
 
 The `Direction` of a connection can have two values:
- - `Forward`
+
+- `Forward`
 
 ![image](https://user-images.githubusercontent.com/12727904/192101918-af9b0da6-ecc8-48f7-bf4d-8f9fdd005153.png)
 ![image](https://user-images.githubusercontent.com/12727904/192101959-2cb9a837-1642-4e96-b2ef-eea5502a587f.png)
-
 
 - `Backward`
 
