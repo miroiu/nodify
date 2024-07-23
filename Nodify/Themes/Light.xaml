@@ -79,6 +79,6 @@
     <Color x:Key="Minimap.BackgroundColor">#f2f3f5</Color>
     <Color x:Key="Minimap.ViewportStrokeColor">DodgerBlue</Color>
     <Color x:Key="Minimap.ViewportBackgroundColor">DodgerBlue</Color>
-    <Color x:Key="MinimapItem.BackgroundColor">#5C6A98</Color>
+    <Color x:Key="MinimapItem.BackgroundColor">#5c6a98</Color>
     
 </ResourceDictionary>
