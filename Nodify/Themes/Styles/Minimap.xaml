@@ -5,21 +5,21 @@
     <local:SubtractConverter x:Key="SubtractConverter" />
 
     <SolidColorBrush x:Key="MinimapBackground"
-                     Color="Black"
-                     Opacity="0.3" />
+                     Color="#121212"
+                     Opacity="0.7" />
     <SolidColorBrush x:Key="MinimapItemBackground"
-                     Color="White"
+                     Color="#2D2D30"
                      Opacity="0.8" />
 
     <Style x:Key="ViewportRectStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
-                Value="White" />
+                Value="DodgerBlue" />
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Fill">
             <Setter.Value>
-                <SolidColorBrush Color="White"
+                <SolidColorBrush Color="DodgerBlue"
                                  Opacity="0.2" />
             </Setter.Value>
         </Setter>

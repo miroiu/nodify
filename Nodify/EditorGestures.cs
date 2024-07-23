@@ -234,6 +234,7 @@ namespace Nodify
             }
         }
 
+        /// <summary>Gestures used by the <see cref="Nodify.Minimap"/> control.</summary>
         public class MinimapGestures
         {
             public MinimapGestures()
