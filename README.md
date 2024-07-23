@@ -18,7 +18,7 @@ The goal of the port is to keep the codebase as similar to the original code as 
 
 > [Examples/Nodify.Shapes](Examples/Nodify.Shapes)
 
-![Canvas](https://github.com/miroiu/nodify/assets/12727904/78dd3dcc-ce46-48bb-92d8-c432eda90adf)
+![Canvas](https://i.imgur.com/fIf8ACd.gif)
 
 🎨 A playground application where you can try all the available settings.
 
@@ -56,7 +56,8 @@ And include Nodify resources:
 Avalonia version compatibility chart:
 
 | Nodify version | Avalonia version |
-| -------------- | ---------------- |
+|----------------|------------------|
+| 6.1.0          | 11.1.0           |
 | 6.0.0          | 11.1.0-beta-2    |
 | 5.3.0          | 11.1.0-beta-2    |
 | 5.2.0          | 11.1.0-beta-1    |

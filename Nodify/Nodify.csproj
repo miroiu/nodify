@@ -49,7 +49,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.1.0-beta2" />
+    <PackageReference Include="Avalonia" Version="11.1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Themes\*.xaml" />

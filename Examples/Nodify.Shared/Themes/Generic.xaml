@@ -57,7 +57,7 @@
                                  Padding="{TemplateBinding Padding}"
                                  MaxLength="{TemplateBinding MaxLength}"
                                  MinLines="{TemplateBinding MinLines}"
-                                 MaxLines="{TemplateBinding MinLines}"
+                                 MaxLines="{TemplateBinding MaxLines}"
                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                  AcceptsTab="True"
