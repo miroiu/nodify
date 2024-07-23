@@ -16,15 +16,16 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>6.1.0</Version>
+    <Version>6.2.0</Version>
     <PackageReleaseNotes>
       > - Features:
-      >	  - Added new built-in connection type: StepConnection
+      >	  - Added a Minimap control and EditorGestures.Minimap
+      >	  - Added ContentContainerStyle, HeaderContainerStyle and FooterContainerStyle dependency properties to Node
+      >	  - Added BringIntoView that takes a Rect parameter to NodifyEditor
+      >	  - Added the NodifyEditor's DataContext as the parameter of the ItemsSelectStartedCommand, ItemsSelectCompletedCommand, ItemsDragStartedCommand and ItemsDragCompletedCommand commands
       > - Bugfixes:
-      >	  - Fixed CircuitConnection directional arrows not interpolating correctly
-      >	  - Fixed BaseConnection SplitEvent and DisconnectEvent not being raised if the corresponding command is null
-      >	  - Fixed DecoratorContainer scaling with zoom when not referencing a theme in App.xaml
-      >	  - Fixed style not applying to the default Connection template outside App.xaml
+      >	  - Fixed hover effect and padding of NodeInput and NodeOutput for vertical orientation
+      >	  - Fixed ItemContainers being selected sometimes when double clicking the canvas
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
