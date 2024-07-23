@@ -26,6 +26,11 @@ namespace Nodify.Playground
                     "Show minimap",
                     "Set Enable nodes dragging optimization to false for realtime updates"),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.DisableMinimapControls,
+                    val => Instance.DisableMinimapControls = val,
+                    "Disable minimap controls",
+                    "Whether the minimap can move and zoom the viewport"),
+                new ProxySettingViewModel<bool>(
                     () => Instance.ResizeToViewport,
                     val => Instance.ResizeToViewport = val,
                     "Minimap resize to viewport",
@@ -97,6 +102,13 @@ namespace Nodify.Playground
         {
             get => _showMinimap;
             set => SetProperty(ref _showMinimap, value);
+        }
+
+        private bool _disableMinimapControls = false;
+        public bool DisableMinimapControls
+        {
+            get => _disableMinimapControls;
+            set => SetProperty(ref _disableMinimapControls, value);
         }
 
         private bool _resizeToViewport = false;

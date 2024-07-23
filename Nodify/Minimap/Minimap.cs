@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -23,6 +24,7 @@ namespace Nodify
         public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(Minimap));
         public static readonly DependencyProperty MaxViewportOffsetProperty = DependencyProperty.Register(nameof(MaxViewportOffset), typeof(Size), typeof(Minimap), new FrameworkPropertyMetadata(new Size(2000, 2000)));
         public static readonly DependencyProperty ResizeToViewportProperty = DependencyProperty.Register(nameof(ResizeToViewport), typeof(bool), typeof(Minimap));
+        public static readonly DependencyProperty IsReadOnlyProperty = TextBoxBase.IsReadOnlyProperty.AddOwner(typeof(Minimap));
 
         public static readonly RoutedEvent ZoomEvent = EventManager.RegisterRoutedEvent(nameof(Zoom), RoutingStrategy.Bubble, typeof(ZoomEventHandler), typeof(Minimap));
 
@@ -77,6 +79,13 @@ namespace Nodify
             set => SetValue(ResizeToViewportProperty, value);
         }
 
+        /// <summary>Whether the minimap can move and zoom the viewport.</summary>
+        public bool IsReadOnly
+        {
+            get => (bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsReadOnlyProperty, value);
+        }
+
         /// <summary>Triggered when zooming in or out using the mouse wheel.</summary>
         public event ZoomEventHandler Zoom
         {
@@ -107,7 +116,7 @@ namespace Nodify
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             var gestures = EditorGestures.Mappings.Minimap;
-            if (gestures.DragViewport.Matches(this, e))
+            if (!IsReadOnly && gestures.DragViewport.Matches(this, e))
             {
                 this.CaptureMouseSafe();
                 IsDragging = true;
@@ -158,7 +167,7 @@ namespace Nodify
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            if (!e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
             {
                 double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                 var location = ViewportLocation + (Vector)ViewportSize / 2;
