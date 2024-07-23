@@ -499,7 +499,7 @@
         <nodify:Minimap ItemsSource="{Binding ItemsSource, ElementName=Editor}"
                         ViewportSize="{Binding ViewportSize, ElementName=Editor}"
                         ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
-                        Visibility="{Binding ShowMinimap, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
+                        IsVisible="{Binding ShowMinimap, Source={x:Static local:PlaygroundSettings.Instance}, Converter={shared:BooleanToVisibilityConverter}}"
                         IsReadOnly="{Binding DisableMinimapControls, Source={x:Static local:PlaygroundSettings.Instance}}"
                         ResizeToViewport="{Binding ResizeToViewport, Source={x:Static local:PlaygroundSettings.Instance}}"
                         MaxViewportOffset="{Binding MinimapMaxViewportOffset.Size, Source={x:Static local:PlaygroundSettings.Instance}}"
@@ -514,8 +514,8 @@
                     <Grid />
                 </DataTemplate>
             </nodify:Minimap.ItemTemplate>
-            <nodify:Minimap.ItemContainerStyle>
-                <Style TargetType="{x:Type nodify:MinimapItem}"
+            <nodify:Minimap.ItemContainerTheme>
+                <ControlTheme TargetType="{x:Type nodify:MinimapItem}"
                        BasedOn="{StaticResource {x:Type nodify:MinimapItem}}">
                     <Setter Property="Location"
                             Value="{Binding Location}" />
@@ -523,8 +523,8 @@
                             Value="150" />
                     <Setter Property="Height"
                             Value="130" />
-                </Style>
-            </nodify:Minimap.ItemContainerStyle>
+                </ControlTheme>
+            </nodify:Minimap.ItemContainerTheme>
         </nodify:Minimap>
     </Grid>
 

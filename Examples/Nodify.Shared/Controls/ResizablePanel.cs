@@ -38,6 +38,7 @@ namespace Nodify
         static ResizablePanel()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ResizablePanel), new FrameworkPropertyMetadata(typeof(ResizablePanel)));
+            ClipToBoundsProperty.OverrideDefaultValue<ResizablePanel>(false); // to match WPF behavior
         }
 
         public ResizablePanel()
@@ -174,6 +175,7 @@ namespace Nodify
         static Resizer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Resizer), new FrameworkPropertyMetadata(typeof(Resizer)));
+            ClipToBoundsProperty.OverrideDefaultValue<Resizer>(false); // to match WPF behavior
         }
     }
 

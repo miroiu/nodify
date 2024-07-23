@@ -47,8 +47,7 @@
                 </Setter>
             </ControlTheme>
 
-            <ControlTheme TargetType="{x:Type shared:Resizer}" x:Key="{x:Type shared:Resizer}"
-                   BasedOn="{StaticResource {x:Type shared:Resizer}}">
+            <ControlTheme TargetType="{x:Type shared:Resizer}" x:Key="{x:Type shared:Resizer}">
                 <Setter Property="Background"
                         Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}" />
                 <Setter Property="IsEnabled"
@@ -433,8 +432,7 @@
                     </nodify:Minimap.Background>
                     <nodify:Minimap.ItemContainerTheme>
                         <ControlTheme TargetType="{x:Type nodify:MinimapItem}"
-                                      x:DataType="local:ShapeViewModel"
-                                      BasedOn="{StaticResource {x:Type nodify:MinimapItem}}">
+                                      x:DataType="local:ShapeViewModel">
                             <Setter Property="Location"
                                     Value="{Binding Location}" />
                             <Setter Property="Width"
