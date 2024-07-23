@@ -20,14 +20,14 @@ namespace Nodify
         public static readonly RoutedEvent PendingConnectionDragEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionDrag), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectorEventHandler), typeof(Connector));
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectorGestures.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionStarted
         {
             add => AddHandler(PendingConnectionStartedEvent, value);
             remove => RemoveHandler(PendingConnectionStartedEvent, value);
         }
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Connect"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectorGestures.Connect"/> gesture.</summary>
         public event PendingConnectionEventHandler PendingConnectionCompleted
         {
             add => AddHandler(PendingConnectionCompletedEvent, value);
@@ -43,7 +43,7 @@ namespace Nodify
             remove => RemoveHandler(PendingConnectionDragEvent, value);
         }
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connector.Disconnect"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectorGestures.Disconnect"/> gesture.</summary>
         public event ConnectorEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);

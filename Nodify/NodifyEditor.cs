@@ -146,7 +146,7 @@ namespace Nodify
         public Transform ViewportTransform => (Transform)GetValue(ViewportTransformProperty);
 
         /// <summary>
-        /// Gets the size of the viewport.
+        /// Gets the size of the viewport in graph space (scaled by the <see cref="ViewportZoom"/>).
         /// </summary>
         public Size ViewportSize
         {
@@ -162,7 +162,6 @@ namespace Nodify
             get => (Point)GetValue(ViewportLocationProperty);
             set => SetValue(ViewportLocationProperty, value);
         }
-
 
         /// <summary>
         /// Gets or sets the zoom factor of the viewport.
@@ -758,12 +757,12 @@ namespace Nodify
         /// <summary>
         /// Zoom in at the viewports center
         /// </summary>
-        public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), (Point)((Vector)ViewportLocation + (Vector)ViewportSize / 2));
+        public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
         /// <summary>
         /// Zoom out at the viewports center
         /// </summary>
-        public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), (Point)((Vector)ViewportLocation + (Vector)ViewportSize / 2));
+        public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
         /// <summary>
         /// Zoom at the specified location in graph space coordinates.

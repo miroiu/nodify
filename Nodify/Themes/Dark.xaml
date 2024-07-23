@@ -75,4 +75,10 @@
     <Color x:Key="PendingConnection.ForegroundColor">White</Color>
     <Color x:Key="PendingConnection.BackgroundColor">#121212</Color>
 
+    <!--MINIMAP-->
+    <Color x:Key="Minimap.BackgroundColor">#121212</Color>
+    <Color x:Key="Minimap.ViewportStrokeColor">DodgerBlue</Color>
+    <Color x:Key="Minimap.ViewportBackgroundColor">DodgerBlue</Color>
+    <Color x:Key="MinimapItem.BackgroundColor">#2D2D30</Color>
+    
 </ResourceDictionary>
