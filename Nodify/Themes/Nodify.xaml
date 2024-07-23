@@ -77,8 +77,8 @@
 
     <!--MINIMAP-->
     <Color x:Key="Minimap.BackgroundColor">#2A1B47</Color>
-    <Color x:Key="Minimap.ViewportStrokeColor">#FD5618</Color>
-    <Color x:Key="Minimap.ViewportBackgroundColor">#FD5618</Color>
-    <Color x:Key="MinimapItem.BackgroundColor">#662D91</Color>
+    <Color x:Key="Minimap.ViewportStrokeColor">#9b44dd</Color>
+    <Color x:Key="Minimap.ViewportBackgroundColor">#9b44dd</Color>
+    <Color x:Key="MinimapItem.BackgroundColor">#FD5618</Color>
 
 </ResourceDictionary>

@@ -8,18 +8,18 @@
                      Color="#121212"
                      Opacity="0.7" />
     <SolidColorBrush x:Key="MinimapItemBackground"
-                     Color="#2D2D30"
+                     Color="DodgerBlue"
                      Opacity="0.8" />
 
     <ControlTheme x:Key="ViewportRectStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="#74747c" />
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Fill">
             <Setter.Value>
-                <SolidColorBrush Color="DodgerBlue"
+                <SolidColorBrush Color="#74747c"
                                  Opacity="0.2" />
             </Setter.Value>
         </Setter>
