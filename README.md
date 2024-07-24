@@ -18,6 +18,10 @@ The goal of the port is to keep the codebase as similar to the original code as 
 
 > [Examples/Nodify.Shapes](Examples/Nodify.Shapes)
 
+#### ➜ Open a [WASM 🌐 browser version of the shapes demo in your browser, without downloading!](https://avalonia-port.nodify-avalonia.pages.dev/) 🚀
+
+_(Note: C# in a browser is still much slower than standalone desktop C#, the performance is much better when used in a standalone application.)_
+
 ![Canvas](https://i.imgur.com/fIf8ACd.gif)
 
 🎨 A playground application where you can try all the available settings.
