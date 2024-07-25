@@ -1,6 +1,4 @@
-
 ![editor-interaction](https://user-images.githubusercontent.com/12727904/192004838-ec6dd997-5e64-4c01-940c-1cd1b8d27837.gif)
-
 
 # Welcome to Nodify!
 
@@ -13,11 +11,13 @@ The graph editor is an infinite area where you can place and move nodes around, 
 Nodify is feature-rich and optimized for interaction with hundreds of nodes at once, and... it is built from the ground up to work with MVVM.
 
 ### Requirements
+
 ![IDE](https://img.shields.io/static/v1?label=%20&message=VS%202019%20or%20greater&color=informational&style=for-the-badge&logo=visual-studio)
 ![C#](https://img.shields.io/static/v1?label=%20&message=8.0&color=239120&style=for-the-badge&logo=c-sharp)
 ![.NET](https://img.shields.io/static/v1?label=%20&message=Framework%204.7.2%20to%20NET%206&color=5C2D91&style=for-the-badge&logo=.net)
 
 ### Install Nodify from Nuget
+
 [![Download Package](https://img.shields.io/nuget/v/Nodify?label=Download&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/Nodify/)
 
 ```xml
@@ -25,10 +25,10 @@ Install-Package Nodify
 ```
 
 ### Application examples
+
 - [Playground](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Playground)
+- [Shapes](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Shapes)
 - [State machine](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.StateMachine)
 - [Calculator](https://github.com/miroiu/nodify/tree/master/Examples/Nodify.Calculator)
 
-
 [![IDE](https://img.shields.io/static/v1?label=%20&message=GET%20STARTED&color=9cf&style=for-the-badge)](Getting-Started)
-
