@@ -12,6 +12,7 @@ namespace Nodify.Shapes
             InitializeComponent();
 
             NodifyEditor.EnableDraggingContainersOptimizations = false;
+            NodifyEditor.EnableCuttingLinePreview = true;
         }
     }
 }

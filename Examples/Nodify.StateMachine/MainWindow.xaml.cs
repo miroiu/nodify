@@ -9,6 +9,9 @@ namespace Nodify.StateMachine
             InitializeComponent();
 
             Connector.EnableStickyConnections = true;
+            NodifyEditor.EnableCuttingLinePreview = true;
+
+            EditorGestures.Mappings.Connection.Disconnect.Value = MultiGesture.None;
         }
     }
 }

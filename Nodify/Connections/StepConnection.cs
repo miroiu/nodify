@@ -31,6 +31,7 @@ namespace Nodify
             SourceOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceSourceOrientation));
             TargetOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceTargetOrientation));
             DirectionProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(ConnectionDirection.Forward, null, CoerceConnectionDirection));
+            NodifyEditor.CuttingConnectionTypes.Add(typeof(StepConnection));
         }
 
         private static object CoerceSourceOrientation(DependencyObject d, object baseValue)

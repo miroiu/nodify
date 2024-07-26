@@ -13,6 +13,7 @@ namespace Nodify
         static LineConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LineConnection), new FrameworkPropertyMetadata(typeof(LineConnection)));
+            NodifyEditor.CuttingConnectionTypes.Add(typeof(LineConnection));
         }
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)

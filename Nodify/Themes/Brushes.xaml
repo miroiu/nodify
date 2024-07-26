@@ -21,6 +21,14 @@
                      Opacity="0.1"
                      Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
 
+    <SolidColorBrush x:Key="NodifyEditor.CuttingLineStrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.CuttingLineColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.CuttingLineBackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.CuttingLineColor}" />
+
     <!--ITEM CONTAINER-->
 
     <SolidColorBrush x:Key="ItemContainer.BorderBrush"
