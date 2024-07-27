@@ -59,15 +59,4 @@
                 Value="30" />
     </Style>
 
-    <Style TargetType="{x:Type local:StepConnection}">
-        <Setter Property="StrokeThickness"
-                Value="3" />
-        <Setter Property="Stroke"
-                Value="DodgerBlue" />
-        <Setter Property="Fill"
-                Value="DodgerBlue" />
-        <Setter Property="Spacing"
-                Value="30" />
-    </Style>
-
 </ResourceDictionary>
