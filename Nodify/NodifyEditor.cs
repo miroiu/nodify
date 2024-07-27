@@ -1475,11 +1475,6 @@ namespace Nodify
             CuttingLineStart = location;
             CuttingLineEnd = location;
             IsCutting = true;
-
-            if (CuttingStartedCommand?.CanExecute(DataContext) ?? false)
-            {
-                CuttingStartedCommand.Execute(DataContext);
-            }
         }
 
         /// <summary>
@@ -1490,11 +1485,6 @@ namespace Nodify
             if (IsCutting)
             {
                 IsCutting = false;
-
-                if (CuttingCompletedCommand?.CanExecute(DataContext) ?? false)
-                {
-                    CuttingCompletedCommand.Execute(DataContext);
-                }
             }
         }
 
@@ -1524,11 +1514,6 @@ namespace Nodify
                         bc.OnDisconnect();
                     }
                 }
-            }
-
-            if (CuttingCompletedCommand?.CanExecute(DataContext) ?? false)
-            {
-                CuttingCompletedCommand.Execute(DataContext);
             }
 
             IsCutting = false;
