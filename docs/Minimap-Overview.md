@@ -58,7 +58,7 @@ The `ViewportStyle` is used to customize the viewport rectangle.
     <Setter Property="StrokeThickness" Value="3"/>
 </Style>
 
-<local:Minimap ViewportStyle="{StaticResource MyViewportStyle}" ... />
+<nodify:Minimap ViewportStyle="{StaticResource MyViewportStyle}" ... />
 ```
 
 The `MaxViewportOffset` property is used to restrict how far the viewport can be moved away from the items when [panning](#panning).

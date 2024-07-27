@@ -56,7 +56,8 @@
                              Duration="0:0:0.3" From="1" To="0.3"  />
         </Storyboard>
 
-        <Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
+        <Style x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}"
+               BasedOn="{StaticResource {x:Type nodify:BaseConnection}}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Input.Shape}" 
                              Value="{x:Static local:ConnectorShape.Square}">
@@ -165,6 +166,15 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="CuttingLineStyle"
+               TargetType="{x:Type nodify:CuttingLine}"
+               BasedOn="{StaticResource {x:Type nodify:CuttingLine}}">
+            <Setter Property="StrokeDashArray"
+                    Value="1 1" />
+            <Setter Property="StrokeThickness"
+                    Value="2" />
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -189,7 +199,8 @@
                              DisplayConnectionsOnTop="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                              BringIntoViewSpeed="{Binding BringIntoViewSpeed, Source={x:Static local:EditorSettings.Instance}}"
                              BringIntoViewMaxDuration="{Binding BringIntoViewMaxDuration, Source={x:Static local:EditorSettings.Instance}}"
-                             SelectionRectangleStyle="{StaticResource SelectionRectangleStyle}">
+                             SelectionRectangleStyle="{StaticResource SelectionRectangleStyle}"
+                             CuttingLineStyle="{StaticResource CuttingLineStyle}">
             <nodify:NodifyEditor.Style>
                 <Style TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">

@@ -2,7 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <Style TargetType="{x:Type local:Connection}">
+    <Style TargetType="{x:Type local:BaseConnection}">
+        <Style.Triggers>
+            <Trigger Property="local:CuttingLine.IsOverElement" Value="True">
+                <Setter Property="Opacity"
+                        Value="0.4" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type local:Connection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -13,7 +23,8 @@
                 Value="20" />
     </Style>
 
-    <Style TargetType="{x:Type local:LineConnection}">
+    <Style TargetType="{x:Type local:LineConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -24,7 +35,8 @@
                 Value="30" />
     </Style>
 
-    <Style TargetType="{x:Type local:CircuitConnection}">
+    <Style TargetType="{x:Type local:CircuitConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -35,7 +47,8 @@
                 Value="30" />
     </Style>
 
-    <Style TargetType="{x:Type local:StepConnection}">
+    <Style TargetType="{x:Type local:StepConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"

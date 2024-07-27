@@ -200,6 +200,16 @@
                 Value="{StaticResource PendingConnection.BackgroundBrush}" />
     </Style>
 
+    <!--CUTTING LINE-->
+
+    <Style TargetType="{x:Type local:CuttingLine}"
+           BasedOn="{StaticResource {x:Type local:CuttingLine}}">
+        <Setter Property="Fill"
+                Value="{StaticResource NodifyEditor.CuttingLineBackgroundBrush}" />
+        <Setter Property="Stroke"
+                Value="{StaticResource NodifyEditor.CuttingLineStrokeBrush}" />
+    </Style>
+
     <!--MINIMAP-->
 
     <Style x:Key="Minimap.ViewportStyle"
@@ -222,8 +232,8 @@
            BasedOn="{StaticResource {x:Type local:Minimap}}">
         <Setter Property="Background"
                 Value="{StaticResource Minimap.BackgroundBrush}" />
-        <Setter Property="ViewportStyle" 
-                Value="{StaticResource Minimap.ViewportStyle}"/>
+        <Setter Property="ViewportStyle"
+                Value="{StaticResource Minimap.ViewportStyle}" />
     </Style>
 
     <Style TargetType="{x:Type local:MinimapItem}"

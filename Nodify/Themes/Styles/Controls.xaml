@@ -10,6 +10,7 @@
         <ResourceDictionary Source="NodeOutput.xaml" />
         <ResourceDictionary Source="Connection.xaml" />
         <ResourceDictionary Source="PendingConnection.xaml" />
+        <ResourceDictionary Source="CuttingLine.xaml" />
 
         <!--CORE-->
         <ResourceDictionary Source="ItemContainer.xaml" />

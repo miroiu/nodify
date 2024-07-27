@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <Style TargetType="{x:Type local:CuttingLine}">
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="StrokeDashArray"
+                Value="2 1" />
+        <Setter Property="Stroke"
+                Value="Red" />
+        <Setter Property="Fill"
+                Value="Red" />
+    </Style>
+    
+</ResourceDictionary>
