@@ -47,6 +47,12 @@
 
 - [NodeInput and NodeOutput](Connectors-Overview#nodeinput-and-nodeoutput)
 
+[CuttingLine overview](CuttingLine-Overview)
+
+- [Enabling preview](CuttingLine-Overview#enabling-preview)
+- [Custom connections](CuttingLine-Overview#custom-connections)
+- [Customization](CuttingLine-Overview#customization)
+
 [Minimap overview](Minimap-Overview)
 
 - [Moving the viewport](Minimap-Overview#panning)
