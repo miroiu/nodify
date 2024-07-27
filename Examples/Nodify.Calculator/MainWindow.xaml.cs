@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 
 namespace Nodify.Calculator
 {
@@ -8,6 +7,8 @@ namespace Nodify.Calculator
         public MainWindow()
         {
             InitializeComponent();
+
+            EditorGestures.Mappings.Editor.Cutting.Value = MultiGesture.None;
         }
     }
 }

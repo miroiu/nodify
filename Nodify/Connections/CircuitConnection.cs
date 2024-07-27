@@ -26,6 +26,7 @@ namespace Nodify
         static CircuitConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CircuitConnection), new FrameworkPropertyMetadata(typeof(CircuitConnection)));
+            NodifyEditor.CuttingConnectionTypes.Add(typeof(CircuitConnection));
         }
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)

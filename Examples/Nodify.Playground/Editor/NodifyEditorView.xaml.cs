@@ -10,5 +10,10 @@ namespace Nodify.Playground
         {
             InitializeComponent();
         }
+
+        private void Minimap_Zoom(object sender, ZoomEventArgs e)
+        {
+            EditorInstance.ZoomAtPosition(e.Zoom, e.Location);
+        }
     }
 }

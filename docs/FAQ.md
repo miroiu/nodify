@@ -52,3 +52,9 @@ A: https://github.com/miroiu/nodify/issues/60
 #### Q: How can I drag nodes from a toolbox into the editor?
 
 A: https://github.com/miroiu/nodify/issues/81
+
+***
+
+#### Q: How can I create a custom connection?
+
+A: https://github.com/miroiu/nodify/issues/121

@@ -13,6 +13,7 @@ namespace Nodify
         static Connection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
+            NodifyEditor.CuttingConnectionTypes.Add(typeof(Connection));
         }
 
         private const double _baseOffset = 100d;

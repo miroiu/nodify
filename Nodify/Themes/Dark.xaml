@@ -10,6 +10,7 @@
     <Color x:Key="NodifyEditor.BackgroundColor">#1E1E1E</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">White</Color>
     <Color x:Key="NodifyEditor.SelectionRectangleColor">DodgerBlue</Color>
+    <Color x:Key="NodifyEditor.CuttingLineColor">Red</Color>
 
     <!--ITEM CONTAINER-->
 
@@ -75,4 +76,10 @@
     <Color x:Key="PendingConnection.ForegroundColor">White</Color>
     <Color x:Key="PendingConnection.BackgroundColor">#121212</Color>
 
+    <!--MINIMAP-->
+    <Color x:Key="Minimap.BackgroundColor">#121212</Color>
+    <Color x:Key="Minimap.ViewportStrokeColor">#74747c</Color>
+    <Color x:Key="Minimap.ViewportBackgroundColor">#74747c</Color>
+    <Color x:Key="MinimapItem.BackgroundColor">DodgerBlue</Color>
+    
 </ResourceDictionary>

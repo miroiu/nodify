@@ -110,16 +110,21 @@ namespace Nodify
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
+                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
                 ZoomOut = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ResetViewportLocation = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
+                CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
             }
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
             public SelectionGestures Selection { get; }
+
+            /// <summary>Gesture used to start cutting connections.</summary>
+            public InputGestureRef Cutting { get; }
 
             /// <summary>Gesture used to start panning.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
@@ -145,17 +150,23 @@ namespace Nodify
             /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>+<see cref="Key.Home"/>.</remarks>
             public InputGestureRef FitToScreen { get; }
 
+            /// <summary>Gesture to cancel the current operation.</summary>
+            /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="Key.Escape"/>.</remarks>
+            public InputGestureRef CancelAction { get; }
+
             /// <summary>Copies from the specified gestures.</summary>
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(NodifyEditorGestures gestures)
             {
                 Selection.Apply(gestures.Selection);
+                Cutting.Value = gestures.Cutting.Value;
                 Pan.Value = gestures.Pan.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
                 ZoomOut.Value = gestures.ZoomOut.Value;
                 ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;
                 FitToScreen.Value = gestures.FitToScreen.Value;
+                CancelAction.Value = gestures.CancelAction.Value;
             }
         }
 
@@ -234,6 +245,31 @@ namespace Nodify
             }
         }
 
+        /// <summary>Gestures used by the <see cref="Nodify.Minimap"/> control.</summary>
+        public class MinimapGestures
+        {
+            public MinimapGestures()
+            {
+                DragViewport = new MouseGesture(MouseAction.LeftClick);
+                ZoomModifierKey = ModifierKeys.None;
+            }
+
+            /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
+            public InputGestureRef DragViewport { get; }
+
+            /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
+            public ModifierKeys ZoomModifierKey { get; set; }
+
+            /// <summary>Copies from the specified gestures.</summary>
+            /// <param name="gestures">The gestures to copy.</param>
+            public void Apply(MinimapGestures gestures)
+            {
+                DragViewport.Value = gestures.DragViewport.Value;
+                ZoomModifierKey = gestures.ZoomModifierKey;
+            }
+        }
+
         /// <summary>Gestures for the editor.</summary>
         public NodifyEditorGestures Editor { get; } = new NodifyEditorGestures();
 
@@ -249,6 +285,9 @@ namespace Nodify
         /// <summary>Gestures for the grouping node.</summary>
         public GroupingNodeGestures GroupingNode { get; } = new GroupingNodeGestures();
 
+        /// <summary>Gestures for the minimap.</summary>
+        public MinimapGestures Minimap { get; } = new MinimapGestures();
+
         /// <summary>Copies from the specified gestures.</summary>
         /// <param name="gestures">The gestures to copy.</param>
         public void Apply(EditorGestures gestures)
@@ -258,6 +297,7 @@ namespace Nodify
             Connector.Apply(gestures.Connector);
             Connection.Apply(gestures.Connection);
             GroupingNode.Apply(gestures.GroupingNode);
+            Minimap.Apply(gestures.Minimap);
         }
     }
 }

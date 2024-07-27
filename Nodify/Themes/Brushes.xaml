@@ -21,6 +21,14 @@
                      Opacity="0.1"
                      Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
 
+    <SolidColorBrush x:Key="NodifyEditor.CuttingLineStrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.CuttingLineColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.CuttingLineBackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.CuttingLineColor}" />
+
     <!--ITEM CONTAINER-->
 
     <SolidColorBrush x:Key="ItemContainer.BorderBrush"
@@ -215,5 +223,26 @@
     <SolidColorBrush x:Key="PendingConnection.BackgroundBrush"
                      o:Freeze="True"
                      Color="{DynamicResource PendingConnection.BackgroundColor}" />
+
+    <!--MINIMAP-->
+
+    <SolidColorBrush x:Key="Minimap.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Minimap.BackgroundColor}"
+                     Opacity="0.7" />
+
+    <SolidColorBrush x:Key="Minimap.ViewportStrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Minimap.ViewportStrokeColor}" />
+
+    <SolidColorBrush x:Key="Minimap.ViewportBackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource Minimap.ViewportBackgroundColor}"
+                     Opacity="0.2" />
+
+    <SolidColorBrush x:Key="MinimapItem.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource MinimapItem.BackgroundColor}"
+                     Opacity="0.8" />
 
 </ResourceDictionary>

@@ -37,6 +37,7 @@
                              PendingConnection="{Binding PendingTransition}"
                              DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
                              ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
+                             RemoveConnectionCommand="{Binding DeleteTransitionCommand}"
                              Grid.Column="1">
             <nodify:NodifyEditor.PendingConnectionTemplate>
                 <DataTemplate DataType="{x:Type local:TransitionViewModel}">

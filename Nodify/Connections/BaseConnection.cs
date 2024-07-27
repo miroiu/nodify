@@ -272,7 +272,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Splits the connection. Triggered by <see cref="EditorGestures.Connection.Split"/> gesture.
+        /// Splits the connection. Triggered by <see cref="EditorGestures.ConnectionGestures.Split"/> gesture.
         /// Parameter is the location where the splitting ocurred.
         /// </summary>
         public ICommand? SplitCommand
@@ -282,7 +282,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Removes this connection. Triggered by <see cref="EditorGestures.Connection.Disconnect"/> gesture.
+        /// Removes this connection. Triggered by <see cref="EditorGestures.ConnectionGestures.Disconnect"/> gesture.
         /// Parameter is the location where the disconnect ocurred.
         /// </summary>
         public ICommand? DisconnectCommand
@@ -352,14 +352,14 @@ namespace Nodify
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
         public static readonly RoutedEvent SplitEvent = EventManager.RegisterRoutedEvent(nameof(Split), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Disconnect"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Disconnect"/> gesture.</summary>
         public event ConnectionEventHandler Disconnect
         {
             add => AddHandler(DisconnectEvent, value);
             remove => RemoveHandler(DisconnectEvent, value);
         }
 
-        /// <summary>Triggered by the <see cref="EditorGestures.Connection.Split"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Split"/> gesture.</summary>
         public event ConnectionEventHandler Split
         {
             add => AddHandler(SplitEvent, value);
@@ -677,44 +677,52 @@ namespace Nodify
             if (gestures.Split.Matches(e.Source, e))
             {
                 Point splitLocation = e.GetPosition(this);
-                object? connection = DataContext;
-                var args = new ConnectionEventArgs(connection)
-                {
-                    RoutedEvent = SplitEvent,
-                    SplitLocation = splitLocation,
-                    Source = this
-                };
-
-                RaiseEvent(args);
-
-                // Raise SplitCommand if SplitEvent is not handled
-                if (!args.Handled && (SplitCommand?.CanExecute(splitLocation) ?? false))
-                {
-                    SplitCommand.Execute(splitLocation);
-                }
+                OnSplit(splitLocation);
 
                 e.Handled = true;
             }
             else if (gestures.Disconnect.Matches(e.Source, e))
             {
-                Point splitLocation = e.GetPosition(this);
-                object? connection = DataContext;
-                var args = new ConnectionEventArgs(connection)
-                {
-                    RoutedEvent = DisconnectEvent,
-                    SplitLocation = splitLocation,
-                    Source = this
-                };
-
-                RaiseEvent(args);
-
-                // Raise DisconnectCommand if DisconnectEvent is not handled
-                if (!args.Handled && (DisconnectCommand?.CanExecute(splitLocation) ?? false))
-                {
-                    DisconnectCommand.Execute(splitLocation);
-                }
+                OnDisconnect();
 
                 e.Handled = true;
+            }
+        }
+
+        protected internal void OnSplit(Point splitLocation)
+        {
+            object? connection = DataContext;
+            var args = new ConnectionEventArgs(connection)
+            {
+                RoutedEvent = SplitEvent,
+                SplitLocation = splitLocation,
+                Source = this
+            };
+
+            RaiseEvent(args);
+
+            // Raise SplitCommand if SplitEvent is not handled
+            if (!args.Handled && (SplitCommand?.CanExecute(splitLocation) ?? false))
+            {
+                SplitCommand.Execute(splitLocation);
+            }
+        }
+
+        protected internal void OnDisconnect()
+        {
+            object? connection = DataContext;
+            var args = new ConnectionEventArgs(connection)
+            {
+                RoutedEvent = DisconnectEvent,
+                Source = this
+            };
+
+            RaiseEvent(args);
+
+            // Raise DisconnectCommand if DisconnectEvent is not handled
+            if (!args.Handled && (DisconnectCommand?.CanExecute(null) ?? false))
+            {
+                DisconnectCommand.Execute(null);
             }
         }
 
