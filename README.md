@@ -17,7 +17,7 @@
 
 > [Examples/Nodify.Shapes](Examples/Nodify.Shapes)
 
-![Canvas](https://github.com/miroiu/nodify/assets/12727904/78dd3dcc-ce46-48bb-92d8-c432eda90adf)
+![Canvas](https://i.imgur.com/MxsACq6.gif)
 
 🎨 A playground application where you can try all the available settings.
 
