@@ -26,6 +26,7 @@ namespace Nodify
         static CircuitConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CircuitConnection), new FrameworkPropertyMetadata(typeof(CircuitConnection)));
+            NodifyEditor.CuttingConnectionTypes.Add(typeof(CircuitConnection));
             AffectsRender<CircuitConnection>(AngleProperty);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -54,6 +55,31 @@ namespace Nodify
                 }
                 return HitTestResultBehavior.Continue;
             }, new PointHitTestParameters(relativePosition));
+
+            return result;
+        }
+
+        public static List<FrameworkElement> GetIntersectingElements(this UIElement container, Geometry geometry, IReadOnlyCollection<Type> supportedTypes)
+        {
+            var result = new List<FrameworkElement>();
+            VisualTreeHelper.HitTest(container, depObj =>
+            {
+                if (depObj is FrameworkElement elem && elem.IsHitTestVisible)
+                {
+                    if (supportedTypes.Contains(elem.GetType()))
+                    {
+                        return HitTestFilterBehavior.ContinueSkipChildren;
+                    }
+
+                    return HitTestFilterBehavior.ContinueSkipSelf;
+                }
+
+                return HitTestFilterBehavior.ContinueSkipSelfAndChildren;
+            }, hitResult =>
+            {
+                result.Add((FrameworkElement)hitResult.VisualHit);
+                return HitTestResultBehavior.Continue;
+            }, new GeometryHitTestParameters(geometry));
 
             return result;
         }

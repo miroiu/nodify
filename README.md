@@ -61,6 +61,7 @@ Avalonia version compatibility chart:
 
 | Nodify version | Avalonia version |
 |----------------|------------------|
+| 6.2.0          | 11.1.0           |
 | 6.1.0          | 11.1.0           |
 | 6.0.0          | 11.1.0-beta-2    |
 | 5.3.0          | 11.1.0-beta-2    |
@@ -77,7 +78,11 @@ Avalonia version compatibility chart:
  - Lots of **configurable** dependency properties
  - Ready for undo/redo
  - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator), 🔶 [**Canvas**](Examples/Nodify.Shapes)
- 
+
+## 😿 Unsupported Features
+
+ - Cutting Lines (blocker: https://github.com/AvaloniaUI/Avalonia/issues/16549)
+
 ## 📝 Documentation
 
 For the wiki please refer to the original [miroiu's Wiki](https://github.com/miroiu/nodify/wiki) since the API is identical, but please report bugs here. However, if you find a bug, please try to check if it also occurs in the original WPF's version.

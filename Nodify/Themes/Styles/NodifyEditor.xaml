@@ -3,7 +3,8 @@
                     xmlns:local="clr-namespace:Nodify">
 
     <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
-    <local:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
+    <local:ScaleDoubleConverter x:Key="ScaleDoubleConverter" />
+    <local:ScalePointConverter x:Key="ScalePointConverter" />
 
     <DataTemplate x:Key="ConnectionTemplate">
         <local:Connection Theme="{DynamicResource {x:Type local:Connection}}" />
@@ -61,11 +62,11 @@
                                 </ItemsPresenter.ItemsPanel>
                             </ItemsPresenter>
 
-                            <ItemsControl ItemsSource="{TemplateBinding Connections}"
-                                          ItemTemplate="{TemplateBinding ConnectionTemplate}"
-                                          ClipToBounds="False"
-                                          IsTabStop="False"
-                                          x:Name="PART_ConnectionsItemsControl">
+                            <ItemsControl  x:Name="PART_ConnectionsHost"
+                                           ItemsSource="{TemplateBinding Connections}"
+                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                           ClipToBounds="False"
+                                           IsTabStop="False">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Canvas />
@@ -82,18 +83,44 @@
                                        Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
                                        IsVisible="{TemplateBinding IsSelecting}">
                                 <Rectangle.Width>
-                                    <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
-                                        <Binding Path="SelectedArea.Width" RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="ViewportZoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="SelectedArea.Width"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
                                     </MultiBinding>
                                 </Rectangle.Width>
                                 <Rectangle.Height>
-                                    <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
-                                        <Binding Path="SelectedArea.Height" RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="ViewportZoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="SelectedArea.Height"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
                                     </MultiBinding>
                                 </Rectangle.Height>
                             </Rectangle>
+
+                            <local:CuttingLine Theme="{TemplateBinding CuttingLineStyle}"
+                                               IsVisible="{TemplateBinding IsCutting}"
+                                               RenderTransformOrigin="0,0"
+                                               RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}">
+                                <local:CuttingLine.StartPoint>
+                                    <MultiBinding Converter="{StaticResource ScalePointConverter}">
+                                        <Binding Path="CuttingLineStart"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </local:CuttingLine.StartPoint>
+                                <local:CuttingLine.EndPoint>
+                                    <MultiBinding Converter="{StaticResource ScalePointConverter}">
+                                        <Binding Path="CuttingLineEnd"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </local:CuttingLine.EndPoint>
+                            </local:CuttingLine>
 
                             <local:DecoratorsControl ItemsSource="{TemplateBinding Decorators}"
                                                      ItemContainerTheme="{TemplateBinding DecoratorContainerStyle}"
@@ -102,7 +129,7 @@
                                                      ClipToBounds="False">
                                 <local:DecoratorsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <local:NodifyCanvas Extent="{Binding DecoratorsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}}"/>
+                                        <local:NodifyCanvas Extent="{Binding DecoratorsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}}" />
                                     </ItemsPanelTemplate>
                                 </local:DecoratorsControl.ItemsPanel>
                             </local:DecoratorsControl>
@@ -111,10 +138,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style Selector="^ /template/ ItemsControl#PART_ConnectionsItemsControl">
+        <Style Selector="^ /template/ ItemsControl#PART_ConnectionsHost">
             <Setter Property="ZIndex" Value="-1" />
         </Style>
-        <Style Selector="^:connections-on-top /template/ ItemsControl#PART_ConnectionsItemsControl">
+        <Style Selector="^:connections-on-top /template/ ItemsControl#PART_ConnectionsHost">
             <Setter Property="ZIndex" Value="0" />
         </Style>
     </ControlTheme>

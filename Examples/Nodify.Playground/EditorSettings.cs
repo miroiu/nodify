@@ -179,6 +179,11 @@ namespace Nodify.Playground
                     "Auto panning tick rate: ",
                     "How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.AllowCuttingCancellation,
+                    val => Instance.AllowCuttingCancellation = val,
+                    "Allow cutting cancellation: ",
+                    "Right click to cancel cutting."),
+                new ProxySettingViewModel<bool>(
                     () => Instance.AllowDraggingCancellation,
                     val => Instance.AllowDraggingCancellation = val,
                     "Allow dragging cancellation: ",
@@ -193,6 +198,11 @@ namespace Nodify.Playground
                     val => Instance.EnableSnappingCorrection = val,
                     "Enable snapping correction: ",
                     "Correct the final position when moving a selection"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableCuttingLinePreview,
+                    val => Instance.EnableCuttingLinePreview = val,
+                    "Enable cutting line preview: ",
+                    "Applies custom connection style on intersection (hurts performance due to hit testing)."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableConnectorOptimizations,
                     val => Instance.EnableConnectorOptimizations = val,
@@ -239,6 +249,8 @@ namespace Nodify.Playground
                     "Enable sticky connectors: ",
                     "The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"),
             };
+
+            EnableCuttingLinePreview = true;
         }
 
         public static EditorSettings Instance { get; } = new EditorSettings();
@@ -478,6 +490,12 @@ namespace Nodify.Playground
             set => NodifyEditor.AutoPanningTickRate = value;
         }
 
+        public bool AllowCuttingCancellation
+        {
+            get => CuttingLine.AllowCuttingCancellation;
+            set => CuttingLine.AllowCuttingCancellation = value;
+        }
+
         public bool AllowDraggingCancellation
         {
             get => ItemContainer.AllowDraggingCancellation;
@@ -494,6 +512,12 @@ namespace Nodify.Playground
         {
             get => NodifyEditor.EnableSnappingCorrection;
             set => NodifyEditor.EnableSnappingCorrection = value;
+        }
+
+        public bool EnableCuttingLinePreview
+        {
+            get => NodifyEditor.EnableCuttingLinePreview;
+            set => NodifyEditor.EnableCuttingLinePreview = value;
         }
 
         public bool EnableConnectorOptimizations

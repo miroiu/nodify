@@ -6,7 +6,8 @@ namespace Nodify.Playground
     {
         Default,
         PanOnly,
-        SelectOnly
+        SelectOnly,
+        CutOnly
     }
 
     public enum EditorGesturesMappings
@@ -25,12 +26,22 @@ namespace Nodify.Playground
             {
                 case EditorInputMode.PanOnly:
                     mappings.Editor.Selection.Apply(EditorGestures.SelectionGestures.None);
+                    mappings.Editor.Cutting.Value = MultiGesture.None;
                     mappings.ItemContainer.Selection.Apply(EditorGestures.SelectionGestures.None);
                     mappings.ItemContainer.Drag.Value = MultiGesture.None;
                     mappings.Connector.Connect.Value = MultiGesture.None;
                     break;
                 case EditorInputMode.SelectOnly:
                     mappings.Editor.Pan.Value = MultiGesture.None;
+                    mappings.Editor.Cutting.Value = MultiGesture.None;
+                    mappings.ItemContainer.Drag.Value = MultiGesture.None;
+                    mappings.Connector.Connect.Value = MultiGesture.None;
+                    break;
+                case EditorInputMode.CutOnly:
+                    mappings.Editor.Cutting.Value = new MouseGesture(MouseAction.LeftClick);
+                    mappings.Editor.Selection.Apply(EditorGestures.SelectionGestures.None);
+                    mappings.Editor.Pan.Value = MultiGesture.None;
+                    mappings.ItemContainer.Selection.Apply(EditorGestures.SelectionGestures.None);
                     mappings.ItemContainer.Drag.Value = MultiGesture.None;
                     mappings.Connector.Connect.Value = MultiGesture.None;
                     break;

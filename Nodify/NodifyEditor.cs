@@ -18,14 +18,17 @@ namespace Nodify
     /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, zoom and select.
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
+    [TemplatePart(Name = ElementConnectionsHost, Type = typeof(FrameworkElement))]
     [StyleTypedProperty(Property = nameof(ItemContainerTheme), StyleTargetType = typeof(ItemContainer))]
     [StyleTypedProperty(Property = nameof(DecoratorContainerStyle), StyleTargetType = typeof(DecoratorContainer))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
+    [StyleTypedProperty(Property = nameof(CuttingLineStyle), StyleTargetType = typeof(CuttingLine))]
     [ContentProperty(nameof(Decorators))]
     [DefaultProperty(nameof(Decorators))]
     public partial class NodifyEditor : MultiSelector
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
+        protected const string ElementConnectionsHost = "PART_ConnectionsHost";
 
         #region Viewport
 
@@ -299,6 +302,7 @@ namespace Nodify
         public static readonly StyledProperty<DataTemplate> DecoratorTemplateProperty = AvaloniaProperty.Register<NodifyEditor, DataTemplate>(nameof(DecoratorTemplate));
         public static readonly StyledProperty<DataTemplate> PendingConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor, DataTemplate>(nameof(PendingConnectionTemplate));
         public static readonly StyledProperty<ControlTheme> SelectionRectangleStyleProperty = AvaloniaProperty.Register<NodifyEditor, ControlTheme>(nameof(SelectionRectangleStyle));
+        public static readonly StyledProperty<ControlTheme> CuttingLineStyleProperty = AvaloniaProperty.Register<NodifyEditor, ControlTheme>(nameof(CuttingLineStyle));
         public static readonly StyledProperty<ControlTheme> DecoratorContainerStyleProperty = AvaloniaProperty.Register<NodifyEditor, ControlTheme>(nameof(DecoratorContainerStyle));
 
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -396,6 +400,15 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets the style to use for the cutting line.
+        /// </summary>
+        public ControlTheme CuttingLineStyle
+        {
+            get => (ControlTheme)GetValue(CuttingLineStyleProperty);
+            set => SetValue(CuttingLineStyleProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the style to use for the <see cref="DecoratorContainer"/>.
         /// </summary>
         public ControlTheme DecoratorContainerStyle
@@ -412,6 +425,12 @@ namespace Nodify
 
         public static readonly DirectProperty<NodifyEditor, bool> IsSelectingProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsSelecting), x => x.IsSelecting);
 
+        public static readonly DirectProperty<NodifyEditor, Point> CuttingLineStartProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Point>(nameof(CuttingLineStart), x => x.CuttingLineStart);
+
+        public static readonly DirectProperty<NodifyEditor, Point> CuttingLineEndProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Point>(nameof(CuttingLineEnd), x => x.CuttingLineEnd);
+
+        public static readonly DirectProperty<NodifyEditor, bool> IsCuttingProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsCutting), x => x.IsCutting);
+
         public static readonly DirectProperty<NodifyEditor, bool> IsPanningProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, bool>(nameof(IsPanning), x => x.IsPanning);
 
         public static readonly DirectProperty<NodifyEditor, Point> MouseLocationProperty = AvaloniaProperty.RegisterDirect<NodifyEditor, Point>(nameof(MouseLocation), x => x.MouseLocation);
@@ -422,10 +441,10 @@ namespace Nodify
             if ((bool)e.NewValue == true)
                 editor.OnItemsSelectStarted();
             else
-                editor.OnItemSelectCompleted();
+                editor.OnItemsSelectCompleted();
         }
 
-        private void OnItemSelectCompleted()
+        private void OnItemsSelectCompleted()
         {
             if (ItemsSelectCompletedCommand?.CanExecute(DataContext) ?? false)
                 ItemsSelectCompletedCommand.Execute(DataContext);
@@ -435,6 +454,27 @@ namespace Nodify
         {
             if (ItemsSelectStartedCommand?.CanExecute(DataContext) ?? false)
                 ItemsSelectStartedCommand.Execute(DataContext);
+        }
+
+        private static void OnIsCuttingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = (NodifyEditor)d;
+            if ((bool)e.NewValue == true)
+                editor.OnCuttingStarted();
+            else
+                editor.OnCuttingCompleted();
+        }
+
+        private void OnCuttingCompleted()
+        {
+            if (CuttingCompletedCommand?.CanExecute(DataContext) ?? false)
+                CuttingCompletedCommand.Execute(DataContext);
+        }
+
+        private void OnCuttingStarted()
+        {
+            if (CuttingStartedCommand?.CanExecute(DataContext) ?? false)
+                CuttingStartedCommand.Execute(DataContext);
         }
 
         private Rect selectedArea;
@@ -455,6 +495,36 @@ namespace Nodify
         {
             get => isSelecting;
             internal set => SetAndRaise(IsSelectingProperty, ref isSelecting, value);
+        }
+
+        private Point cuttingLineStart;
+        /// <summary>
+        /// Gets the start point of the <see cref="CuttingLine"/> while <see cref="IsCutting"/> is true.
+        /// </summary>
+        public Point CuttingLineStart
+        {
+            get => cuttingLineStart;
+            internal set => SetAndRaise(CuttingLineStartProperty, ref cuttingLineStart, value);
+        }
+
+        private Point cuttingLineEnd;
+        /// <summary>
+        /// Gets the end point of the <see cref="CuttingLine"/> while <see cref="IsCutting"/> is true.
+        /// </summary>
+        public Point CuttingLineEnd
+        {
+            get => cuttingLineEnd;
+            internal set => SetAndRaise(CuttingLineEndProperty, ref cuttingLineEnd, value);
+        }
+
+        private bool isCutting;
+        /// <summary>
+        /// Gets a value that indicates whether a cutting operation is in progress.
+        /// </summary>
+        public bool IsCutting
+        {
+            get => isCutting;
+            internal set => SetAndRaise(IsCuttingProperty, ref isCutting, value);
         }
 
         private bool isPanning;
@@ -595,6 +665,8 @@ namespace Nodify
         public static readonly StyledProperty<ICommand> ItemsDragCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor, ICommand>(nameof(ItemsDragCompletedCommand));
         public static readonly StyledProperty<ICommand> ItemsSelectStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor, ICommand>(nameof(ItemsSelectStartedCommand));
         public static readonly StyledProperty<ICommand> ItemsSelectCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor, ICommand>(nameof(ItemsSelectCompletedCommand));
+        public static readonly StyledProperty<ICommand> CuttingStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor, ICommand>(nameof(CuttingStartedCommand));
+        public static readonly StyledProperty<ICommand> CuttingCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor, ICommand>(nameof(CuttingCompletedCommand));
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
@@ -672,6 +744,20 @@ namespace Nodify
             set => SetValue(ItemsSelectCompletedCommandProperty, value);
         }
 
+        /// <summary>Invoked when a cutting operation is started.</summary>
+        public ICommand? CuttingStartedCommand
+        {
+            get => (ICommand?)GetValue(CuttingStartedCommandProperty);
+            set => SetValue(CuttingStartedCommandProperty, value);
+        }
+
+        /// <summary>Invoked when a cutting operation is completed.</summary>
+        public ICommand? CuttingCompletedCommand
+        {
+            get => (ICommand?)GetValue(CuttingCompletedCommandProperty);
+            set => SetValue(CuttingCompletedCommandProperty, value);
+        }
+
         #endregion
 
         #region Fields
@@ -719,6 +805,19 @@ namespace Nodify
         public static bool EnableDraggingContainersOptimizations { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets whether the cutting line should apply the preview style to the interesected elements.
+        /// </summary>
+        /// <remarks>
+        /// This may hurt performance because intersection must be calculated on mouse move.
+        /// </remarks>
+        public static bool EnableCuttingLinePreview { get; set; } = false;
+
+        /// <summary>
+        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement">.
+        /// </summary>
+        public static readonly HashSet<Type> CuttingConnectionTypes = new HashSet<Type>();
+
+        /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
         /// </summary>
         public bool IsBulkUpdatingItems { get; protected set; }
@@ -727,6 +826,11 @@ namespace Nodify
         /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
         /// </summary>
         protected internal ItemsPresenter ItemsHost { get; private set; } = default!;
+
+        /// <summary>
+        /// Gets the element that holds all the <see cref="BaseConnection"/>s and custom connections.
+        /// </summary>
+        protected internal UIElement ConnectionsHost { get; private set; } = default!;
 
         private IDraggingStrategy? _draggingStrategy;
         private DispatcherTimer? _autoPanningTimer;
@@ -769,6 +873,7 @@ namespace Nodify
             MinViewportZoomProperty.Changed.AddClassHandler<NodifyEditor>(OnMinViewportZoomChanged);
             MaxViewportZoomProperty.Changed.AddClassHandler<NodifyEditor>(OnMaxViewportZoomChanged);
             SelectedItemsProperty.Changed.AddClassHandler<NodifyEditor>(OnSelectedItemsSourceChanged);
+            IsCuttingProperty.Changed.AddClassHandler<NodifyEditor>(OnIsCuttingChanged);
 
             EditorCommands.Register(typeof(NodifyEditor));
         }
@@ -804,7 +909,8 @@ namespace Nodify
         {
             base.OnApplyTemplate(e);
 
-            ItemsHost = e.NameScope.Find<ItemsPresenter>("PART_ItemsPresenter") ?? throw new InvalidOperationException("PART_ItemsHost is missing or is not of type Panel.");
+            ItemsHost = e.NameScope.Find<ItemsPresenter>("PART_ItemsPresenter") ?? throw new InvalidOperationException($"{ElementItemsHost} is missing or is not of type Panel.");
+            ConnectionsHost = e.NameScope.Find<ItemsControl>(ElementConnectionsHost) ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
 
@@ -1037,9 +1143,14 @@ namespace Nodify
 
         private void OnRemoveConnection(object? sender, ConnectionEventArgs e)
         {
-            if (RemoveConnectionCommand?.CanExecute(e.Connection) ?? false)
+            OnRemoveConnection(e.Connection);
+        }
+        
+        protected void OnRemoveConnection(object? dataContext)
+        {
+            if (RemoveConnectionCommand?.CanExecute(dataContext) ?? false)
             {
-                RemoveConnectionCommand.Execute(e.Connection);
+                RemoveConnectionCommand.Execute(dataContext);
             }
         }
 
@@ -1452,6 +1563,62 @@ namespace Nodify
 
                 e.Handled = true;
             }
+        }
+
+        #endregion
+
+        #region Cutting
+
+        /// <summary>
+        /// Starts the cutting operation at the specified location. Call <see cref="EndCutting"/> to finish cutting.
+        /// </summary>
+        protected internal void StartCutting(Point location)
+        {
+            CuttingLineStart = location;
+            CuttingLineEnd = location;
+            IsCutting = true;
+        }
+
+        /// <summary>
+        /// Cancels the cutting operation.
+        /// </summary>
+        protected internal void CancelCutting()
+        {
+            if (IsCutting)
+            {
+                IsCutting = false;
+            }
+        }
+
+        /// <summary>
+        /// Ends the cutting operation at the specified location.
+        /// </summary>
+        protected internal void EndCutting(Point location)
+        {
+            CuttingLineEnd = location;
+
+            var lineGeometry = new LineGeometry(CuttingLineStart, CuttingLineEnd);
+            var connections = ConnectionsHost.GetIntersectingElements(lineGeometry, CuttingConnectionTypes);
+
+            if (RemoveConnectionCommand != null)
+            {
+                foreach (var connection in connections)
+                {
+                    OnRemoveConnection(connection.DataContext);
+                }
+            }
+            else
+            {
+                foreach (var connection in connections)
+                {
+                    if (connection is BaseConnection bc)
+                    {
+                        bc.OnDisconnect();
+                    }
+                }
+            }
+
+            IsCutting = false;
         }
 
         #endregion

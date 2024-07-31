@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <ControlTheme TargetType="{x:Type local:CuttingLine}" x:Key="{x:Type local:CuttingLine}">
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="StrokeDashArray"
+                Value="2,1" />
+        <Setter Property="Stroke"
+                Value="Red" />
+        <Setter Property="Fill"
+                Value="Red" />
+    </ControlTheme>
+    
+</ResourceDictionary>

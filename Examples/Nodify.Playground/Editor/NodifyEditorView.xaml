@@ -44,6 +44,8 @@
         <SolidColorBrush x:Key="SquareConnectorColor" Color="MediumSlateBlue" />
         <SolidColorBrush x:Key="TriangleConnectorColor" Color="MediumVioletRed" />
         
+        <!-- <UIElement x:Key="ConnectionAnimationPlaceholder" Opacity="1" /> -->
+
         <!-- <Storyboard x:Key="HighlightConnection"> -->
         <!--     <DoubleAnimation Storyboard.TargetProperty="StrokeThickness"  -->
         <!--                      Duration="0:0:0.3" From="3" To="6"  /> -->
@@ -52,7 +54,8 @@
         <!--                      Duration="0:0:0.3" From="1" To="0.3"  /> -->
         <!-- </Storyboard> -->
 
-        <ControlTheme x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}">
+        <ControlTheme x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}"
+               BasedOn="{StaticResource {x:Type nodify:BaseConnection}}">
             <Setter Property="(Interaction.Behaviors)">
                 <BehaviorCollectionTemplate>
                     <BehaviorCollection>
@@ -166,6 +169,15 @@
                 </BehaviorCollectionTemplate>
             </Setter>
         </ControlTheme>
+
+        <ControlTheme x:Key="CuttingLineStyle"
+               TargetType="{x:Type nodify:CuttingLine}"
+               BasedOn="{StaticResource {x:Type nodify:CuttingLine}}">
+            <Setter Property="StrokeDashArray"
+                    Value="1,1" />
+            <Setter Property="StrokeThickness"
+                    Value="2" />
+        </ControlTheme>
     </UserControl.Resources>
 
     <Grid>
@@ -190,7 +202,8 @@
                              DisplayConnectionsOnTop="{Binding DisplayConnectionsOnTop, Source={x:Static local:EditorSettings.Instance}}"
                              BringIntoViewSpeed="{Binding BringIntoViewSpeed, Source={x:Static local:EditorSettings.Instance}}"
                              BringIntoViewMaxDuration="{Binding BringIntoViewMaxDuration, Source={x:Static local:EditorSettings.Instance}}"
-                             SelectionRectangleStyle="{StaticResource SelectionRectangleStyle}">
+                             SelectionRectangleStyle="{StaticResource SelectionRectangleStyle}"
+                             CuttingLineStyle="{StaticResource CuttingLineStyle}">
             <nodify:NodifyEditor.Theme>
                 <ControlTheme TargetType="{x:Type nodify:NodifyEditor}"
                        BasedOn="{StaticResource {x:Type nodify:NodifyEditor}}">

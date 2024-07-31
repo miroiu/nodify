@@ -31,7 +31,11 @@ namespace Nodify
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (gestures.Selection.Select.Matches(e.Source, e))
+            if (gestures.Cutting.Matches(e.Source, e))
+            {
+                PushState(new EditorCuttingState(Editor), e);
+            }
+            else if (gestures.Selection.Select.Matches(e.Source, e))
             {
                 SelectionType selectionType = GetSelectionType(e);
                 var selecting = new EditorSelectingState(Editor, selectionType);

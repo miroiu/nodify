@@ -2,7 +2,16 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <ControlTheme TargetType="{x:Type local:Connection}" x:Key="{x:Type local:Connection}">
+    <ControlTheme TargetType="{x:Type local:BaseConnection}" x:Key="{x:Type local:BaseConnection}">
+        <Setter Property="Opacity" Value="1" />
+        <Style Selector="^[(local|CuttingLine.IsOverElement)=true]">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme TargetType="{x:Type local:Connection}"
+           x:Key="{x:Type local:Connection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -13,7 +22,9 @@
                 Value="20" />
     </ControlTheme>
 
-    <ControlTheme TargetType="{x:Type local:LineConnection}" x:Key="{x:Type local:LineConnection}">
+    <ControlTheme TargetType="{x:Type local:LineConnection}"
+           x:Key="{x:Type local:LineConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -24,7 +35,9 @@
                 Value="30" />
     </ControlTheme>
 
-    <ControlTheme TargetType="{x:Type local:CircuitConnection}" x:Key="{x:Type local:CircuitConnection}">
+    <ControlTheme TargetType="{x:Type local:CircuitConnection}"
+           x:Key="{x:Type local:CircuitConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
@@ -35,7 +48,9 @@
                 Value="30" />
     </ControlTheme>
 
-    <ControlTheme TargetType="{x:Type local:StepConnection}" x:Key="{x:Type local:StepConnection}">
+    <ControlTheme TargetType="{x:Type local:StepConnection}"
+           x:Key="{x:Type local:StepConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"

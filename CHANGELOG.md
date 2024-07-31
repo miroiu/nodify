@@ -6,6 +6,15 @@
 > - Features:
 > - Bugfixes:
 
+#### **Version 6.3.0**
+
+> - Features:
+>	- Added a CuttingLine control that removes intersecting connections
+>	- Added CuttingLineStyle, CuttingStartedCommand, CuttingCompletedCommand, IsCutting, EnableCuttingLinePreview and CuttingConnectionTypes to NodifyEditor
+>	- Added EditorGestures.Editor.Cutting and EditorGestures.Editor.CancelAction
+> - Bugfixes:
+>	- Fixed connection styles not inheriting from the BaseConnection style
+
 #### **Version 6.2.0**
 
 > - Features:

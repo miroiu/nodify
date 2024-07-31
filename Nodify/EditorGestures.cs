@@ -110,16 +110,25 @@ namespace Nodify
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
+                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
                 ZoomOut = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ResetViewportLocation = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
+                CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
+
+                // Avalonia doesn't support Geometry Hit Testing, so Cutting can't work, hence disable it
+                // Follow https://github.com/AvaloniaUI/Avalonia/issues/16549 for more information
+                Cutting = new KeyGesture(Key.None);
             }
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
             public SelectionGestures Selection { get; }
+
+            /// <summary>Gesture used to start cutting connections.</summary>
+            public InputGestureRef Cutting { get; }
 
             /// <summary>Gesture used to start panning.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
@@ -145,17 +154,23 @@ namespace Nodify
             /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>+<see cref="Key.Home"/>.</remarks>
             public InputGestureRef FitToScreen { get; }
 
+            /// <summary>Gesture to cancel the current operation.</summary>
+            /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="Key.Escape"/>.</remarks>
+            public InputGestureRef CancelAction { get; }
+
             /// <summary>Copies from the specified gestures.</summary>
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(NodifyEditorGestures gestures)
             {
                 Selection.Apply(gestures.Selection);
+                Cutting.Value = gestures.Cutting.Value;
                 Pan.Value = gestures.Pan.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
                 ZoomOut.Value = gestures.ZoomOut.Value;
                 ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;
                 FitToScreen.Value = gestures.FitToScreen.Value;
+                CancelAction.Value = gestures.CancelAction.Value;
             }
         }
 

@@ -22,6 +22,14 @@ internal static class VisualTreeHelper
             topMost = GetParent(topMost);
         }
     }
+
+    public static void HitTest(UIElement element,
+        Func<DependencyObject, HitTestFilterBehavior> filter,
+        Func<HitTestResult, HitTestResultBehavior> test,
+        GeometryHitTestParameters parameters)
+    {
+        // unfortunately this is not supported in Avalonia
+    }
 }
 
 internal class PointHitTestParameters
@@ -38,7 +46,19 @@ internal enum HitTestFilterBehavior
 {
     Continue,
     ContinueSkipSelfAndChildren,
-    Stop
+    Stop,
+    ContinueSkipChildren,
+    ContinueSkipSelf
+}
+
+internal class GeometryHitTestParameters
+{
+    public GeometryHitTestParameters(Geometry geometry)
+    {
+        Geometry = geometry;
+    }
+
+    public Geometry Geometry { get; }
 }
 
 internal enum HitTestResultBehavior

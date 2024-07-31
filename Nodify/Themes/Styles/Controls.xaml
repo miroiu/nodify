@@ -10,6 +10,7 @@
         <MergeResourceInclude Source="/Themes/Styles/NodeOutput.xaml" />
         <MergeResourceInclude Source="/Themes/Styles/Connection.xaml" />
         <MergeResourceInclude Source="/Themes/Styles/PendingConnection.xaml" />
+        <MergeResourceInclude Source="/Themes/Styles/CuttingLine.xaml" />
 
         <!--CORE-->
         <MergeResourceInclude Source="/Themes/Styles/ItemContainer.xaml" />
