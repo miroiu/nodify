@@ -1,22 +1,29 @@
 - [Alignment Enum](#alignment-enum)
+- [AllGestures Class](#allgestures-class)
+- [AnyGesture Class](#anygesture-class)
+- [ArrowHeadEnds Enum](#arrowheadends-enum)
+- [ArrowHeadShape Enum](#arrowheadshape-enum)
 - [BaseConnection Class](#baseconnection-class)
 - [BoxValue Class](#boxvalue-class)
 - [CircuitConnection Class](#circuitconnection-class)
 - [Connection Class](#connection-class)
-- [Connection Class](#connection-class)
 - [ConnectionDirection Enum](#connectiondirection-enum)
 - [ConnectionEventArgs Class](#connectioneventargs-class)
 - [ConnectionEventHandler Delegate](#connectioneventhandler-delegate)
+- [ConnectionGestures Class](#connectiongestures-class)
 - [ConnectionOffsetMode Enum](#connectionoffsetmode-enum)
-- [Connector Class](#connector-class)
 - [Connector Class](#connector-class)
 - [ConnectorEventArgs Class](#connectoreventargs-class)
 - [ConnectorEventHandler Delegate](#connectoreventhandler-delegate)
+- [ConnectorGestures Class](#connectorgestures-class)
+- [ConnectorPosition Enum](#connectorposition-enum)
 - [ContainerDefaultState Class](#containerdefaultstate-class)
 - [ContainerDraggingState Class](#containerdraggingstate-class)
 - [ContainerState Class](#containerstate-class)
+- [CuttingLine Class](#cuttingline-class)
 - [DecoratorContainer Class](#decoratorcontainer-class)
 - [EditorCommands Class](#editorcommands-class)
+- [EditorCuttingState Class](#editorcuttingstate-class)
 - [EditorDefaultState Class](#editordefaultstate-class)
 - [EditorGestures Class](#editorgestures-class)
 - [EditorPanningState Class](#editorpanningstate-class)
@@ -25,37 +32,43 @@
 - [GeneratedInternalTypeHelper Class](#generatedinternaltypehelper-class)
 - [GroupingMovementMode Enum](#groupingmovementmode-enum)
 - [GroupingNode Class](#groupingnode-class)
-- [GroupingNode Class](#groupingnode-class)
+- [GroupingNodeGestures Class](#groupingnodegestures-class)
 - [INodifyCanvasItem Interface](#inodifycanvasitem-interface)
+- [InputGestureRef Class](#inputgestureref-class)
 - [ItemContainer Class](#itemcontainer-class)
-- [ItemContainer Class](#itemcontainer-class)
+- [ItemContainerGestures Class](#itemcontainergestures-class)
 - [KnotNode Class](#knotnode-class)
 - [LineConnection Class](#lineconnection-class)
 - [Match Enum](#match-enum)
+- [Minimap Class](#minimap-class)
+- [MinimapGestures Class](#minimapgestures-class)
+- [MinimapItem Class](#minimapitem-class)
 - [MultiGesture Class](#multigesture-class)
 - [Node Class](#node-class)
 - [NodeInput Class](#nodeinput-class)
 - [NodeOutput Class](#nodeoutput-class)
 - [NodifyCanvas Class](#nodifycanvas-class)
 - [NodifyEditor Class](#nodifyeditor-class)
+- [NodifyEditorGestures Class](#nodifyeditorgestures-class)
 - [PendingConnection Class](#pendingconnection-class)
 - [PendingConnectionEventArgs Class](#pendingconnectioneventargs-class)
 - [PendingConnectionEventHandler Delegate](#pendingconnectioneventhandler-delegate)
 - [PreviewLocationChanged Delegate](#previewlocationchanged-delegate)
 - [ResizeEventArgs Class](#resizeeventargs-class)
 - [ResizeEventHandler Delegate](#resizeeventhandler-delegate)
-- [Selection Class](#selection-class)
+- [SelectionGestures Class](#selectiongestures-class)
 - [SelectionHelper Class](#selectionhelper-class)
 - [SelectionType Enum](#selectiontype-enum)
 - [StateNode Class](#statenode-class)
+- [StepConnection Class](#stepconnection-class)
+- [ZoomEventArgs Class](#zoomeventargs-class)
+- [ZoomEventHandler Delegate](#zoomeventhandler-delegate)
 
 ## Alignment Enum
 
 **Namespace:** Nodify
 
 **Assembly:** Nodify
-
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [Alignment](#alignment-enum)
 
 ```csharp
 public enum Alignment
@@ -66,62 +79,174 @@ public enum Alignment
 #### Bottom
 
 ```csharp
-public const Alignment Bottom = 2;
+Bottom = 2;
 ```
-
-**Field Value**
-
-[Alignment](#alignment-enum)
 
 #### Center
 
 ```csharp
-public const Alignment Center = 5;
+Center = 5;
 ```
-
-**Field Value**
-
-[Alignment](#alignment-enum)
 
 #### Left
 
 ```csharp
-public const Alignment Left = 1;
+Left = 1;
 ```
-
-**Field Value**
-
-[Alignment](#alignment-enum)
 
 #### Middle
 
 ```csharp
-public const Alignment Middle = 4;
+Middle = 4;
 ```
-
-**Field Value**
-
-[Alignment](#alignment-enum)
 
 #### Right
 
 ```csharp
-public const Alignment Right = 3;
+Right = 3;
 ```
-
-**Field Value**
-
-[Alignment](#alignment-enum)
 
 #### Top
 
 ```csharp
-public const Alignment Top = 0;
+Top = 0;
 ```
 
-**Field Value**
+## AllGestures Class
 
-[Alignment](#alignment-enum)
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture) → [MultiGesture](#multigesture-class) → [AllGestures](#allgestures-class)
+
+```csharp
+public sealed class AllGestures : MultiGesture
+```
+
+### Constructors
+
+#### AllGestures(InputGesture[])
+
+```csharp
+public AllGestures(InputGesture[] gestures);
+```
+
+**Parameters**
+
+`gestures` [InputGesture[]](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture[])
+
+## AnyGesture Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture) → [MultiGesture](#multigesture-class) → [AnyGesture](#anygesture-class)
+
+```csharp
+public sealed class AnyGesture : MultiGesture
+```
+
+### Constructors
+
+#### AnyGesture(InputGesture[])
+
+```csharp
+public AnyGesture(InputGesture[] gestures);
+```
+
+**Parameters**
+
+`gestures` [InputGesture[]](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture[])
+
+## ArrowHeadEnds Enum
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**References:** [BaseConnection](#baseconnection-class)
+
+The end at which the arrow head is drawn.
+
+```csharp
+public enum ArrowHeadEnds
+```
+
+### Fields
+
+#### Both
+
+Arrow heads at both ends.
+
+```csharp
+Both = 2;
+```
+
+#### End
+
+Arrow head at end.
+
+```csharp
+End = 1;
+```
+
+#### None
+
+No arrow head.
+
+```csharp
+None = 3;
+```
+
+#### Start
+
+Arrow head at start.
+
+```csharp
+Start = 0;
+```
+
+## ArrowHeadShape Enum
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**References:** [BaseConnection](#baseconnection-class)
+
+The shape of the arrowhead.
+
+```csharp
+public enum ArrowHeadShape
+```
+
+### Fields
+
+#### Arrowhead
+
+The default arrowhead.
+
+```csharp
+Arrowhead = 0;
+```
+
+#### Ellipse
+
+An ellipse.
+
+```csharp
+Ellipse = 1;
+```
+
+#### Rectangle
+
+A rectangle.
+
+```csharp
+Rectangle = 2;
+```
 
 ## BaseConnection Class
 
@@ -133,7 +258,7 @@ public const Alignment Top = 0;
 
 **Derived:** [LineConnection](#lineconnection-class), [Connection](#connection-class)
 
-**References:** [ConnectionEventHandler](#connectioneventhandler-delegate), [ConnectionOffsetMode](#connectionoffsetmode-enum), [ConnectionDirection](#connectiondirection-enum), [LineConnection](#lineconnection-class), [ConnectionEventArgs](#connectioneventargs-class), [NodifyEditor](#nodifyeditor-class)
+**References:** [ConnectionEventHandler](#connectioneventhandler-delegate), [ConnectionDirection](#connectiondirection-enum), [ArrowHeadShape](#arrowheadshape-enum), [ConnectionOffsetMode](#connectionoffsetmode-enum), [ArrowHeadEnds](#arrowheadends-enum), [CuttingLine](#cuttingline-class), [LineConnection](#lineconnection-class), [ConnectionEventArgs](#connectioneventargs-class), [NodifyEditor](#nodifyeditor-class)
 
 Represents the base class for shapes that are drawn from a [BaseConnection.Source](#baseconnection-class#source) point to a [BaseConnection.Target](#baseconnection-class#target) point.
 
@@ -151,126 +276,6 @@ protected BaseConnection();
 
 ### Fields
 
-#### ArrowSizeProperty
-
-```csharp
-public static DependencyProperty ArrowSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DirectionProperty
-
-```csharp
-public static DependencyProperty DirectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisconnectCommandProperty
-
-```csharp
-public static DependencyProperty DisconnectCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisconnectEvent
-
-```csharp
-public static RoutedEvent DisconnectEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### OffsetModeProperty
-
-```csharp
-public static DependencyProperty OffsetModeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SourceOffsetProperty
-
-```csharp
-public static DependencyProperty SourceOffsetProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SourceProperty
-
-```csharp
-public static DependencyProperty SourceProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SpacingProperty
-
-```csharp
-public static DependencyProperty SpacingProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SplitCommandProperty
-
-```csharp
-public static DependencyProperty SplitCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SplitEvent
-
-```csharp
-public static RoutedEvent SplitEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### TargetOffsetProperty
-
-```csharp
-public static DependencyProperty TargetOffsetProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### TargetProperty
-
-```csharp
-public static DependencyProperty TargetProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### ZeroVector
 
 Gets a vector that has its coordinates set to 0.
@@ -284,6 +289,30 @@ protected static Vector ZeroVector;
 [Vector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Vector)
 
 ### Properties
+
+#### ArrowEnds
+
+Gets or sets the arrowhead ends.
+
+```csharp
+public ArrowHeadEnds ArrowEnds { get; set; }
+```
+
+**Property Value**
+
+[ArrowHeadEnds](#arrowheadends-enum)
+
+#### ArrowShape
+
+Gets or sets the arrowhead ends.
+
+```csharp
+public ArrowHeadShape ArrowShape { get; set; }
+```
+
+**Property Value**
+
+[ArrowHeadShape](#arrowheadshape-enum)
 
 #### ArrowSize
 
@@ -309,7 +338,7 @@ protected override Geometry DefiningGeometry { get; set; }
 
 #### Direction
 
-Gets or sets the direction in which this connection is oriented.
+Gets or sets the direction in which this connection is flowing.
 
 ```csharp
 public ConnectionDirection Direction { get; set; }
@@ -319,10 +348,34 @@ public ConnectionDirection Direction { get; set; }
 
 [ConnectionDirection](#connectiondirection-enum)
 
+#### DirectionalArrowsCount
+
+Gets or sets the number of arrows to be drawn on the line in the direction of the connection (see [BaseConnection.Direction](#baseconnection-class#direction)).
+
+```csharp
+public uint DirectionalArrowsCount { get; set; }
+```
+
+**Property Value**
+
+[UInt32](https://docs.microsoft.com/en-us/dotnet/api/System.UInt32)
+
+#### DirectionalArrowsOffset
+
+Gets or sets the offset of the arrows drawn by the [BaseConnection.DirectionalArrowsCount](#baseconnection-class#directionalarrowscount) (value is clamped between 0 and 1).
+
+```csharp
+public double DirectionalArrowsOffset { get; set; }
+```
+
+**Property Value**
+
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
 #### DisconnectCommand
 
-Removes this connection. Triggered by Nodify.EditorGestures.Connection.Disconnect gesture.
-            Parameter is the location where the disconnect ocurred.
+Removes this connection. Triggered by Nodify.EditorGestures.ConnectionGestures.Disconnect gesture.
+Parameter is the location where the disconnect ocurred.
 
 ```csharp
 public ICommand DisconnectCommand { get; set; }
@@ -332,17 +385,67 @@ public ICommand DisconnectCommand { get; set; }
 
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
 
-#### OffsetMode
-
-Gets or sets the [ConnectionOffsetMode](#connectionoffsetmode-enum) to apply when drawing the connection.
+#### FontFamily
 
 ```csharp
-public ConnectionOffsetMode OffsetMode { get; set; }
+public FontFamily FontFamily { get; set; }
 ```
 
 **Property Value**
 
-[ConnectionOffsetMode](#connectionoffsetmode-enum)
+[FontFamily](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.FontFamily)
+
+#### FontSize
+
+```csharp
+public double FontSize { get; set; }
+```
+
+**Property Value**
+
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+#### FontStretch
+
+```csharp
+public FontStretch FontStretch { get; set; }
+```
+
+**Property Value**
+
+[FontStretch](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FontStretch)
+
+#### FontStyle
+
+```csharp
+public FontStyle FontStyle { get; set; }
+```
+
+**Property Value**
+
+[FontStyle](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FontStyle)
+
+#### FontWeight
+
+```csharp
+public FontWeight FontWeight { get; set; }
+```
+
+**Property Value**
+
+[FontWeight](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FontWeight)
+
+#### Foreground
+
+The brush used to render the [BaseConnection.Text](#baseconnection-class#text).
+
+```csharp
+public Brush Foreground { get; set; }
+```
+
+**Property Value**
+
+[Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
 
 #### Source
 
@@ -368,6 +471,30 @@ public Size SourceOffset { get; set; }
 
 [Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)
 
+#### SourceOffsetMode
+
+Gets or sets the [ConnectionOffsetMode](#connectionoffsetmode-enum) to apply to the [BaseConnection.Source](#baseconnection-class#source) when drawing the connection.
+
+```csharp
+public ConnectionOffsetMode SourceOffsetMode { get; set; }
+```
+
+**Property Value**
+
+[ConnectionOffsetMode](#connectionoffsetmode-enum)
+
+#### SourceOrientation
+
+Gets or sets the orientation in which this connection is flowing.
+
+```csharp
+public Orientation SourceOrientation { get; set; }
+```
+
+**Property Value**
+
+[Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
 #### Spacing
 
 The distance between the start point and the where the angle breaks.
@@ -382,8 +509,8 @@ public double Spacing { get; set; }
 
 #### SplitCommand
 
-Splits the connection. Triggered by Nodify.EditorGestures.Connection.Split gesture.
-            Parameter is the location where the splitting ocurred.
+Splits the connection. Triggered by Nodify.EditorGestures.ConnectionGestures.Split gesture.
+Parameter is the location where the splitting ocurred.
 
 ```csharp
 public ICommand SplitCommand { get; set; }
@@ -417,12 +544,48 @@ public Size TargetOffset { get; set; }
 
 [Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)
 
-### Methods
+#### TargetOffsetMode
 
-#### DrawArrowGeometry(StreamGeometryContext, Point, Point)
+Gets or sets the [ConnectionOffsetMode](#connectionoffsetmode-enum) to apply to the [BaseConnection.Target](#baseconnection-class#target) when drawing the connection.
 
 ```csharp
-protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target);
+public ConnectionOffsetMode TargetOffsetMode { get; set; }
+```
+
+**Property Value**
+
+[ConnectionOffsetMode](#connectionoffsetmode-enum)
+
+#### TargetOrientation
+
+Gets or sets the orientation in which this connection is flowing.
+
+```csharp
+public Orientation TargetOrientation { get; set; }
+```
+
+**Property Value**
+
+[Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
+#### Text
+
+Gets or sets the text contents of the [BaseConnection](#baseconnection-class).
+
+```csharp
+public string Text { get; set; }
+```
+
+**Property Value**
+
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)
+
+### Methods
+
+#### DrawArrowGeometry(StreamGeometryContext, Point, Point, ConnectionDirection, ArrowHeadShape, Orientation)
+
+```csharp
+protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = 0, ArrowHeadShape shape = 0, Orientation orientation = 0);
 ```
 
 **Parameters**
@@ -432,11 +595,81 @@ protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point so
 `source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 `target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`arrowDirection` [ConnectionDirection](#connectiondirection-enum)
+
+`shape` [ArrowHeadShape](#arrowheadshape-enum)
+
+`orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
+#### DrawDefaultArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)
+
+```csharp
+protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = 0, Orientation orientation = 0);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`arrowDirection` [ConnectionDirection](#connectiondirection-enum)
+
+`orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
+#### DrawDirectionalArrowheadGeometry(StreamGeometryContext, Vector, Point)
+
+```csharp
+protected virtual void DrawDirectionalArrowheadGeometry(StreamGeometryContext context, Vector direction, Point location);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`direction` [Vector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Vector)
+
+`location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### DrawDirectionalArrowsGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected virtual void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### DrawEllipseArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)
+
+```csharp
+protected virtual void DrawEllipseArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = 0, Orientation orientation = 0);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`arrowDirection` [ConnectionDirection](#connectiondirection-enum)
+
+`orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
 
 #### DrawLineGeometry(StreamGeometryContext, Point, Point)
 
 ```csharp
-protected virtual ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+protected virtual ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 ```
 
 **Parameters**
@@ -449,27 +682,29 @@ protected virtual ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryContex
 
 **Returns**
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
 
-#### GetArrowHeadPoints(Point, Point)
+#### DrawRectangleArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)
 
 ```csharp
-protected virtual ValueTuple<Point, Point> GetArrowHeadPoints(Point source, Point target);
+protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = 0, Orientation orientation = 0);
 ```
 
 **Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
 
 `source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 `target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-**Returns**
+`arrowDirection` [ConnectionDirection](#connectiondirection-enum)
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+`orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
 
 #### GetOffset()
 
-Gets the resulting offset after applying the [BaseConnection.OffsetMode](#baseconnection-class#offsetmode).
+Gets the resulting offset after applying the [BaseConnection.SourceOffsetMode](#baseconnection-class#sourceoffsetmode).
 
 ```csharp
 protected virtual ValueTuple<Vector, Vector> GetOffset();
@@ -478,6 +713,24 @@ protected virtual ValueTuple<Vector, Vector> GetOffset();
 **Returns**
 
 [ValueTuple<Vector, Vector>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+
+#### GetTextPosition(FormattedText, Point, Point)
+
+```csharp
+protected virtual Point GetTextPosition(FormattedText text, Point source, Point target);
+```
+
+**Parameters**
+
+`text` [FormattedText](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.FormattedText)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 #### OnMouseDown(MouseButtonEventArgs)
 
@@ -499,11 +752,41 @@ protected override void OnMouseUp(MouseButtonEventArgs e);
 
 `e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)
 
+#### OnRender(DrawingContext)
+
+```csharp
+protected override void OnRender(DrawingContext drawingContext);
+```
+
+**Parameters**
+
+`drawingContext` [DrawingContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.DrawingContext)
+
+#### StartAnimation(Double)
+
+Starts animating the directional arrows.
+
+```csharp
+public void StartAnimation(double duration = 1.5d);
+```
+
+**Parameters**
+
+`duration` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double): The duration for moving an arrowhead from [BaseConnection.Source](#baseconnection-class#source) to [BaseConnection.Target](#baseconnection-class#target).
+
+#### StopAnimation()
+
+Stops the animation started by Nodify.BaseConnection.StartAnimation(System.Double)
+
+```csharp
+public void StopAnimation();
+```
+
 ### Events
 
 #### Disconnect
 
-Triggered by the Nodify.EditorGestures.Connection.Disconnect gesture.
+Triggered by the Nodify.EditorGestures.ConnectionGestures.Disconnect gesture.
 
 ```csharp
 public event ConnectionEventHandler Disconnect;
@@ -515,7 +798,7 @@ public event ConnectionEventHandler Disconnect;
 
 #### Split
 
-Triggered by the Nodify.EditorGestures.Connection.Split gesture.
+Triggered by the Nodify.EditorGestures.ConnectionGestures.Split gesture.
 
 ```csharp
 public event ConnectionEventHandler Split;
@@ -543,6 +826,16 @@ public static class BoxValue
 
 ```csharp
 public static object ArrowSize;
+```
+
+**Field Value**
+
+[Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
+#### ConnectionOffset
+
+```csharp
+public static object ConnectionOffset;
 ```
 
 **Field Value**
@@ -669,10 +962,30 @@ public static object Size;
 
 [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
 
+#### Thickness2
+
+```csharp
+public static object Thickness2;
+```
+
+**Field Value**
+
+[Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
 #### True
 
 ```csharp
 public static object True;
+```
+
+**Field Value**
+
+[Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
+#### UInt0
+
+```csharp
+public static object UInt0;
 ```
 
 **Field Value**
@@ -713,16 +1026,6 @@ public CircuitConnection();
 
 ### Fields
 
-#### AngleProperty
-
-```csharp
-public static DependencyProperty AngleProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### Degrees
 
 ```csharp
@@ -749,10 +1052,24 @@ public double Angle { get; set; }
 
 ### Methods
 
+#### DrawDirectionalArrowsGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
 #### DrawLineGeometry(StreamGeometryContext, Point, Point)
 
 ```csharp
-protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 ```
 
 **Parameters**
@@ -765,7 +1082,25 @@ protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryConte
 
 **Returns**
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+
+#### GetTextPosition(FormattedText, Point, Point)
+
+```csharp
+protected override Point GetTextPosition(FormattedText text, Point source, Point target);
+```
+
+**Parameters**
+
+`text` [FormattedText](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.FormattedText)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 ## Connection Class
 
@@ -777,7 +1112,7 @@ protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryConte
 
 **References:** [Connector](#connector-class), [NodifyEditor](#nodifyeditor-class)
 
-Represents a quadratic curve.
+Represents a cubic bezier curve.
 
 ```csharp
 public class Connection : BaseConnection
@@ -793,10 +1128,24 @@ public Connection();
 
 ### Methods
 
+#### DrawDirectionalArrowsGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
 #### DrawLineGeometry(StreamGeometryContext, Point, Point)
 
 ```csharp
-protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 ```
 
 **Parameters**
@@ -809,41 +1158,47 @@ protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryConte
 
 **Returns**
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
 
-## Connection Class
-
-**Namespace:** Nodify
-
-**Assembly:** Nodify
-
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Connection](#connection-class)
+#### GetTextPosition(FormattedText, Point, Point)
 
 ```csharp
-public static class Connection
+protected override Point GetTextPosition(FormattedText text, Point source, Point target);
 ```
 
-### Properties
+**Parameters**
 
-#### Disconnect
+`text` [FormattedText](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.FormattedText)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### InterpolateCubicBezier(Point, Point, Point, Point, Double)
 
 ```csharp
-public static InputGesture Disconnect { get; set; }
+protected static Point InterpolateCubicBezier(Point P0, Point P1, Point P2, Point P3, double t);
 ```
 
-**Property Value**
+**Parameters**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+`P0` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-#### Split
+`P1` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-```csharp
-public static InputGesture Split { get; set; }
-```
+`P2` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-**Property Value**
+`P3` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+`t` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 ## ConnectionDirection Enum
 
@@ -851,9 +1206,7 @@ public static InputGesture Split { get; set; }
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [ConnectionDirection](#connectiondirection-enum)
-
-**References:** [BaseConnection](#baseconnection-class), [PendingConnection](#pendingconnection-class)
+**References:** [BaseConnection](#baseconnection-class), [LineConnection](#lineconnection-class), [PendingConnection](#pendingconnection-class)
 
 The direction in which a connection is oriented.
 
@@ -868,24 +1221,16 @@ public enum ConnectionDirection
 From [BaseConnection.Target](#baseconnection-class#target) to [BaseConnection.Source](#baseconnection-class#source).
 
 ```csharp
-public const ConnectionDirection Backward = 1;
+Backward = 1;
 ```
-
-**Field Value**
-
-[ConnectionDirection](#connectiondirection-enum)
 
 #### Forward
 
 From [BaseConnection.Source](#baseconnection-class#source) to [BaseConnection.Target](#baseconnection-class#target).
 
 ```csharp
-public const ConnectionDirection Forward = 0;
+Forward = 0;
 ```
-
-**Field Value**
-
-[ConnectionDirection](#connectiondirection-enum)
 
 ## ConnectionEventArgs Class
 
@@ -979,13 +1324,67 @@ public delegate void ConnectionEventHandler(object sender, ConnectionEventArgs e
 
 `e` [ConnectionEventArgs](#connectioneventargs-class): The event data.
 
-## ConnectionOffsetMode Enum
+## ConnectionGestures Class
 
 **Namespace:** Nodify
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [ConnectionOffsetMode](#connectionoffsetmode-enum)
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ConnectionGestures](#connectiongestures-class)
+
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class)
+
+```csharp
+public class ConnectionGestures
+```
+
+### Constructors
+
+#### ConnectionGestures()
+
+```csharp
+public ConnectionGestures();
+```
+
+### Properties
+
+#### Disconnect
+
+```csharp
+public InputGestureRef Disconnect { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Split
+
+```csharp
+public InputGestureRef Split { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+### Methods
+
+#### Apply(ConnectionGestures)
+
+```csharp
+public void Apply(ConnectionGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [ConnectionGestures](#connectiongestures-class)
+
+## ConnectionOffsetMode Enum
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
 
 **References:** [BaseConnection](#baseconnection-class)
 
@@ -1002,99 +1401,40 @@ public enum ConnectionOffsetMode
 The offset is applied in a circle around the point.
 
 ```csharp
-public const ConnectionOffsetMode Circle = 1;
+Circle = 1;
 ```
-
-**Field Value**
-
-[ConnectionOffsetMode](#connectionoffsetmode-enum)
 
 #### Edge
 
 The offset is applied in a rectangle shape around the point, perpendicular to the edges.
 
 ```csharp
-public const ConnectionOffsetMode Edge = 3;
+Edge = 3;
 ```
-
-**Field Value**
-
-[ConnectionOffsetMode](#connectionoffsetmode-enum)
 
 #### None
 
 No offset applied.
 
 ```csharp
-public const ConnectionOffsetMode None = 0;
+None = 0;
 ```
-
-**Field Value**
-
-[ConnectionOffsetMode](#connectionoffsetmode-enum)
 
 #### Rectangle
 
 The offset is applied in a rectangle shape around the point.
 
 ```csharp
-public const ConnectionOffsetMode Rectangle = 2;
+Rectangle = 2;
 ```
 
-**Field Value**
+#### Static
 
-[ConnectionOffsetMode](#connectionoffsetmode-enum)
-
-## Connector Class
-
-**Namespace:** Nodify
-
-**Assembly:** Nodify
-
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Connector](#connector-class)
-
-**References:** [PendingConnection](#pendingconnection-class), [Connection](#connection-class), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [ConnectorEventHandler](#connectoreventhandler-delegate), [ConnectorEventArgs](#connectoreventargs-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [KnotNode](#knotnode-class), [Node](#node-class), [NodeInput](#nodeinput-class), [NodeOutput](#nodeoutput-class), [StateNode](#statenode-class)
-
-Represents a connector control that can start and complete a [PendingConnection](#pendingconnection-class).
-            Has a [Connector.ElementConnector](#connector-class#elementconnector) that the [Connector.Anchor](#connector-class#anchor) is calculated from for the [PendingConnection](#pendingconnection-class). Center of this control is used if missing.
+The offset is applied as a fixed margin.
 
 ```csharp
-public static class Connector
+Static = 4;
 ```
-
-### Properties
-
-#### CancelAction
-
-```csharp
-public static InputGesture CancelAction { get; set; }
-```
-
-**Property Value**
-
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
-
-#### Connect
-
-```csharp
-public static InputGesture Connect { get; set; }
-```
-
-**Property Value**
-
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
-
-#### Disconnect
-
-Triggered by the Nodify.EditorGestures.Connector.Disconnect gesture.
-
-```csharp
-public static InputGesture Disconnect { get; set; }
-```
-
-**Property Value**
-
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
 
 ## Connector Class
 
@@ -1106,7 +1446,10 @@ public static InputGesture Disconnect { get; set; }
 
 **Derived:** [NodeInput](#nodeinput-class), [NodeOutput](#nodeoutput-class), [StateNode](#statenode-class)
 
-**References:** [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [ConnectorEventHandler](#connectoreventhandler-delegate), [ItemContainer](#itemcontainer-class)
+**References:** [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [ConnectorEventHandler](#connectoreventhandler-delegate), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [Connection](#connection-class), [NodifyEditor](#nodifyeditor-class), [ConnectorEventArgs](#connectoreventargs-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [KnotNode](#knotnode-class), [Node](#node-class), [NodeInput](#nodeinput-class), [NodeOutput](#nodeoutput-class), [StateNode](#statenode-class)
+
+Represents a connector control that can start and complete a [PendingConnection](#pendingconnection-class).
+Has a [Connector.ElementConnector](#connector-class#elementconnector) that the [Connector.Anchor](#connector-class#anchor) is calculated from for the [PendingConnection](#pendingconnection-class). Center of this control is used if missing.
 
 ```csharp
 public class Connector : Control
@@ -1122,36 +1465,6 @@ public Connector();
 
 ### Fields
 
-#### AnchorProperty
-
-```csharp
-public static DependencyProperty AnchorProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisconnectCommandProperty
-
-```csharp
-public static DependencyProperty DisconnectCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisconnectEvent
-
-```csharp
-public static RoutedEvent DisconnectEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
 #### ElementConnector
 
 ```csharp
@@ -1164,6 +1477,8 @@ protected const string ElementConnector = "PART_Connector";
 
 #### EnableOptimizations
 
+Gets or sets if [Connector](#connector-class)s should enable optimizations based on [Connector.OptimizeSafeZone](#connector-class#optimizesafezone) and [Connector.OptimizeMinimumSelectedItems](#connector-class#optimizeminimumselecteditems).
+
 ```csharp
 public static bool EnableOptimizations;
 ```
@@ -1172,27 +1487,9 @@ public static bool EnableOptimizations;
 
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
-#### IsConnectedProperty
-
-```csharp
-public static DependencyProperty IsConnectedProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsPendingConnectionProperty
-
-```csharp
-public static DependencyProperty IsPendingConnectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### OptimizeMinimumSelectedItems
+
+Gets or sets the minimum selected items needed to trigger optimizations when outside of the [Connector.OptimizeSafeZone](#connector-class#optimizesafezone).
 
 ```csharp
 public static uint OptimizeMinimumSelectedItems;
@@ -1204,6 +1501,8 @@ public static uint OptimizeMinimumSelectedItems;
 
 #### OptimizeSafeZone
 
+Gets or sets the safe zone outside the editor's viewport that will not trigger optimizations.
+
 ```csharp
 public static double OptimizeSafeZone;
 ```
@@ -1212,39 +1511,11 @@ public static double OptimizeSafeZone;
 
 [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
 
-#### PendingConnectionCompletedEvent
-
-```csharp
-public static RoutedEvent PendingConnectionCompletedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### PendingConnectionDragEvent
-
-```csharp
-public static RoutedEvent PendingConnectionDragEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### PendingConnectionStartedEvent
-
-```csharp
-public static RoutedEvent PendingConnectionStartedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
 ### Properties
 
 #### AllowPendingConnectionCancellation
+
+Gets or sets whether cancelling a pending connection is allowed.
 
 ```csharp
 public static bool AllowPendingConnectionCancellation { get; set; }
@@ -1256,6 +1527,9 @@ public static bool AllowPendingConnectionCancellation { get; set; }
 
 #### Anchor
 
+Gets the location where [Connection](#connection-class)s can be attached to.
+Bind with System.Windows.Data.BindingMode.OneWayToSource
+
 ```csharp
 public Point Anchor { get; set; }
 ```
@@ -1265,6 +1539,8 @@ public Point Anchor { get; set; }
 [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 #### Container
+
+Gets the [ItemContainer](#itemcontainer-class) that contains this [Connector](#connector-class).
 
 ```csharp
 protected ItemContainer Container { get; set; }
@@ -1276,6 +1552,9 @@ protected ItemContainer Container { get; set; }
 
 #### DisconnectCommand
 
+Invoked if the [Connector.Disconnect](#connector-class#disconnect) event is not handled.
+Parameter is the [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) of this control.
+
 ```csharp
 public ICommand DisconnectCommand { get; set; }
 ```
@@ -1285,6 +1564,8 @@ public ICommand DisconnectCommand { get; set; }
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
 
 #### EnableStickyConnections
+
+Gets or sets whether the connection should be completed in two steps.
 
 ```csharp
 public static bool EnableStickyConnections { get; set; }
@@ -1296,6 +1577,8 @@ public static bool EnableStickyConnections { get; set; }
 
 #### IsConnected
 
+If this is set to false, the [Connector.Disconnect](#connector-class#disconnect) event will not be invoked and the connector will stop updating its [Connector.Anchor](#connector-class#anchor) when moved, resized etc.
+
 ```csharp
 public bool IsConnected { get; set; }
 ```
@@ -1306,6 +1589,8 @@ public bool IsConnected { get; set; }
 
 #### IsPendingConnection
 
+Gets a value that indicates whether a [PendingConnection](#pendingconnection-class) is in progress for this [Connector](#connector-class).
+
 ```csharp
 public bool IsPendingConnection { get; protected set; }
 ```
@@ -1315,6 +1600,8 @@ public bool IsPendingConnection { get; protected set; }
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
 #### Thumb
+
+Gets the [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) used to calculate the [Connector.Anchor](#connector-class#anchor).
 
 ```csharp
 protected FrameworkElement Thumb { get; set; }
@@ -1426,21 +1713,27 @@ protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo);
 
 #### UpdateAnchor(Point)
 
+Updates the [Connector.Anchor](#connector-class#anchor) relative to a location. (usually [Connector.Container](#connector-class#container)'s location)
+
 ```csharp
 protected void UpdateAnchor(Point location);
 ```
 
 **Parameters**
 
-`location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+`location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): The relative location
 
 #### UpdateAnchor()
+
+Updates the [Connector.Anchor](#connector-class#anchor) based on [Connector.Container](#connector-class#container)'s location.
 
 ```csharp
 public void UpdateAnchor();
 ```
 
 #### UpdateAnchorOptimized(Point)
+
+Updates the [Connector.Anchor](#connector-class#anchor) and applies optimizations if needed based on [Connector.EnableOptimizations](#connector-class#enableoptimizations) flag
 
 ```csharp
 protected void UpdateAnchorOptimized(Point location);
@@ -1454,6 +1747,8 @@ protected void UpdateAnchorOptimized(Point location);
 
 #### Disconnect
 
+Triggered by the Nodify.EditorGestures.ConnectorGestures.Disconnect gesture.
+
 ```csharp
 public event ConnectorEventHandler Disconnect;
 ```
@@ -1463,6 +1758,8 @@ public event ConnectorEventHandler Disconnect;
 [ConnectorEventHandler](#connectoreventhandler-delegate)
 
 #### PendingConnectionCompleted
+
+Triggered by the Nodify.EditorGestures.ConnectorGestures.Connect gesture.
 
 ```csharp
 public event PendingConnectionEventHandler PendingConnectionCompleted;
@@ -1474,6 +1771,8 @@ public event PendingConnectionEventHandler PendingConnectionCompleted;
 
 #### PendingConnectionDrag
 
+Occurs when the mouse is changing position and the [Connector](#connector-class) has mouse capture.
+
 ```csharp
 public event PendingConnectionEventHandler PendingConnectionDrag;
 ```
@@ -1483,6 +1782,8 @@ public event PendingConnectionEventHandler PendingConnectionDrag;
 [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate)
 
 #### PendingConnectionStarted
+
+Triggered by the Nodify.EditorGestures.ConnectorGestures.Connect gesture.
 
 ```csharp
 public event PendingConnectionEventHandler PendingConnectionStarted;
@@ -1570,7 +1871,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ConnectorEventHandler](#connectoreventhandler-delegate)
 
-**References:** [ConnectorEventArgs](#connectoreventargs-class), [Connector](#connector-class), [Connector](#connector-class)
+**References:** [ConnectorEventArgs](#connectoreventargs-class), [Connector](#connector-class)
 
 Represents the method that will handle [Connector](#connector-class) related routed events.
 
@@ -1584,6 +1885,110 @@ public delegate void ConnectorEventHandler(object sender, ConnectorEventArgs e);
 
 `e` [ConnectorEventArgs](#connectoreventargs-class): The event data.
 
+## ConnectorGestures Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ConnectorGestures](#connectorgestures-class)
+
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class)
+
+```csharp
+public class ConnectorGestures
+```
+
+### Constructors
+
+#### ConnectorGestures()
+
+```csharp
+public ConnectorGestures();
+```
+
+### Properties
+
+#### CancelAction
+
+```csharp
+public InputGestureRef CancelAction { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Connect
+
+```csharp
+public InputGestureRef Connect { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Disconnect
+
+```csharp
+public InputGestureRef Disconnect { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+### Methods
+
+#### Apply(ConnectorGestures)
+
+```csharp
+public void Apply(ConnectorGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [ConnectorGestures](#connectorgestures-class)
+
+## ConnectorPosition Enum
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**References:** [StepConnection](#stepconnection-class)
+
+```csharp
+public enum ConnectorPosition
+```
+
+### Fields
+
+#### Bottom
+
+```csharp
+Bottom = 2;
+```
+
+#### Left
+
+```csharp
+Left = 1;
+```
+
+#### Right
+
+```csharp
+Right = 3;
+```
+
+#### Top
+
+```csharp
+Top = 0;
+```
+
 ## ContainerDefaultState Class
 
 **Namespace:** Nodify
@@ -1592,7 +1997,7 @@ public delegate void ConnectorEventHandler(object sender, ConnectorEventArgs e);
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ContainerState](#containerstate-class) → [ContainerDefaultState](#containerdefaultstate-class)
 
-**References:** [ItemContainer](#itemcontainer-class), [ContainerState](#containerstate-class), [ItemContainer](#itemcontainer-class)
+**References:** [ItemContainer](#itemcontainer-class), [ContainerState](#containerstate-class)
 
 The default state of the [ItemContainer](#itemcontainer-class).
 
@@ -1918,6 +2323,114 @@ public virtual void ReEnter(ContainerState from);
 
 `from` [ContainerState](#containerstate-class): The state we re-enter from.
 
+## CuttingLine Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Shape](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Shapes.Shape) → [CuttingLine](#cuttingline-class)
+
+**References:** [BaseConnection](#baseconnection-class), [NodifyEditor](#nodifyeditor-class)
+
+```csharp
+public class CuttingLine : Shape
+```
+
+### Constructors
+
+#### CuttingLine()
+
+```csharp
+public CuttingLine();
+```
+
+### Properties
+
+#### AllowCuttingCancellation
+
+Gets or sets whether cancelling a cutting operation is allowed.
+
+```csharp
+public static bool AllowCuttingCancellation { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### DefiningGeometry
+
+```csharp
+protected override Geometry DefiningGeometry { get; set; }
+```
+
+**Property Value**
+
+[Geometry](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Geometry)
+
+#### EndPoint
+
+Gets or sets the end point.
+
+```csharp
+public Point EndPoint { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### StartPoint
+
+Gets or sets the start point.
+
+```csharp
+public Point StartPoint { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+### Methods
+
+#### GetIsOverElement(UIElement)
+
+```csharp
+public static bool GetIsOverElement(UIElement elem);
+```
+
+**Parameters**
+
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)
+
+**Returns**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### OnRender(DrawingContext)
+
+```csharp
+protected override void OnRender(DrawingContext drawingContext);
+```
+
+**Parameters**
+
+`drawingContext` [DrawingContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.DrawingContext)
+
+#### SetIsOverElement(UIElement, Boolean)
+
+```csharp
+public static void SetIsOverElement(UIElement elem, bool value);
+```
+
+**Parameters**
+
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)
+
+`value` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
 ## DecoratorContainer Class
 
 **Namespace:** Nodify
@@ -1943,38 +2456,6 @@ public class DecoratorContainer : ContentControl, INodifyCanvasItem
 ```csharp
 public DecoratorContainer();
 ```
-
-### Fields
-
-#### ActualSizeProperty
-
-```csharp
-public static DependencyProperty ActualSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### LocationChangedEvent
-
-```csharp
-public static RoutedEvent LocationChangedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### LocationProperty
-
-```csharp
-public static DependencyProperty LocationProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 ### Properties
 
@@ -2044,7 +2525,7 @@ public event RoutedEventHandler LocationChanged;
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorCommands](#editorcommands-class)
 
-**References:** [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class)
+**References:** [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [InputGestureRef](#inputgestureref-class)
 
 ```csharp
 public static class EditorCommands
@@ -2055,7 +2536,7 @@ public static class EditorCommands
 #### Align
 
 Aligns [NodifyEditor.SelectedItems](#nodifyeditor-class#selecteditems) using the specified alignment method.
-            Parameter is of type Nodify.EditorCommands.Alignment or a string that can be converted to an alignment.
+Parameter is of type Nodify.EditorCommands.Alignment or a string that can be converted to an alignment.
 
 ```csharp
 public static RoutedUICommand Align { get; set; }
@@ -2068,7 +2549,7 @@ public static RoutedUICommand Align { get; set; }
 #### BringIntoView
 
 Moves the [NodifyEditor.ViewportLocation](#nodifyeditor-class#viewportlocation) to the specified location.
-            Parameter is a [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point) or a string that can be converted to a point.
+Parameter is a [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point) or a string that can be converted to a point.
 
 ```csharp
 public static RoutedUICommand BringIntoView { get; set; }
@@ -2126,6 +2607,92 @@ public static RoutedUICommand ZoomOut { get; set; }
 
 [RoutedUICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.RoutedUICommand)
 
+## EditorCuttingState Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorCuttingState](#editorcuttingstate-class)
+
+**References:** [NodifyEditor](#nodifyeditor-class), [EditorState](#editorstate-class)
+
+```csharp
+public class EditorCuttingState : EditorState
+```
+
+### Constructors
+
+#### EditorCuttingState(NodifyEditor)
+
+```csharp
+public EditorCuttingState(NodifyEditor editor);
+```
+
+**Parameters**
+
+`editor` [NodifyEditor](#nodifyeditor-class)
+
+### Properties
+
+#### Canceled
+
+```csharp
+public bool Canceled { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+### Methods
+
+#### Enter(EditorState)
+
+```csharp
+public override void Enter(EditorState from);
+```
+
+**Parameters**
+
+`from` [EditorState](#editorstate-class)
+
+#### Exit()
+
+```csharp
+public override void Exit();
+```
+
+#### HandleKeyUp(KeyEventArgs)
+
+```csharp
+public override void HandleKeyUp(KeyEventArgs e);
+```
+
+**Parameters**
+
+`e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)
+
+#### HandleMouseMove(MouseEventArgs)
+
+```csharp
+public override void HandleMouseMove(MouseEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseEventArgs)
+
+#### HandleMouseUp(MouseButtonEventArgs)
+
+```csharp
+public override void HandleMouseUp(MouseButtonEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)
+
 ## EditorDefaultState Class
 
 **Namespace:** Nodify
@@ -2138,15 +2705,15 @@ public static RoutedUICommand ZoomOut { get; set; }
 
 The default state of the editor.
               Default State
-               - mouse left down   -> Selecting State
-               - mouse right down  -> Panning State
+              	- mouse left down  	-> Selecting State
+              	- mouse right down  -> Panning State
               Selecting State
-               - mouse left up  -> Default State
-               - mouse right down  -> Panning State
+              	- mouse left up 	-> Default State
+              	- mouse right down 	-> Panning State
               Panning State
-               - mouse right up -> previous state (Selecting State or Default State)
-               - mouse left up  -> Panning State
-
+              	- mouse right up	-> previous state (Selecting State or Default State)
+              	- mouse left up		-> Panning State  
+  
 ```csharp
 public class EditorDefaultState : EditorState
 ```
@@ -2185,99 +2752,121 @@ public override void HandleMouseDown(MouseButtonEventArgs e);
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorGestures](#editorgestures-class)
 
-**References:** [NodifyEditor](#nodifyeditor-class)
+**References:** [NodifyEditorGestures](#nodifyeditorgestures-class), [ItemContainerGestures](#itemcontainergestures-class), [ConnectorGestures](#connectorgestures-class), [ConnectionGestures](#connectiongestures-class), [GroupingNodeGestures](#groupingnodegestures-class), [MinimapGestures](#minimapgestures-class), [NodifyEditor](#nodifyeditor-class)
 
-Gestures used by the [NodifyEditor](#nodifyeditor-class).
+Gestures used by built-in controls inside the [NodifyEditor](#nodifyeditor-class).
 
 ```csharp
-public static class EditorGestures
+public class EditorGestures
 ```
+
+### Constructors
+
+#### EditorGestures()
+
+```csharp
+public EditorGestures();
+```
+
+### Fields
+
+#### Mappings
+
+```csharp
+public static EditorGestures Mappings;
+```
+
+**Field Value**
+
+[EditorGestures](#editorgestures-class)
 
 ### Properties
 
-#### FitToScreen
+#### Connection
 
-Gesture used to fit as many containers as possible into the viewport.
+Gestures for the connection.
 
 ```csharp
-public static InputGesture FitToScreen { get; set; }
+public ConnectionGestures Connection { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[ConnectionGestures](#connectiongestures-class)
 
-#### Pan
+#### Connector
 
-Gesture used to start panning.
+Gestures for the connector.
 
 ```csharp
-public static InputGesture Pan { get; set; }
+public ConnectorGestures Connector { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[ConnectorGestures](#connectorgestures-class)
 
-#### ResetViewportLocation
+#### Editor
 
-Gesture used to move the editor's viewport location to (0, 0).
+Gestures for the editor.
 
 ```csharp
-public static InputGesture ResetViewportLocation { get; set; }
+public NodifyEditorGestures Editor { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[NodifyEditorGestures](#nodifyeditorgestures-class)
 
-#### Select
+#### GroupingNode
 
-Gesture used to start selecting using a Nodify.EditorGestures.Selection strategy.
+Gestures for the grouping node.
 
 ```csharp
-public static InputGesture Select { get; set; }
+public GroupingNodeGestures GroupingNode { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[GroupingNodeGestures](#groupingnodegestures-class)
 
-#### Zoom
+#### ItemContainer
 
-The key modifier required to start zooming by mouse wheel.
+Gestures for the item container.
 
 ```csharp
-public static ModifierKeys Zoom { get; set; }
+public ItemContainerGestures ItemContainer { get; set; }
 ```
 
 **Property Value**
 
-[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)
+[ItemContainerGestures](#itemcontainergestures-class)
 
-#### ZoomIn
+#### Minimap
 
-Gesture used to zoom in.
+Gestures for the minimap.
 
 ```csharp
-public static InputGesture ZoomIn { get; set; }
+public MinimapGestures Minimap { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[MinimapGestures](#minimapgestures-class)
 
-#### ZoomOut
+### Methods
 
-Gesture used to zoom out.
+#### Apply(EditorGestures)
+
+Copies from the specified gestures.
 
 ```csharp
-public static InputGesture ZoomOut { get; set; }
+public void Apply(EditorGestures gestures);
 ```
 
-**Property Value**
+**Parameters**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+`gestures` [EditorGestures](#editorgestures-class): The gestures to copy.
 
 ## EditorPanningState Class
 
@@ -2421,6 +3010,16 @@ public override void HandleAutoPanning(MouseEventArgs e);
 
 `e` [MouseEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseEventArgs)
 
+#### HandleKeyUp(KeyEventArgs)
+
+```csharp
+public override void HandleKeyUp(KeyEventArgs e);
+```
+
+**Parameters**
+
+`e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)
+
 #### HandleMouseDown(MouseButtonEventArgs)
 
 ```csharp
@@ -2459,9 +3058,9 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class)
 
-**Derived:** [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class)
+**Derived:** [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class)
 
-**References:** [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [NodifyEditor](#nodifyeditor-class)
+**References:** [EditorCuttingState](#editorcuttingstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [NodifyEditor](#nodifyeditor-class)
 
 The base class for editor states.
 
@@ -2745,9 +3344,7 @@ protected override void SetPropertyValue(PropertyInfo propertyInfo, object targe
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [GroupingMovementMode](#groupingmovementmode-enum)
-
-**References:** [GroupingNode](#groupingnode-class), [GroupingNode](#groupingnode-class)
+**References:** [GroupingNode](#groupingnode-class)
 
 Specifies the possible movement modes of a [GroupingNode](#groupingnode-class).
 
@@ -2762,52 +3359,16 @@ public enum GroupingMovementMode
 The [GroupingNode](#groupingnode-class) will move its content when moved.
 
 ```csharp
-public const GroupingMovementMode Group = 0;
+Group = 0;
 ```
-
-**Field Value**
-
-[GroupingMovementMode](#groupingmovementmode-enum)
 
 #### Self
 
 The [GroupingNode](#groupingnode-class) will not move its content when moved.
 
 ```csharp
-public const GroupingMovementMode Self = 1;
+Self = 1;
 ```
-
-**Field Value**
-
-[GroupingMovementMode](#groupingmovementmode-enum)
-
-## GroupingNode Class
-
-**Namespace:** Nodify
-
-**Assembly:** Nodify
-
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [GroupingNode](#groupingnode-class)
-
-**References:** [GroupingMovementMode](#groupingmovementmode-enum), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class)
-
-Defines a panel with a header that groups [ItemContainer](#itemcontainer-class)s inside it and can be resized.
-
-```csharp
-public static class GroupingNode
-```
-
-### Properties
-
-#### SwitchMovementMode
-
-```csharp
-public static ModifierKeys SwitchMovementMode { get; set; }
-```
-
-**Property Value**
-
-[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)
 
 ## GroupingNode Class
 
@@ -2819,6 +3380,8 @@ public static ModifierKeys SwitchMovementMode { get; set; }
 
 **References:** [ResizeEventHandler](#resizeeventhandler-delegate), [GroupingMovementMode](#groupingmovementmode-enum), [NodifyEditor](#nodifyeditor-class), [ItemContainer](#itemcontainer-class)
 
+Defines a panel with a header that groups [ItemContainer](#itemcontainer-class)s inside it and can be resized.
+
 ```csharp
 public class GroupingNode : HeaderedContentControl
 ```
@@ -2827,33 +3390,17 @@ public class GroupingNode : HeaderedContentControl
 
 #### GroupingNode()
 
+Initializes a new instance of the [GroupingNode](#groupingnode-class) class.
+
 ```csharp
 public GroupingNode();
 ```
 
 ### Fields
 
-#### ActualSizeProperty
-
-```csharp
-public static DependencyProperty ActualSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### CanResizeProperty
-
-```csharp
-public static DependencyProperty CanResizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### ContentControl
+
+Gets the [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) control of this [GroupingNode](#groupingnode-class).
 
 ```csharp
 protected FrameworkElement ContentControl;
@@ -2903,17 +3450,9 @@ protected static object GroupMovementBoxed;
 
 [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
 
-#### HeaderBrushProperty
-
-```csharp
-public static DependencyProperty HeaderBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### HeaderControl
+
+Gets the [HeaderedContentControl.Header](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.HeaderedContentControl.header) control of this [GroupingNode](#groupingnode-class).
 
 ```csharp
 protected FrameworkElement HeaderControl;
@@ -2923,57 +3462,9 @@ protected FrameworkElement HeaderControl;
 
 [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement)
 
-#### MovementModeProperty
-
-```csharp
-public static DependencyProperty MovementModeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ResizeCompletedCommandProperty
-
-```csharp
-public static DependencyProperty ResizeCompletedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ResizeCompletedEvent
-
-```csharp
-public static RoutedEvent ResizeCompletedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### ResizeStartedCommandProperty
-
-```csharp
-public static DependencyProperty ResizeStartedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ResizeStartedEvent
-
-```csharp
-public static RoutedEvent ResizeStartedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
 #### ResizeThumb
+
+Gets the [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) used to resize this [GroupingNode](#groupingnode-class).
 
 ```csharp
 protected FrameworkElement ResizeThumb;
@@ -2987,6 +3478,8 @@ protected FrameworkElement ResizeThumb;
 
 #### ActualSize
 
+Gets or sets the actual size of this [GroupingNode](#groupingnode-class).
+
 ```csharp
 public Size ActualSize { get; set; }
 ```
@@ -2996,6 +3489,8 @@ public Size ActualSize { get; set; }
 [Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)
 
 #### CanResize
+
+Gets or sets a value that indicates whether this [GroupingNode](#groupingnode-class) can be resized.
 
 ```csharp
 public bool CanResize { get; set; }
@@ -3007,6 +3502,8 @@ public bool CanResize { get; set; }
 
 #### Container
 
+Gets the [NodifyEditor](#nodifyeditor-class) that owns this [GroupingNode.Container](#groupingnode-class#container).
+
 ```csharp
 protected ItemContainer Container { get; set; }
 ```
@@ -3016,6 +3513,8 @@ protected ItemContainer Container { get; set; }
 [ItemContainer](#itemcontainer-class)
 
 #### Editor
+
+Gets the [NodifyEditor](#nodifyeditor-class) that owns this [GroupingNode](#groupingnode-class).
 
 ```csharp
 protected NodifyEditor Editor { get; set; }
@@ -3027,6 +3526,8 @@ protected NodifyEditor Editor { get; set; }
 
 #### HeaderBrush
 
+Gets or sets the brush used for the background of the [HeaderedContentControl.Header](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.HeaderedContentControl.header) of this [GroupingNode](#groupingnode-class).
+
 ```csharp
 public Brush HeaderBrush { get; set; }
 ```
@@ -3036,6 +3537,8 @@ public Brush HeaderBrush { get; set; }
 [Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
 
 #### MovementMode
+
+Gets or sets the default movement mode which can be temporarily changed by holding the SwitchMovementModeModifierKey while dragging by the header.
 
 ```csharp
 public GroupingMovementMode MovementMode { get; set; }
@@ -3047,6 +3550,9 @@ public GroupingMovementMode MovementMode { get; set; }
 
 #### ResizeCompletedCommand
 
+Invoked when the [GroupingNode.ResizeCompleted](#groupingnode-class#resizecompleted) event is not handled.
+Parameter is the [ItemContainer.ActualSize](#itemcontainer-class#actualsize) of the container.
+
 ```csharp
 public ICommand ResizeCompletedCommand { get; set; }
 ```
@@ -3056,6 +3562,9 @@ public ICommand ResizeCompletedCommand { get; set; }
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
 
 #### ResizeStartedCommand
+
+Invoked when the [GroupingNode.ResizeStarted](#groupingnode-class#resizestarted) event is not handled.
+Parameter is the [ItemContainer.ActualSize](#itemcontainer-class#actualsize) of the container.
 
 ```csharp
 public ICommand ResizeStartedCommand { get; set; }
@@ -3077,6 +3586,8 @@ public override void OnApplyTemplate();
 
 #### ResizeCompleted
 
+Occurs when the node finished resizing.
+
 ```csharp
 public event ResizeEventHandler ResizeCompleted;
 ```
@@ -3087,6 +3598,8 @@ public event ResizeEventHandler ResizeCompleted;
 
 #### ResizeStarted
 
+Occurs when the node started resizing.
+
 ```csharp
 public event ResizeEventHandler ResizeStarted;
 ```
@@ -3094,6 +3607,52 @@ public event ResizeEventHandler ResizeStarted;
 **Event Type**
 
 [ResizeEventHandler](#resizeeventhandler-delegate)
+
+## GroupingNodeGestures Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [GroupingNodeGestures](#groupingnodegestures-class)
+
+**References:** [EditorGestures](#editorgestures-class)
+
+```csharp
+public class GroupingNodeGestures
+```
+
+### Constructors
+
+#### GroupingNodeGestures()
+
+```csharp
+public GroupingNodeGestures();
+```
+
+### Properties
+
+#### SwitchMovementMode
+
+```csharp
+public ModifierKeys SwitchMovementMode { get; set; }
+```
+
+**Property Value**
+
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)
+
+### Methods
+
+#### Apply(GroupingNodeGestures)
+
+```csharp
+public void Apply(GroupingNodeGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [GroupingNodeGestures](#groupingnodegestures-class)
 
 ## INodifyCanvasItem Interface
 
@@ -3151,53 +3710,54 @@ public virtual void Arrange(Rect rect);
 
 `rect` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)
 
-## ItemContainer Class
+## InputGestureRef Class
 
 **Namespace:** Nodify
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ItemContainer](#itemcontainer-class)
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture) → [InputGestureRef](#inputgestureref-class)
 
-**References:** [Connector](#connector-class), [PendingConnection](#pendingconnection-class), [EditorCommands](#editorcommands-class), [ContainerDefaultState](#containerdefaultstate-class), [SelectionHelper](#selectionhelper-class), [PreviewLocationChanged](#previewlocationchanged-delegate), [NodifyEditor](#nodifyeditor-class), [GroupingNode](#groupingnode-class)
+**References:** [SelectionGestures](#selectiongestures-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class), [ConnectorGestures](#connectorgestures-class), [ConnectionGestures](#connectiongestures-class), [MinimapGestures](#minimapgestures-class), [EditorCommands](#editorcommands-class)
 
-The container for all the items generated by the [ItemsControl.ItemsSource](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl.itemssource) of the [NodifyEditor](#nodifyeditor-class).
+An input gesture that allows changing its logic at runtime without changing its reference.
+Useful for classes that capture the object reference without the posibility of updating it. (e.g. [EditorCommands](#editorcommands-class))
 
 ```csharp
-public static class ItemContainer
+public sealed class InputGestureRef : InputGesture
 ```
 
 ### Properties
 
-#### CancelAction
+#### Value
+
+The referenced gesture.
 
 ```csharp
-public static InputGesture CancelAction { get; set; }
+public InputGesture Value { get; set; }
 ```
 
 **Property Value**
 
 [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
 
-#### Drag
+### Methods
+
+#### Matches(Object, InputEventArgs)
 
 ```csharp
-public static InputGesture Drag { get; set; }
+public override bool Matches(object targetElement, InputEventArgs inputEventArgs);
 ```
 
-**Property Value**
+**Parameters**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+`targetElement` [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
 
-#### Select
+`inputEventArgs` [InputEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputEventArgs)
 
-```csharp
-public static InputGesture Select { get; set; }
-```
+**Returns**
 
-**Property Value**
-
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
 ## ItemContainer Class
 
@@ -3209,7 +3769,9 @@ public static InputGesture Select { get; set; }
 
 **Implements:** [INodifyCanvasItem](#inodifycanvasitem-interface)
 
-**References:** [ContainerDefaultState](#containerdefaultstate-class), [ContainerDraggingState](#containerdraggingstate-class), [ContainerState](#containerstate-class), [Connector](#connector-class), [NodifyEditor](#nodifyeditor-class), [GroupingNode](#groupingnode-class), [PreviewLocationChanged](#previewlocationchanged-delegate)
+**References:** [Connector](#connector-class), [ContainerDefaultState](#containerdefaultstate-class), [ContainerDraggingState](#containerdraggingstate-class), [ContainerState](#containerstate-class), [NodifyEditor](#nodifyeditor-class), [PreviewLocationChanged](#previewlocationchanged-delegate), [GroupingNode](#groupingnode-class), [PendingConnection](#pendingconnection-class), [EditorCommands](#editorcommands-class), [SelectionHelper](#selectionhelper-class)
+
+The container for all the items generated by the [ItemsControl.ItemsSource](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl.itemssource) of the [NodifyEditor](#nodifyeditor-class).
 
 ```csharp
 public class ItemContainer : ContentControl, INodifyCanvasItem
@@ -3218,6 +3780,8 @@ public class ItemContainer : ContentControl, INodifyCanvasItem
 ### Constructors
 
 #### ItemContainer(NodifyEditor)
+
+Constructs an instance of an [ItemContainer](#itemcontainer-class) in the specified [NodifyEditor](#nodifyeditor-class).
 
 ```csharp
 public ItemContainer(NodifyEditor editor);
@@ -3229,86 +3793,6 @@ public ItemContainer(NodifyEditor editor);
 
 ### Fields
 
-#### ActualSizeProperty
-
-```csharp
-public static DependencyProperty ActualSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DesiredSizeForSelectionProperty
-
-```csharp
-public static DependencyProperty DesiredSizeForSelectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DragCompletedEvent
-
-```csharp
-public static RoutedEvent DragCompletedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### DragDeltaEvent
-
-```csharp
-public static RoutedEvent DragDeltaEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### DragStartedEvent
-
-```csharp
-public static RoutedEvent DragStartedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### HighlightBrushProperty
-
-```csharp
-public static DependencyProperty HighlightBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsDraggableProperty
-
-```csharp
-public static DependencyProperty IsDraggableProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsPreviewingLocationProperty
-
-```csharp
-public static DependencyProperty IsPreviewingLocationProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### IsPreviewingLocationPropertyKey
 
 ```csharp
@@ -3318,16 +3802,6 @@ public static DependencyPropertyKey IsPreviewingLocationPropertyKey;
 **Field Value**
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
-
-#### IsPreviewingSelectionProperty
-
-```csharp
-public static DependencyProperty IsPreviewingSelectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 #### IsPreviewingSelectionPropertyKey
 
@@ -3339,79 +3813,11 @@ public static DependencyPropertyKey IsPreviewingSelectionPropertyKey;
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
-#### IsSelectableProperty
-
-```csharp
-public static DependencyProperty IsSelectableProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsSelectedProperty
-
-```csharp
-public static DependencyProperty IsSelectedProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### LocationChangedEvent
-
-```csharp
-public static RoutedEvent LocationChangedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### LocationProperty
-
-```csharp
-public static DependencyProperty LocationProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SelectedBrushProperty
-
-```csharp
-public static DependencyProperty SelectedBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SelectedEvent
-
-```csharp
-public static RoutedEvent SelectedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### UnselectedEvent
-
-```csharp
-public static RoutedEvent UnselectedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
 ### Properties
 
 #### ActualSize
+
+Gets the actual size of this [ItemContainer](#itemcontainer-class).
 
 ```csharp
 public Size ActualSize { get; set; }
@@ -3423,6 +3829,8 @@ public Size ActualSize { get; set; }
 
 #### AllowDraggingCancellation
 
+Gets or sets whether cancelling a dragging operation is allowed.
+
 ```csharp
 public static bool AllowDraggingCancellation { get; set; }
 ```
@@ -3432,6 +3840,9 @@ public static bool AllowDraggingCancellation { get; set; }
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
 #### DesiredSizeForSelection
+
+Overrides the size to check against when calculating if this [ItemContainer](#itemcontainer-class) can be part of the current [NodifyEditor.SelectedArea](#nodifyeditor-class#selectedarea).
+Defaults to [UIElement.RenderSize](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement.rendersize).
 
 ```csharp
 public Size? DesiredSizeForSelection { get; set; }
@@ -3443,6 +3854,8 @@ public Size? DesiredSizeForSelection { get; set; }
 
 #### Editor
 
+The [NodifyEditor](#nodifyeditor-class) that owns this [ItemContainer](#itemcontainer-class).
+
 ```csharp
 public NodifyEditor Editor { get; set; }
 ```
@@ -3452,6 +3865,8 @@ public NodifyEditor Editor { get; set; }
 [NodifyEditor](#nodifyeditor-class)
 
 #### HighlightBrush
+
+Gets or sets the brush used when the [PendingConnection.IsOverElementProperty](#pendingconnection-class#isoverelementproperty) attached property is true for this [ItemContainer](#itemcontainer-class).
 
 ```csharp
 public Brush HighlightBrush { get; set; }
@@ -3463,6 +3878,8 @@ public Brush HighlightBrush { get; set; }
 
 #### IsDraggable
 
+Gets or sets whether this [ItemContainer](#itemcontainer-class) can be dragged.
+
 ```csharp
 public bool IsDraggable { get; set; }
 ```
@@ -3472,6 +3889,8 @@ public bool IsDraggable { get; set; }
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
 #### IsPreviewingLocation
+
+Gets a value indicating whether this [ItemContainer](#itemcontainer-class) is previewing a new location but didn't logically move there.
 
 ```csharp
 public bool IsPreviewingLocation { get; set; }
@@ -3483,6 +3902,8 @@ public bool IsPreviewingLocation { get; set; }
 
 #### IsPreviewingSelection
 
+Gets a value indicating whether this [ItemContainer](#itemcontainer-class) is about to change its [ItemContainer.IsSelected](#itemcontainer-class#isselected) state.
+
 ```csharp
 public Boolean? IsPreviewingSelection { get; set; }
 ```
@@ -3492,6 +3913,8 @@ public Boolean? IsPreviewingSelection { get; set; }
 [Boolean?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable)
 
 #### IsSelectable
+
+Gets or sets whether this [ItemContainer](#itemcontainer-class) can be selected.
 
 ```csharp
 public bool IsSelectable { get; set; }
@@ -3503,6 +3926,9 @@ public bool IsSelectable { get; set; }
 
 #### IsSelected
 
+Gets or sets a value that indicates whether this [ItemContainer](#itemcontainer-class) is selected.
+Can only be set if [ItemContainer.IsSelectable](#itemcontainer-class#isselectable) is true.
+
 ```csharp
 public bool IsSelected { get; set; }
 ```
@@ -3513,6 +3939,8 @@ public bool IsSelected { get; set; }
 
 #### Location
 
+Gets or sets the location of this [ItemContainer](#itemcontainer-class) inside the [NodifyEditor](#nodifyeditor-class) in graph space coordinates.
+
 ```csharp
 public virtual Point Location { get; set; }
 ```
@@ -3521,7 +3949,21 @@ public virtual Point Location { get; set; }
 
 [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
+#### SelectedBorderThickness
+
+Gets or sets the border thickness used when [ItemContainer.IsSelected](#itemcontainer-class#isselected) or [ItemContainer.IsPreviewingSelection](#itemcontainer-class#ispreviewingselection) is true.
+
+```csharp
+public Thickness SelectedBorderThickness { get; set; }
+```
+
+**Property Value**
+
+[Thickness](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Thickness)
+
 #### SelectedBrush
+
+Gets or sets the brush used when [ItemContainer.IsSelected](#itemcontainer-class#isselected) or [ItemContainer.IsPreviewingSelection](#itemcontainer-class#ispreviewingselection) is true.
 
 ```csharp
 public Brush SelectedBrush { get; set; }
@@ -3531,7 +3973,21 @@ public Brush SelectedBrush { get; set; }
 
 [Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
 
+#### SelectedMargin
+
+The calculated margin when the container is selected or previewing selection.
+
+```csharp
+public Thickness SelectedMargin { get; set; }
+```
+
+**Property Value**
+
+[Thickness](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Thickness)
+
 #### State
+
+The current state of the container.
 
 ```csharp
 public ContainerState State { get; set; }
@@ -3545,15 +4001,19 @@ public ContainerState State { get; set; }
 
 #### GetInitialState()
 
+Creates the initial state of the container.
+
 ```csharp
 protected virtual ContainerState GetInitialState();
 ```
 
 **Returns**
 
-[ContainerState](#containerstate-class)
+[ContainerState](#containerstate-class): The initial state.
 
 #### IsSelectableInArea(Rect, Boolean)
+
+Checks if area contains or intersects with this [ItemContainer](#itemcontainer-class) taking into consideration the [ItemContainer.DesiredSizeForSelection](#itemcontainer-class#desiredsizeforselection).
 
 ```csharp
 public virtual bool IsSelectableInArea(Rect area, bool isContained);
@@ -3561,15 +4021,17 @@ public virtual bool IsSelectableInArea(Rect area, bool isContained);
 
 **Parameters**
 
-`area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)
+`area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The area to check if contains or intersects this [ItemContainer](#itemcontainer-class).
 
-`isContained` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+`isContained` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): If true will check if area contains this, otherwise will check if area intersects with this.
 
 **Returns**
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True if area contains or intersects this [ItemContainer](#itemcontainer-class).
 
 #### IsSelectableLocation(Point)
+
+Checks if position is selectable.
 
 ```csharp
 protected virtual bool IsSelectableLocation(Point position);
@@ -3577,11 +4039,11 @@ protected virtual bool IsSelectableLocation(Point position);
 
 **Parameters**
 
-`position` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+`position` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): A position relative to this [ItemContainer](#itemcontainer-class).
 
 **Returns**
 
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True if position is selectable.
 
 #### OnApplyTemplate()
 
@@ -3610,6 +4072,8 @@ protected override void OnKeyUp(KeyEventArgs e);
 `e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)
 
 #### OnLocationChanged()
+
+Raises the [ItemContainer.LocationChangedEvent](#itemcontainer-class#locationchangedevent) and sets [ItemContainer.IsPreviewingLocation](#itemcontainer-class#ispreviewinglocation) to false.
 
 ```csharp
 protected void OnLocationChanged();
@@ -3677,15 +4141,20 @@ protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo);
 
 #### OnSelectedChanged(Boolean)
 
+Raises the [ItemContainer.SelectedEvent](#itemcontainer-class#selectedevent) or [ItemContainer.UnselectedEvent](#itemcontainer-class#unselectedevent) based on newValue.
+Called when the [ItemContainer.IsSelected](#itemcontainer-class#isselected) value is changed.
+
 ```csharp
 protected void OnSelectedChanged(bool newValue);
 ```
 
 **Parameters**
 
-`newValue` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+`newValue` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True if selected, false otherwise.
 
 #### PopAllStates()
+
+Pops all states from the container.
 
 ```csharp
 public void PopAllStates();
@@ -3693,11 +4162,15 @@ public void PopAllStates();
 
 #### PopState()
 
+Pops the current [ItemContainer.State](#itemcontainer-class#state) from the stack.
+
 ```csharp
 public void PopState();
 ```
 
 #### PushState(ContainerState)
+
+Pushes the given state to the stack.
 
 ```csharp
 public void PushState(ContainerState state);
@@ -3705,11 +4178,13 @@ public void PushState(ContainerState state);
 
 **Parameters**
 
-`state` [ContainerState](#containerstate-class)
+`state` [ContainerState](#containerstate-class): The new state of the container.
 
 ### Events
 
 #### DragCompleted
+
+Occurs when this [ItemContainer](#itemcontainer-class) completed the drag operation.
 
 ```csharp
 public event DragCompletedEventHandler DragCompleted;
@@ -3721,6 +4196,8 @@ public event DragCompletedEventHandler DragCompleted;
 
 #### DragDelta
 
+Occurs when this [ItemContainer](#itemcontainer-class) is being dragged.
+
 ```csharp
 public event DragDeltaEventHandler DragDelta;
 ```
@@ -3730,6 +4207,8 @@ public event DragDeltaEventHandler DragDelta;
 [DragDeltaEventHandler](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.DragDeltaEventHandler)
 
 #### DragStarted
+
+Occurs when this [ItemContainer](#itemcontainer-class) is the instigator of a drag operation.
 
 ```csharp
 public event DragStartedEventHandler DragStarted;
@@ -3741,6 +4220,8 @@ public event DragStartedEventHandler DragStarted;
 
 #### LocationChanged
 
+Occurs when the [ItemContainer.Location](#itemcontainer-class#location) of this [ItemContainer](#itemcontainer-class) is changed.
+
 ```csharp
 public event RoutedEventHandler LocationChanged;
 ```
@@ -3750,6 +4231,8 @@ public event RoutedEventHandler LocationChanged;
 [RoutedEventHandler](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventHandler)
 
 #### PreviewLocationChanged
+
+Occurs when the [ItemContainer](#itemcontainer-class) is previewing a new location.
 
 ```csharp
 public event PreviewLocationChanged PreviewLocationChanged;
@@ -3761,6 +4244,8 @@ public event PreviewLocationChanged PreviewLocationChanged;
 
 #### Selected
 
+Occurs when this [ItemContainer](#itemcontainer-class) is selected.
+
 ```csharp
 public event RoutedEventHandler Selected;
 ```
@@ -3771,6 +4256,8 @@ public event RoutedEventHandler Selected;
 
 #### Unselected
 
+Occurs when this [ItemContainer](#itemcontainer-class) is unselected.
+
 ```csharp
 public event RoutedEventHandler Unselected;
 ```
@@ -3778,6 +4265,72 @@ public event RoutedEventHandler Unselected;
 **Event Type**
 
 [RoutedEventHandler](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventHandler)
+
+## ItemContainerGestures Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ItemContainerGestures](#itemcontainergestures-class)
+
+**References:** [EditorGestures](#editorgestures-class), [SelectionGestures](#selectiongestures-class), [InputGestureRef](#inputgestureref-class)
+
+```csharp
+public class ItemContainerGestures
+```
+
+### Constructors
+
+#### ItemContainerGestures()
+
+```csharp
+public ItemContainerGestures();
+```
+
+### Properties
+
+#### CancelAction
+
+```csharp
+public InputGestureRef CancelAction { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Drag
+
+```csharp
+public InputGestureRef Drag { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Selection
+
+```csharp
+public SelectionGestures Selection { get; set; }
+```
+
+**Property Value**
+
+[SelectionGestures](#selectiongestures-class)
+
+### Methods
+
+#### Apply(ItemContainerGestures)
+
+```csharp
+public void Apply(ItemContainerGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [ItemContainerGestures](#itemcontainergestures-class)
 
 ## KnotNode Class
 
@@ -3811,9 +4364,9 @@ public KnotNode();
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Shape](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Shapes.Shape) → [BaseConnection](#baseconnection-class) → [LineConnection](#lineconnection-class)
 
-**Derived:** [CircuitConnection](#circuitconnection-class)
+**Derived:** [CircuitConnection](#circuitconnection-class), [StepConnection](#stepconnection-class)
 
-**References:** [BaseConnection](#baseconnection-class)
+**References:** [ConnectionDirection](#connectiondirection-enum), [BaseConnection](#baseconnection-class)
 
 Represents a line that has an arrow indicating its [BaseConnection.Direction](#baseconnection-class#direction).
 
@@ -3831,10 +4384,42 @@ public LineConnection();
 
 ### Methods
 
+#### DrawDefaultArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)
+
+```csharp
+protected override void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = 0, Orientation orientation = 0);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`arrowDirection` [ConnectionDirection](#connectiondirection-enum)
+
+`orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
+#### DrawDirectionalArrowsGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
 #### DrawLineGeometry(StreamGeometryContext, Point, Point)
 
 ```csharp
-protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 ```
 
 **Parameters**
@@ -3847,31 +4432,73 @@ protected override ValueTuple<Point, Point> DrawLineGeometry(StreamGeometryConte
 
 **Returns**
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
 
-#### GetArrowHeadPoints(Point, Point)
+#### InterpolateLine(Point, Point, Point, Point, Double)
 
 ```csharp
-protected override ValueTuple<Point, Point> GetArrowHeadPoints(Point source, Point target);
+protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Point p0, Point p1, Point p2, Point p3, double t);
 ```
 
 **Parameters**
 
-`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+`p0` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
-`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+`p1` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`p2` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`p3` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`t` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
 
 **Returns**
 
-[ValueTuple<Point, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+
+#### InterpolateLine(Point, Point, Point, Double)
+
+```csharp
+protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Point p0, Point p1, Point p2, double t);
+```
+
+**Parameters**
+
+`p0` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`p1` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`p2` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`t` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+**Returns**
+
+[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+
+#### InterpolateLineSegment(Point, Point, Double)
+
+```csharp
+protected static Point InterpolateLineSegment(Point p0, Point p1, double t);
+```
+
+**Parameters**
+
+`p0` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`p1` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`t` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 ## Match Enum
 
 **Namespace:** Nodify
 
 **Assembly:** Nodify
-
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [Match](#match-enum)
 
 **References:** [MultiGesture](#multigesture-class)
 
@@ -3884,22 +4511,332 @@ public enum Match
 #### All
 
 ```csharp
-public const Match All = 1;
+All = 1;
 ```
-
-**Field Value**
-
-[Match](#match-enum)
 
 #### Any
 
 ```csharp
-public const Match Any = 0;
+Any = 0;
+```
+
+## Minimap Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Minimap](#minimap-class)
+
+**References:** [ZoomEventHandler](#zoomeventhandler-delegate), [MinimapItem](#minimapitem-class), [NodifyEditor](#nodifyeditor-class), [ZoomEventArgs](#zoomeventargs-class)
+
+A minimap control that can position the viewport, and zoom in and out.
+
+```csharp
+public class Minimap : ItemsControl
+```
+
+### Constructors
+
+#### Minimap()
+
+```csharp
+public Minimap();
+```
+
+### Fields
+
+#### ElementItemsHost
+
+```csharp
+protected const string ElementItemsHost = "PART_ItemsHost";
 ```
 
 **Field Value**
 
-[Match](#match-enum)
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)
+
+### Properties
+
+#### Extent
+
+The area covered by the items and the viewport rectangle in graph space.
+
+```csharp
+public Rect Extent { get; set; }
+```
+
+**Property Value**
+
+[Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)
+
+#### IsDragging
+
+```csharp
+protected bool IsDragging { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### IsReadOnly
+
+Whether the minimap can move and zoom the viewport.
+
+```csharp
+public bool IsReadOnly { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### ItemsExtent
+
+The area covered by the [MinimapItem](#minimapitem-class)s in graph space.
+
+```csharp
+public Rect ItemsExtent { get; set; }
+```
+
+**Property Value**
+
+[Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)
+
+#### MaxViewportOffset
+
+The max position from the [NodifyEditor.ItemsExtent](#nodifyeditor-class#itemsextent) that the viewport can move to.
+
+```csharp
+public Size MaxViewportOffset { get; set; }
+```
+
+**Property Value**
+
+[Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)
+
+#### ResizeToViewport
+
+Whether the minimap should resize to also display the whole viewport.
+
+```csharp
+public bool ResizeToViewport { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### ViewportLocation
+
+```csharp
+public Point ViewportLocation { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### ViewportSize
+
+```csharp
+public Size ViewportSize { get; set; }
+```
+
+**Property Value**
+
+[Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)
+
+#### ViewportStyle
+
+Gets or sets the style to use for the viewport rectangle.
+
+```csharp
+public Style ViewportStyle { get; set; }
+```
+
+**Property Value**
+
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)
+
+### Methods
+
+#### GetContainerForItemOverride()
+
+```csharp
+protected override DependencyObject GetContainerForItemOverride();
+```
+
+**Returns**
+
+[DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject)
+
+#### IsItemItsOwnContainerOverride(Object)
+
+```csharp
+protected override bool IsItemItsOwnContainerOverride(object item);
+```
+
+**Parameters**
+
+`item` [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
+**Returns**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### OnApplyTemplate()
+
+```csharp
+public override void OnApplyTemplate();
+```
+
+#### OnMouseDown(MouseButtonEventArgs)
+
+```csharp
+protected override void OnMouseDown(MouseButtonEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)
+
+#### OnMouseMove(MouseEventArgs)
+
+```csharp
+protected override void OnMouseMove(MouseEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseEventArgs)
+
+#### OnMouseUp(MouseButtonEventArgs)
+
+```csharp
+protected override void OnMouseUp(MouseButtonEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)
+
+#### OnMouseWheel(MouseWheelEventArgs)
+
+```csharp
+protected override void OnMouseWheel(MouseWheelEventArgs e);
+```
+
+**Parameters**
+
+`e` [MouseWheelEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseWheelEventArgs)
+
+### Events
+
+#### Zoom
+
+Triggered when zooming in or out using the mouse wheel.
+
+```csharp
+public event ZoomEventHandler Zoom;
+```
+
+**Event Type**
+
+[ZoomEventHandler](#zoomeventhandler-delegate)
+
+## MinimapGestures Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [MinimapGestures](#minimapgestures-class)
+
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class)
+
+```csharp
+public class MinimapGestures
+```
+
+### Constructors
+
+#### MinimapGestures()
+
+```csharp
+public MinimapGestures();
+```
+
+### Properties
+
+#### DragViewport
+
+```csharp
+public InputGestureRef DragViewport { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### ZoomModifierKey
+
+```csharp
+public ModifierKeys ZoomModifierKey { get; set; }
+```
+
+**Property Value**
+
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)
+
+### Methods
+
+#### Apply(MinimapGestures)
+
+```csharp
+public void Apply(MinimapGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [MinimapGestures](#minimapgestures-class)
+
+## MinimapItem Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) → [MinimapItem](#minimapitem-class)
+
+**References:** [Minimap](#minimap-class)
+
+```csharp
+public class MinimapItem : ContentControl
+```
+
+### Constructors
+
+#### MinimapItem()
+
+```csharp
+public MinimapItem();
+```
+
+### Properties
+
+#### Location
+
+Gets or sets the location of this [MinimapItem](#minimapitem-class) inside the [Minimap](#minimap-class).
+
+```csharp
+public Point Location { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
 
 ## MultiGesture Class
 
@@ -3908,6 +4845,8 @@ public const Match Any = 0;
 **Assembly:** Nodify
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture) → [MultiGesture](#multigesture-class)
+
+**Derived:** [AnyGesture](#anygesture-class), [AllGestures](#allgestures-class)
 
 **References:** [Match](#match-enum)
 
@@ -3932,6 +4871,18 @@ public MultiGesture(Match match, InputGesture[] gestures);
 `match` [Match](#match-enum): The matching strategy.
 
 `gestures` [InputGesture[]](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture[]): The input gestures.
+
+### Fields
+
+#### None
+
+```csharp
+public static MultiGesture None;
+```
+
+**Field Value**
+
+[MultiGesture](#multigesture-class)
 
 ### Methods
 
@@ -3975,108 +4926,6 @@ public class Node : HeaderedContentControl
 public Node();
 ```
 
-### Fields
-
-#### ContentBrushProperty
-
-```csharp
-public static DependencyProperty ContentBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### FooterBrushProperty
-
-```csharp
-public static DependencyProperty FooterBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### FooterProperty
-
-```csharp
-public static DependencyProperty FooterProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### FooterTemplateProperty
-
-```csharp
-public static DependencyProperty FooterTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HasFooterProperty
-
-```csharp
-public static DependencyProperty HasFooterProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HeaderBrushProperty
-
-```csharp
-public static DependencyProperty HeaderBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### InputConnectorTemplateProperty
-
-```csharp
-public static DependencyProperty InputConnectorTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### InputProperty
-
-```csharp
-public static DependencyProperty InputProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### OutputConnectorTemplateProperty
-
-```csharp
-public static DependencyProperty OutputConnectorTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### OutputProperty
-
-```csharp
-public static DependencyProperty OutputProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 ### Properties
 
 #### ContentBrush
@@ -4090,6 +4939,18 @@ public Brush ContentBrush { get; set; }
 **Property Value**
 
 [Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
+
+#### ContentContainerStyle
+
+Gets or sets the style for the content container.
+
+```csharp
+public Style ContentContainerStyle { get; set; }
+```
+
+**Property Value**
+
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)
 
 #### Footer
 
@@ -4114,6 +4975,18 @@ public Brush FooterBrush { get; set; }
 **Property Value**
 
 [Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
+
+#### FooterContainerStyle
+
+Gets or sets the style for the footer container.
+
+```csharp
+public Style FooterContainerStyle { get; set; }
+```
+
+**Property Value**
+
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)
 
 #### FooterTemplate
 
@@ -4150,6 +5023,18 @@ public Brush HeaderBrush { get; set; }
 **Property Value**
 
 [Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)
+
+#### HeaderContainerStyle
+
+Gets or sets the style for the header container.
+
+```csharp
+public Style HeaderContainerStyle { get; set; }
+```
+
+**Property Value**
+
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)
 
 #### Input
 
@@ -4223,38 +5108,6 @@ public class NodeInput : Connector
 public NodeInput();
 ```
 
-### Fields
-
-#### ConnectorTemplateProperty
-
-```csharp
-public static DependencyProperty ConnectorTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HeaderProperty
-
-```csharp
-public static DependencyProperty HeaderProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HeaderTemplateProperty
-
-```csharp
-public static DependencyProperty HeaderTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 ### Properties
 
 #### ConnectorTemplate
@@ -4292,6 +5145,16 @@ public DataTemplate HeaderTemplate { get; set; }
 **Property Value**
 
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)
+
+#### Orientation
+
+```csharp
+public Orientation Orientation { get; set; }
+```
+
+**Property Value**
+
+[Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
 
 ## NodeOutput Class
 
@@ -4317,38 +5180,6 @@ public class NodeOutput : Connector
 public NodeOutput();
 ```
 
-### Fields
-
-#### ConnectorTemplateProperty
-
-```csharp
-public static DependencyProperty ConnectorTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HeaderProperty
-
-```csharp
-public static DependencyProperty HeaderProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### HeaderTemplateProperty
-
-```csharp
-public static DependencyProperty HeaderTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 ### Properties
 
 #### ConnectorTemplate
@@ -4387,6 +5218,16 @@ public DataTemplate HeaderTemplate { get; set; }
 
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)
 
+#### Orientation
+
+```csharp
+public Orientation Orientation { get; set; }
+```
+
+**Property Value**
+
+[Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)
+
 ## NodifyCanvas Class
 
 **Namespace:** Nodify
@@ -4410,18 +5251,6 @@ public class NodifyCanvas : Panel
 ```csharp
 public NodifyCanvas();
 ```
-
-### Fields
-
-#### ExtentProperty
-
-```csharp
-public static DependencyProperty ExtentProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 ### Properties
 
@@ -4475,7 +5304,7 @@ protected override Size MeasureOverride(Size constraint);
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Selector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.Selector) → [MultiSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.MultiSelector) → [NodifyEditor](#nodifyeditor-class)
 
-**References:** [ContainerState](#containerstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [ItemContainer](#itemcontainer-class), [GroupingNode](#groupingnode-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)
+**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)
 
 Groups [ItemContainer](#itemcontainer-class)s and [Connection](#connection-class)s in an area that you can drag, zoom and select.
 
@@ -4495,175 +5324,45 @@ public NodifyEditor();
 
 ### Fields
 
-#### AutoPanEdgeDistanceProperty
+#### CuttingConnectionTypes
 
 ```csharp
-public static DependencyProperty AutoPanEdgeDistanceProperty;
+public static HashSet<Type> CuttingConnectionTypes;
 ```
 
 **Field Value**
 
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
+[HashSet<Type>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet)
 
-#### AutoPanSpeedProperty
+#### CuttingLineEndPropertyKey
 
 ```csharp
-public static DependencyProperty AutoPanSpeedProperty;
+protected static DependencyPropertyKey CuttingLineEndPropertyKey;
 ```
 
 **Field Value**
 
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
-#### BringIntoViewMaxDurationProperty
+#### CuttingLineStartPropertyKey
 
 ```csharp
-public static DependencyProperty BringIntoViewMaxDurationProperty;
+protected static DependencyPropertyKey CuttingLineStartPropertyKey;
 ```
 
 **Field Value**
 
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
-#### BringIntoViewSpeedProperty
+#### ElementConnectionsHost
 
 ```csharp
-public static DependencyProperty BringIntoViewSpeedProperty;
+protected const string ElementConnectionsHost = "PART_ConnectionsHost";
 ```
 
 **Field Value**
 
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ConnectionCompletedCommandProperty
-
-```csharp
-public static DependencyProperty ConnectionCompletedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ConnectionsProperty
-
-```csharp
-public static DependencyProperty ConnectionsProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ConnectionStartedCommandProperty
-
-```csharp
-public static DependencyProperty ConnectionStartedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ConnectionTemplateProperty
-
-```csharp
-public static DependencyProperty ConnectionTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DecoratorContainerStyleProperty
-
-```csharp
-public static DependencyProperty DecoratorContainerStyleProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DecoratorsExtentProperty
-
-```csharp
-public static DependencyProperty DecoratorsExtentProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DecoratorsProperty
-
-```csharp
-public static DependencyProperty DecoratorsProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DecoratorTemplateProperty
-
-```csharp
-public static DependencyProperty DecoratorTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisableAutoPanningProperty
-
-```csharp
-public static DependencyProperty DisableAutoPanningProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisablePanningProperty
-
-```csharp
-public static DependencyProperty DisablePanningProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisableZoomingProperty
-
-```csharp
-public static DependencyProperty DisableZoomingProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisconnectConnectorCommandProperty
-
-```csharp
-public static DependencyProperty DisconnectConnectorCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DisplayConnectionsOnTopProperty
-
-```csharp
-public static DependencyProperty DisplayConnectionsOnTopProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)
 
 #### ElementItemsHost
 
@@ -4675,35 +5374,15 @@ protected const string ElementItemsHost = "PART_ItemsHost";
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/System.String)
 
-#### EnableRealtimeSelectionProperty
+#### IsCuttingPropertyKey
 
 ```csharp
-public static DependencyProperty EnableRealtimeSelectionProperty;
+protected static DependencyPropertyKey IsCuttingPropertyKey;
 ```
 
 **Field Value**
 
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### GridCellSizeProperty
-
-```csharp
-public static DependencyProperty GridCellSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsPanningProperty
-
-```csharp
-public static DependencyProperty IsPanningProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
 #### IsPanningPropertyKey
 
@@ -4715,16 +5394,6 @@ public static DependencyPropertyKey IsPanningPropertyKey;
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
-#### IsSelectingProperty
-
-```csharp
-public static DependencyProperty IsSelectingProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### IsSelectingPropertyKey
 
 ```csharp
@@ -4735,66 +5404,6 @@ protected static DependencyPropertyKey IsSelectingPropertyKey;
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
 
-#### ItemsDragCompletedCommandProperty
-
-```csharp
-public static DependencyProperty ItemsDragCompletedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ItemsDragStartedCommandProperty
-
-```csharp
-public static DependencyProperty ItemsDragStartedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ItemsExtentProperty
-
-```csharp
-public static DependencyProperty ItemsExtentProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### MaxViewportZoomProperty
-
-```csharp
-public static DependencyProperty MaxViewportZoomProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### MinViewportZoomProperty
-
-```csharp
-public static DependencyProperty MinViewportZoomProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### MouseLocationProperty
-
-```csharp
-public static DependencyProperty MouseLocationProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### MouseLocationPropertyKey
 
 ```csharp
@@ -4804,36 +5413,6 @@ protected static DependencyPropertyKey MouseLocationPropertyKey;
 **Field Value**
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
-
-#### PendingConnectionProperty
-
-```csharp
-public static DependencyProperty PendingConnectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### PendingConnectionTemplateProperty
-
-```csharp
-public static DependencyProperty PendingConnectionTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### RemoveConnectionCommandProperty
-
-```csharp
-public static DependencyProperty RemoveConnectionCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 #### ScaleTransform
 
@@ -4847,16 +5426,6 @@ protected readonly ScaleTransform ScaleTransform;
 
 [ScaleTransform](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.ScaleTransform)
 
-#### SelectedAreaProperty
-
-```csharp
-public static DependencyProperty SelectedAreaProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### SelectedAreaPropertyKey
 
 ```csharp
@@ -4866,26 +5435,6 @@ protected static DependencyPropertyKey SelectedAreaPropertyKey;
 **Field Value**
 
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)
-
-#### SelectedItemsProperty
-
-```csharp
-public static DependencyProperty SelectedItemsProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SelectionRectangleStyleProperty
-
-```csharp
-public static DependencyProperty SelectionRectangleStyleProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 #### TranslateTransform
 
@@ -4898,56 +5447,6 @@ protected readonly TranslateTransform TranslateTransform;
 **Field Value**
 
 [TranslateTransform](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.TranslateTransform)
-
-#### ViewportLocationProperty
-
-```csharp
-public static DependencyProperty ViewportLocationProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ViewportSizeProperty
-
-```csharp
-public static DependencyProperty ViewportSizeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ViewportTransformProperty
-
-```csharp
-public static DependencyProperty ViewportTransformProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ViewportUpdatedEvent
-
-```csharp
-public static RoutedEvent ViewportUpdatedEvent;
-```
-
-**Field Value**
-
-[RoutedEvent](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEvent)
-
-#### ViewportZoomProperty
-
-```csharp
-public static DependencyProperty ViewportZoomProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 ### Properties
 
@@ -5014,8 +5513,8 @@ public double BringIntoViewSpeed { get; set; }
 #### ConnectionCompletedCommand
 
 Invoked when the [PendingConnection](#pendingconnection-class) is completed.
-            Use [PendingConnection.CompletedCommand](#pendingconnection-class#completedcommand) if you want to control the visibility of the connection from the viewmodel.
-            Parameter is System.Tuple`2 where System.Tuple`2.Item1 is the [PendingConnection.Source](#pendingconnection-class#source) and System.Tuple`2.Item2 is [PendingConnection.Target](#pendingconnection-class#target).
+Use [PendingConnection.CompletedCommand](#pendingconnection-class#completedcommand) if you want to control the visibility of the connection from the viewmodel.
+Parameter is System.Tuple`2 where System.Tuple`2.Item1 is the [PendingConnection.Source](#pendingconnection-class#source) and System.Tuple`2.Item2 is [PendingConnection.Target](#pendingconnection-class#target).
 
 ```csharp
 public ICommand ConnectionCompletedCommand { get; set; }
@@ -5040,8 +5539,8 @@ public IEnumerable Connections { get; set; }
 #### ConnectionStartedCommand
 
 Invoked when the [PendingConnection](#pendingconnection-class) is completed.
-            Use [PendingConnection.StartedCommand](#pendingconnection-class#startedcommand) if you want to control the visibility of the connection from the viewmodel.
-            Parameter is [PendingConnection.Source](#pendingconnection-class#source).
+Use [PendingConnection.StartedCommand](#pendingconnection-class#startedcommand) if you want to control the visibility of the connection from the viewmodel.
+Parameter is [PendingConnection.Source](#pendingconnection-class#source).
 
 ```csharp
 public ICommand ConnectionStartedCommand { get; set; }
@@ -5062,6 +5561,66 @@ public DataTemplate ConnectionTemplate { get; set; }
 **Property Value**
 
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)
+
+#### CuttingCompletedCommand
+
+Invoked when a cutting operation is completed.
+
+```csharp
+public ICommand CuttingCompletedCommand { get; set; }
+```
+
+**Property Value**
+
+[ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
+
+#### CuttingLineEnd
+
+Gets the end point of the [CuttingLine](#cuttingline-class) while [NodifyEditor.IsCutting](#nodifyeditor-class#iscutting) is true.
+
+```csharp
+public Point CuttingLineEnd { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### CuttingLineStart
+
+Gets the start point of the [CuttingLine](#cuttingline-class) while [NodifyEditor.IsCutting](#nodifyeditor-class#iscutting) is true.
+
+```csharp
+public Point CuttingLineStart { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### CuttingLineStyle
+
+Gets or sets the style to use for the cutting line.
+
+```csharp
+public Style CuttingLineStyle { get; set; }
+```
+
+**Property Value**
+
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)
+
+#### CuttingStartedCommand
+
+Invoked when a cutting operation is started.
+
+```csharp
+public ICommand CuttingStartedCommand { get; set; }
+```
+
+**Property Value**
+
+[ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
 
 #### DecoratorContainerStyle
 
@@ -5150,8 +5709,8 @@ public bool DisableZooming { get; set; }
 #### DisconnectConnectorCommand
 
 Invoked when the [Connector.Disconnect](#connector-class#disconnect) event is raised.
-            Can also be handled at the [Connector](#connector-class) level using the [Connector.DisconnectCommand](#connector-class#disconnectcommand) command.
-            Parameter is the [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext).
+Can also be handled at the [Connector](#connector-class) level using the [Connector.DisconnectCommand](#connector-class#disconnectcommand) command.
+Parameter is the [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext).
 
 ```csharp
 public ICommand DisconnectConnectorCommand { get; set; }
@@ -5173,10 +5732,34 @@ public bool DisplayConnectionsOnTop { get; set; }
 
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
 
+#### EnableCuttingLinePreview
+
+Gets or sets whether the cutting line should apply the preview style to the interesected elements.
+
+```csharp
+public static bool EnableCuttingLinePreview { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### EnableDraggingContainersOptimizations
+
+Gets or sets if the current position of containers that are being dragged should not be committed until the end of the dragging operation.
+
+```csharp
+public static bool EnableDraggingContainersOptimizations { get; set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
 #### EnableRealtimeSelection
 
 Enables selecting and deselecting items while the [NodifyEditor.SelectedArea](#nodifyeditor-class#selectedarea) changes.
-            Disable for maximum performance when hundreds of items are generated.
+Disable for maximum performance when hundreds of items are generated.
 
 ```csharp
 public bool EnableRealtimeSelection { get; set; }
@@ -5237,7 +5820,7 @@ public uint GridCellSize { get; set; }
 #### HandleRightClickAfterPanningThreshold
 
 Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
-            Useful for System.Windows.Controls.ContextMenus to appear if mouse only moved a bit or not at all.
+Useful for System.Windows.Controls.ContextMenus to appear if mouse only moved a bit or not at all.
 
 ```csharp
 public static double HandleRightClickAfterPanningThreshold { get; set; }
@@ -5253,6 +5836,18 @@ Tells if the [NodifyEditor](#nodifyeditor-class) is doing operations on multiple
 
 ```csharp
 public bool IsBulkUpdatingItems { get; protected set; }
+```
+
+**Property Value**
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)
+
+#### IsCutting
+
+Gets a value that indicates whether a cutting operation is in progress.
+
+```csharp
+public bool IsCutting { get; set; }
 ```
 
 **Property Value**
@@ -5319,6 +5914,30 @@ public Rect ItemsExtent { get; set; }
 
 [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)
 
+#### ItemsSelectCompletedCommand
+
+Invoked when a selection operation is completed.
+
+```csharp
+public ICommand ItemsSelectCompletedCommand { get; set; }
+```
+
+**Property Value**
+
+[ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
+
+#### ItemsSelectStartedCommand
+
+Invoked when a selection operation is started.
+
+```csharp
+public ICommand ItemsSelectStartedCommand { get; set; }
+```
+
+**Property Value**
+
+[ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)
+
 #### MaxViewportZoom
 
 Gets or sets the maximum zoom factor of the viewport
@@ -5357,7 +5976,7 @@ public Point MouseLocation { get; protected set; }
 
 #### OptimizeRenderingMinimumContainers
 
-Gets or sets the minimum selected [ItemContainer](#itemcontainer-class)s needed to trigger optimizations when reaching the [NodifyEditor.OptimizeRenderingZoomOutPercent](#nodifyeditor-class#optimizerenderingzoomoutpercent).
+Gets or sets the minimum number of [ItemContainer](#itemcontainer-class)s needed to trigger optimizations when reaching the [NodifyEditor.OptimizeRenderingZoomOutPercent](#nodifyeditor-class#optimizerenderingzoomoutpercent).
 
 ```csharp
 public static uint OptimizeRenderingMinimumContainers { get; set; }
@@ -5370,7 +5989,7 @@ public static uint OptimizeRenderingMinimumContainers { get; set; }
 #### OptimizeRenderingZoomOutPercent
 
 Gets or sets the minimum zoom out percent needed to start optimizing the rendering for [ItemContainer](#itemcontainer-class)s.
-            Value is between 0 and 1.
+Value is between 0 and 1.
 
 ```csharp
 public static double OptimizeRenderingZoomOutPercent { get; set; }
@@ -5407,8 +6026,8 @@ public DataTemplate PendingConnectionTemplate { get; set; }
 #### RemoveConnectionCommand
 
 Invoked when the [BaseConnection.Disconnect](#baseconnection-class#disconnect) event is raised.
-            Can also be handled at the [BaseConnection](#baseconnection-class) level using the [BaseConnection.DisconnectCommand](#baseconnection-class#disconnectcommand) command.
-            Parameter is the [BaseConnection](#baseconnection-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext).
+Can also be handled at the [BaseConnection](#baseconnection-class) level using the [BaseConnection.DisconnectCommand](#baseconnection-class#disconnectcommand) command.
+Parameter is the [BaseConnection](#baseconnection-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext).
 
 ```csharp
 public ICommand RemoveConnectionCommand { get; set; }
@@ -5480,7 +6099,7 @@ public Point ViewportLocation { get; set; }
 
 #### ViewportSize
 
-Gets the size of the viewport.
+Gets the size of the viewport in graph space (scaled by the [NodifyEditor.ViewportZoom](#nodifyeditor-class#viewportzoom)).
 
 ```csharp
 public Size ViewportSize { get; set; }
@@ -5532,6 +6151,18 @@ public void BringIntoView(Point point, bool animated = true, Action onFinish = n
 
 `onFinish` [Action](https://docs.microsoft.com/en-us/dotnet/api/System.Action): The callback invoked when movement is finished.
 
+#### BringIntoView(Rect)
+
+Moves the viewport center at the center of the specified area.
+
+```csharp
+public void BringIntoView(Rect area);
+```
+
+**Parameters**
+
+`area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The location in graph space coordinates.
+
 #### FitToScreen(Rect?)
 
 Scales the viewport to fit the specified area or all the [ItemContainer](#itemcontainer-class)s if that's possible.
@@ -5566,6 +6197,56 @@ protected virtual EditorState GetInitialState();
 
 [EditorState](#editorstate-class): The initial state.
 
+#### GetLocationInsideEditor(Point, UIElement)
+
+Translates the specified location to graph space coordinates (relative to the [NodifyEditor.ItemsHost](#nodifyeditor-class#itemshost)).
+
+```csharp
+public Point GetLocationInsideEditor(Point location, UIElement relativeTo);
+```
+
+**Parameters**
+
+`location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): The location coordinates relative to relativeTo
+
+`relativeTo` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement): The element where the location was calculated from.
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): A location inside the graph.
+
+#### GetLocationInsideEditor(DragEventArgs)
+
+Translates the event location to graph space coordinates (relative to the [NodifyEditor.ItemsHost](#nodifyeditor-class#itemshost)).
+
+```csharp
+public Point GetLocationInsideEditor(DragEventArgs args);
+```
+
+**Parameters**
+
+`args` [DragEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DragEventArgs): The drag event.
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): A location inside the graph
+
+#### GetLocationInsideEditor(MouseEventArgs)
+
+Translates the event location to graph space coordinates (relative to the [NodifyEditor.ItemsHost](#nodifyeditor-class#itemshost)).
+
+```csharp
+public Point GetLocationInsideEditor(MouseEventArgs args);
+```
+
+**Parameters**
+
+`args` [MouseEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseEventArgs): The mouse event.
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): A location inside the graph
+
 #### InvertSelection(Rect, Boolean)
 
 Inverts the [ItemContainer](#itemcontainer-class)s selection in the specified area.
@@ -5578,7 +6259,7 @@ public void InvertSelection(Rect area, bool fit = false);
 
 `area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The area to look for [ItemContainer](#itemcontainer-class)s.
 
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class).  False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
 
 #### IsItemItsOwnContainerOverride(Object)
 
@@ -5682,6 +6363,16 @@ protected override void OnMouseWheel(MouseWheelEventArgs e);
 
 `e` [MouseWheelEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseWheelEventArgs)
 
+#### OnRemoveConnection(Object)
+
+```csharp
+protected void OnRemoveConnection(object dataContext);
+```
+
+**Parameters**
+
+`dataContext` [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
 #### OnRenderSizeChanged(SizeChangedInfo)
 
 ```csharp
@@ -5705,7 +6396,7 @@ protected override void OnSelectionChanged(SelectionChangedEventArgs e);
 #### OnViewportUpdated()
 
 Updates the [NodifyEditor.ViewportSize](#nodifyeditor-class#viewportsize) and raises the [NodifyEditor.ViewportUpdatedEvent](#nodifyeditor-class#viewportupdatedevent).
-            Called when the [UIElement.RenderSize](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement.rendersize) or [NodifyEditor.ViewportZoom](#nodifyeditor-class#viewportzoom) is changed.
+Called when the [UIElement.RenderSize](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement.rendersize) or [NodifyEditor.ViewportZoom](#nodifyeditor-class#viewportzoom) is changed.
 
 ```csharp
 protected void OnViewportUpdated();
@@ -5753,7 +6444,7 @@ public void SelectArea(Rect area, bool append = false, bool fit = false);
 
 `append` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): If true, it will add to the existing selection.
 
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class).  False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
 
 #### UnselectArea(Rect, Boolean)
 
@@ -5767,7 +6458,7 @@ public void UnselectArea(Rect area, bool fit = false);
 
 `area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The area to look for [ItemContainer](#itemcontainer-class)s.
 
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class).  False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
 
 #### ZoomAtPosition(Double, Point)
 
@@ -5813,6 +6504,132 @@ public event RoutedEventHandler ViewportUpdated;
 
 [RoutedEventHandler](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventHandler)
 
+## NodifyEditorGestures Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [NodifyEditorGestures](#nodifyeditorgestures-class)
+
+**References:** [EditorGestures](#editorgestures-class), [SelectionGestures](#selectiongestures-class), [InputGestureRef](#inputgestureref-class)
+
+```csharp
+public class NodifyEditorGestures
+```
+
+### Constructors
+
+#### NodifyEditorGestures()
+
+```csharp
+public NodifyEditorGestures();
+```
+
+### Properties
+
+#### CancelAction
+
+```csharp
+public InputGestureRef CancelAction { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Cutting
+
+```csharp
+public InputGestureRef Cutting { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### FitToScreen
+
+```csharp
+public InputGestureRef FitToScreen { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Pan
+
+```csharp
+public InputGestureRef Pan { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### ResetViewportLocation
+
+```csharp
+public InputGestureRef ResetViewportLocation { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### Selection
+
+```csharp
+public SelectionGestures Selection { get; set; }
+```
+
+**Property Value**
+
+[SelectionGestures](#selectiongestures-class)
+
+#### ZoomIn
+
+```csharp
+public InputGestureRef ZoomIn { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+#### ZoomModifierKey
+
+```csharp
+public ModifierKeys ZoomModifierKey { get; set; }
+```
+
+**Property Value**
+
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)
+
+#### ZoomOut
+
+```csharp
+public InputGestureRef ZoomOut { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+### Methods
+
+#### Apply(NodifyEditorGestures)
+
+```csharp
+public void Apply(NodifyEditorGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [NodifyEditorGestures](#nodifyeditorgestures-class)
+
 ## PendingConnection Class
 
 **Namespace:** Nodify
@@ -5837,170 +6654,6 @@ public class PendingConnection : ContentControl
 public PendingConnection();
 ```
 
-### Fields
-
-#### AllowOnlyConnectorsProperty
-
-```csharp
-public static DependencyProperty AllowOnlyConnectorsProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### CompletedCommandProperty
-
-```csharp
-public static DependencyProperty CompletedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### DirectionProperty
-
-```csharp
-public static DependencyProperty DirectionProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### EnablePreviewProperty
-
-```csharp
-public static DependencyProperty EnablePreviewProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### EnableSnappingProperty
-
-```csharp
-public static DependencyProperty EnableSnappingProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsOverElementProperty
-
-Will be set for [Connector](#connector-class)s and [ItemContainer](#itemcontainer-class)s when the pending connection is over the element if [PendingConnection.EnablePreview](#pendingconnection-class#enablepreview) or [PendingConnection.EnableSnapping](#pendingconnection-class#enablesnapping) is true.
-
-```csharp
-public static DependencyProperty IsOverElementProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### IsVisibleProperty
-
-```csharp
-public static DependencyProperty IsVisibleProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### PreviewTargetProperty
-
-```csharp
-public static DependencyProperty PreviewTargetProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SourceAnchorProperty
-
-```csharp
-public static DependencyProperty SourceAnchorProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### SourceProperty
-
-```csharp
-public static DependencyProperty SourceProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### StartedCommandProperty
-
-```csharp
-public static DependencyProperty StartedCommandProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### StrokeDashArrayProperty
-
-```csharp
-public static DependencyProperty StrokeDashArrayProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### StrokeProperty
-
-```csharp
-public static DependencyProperty StrokeProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### StrokeThicknessProperty
-
-```csharp
-public static DependencyProperty StrokeThicknessProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### TargetAnchorProperty
-
-```csharp
-public static DependencyProperty TargetAnchorProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### TargetProperty
-
-```csharp
-public static DependencyProperty TargetProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 ### Properties
 
 #### AllowOnlyConnectors
@@ -6018,8 +6671,8 @@ public bool AllowOnlyConnectors { get; set; }
 #### CompletedCommand
 
 Gets or sets the command to invoke when the pending connection is completed.
-            Will not be invoked if [NodifyEditor.ConnectionCompletedCommand](#nodifyeditor-class#connectioncompletedcommand) is used.
-            [PendingConnection.Target](#pendingconnection-class#target) will be set to the desired [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) and will also be the command's parameter.
+Will not be invoked if [NodifyEditor.ConnectionCompletedCommand](#nodifyeditor-class#connectioncompletedcommand) is used.
+[PendingConnection.Target](#pendingconnection-class#target) will be set to the desired [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) and will also be the command's parameter.
 
 ```csharp
 public ICommand CompletedCommand { get; set; }
@@ -6128,8 +6781,8 @@ public Point SourceAnchor { get; set; }
 #### StartedCommand
 
 Gets or sets the command to invoke when the pending connection is started.
-            Will not be invoked if [NodifyEditor.ConnectionStartedCommand](#nodifyeditor-class#connectionstartedcommand) is used.
-            [PendingConnection.Source](#pendingconnection-class#source) will be set to the [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) that started this connection and will also be the command's parameter.
+Will not be invoked if [NodifyEditor.ConnectionStartedCommand](#nodifyeditor-class#connectionstartedcommand) is used.
+[PendingConnection.Source](#pendingconnection-class#source) will be set to the [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) that started this connection and will also be the command's parameter.
 
 ```csharp
 public ICommand StartedCommand { get; set; }
@@ -6178,7 +6831,7 @@ public double StrokeThickness { get; set; }
 #### Target
 
 Gets or sets the [Connector](#connector-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) (or potentially an [ItemContainer](#itemcontainer-class)'s [FrameworkElement.DataContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement.datacontext) if [PendingConnection.AllowOnlyConnectors](#pendingconnection-class#allowonlyconnectors) is false) that the [PendingConnection.Source](#pendingconnection-class#source) can connect to.
-            Only set when the connection is completed (see [PendingConnection.CompletedCommand](#pendingconnection-class#completedcommand)).
+Only set when the connection is completed (see [PendingConnection.CompletedCommand](#pendingconnection-class#completedcommand)).
 
 ```csharp
 public object Target { get; set; }
@@ -6418,7 +7071,7 @@ public delegate void PendingConnectionEventHandler(object sender, PendingConnect
 
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [PreviewLocationChanged](#previewlocationchanged-delegate)
 
-**References:** [ItemContainer](#itemcontainer-class), [ItemContainer](#itemcontainer-class)
+**References:** [ItemContainer](#itemcontainer-class)
 
 Delegate used to notify when an [ItemContainer](#itemcontainer-class) is previewing a new location.
 
@@ -6524,59 +7177,123 @@ public delegate void ResizeEventHandler(object sender, ResizeEventArgs e);
 
 `e` [ResizeEventArgs](#resizeeventargs-class): The event data.
 
-## Selection Class
+## SelectionGestures Class
 
 **Namespace:** Nodify
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Selection](#selection-class)
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [SelectionGestures](#selectiongestures-class)
+
+**References:** [InputGestureRef](#inputgestureref-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class)
 
 ```csharp
-public static class Selection
+public class SelectionGestures
 ```
+
+### Constructors
+
+#### SelectionGestures(MouseAction)
+
+```csharp
+public SelectionGestures(MouseAction mouseAction);
+```
+
+**Parameters**
+
+`mouseAction` [MouseAction](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseAction)
+
+#### SelectionGestures()
+
+```csharp
+public SelectionGestures();
+```
+
+### Fields
+
+#### None
+
+```csharp
+public static SelectionGestures None;
+```
+
+**Field Value**
+
+[SelectionGestures](#selectiongestures-class)
 
 ### Properties
 
 #### Append
 
 ```csharp
-public static InputGesture Append { get; set; }
+public InputGestureRef Append { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[InputGestureRef](#inputgestureref-class)
+
+#### Cancel
+
+```csharp
+public InputGestureRef Cancel { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
 
 #### Invert
 
 ```csharp
-public static InputGesture Invert { get; set; }
+public InputGestureRef Invert { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[InputGestureRef](#inputgestureref-class)
 
 #### Remove
 
 ```csharp
-public static InputGesture Remove { get; set; }
+public InputGestureRef Remove { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[InputGestureRef](#inputgestureref-class)
 
 #### Replace
 
 ```csharp
-public static InputGesture Replace { get; set; }
+public InputGestureRef Replace { get; set; }
 ```
 
 **Property Value**
 
-[InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture)
+[InputGestureRef](#inputgestureref-class)
+
+#### Select
+
+```csharp
+public InputGestureRef Select { get; set; }
+```
+
+**Property Value**
+
+[InputGestureRef](#inputgestureref-class)
+
+### Methods
+
+#### Apply(SelectionGestures)
+
+```csharp
+public void Apply(SelectionGestures gestures);
+```
+
+**Parameters**
+
+`gestures` [SelectionGestures](#selectiongestures-class)
 
 ## SelectionHelper Class
 
@@ -6609,6 +7326,14 @@ public SelectionHelper(NodifyEditor host);
 `host` [NodifyEditor](#nodifyeditor-class): The editor to select items from.
 
 ### Methods
+
+#### Abort()
+
+Aborts the current selection.
+
+```csharp
+public void Abort();
+```
 
 #### End()
 
@@ -6650,8 +7375,6 @@ public void Update(Point endLocation);
 
 **Assembly:** Nodify
 
-**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ValueType](https://docs.microsoft.com/en-us/dotnet/api/System.ValueType) → [Enum](https://docs.microsoft.com/en-us/dotnet/api/System.Enum) → [SelectionType](#selectiontype-enum)
-
 **References:** [EditorSelectingState](#editorselectingstate-class), [SelectionHelper](#selectionhelper-class)
 
 ```csharp
@@ -6663,42 +7386,26 @@ public enum SelectionType
 #### Append
 
 ```csharp
-public const SelectionType Append = 2;
+Append = 2;
 ```
-
-**Field Value**
-
-[SelectionType](#selectiontype-enum)
 
 #### Invert
 
 ```csharp
-public const SelectionType Invert = 3;
+Invert = 3;
 ```
-
-**Field Value**
-
-[SelectionType](#selectiontype-enum)
 
 #### Remove
 
 ```csharp
-public const SelectionType Remove = 1;
+Remove = 1;
 ```
-
-**Field Value**
-
-[SelectionType](#selectiontype-enum)
 
 #### Replace
 
 ```csharp
-public const SelectionType Replace = 0;
+Replace = 0;
 ```
-
-**Field Value**
-
-[SelectionType](#selectiontype-enum)
 
 ## StateNode Class
 
@@ -6726,36 +7433,6 @@ public StateNode();
 
 ### Fields
 
-#### ContentProperty
-
-```csharp
-public static DependencyProperty ContentProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### ContentTemplateProperty
-
-```csharp
-public static DependencyProperty ContentTemplateProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
-#### CornerRadiusProperty
-
-```csharp
-public static DependencyProperty CornerRadiusProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
-
 #### ElementContent
 
 ```csharp
@@ -6765,16 +7442,6 @@ protected const string ElementContent = "PART_Content";
 **Field Value**
 
 [String](https://docs.microsoft.com/en-us/dotnet/api/System.String)
-
-#### HighlightBrushProperty
-
-```csharp
-public static DependencyProperty HighlightBrushProperty;
-```
-
-**Field Value**
-
-[DependencyProperty](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyProperty)
 
 ### Properties
 
@@ -6865,3 +7532,197 @@ protected override void OnMouseUp(MouseButtonEventArgs e);
 **Parameters**
 
 `e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)
+
+## StepConnection Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Shape](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Shapes.Shape) → [BaseConnection](#baseconnection-class) → [LineConnection](#lineconnection-class) → [StepConnection](#stepconnection-class)
+
+**References:** [ConnectorPosition](#connectorposition-enum)
+
+```csharp
+public class StepConnection : LineConnection
+```
+
+### Constructors
+
+#### StepConnection()
+
+```csharp
+public StepConnection();
+```
+
+### Properties
+
+#### SourcePosition
+
+Gets or sets the position of the source connector.
+
+```csharp
+public ConnectorPosition SourcePosition { get; set; }
+```
+
+**Property Value**
+
+[ConnectorPosition](#connectorposition-enum)
+
+#### TargetPosition
+
+Gets or sets the position of the target connector.
+
+```csharp
+public ConnectorPosition TargetPosition { get; set; }
+```
+
+**Property Value**
+
+[ConnectorPosition](#connectorposition-enum)
+
+### Methods
+
+#### DrawDirectionalArrowsGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### DrawLineGeometry(StreamGeometryContext, Point, Point)
+
+```csharp
+protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>> DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
+```
+
+**Parameters**
+
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+**Returns**
+
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+
+#### GetTextPosition(FormattedText, Point, Point)
+
+```csharp
+protected override Point GetTextPosition(FormattedText text, Point source, Point target);
+```
+
+**Parameters**
+
+`text` [FormattedText](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.FormattedText)
+
+`source` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+`target` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+**Returns**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+## ZoomEventArgs Class
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.EventArgs) → [RoutedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventArgs) → [ZoomEventArgs](#zoomeventargs-class)
+
+**References:** [ZoomEventHandler](#zoomeventhandler-delegate), [Minimap](#minimap-class)
+
+Provides data for [Minimap.Zoom](#minimap-class#zoom) routed event.
+
+```csharp
+public class ZoomEventArgs : RoutedEventArgs
+```
+
+### Constructors
+
+#### ZoomEventArgs(Double, Point)
+
+Initializes a new instance of the [ZoomEventArgs](#zoomeventargs-class) class using the specified [ZoomEventArgs.Zoom](#zoomeventargs-class#zoom) and [ZoomEventArgs.Location](#zoomeventargs-class#location).
+
+```csharp
+public ZoomEventArgs(double zoom, Point location);
+```
+
+**Parameters**
+
+`zoom` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+`location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+### Properties
+
+#### Location
+
+Gets the location where the editor should zoom in.
+
+```csharp
+public Point Location { get; set; }
+```
+
+**Property Value**
+
+[Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)
+
+#### Zoom
+
+Gets the zoom amount.
+
+```csharp
+public double Zoom { get; set; }
+```
+
+**Property Value**
+
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)
+
+### Methods
+
+#### InvokeEventHandler(Delegate, Object)
+
+```csharp
+protected override void InvokeEventHandler(Delegate genericHandler, object genericTarget);
+```
+
+**Parameters**
+
+`genericHandler` [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate)
+
+`genericTarget` [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)
+
+## ZoomEventHandler Delegate
+
+**Namespace:** Nodify
+
+**Assembly:** Nodify
+
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ZoomEventHandler](#zoomeventhandler-delegate)
+
+**References:** [ZoomEventArgs](#zoomeventargs-class), [Minimap](#minimap-class)
+
+Represents the method that will handle [Minimap.Zoom](#minimap-class#zoom) routed event.
+
+```csharp
+public delegate void ZoomEventHandler(object sender, ZoomEventArgs e);
+```
+
+**Parameters**
+
+`sender` [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object): The object where the event handler is attached.
+
+`e` [ZoomEventArgs](#zoomeventargs-class): The event data.
