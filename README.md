@@ -87,6 +87,9 @@ Avalonia version compatibility chart:
 
 For the wiki please refer to the original [miroiu's Wiki](https://github.com/miroiu/nodify/wiki) since the API is identical, but please report bugs here. However, if you find a bug, please try to check if it also occurs in the original WPF's version.
 
+> [!NOTE]  
+> Avalonia.Point should be used in place of System.Windows.Point (Anchor points).
+
 ## ❤️ [Contributing](CONTRIBUTING.md)
 
 If you find a bug in Avalonia port, bug reports, PRs are more than welcome. If you think this might be not related to Avalonia, please try to reproduce it first in the original [WPF's version](https://github.com/miroiu/nodify).
