@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added OutlineBrush and OutlineThickness dependency properties to BaseConnection to support increasing the selection area without increasing the stroke thickness
 > - Bugfixes:
 
 #### **Version 6.3.0**
