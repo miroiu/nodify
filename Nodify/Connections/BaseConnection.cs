@@ -128,6 +128,8 @@ namespace Nodify
         public static readonly DependencyProperty ArrowShapeProperty = DependencyProperty.Register(nameof(ArrowShape), typeof(ArrowHeadShape), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadShape.Arrowhead, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty SplitCommandProperty = DependencyProperty.Register(nameof(SplitCommand), typeof(ICommand), typeof(BaseConnection));
         public static readonly DependencyProperty DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner(typeof(BaseConnection));
+        public static readonly DependencyProperty OutlineThicknessProperty = DependencyProperty.Register(nameof(OutlineThickness), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double5, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnOutlinePenChanged)));
+        public static readonly DependencyProperty OutlineBrushProperty = DependencyProperty.Register(nameof(OutlineBrush), typeof(Brush), typeof(BaseConnection), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnOutlinePenChanged)));
         public static readonly DependencyProperty ForegroundProperty = TextBlock.ForegroundProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty FontSizeProperty = TextElement.FontSizeProperty.AddOwner(typeof(BaseConnection));
@@ -135,6 +137,11 @@ namespace Nodify
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
+
+        private static void OnOutlinePenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((BaseConnection)d)._outlinePen = null;
+        }
 
         /// <summary>
         /// Gets or sets the start point of this connection.
@@ -292,6 +299,24 @@ namespace Nodify
         }
 
         /// <summary>
+        /// The thickness of the outline.
+        /// </summary>
+        public double OutlineThickness
+        {
+            get => (double)GetValue(OutlineThicknessProperty);
+            set => SetValue(OutlineThicknessProperty, value);
+        }
+
+        /// <summary>
+        /// The brush used to render the outline.
+        /// </summary>
+        public Brush? OutlineBrush
+        {
+            get => (Brush?)GetValue(OutlineBrushProperty);
+            set => SetValue(OutlineBrushProperty, value);
+        }
+
+        /// <summary>
         /// The brush used to render the <see cref="Text"/>.
         /// </summary>
         public Brush? Foreground
@@ -372,6 +397,8 @@ namespace Nodify
         /// Gets a vector that has its coordinates set to 0.
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
+
+        private Pen? _outlinePen;
 
         private readonly StreamGeometry _geometry = new StreamGeometry
         {
@@ -734,8 +761,18 @@ namespace Nodify
             }
         }
 
+        private Pen GetOutlinePen()
+        {
+            return _outlinePen ??= new Pen(OutlineBrush, StrokeThickness + OutlineThickness * 2d);
+        }
+
         protected override void OnRender(DrawingContext drawingContext)
         {
+            if (OutlineBrush != null)
+            {
+                drawingContext.DrawGeometry(OutlineBrush, GetOutlinePen(), DefiningGeometry);
+            }
+
             base.OnRender(drawingContext);
 
             if (!string.IsNullOrEmpty(Text))
