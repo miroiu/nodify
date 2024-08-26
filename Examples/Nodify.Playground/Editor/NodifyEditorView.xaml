@@ -41,17 +41,26 @@
                       Transform="{Binding DpiScaledViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
-        <SolidColorBrush x:Key="SquareConnectorColor" Color="MediumSlateBlue" />
-        <SolidColorBrush x:Key="TriangleConnectorColor" Color="MediumVioletRed" />
+        <SolidColorBrush x:Key="SquareConnectorColor"
+                         Color="MediumSlateBlue" />
+        <SolidColorBrush x:Key="TriangleConnectorColor"
+                         Color="MediumVioletRed" />
+        <SolidColorBrush x:Key="SquareConnectorOutline"
+                         Color="MediumSlateBlue"
+                         Opacity="0.15" />
+        <SolidColorBrush x:Key="TriangleConnectorOutline"
+                         Color="MediumVioletRed"
+                         Opacity="0.15" />
         
-        <!-- <UIElement x:Key="ConnectionAnimationPlaceholder" Opacity="1" /> -->
+        <!-- UIElement x:Key="ConnectionAnimationPlaceholder" -->
+        <!--            Opacity="1" /> -->
 
         <!-- <Storyboard x:Key="HighlightConnection"> -->
-        <!--     <DoubleAnimation Storyboard.TargetProperty="StrokeThickness"  -->
-        <!--                      Duration="0:0:0.3" From="3" To="6"  /> -->
         <!--     <DoubleAnimation Storyboard.Target="{StaticResource ConnectionAnimationPlaceholder}" -->
-        <!--                      Storyboard.TargetProperty="(Control.Opacity)"  -->
-        <!--                      Duration="0:0:0.3" From="1" To="0.3"  /> -->
+        <!--                      Storyboard.TargetProperty="(UIElement.Opacity)" -->
+        <!--                      Duration="0:0:0.3" -->
+        <!--                      From="1" -->
+        <!--                      To="0.3" /> -->
         <!-- </Storyboard> -->
 
         <ControlTheme x:Key="ConnectionStyle" TargetType="{x:Type nodify:BaseConnection}"
@@ -61,13 +70,21 @@
                     <BehaviorCollection>
                         <DataTrigger Property="Input.Shape" 
                                      Value="{x:Static local:ConnectorShape.Square}">
-                            <PropertySetter Property="Stroke" Value="{StaticResource SquareConnectorColor}"/>
-                            <PropertySetter Property="Fill" Value="{StaticResource SquareConnectorColor}"/>
+                            <PropertySetter Property="Stroke"
+                                    Value="{StaticResource SquareConnectorColor}" />
+                            <PropertySetter Property="Fill"
+                                    Value="{StaticResource SquareConnectorColor}" />
+                            <PropertySetter Property="OutlineBrush"
+                                    Value="{StaticResource SquareConnectorOutline}" />
                         </DataTrigger>
                         <DataTrigger Property="Input.Shape" 
                                      Value="{x:Static local:ConnectorShape.Triangle}">
-                            <PropertySetter Property="Stroke" Value="{StaticResource TriangleConnectorColor}"/>
-                            <PropertySetter Property="Fill" Value="{StaticResource TriangleConnectorColor}"/>
+                            <PropertySetter Property="Stroke"
+                                    Value="{StaticResource TriangleConnectorColor}" />
+                            <PropertySetter Property="Fill"
+                                    Value="{StaticResource TriangleConnectorColor}" />
+                            <PropertySetter Property="OutlineBrush"
+                                    Value="{StaticResource TriangleConnectorOutline}" />
                         </DataTrigger>
                         <DataTrigger Property="IsMouseDirectlyOver" Value="True">
                             <!-- <DataTrigger.EnterActions> -->
@@ -76,7 +93,8 @@
                             <!-- <DataTrigger.ExitActions> -->
                             <!--     <RemoveStoryboard BeginStoryboardName="HighlightConnection" /> -->
                             <!-- </DataTrigger.ExitActions> -->
-                            <PropertySetter Property="Opacity" Value="1" />
+                            <PropertySetter Property="Opacity"
+                                    Value="1" />
                         </DataTrigger>
                     </BehaviorCollection>
                 </BehaviorCollectionTemplate>
@@ -85,6 +103,12 @@
             <Setter Property="StrokeThickness" Value="3"/>
             <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
             <Setter Property="Fill" Value="{DynamicResource Connection.StrokeBrush}"/>
+            <Setter Property="OutlineBrush">
+                <Setter.Value>
+                    <SolidColorBrush Color="{DynamicResource Connection.StrokeColor}"
+                                     Opacity="0.15" />
+                </Setter.Value>
+            </Setter>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="(ToolTip.Tip)" Value="Double click to split"/>
             <Setter Property="Source" Value="{Binding Output.Anchor}" />

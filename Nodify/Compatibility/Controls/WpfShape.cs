@@ -57,10 +57,7 @@ public class WpfShape : Panel
         _shape.Bind(StrokeDashOffsetProperty, this.GetObservable(StrokeDashOffsetProperty), BindingPriority.Template);
         _shape.Bind(StrokeLineCapProperty, this.GetObservable(StrokeLineCapProperty), BindingPriority.Template);
         _shape.Bind(StrokeJoinProperty, this.GetObservable(StrokeJoinProperty), BindingPriority.Template);
-        _renderer = new InnerRenderer()
-        {
-            IsHitTestVisible = false
-        };
+        _renderer = new InnerRenderer();
         Children.Add(_shape);
         Children.Add(_renderer);
         _renderer.OnRender += OnRender;

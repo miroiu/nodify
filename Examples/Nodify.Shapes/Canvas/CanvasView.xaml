@@ -199,6 +199,19 @@
                             <SolidColorBrush Color="White"
                                              Opacity="0.7" />
                         </nodify:StepConnection.Stroke>
+                        <nodify:StepConnection.Theme>
+                            <ControlTheme TargetType="{x:Type nodify:StepConnection}">
+                                <Setter Property="OutlineBrush"
+                                        Value="Transparent" />
+                                <Style Selector="^:pointerover">
+                                    <Setter Property="OutlineBrush">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="White" Opacity="0.15" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ControlTheme>
+                        </nodify:StepConnection.Theme>
                     </nodify:StepConnection>
                 </DataTemplate>
             </nodify:NodifyEditor.ConnectionTemplate>
@@ -371,7 +384,8 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type shared:Resizer}">
-                                <Grid Margin="-3 -6 -6 -3" Background="Transparent">
+                                <Grid Margin="-3 -6 -6 -3"
+                                      Background="Transparent">
                                     <Rectangle Height="12"
                                                Width="3"
                                                Fill="#d2d4d7"
