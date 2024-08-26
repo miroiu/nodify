@@ -128,6 +128,8 @@ namespace Nodify
         public static readonly StyledProperty<ArrowHeadShape> ArrowShapeProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadShape>(nameof(ArrowShape), ArrowHeadShape.Arrowhead);
         public static readonly StyledProperty<ICommand> SplitCommandProperty = AvaloniaProperty.Register<BaseConnection, ICommand>(nameof(SplitCommand));
         public static readonly StyledProperty<ICommand> DisconnectCommandProperty = Connector.DisconnectCommandProperty.AddOwner<BaseConnection>();
+        public static readonly StyledProperty<double> OutlineThicknessProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(OutlineThickness), BoxValue.Double5);
+        public static readonly StyledProperty<IBrush?> OutlineBrushProperty = AvaloniaProperty.Register<BaseConnection, IBrush?>(nameof(OutlineBrush));
         public static readonly StyledProperty<IBrush?> ForegroundProperty = TextBlock.ForegroundProperty.AddOwner<BaseConnection>();
         public static readonly StyledProperty<string?> TextProperty = TextBlock.TextProperty.AddOwner<BaseConnection>();
         public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<BaseConnection>();
@@ -136,14 +138,11 @@ namespace Nodify
         public static readonly StyledProperty<FontStyle> FontStyleProperty = TextElement.FontStyleProperty.AddOwner<BaseConnection>();
         public static readonly StyledProperty<FontStretch> FontStretchProperty = TextElement.FontStretchProperty.AddOwner<BaseConnection>();
 
-        static BaseConnection()
+        private static void OnOutlinePenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AffectsRender<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, TextProperty, DirectionalArrowsCountProperty, DirectionalArrowsOffsetProperty);
-            AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty, SourceOffsetProperty, TargetOffsetProperty, 
-                SourceOffsetModeProperty, TargetOffsetModeProperty, DirectionProperty, SpacingProperty, ArrowSizeProperty, ArrowEndsProperty, ArrowShapeProperty, SourceOrientationProperty, TargetOrientationProperty, DirectionalArrowsCountProperty, DirectionalArrowsOffsetProperty);
+            ((BaseConnection)d)._outlinePen = null;
         }
-        
+
         /// <summary>
         /// Gets or sets the start point of this connection.
         /// </summary>
@@ -300,6 +299,24 @@ namespace Nodify
         }
 
         /// <summary>
+        /// The thickness of the outline.
+        /// </summary>
+        public double OutlineThickness
+        {
+            get => (double)GetValue(OutlineThicknessProperty);
+            set => SetValue(OutlineThicknessProperty, value);
+        }
+
+        /// <summary>
+        /// The brush used to render the outline.
+        /// </summary>
+        public IBrush? OutlineBrush
+        {
+            get => (IBrush?)GetValue(OutlineBrushProperty);
+            set => SetValue(OutlineBrushProperty, value);
+        }
+
+        /// <summary>
         /// The brush used to render the <see cref="Text"/>.
         /// </summary>
         public IBrush? Foreground
@@ -381,6 +398,8 @@ namespace Nodify
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
         
+        private Pen? _outlinePen;
+
         protected override Geometry CreateDefiningGeometry()
         {
             var _geometry = new StreamGeometry
@@ -742,8 +761,18 @@ namespace Nodify
             }
         }
         
+        private Pen GetOutlinePen()
+        {
+            return _outlinePen ??= new Pen(OutlineBrush, StrokeThickness + OutlineThickness * 2d);
+        }
+
         protected override void Render(DrawingContext drawingContext)
         {
+            if (OutlineBrush != null)
+            {
+                drawingContext.DrawGeometry(OutlineBrush, GetOutlinePen(), CreateDefiningGeometry());
+            }
+
             base.Render(drawingContext);
         
             if (!string.IsNullOrEmpty(Text))
