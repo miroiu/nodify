@@ -14,15 +14,6 @@
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
         <shared:ToStringConverter x:Key="ToStringConverter" />
-
-        <Storyboard RepeatBehavior="Forever"
-                    x:Key="{x:Static local:MainWindow.AnimateDirectionalArrowsStoryboardKey}">
-            <DoubleAnimation Duration="0:0:2"
-                             From="0"
-                             To="1"
-                             Storyboard.Target="{Binding .,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
-                             Storyboard.TargetProperty="DirectionalArrowsOffset" />
-        </Storyboard>
     </Window.Resources>
 
     <Window.DataContext>

@@ -122,6 +122,8 @@ namespace Nodify
         public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register(nameof(Direction), typeof(ConnectionDirection), typeof(BaseConnection), new FrameworkPropertyMetadata(default(ConnectionDirection), FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionalArrowsCountProperty = DependencyProperty.Register(nameof(DirectionalArrowsCount), typeof(uint), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.UInt0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty DirectionalArrowsOffsetProperty = DependencyProperty.Register(nameof(DirectionalArrowsOffset), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty IsAnimatingDirectionalArrowsProperty = DependencyProperty.Register(nameof(IsAnimatingDirectionalArrows), typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnIsAnimatingDirectionalArrowsChanged)));
+        public static readonly DependencyProperty DirectionalArrowsAnimationDurationProperty = DependencyProperty.Register(nameof(DirectionalArrowsAnimationDuration), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double2, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnDirectionalArrowsAnimationDurationChanged)));
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(nameof(Spacing), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowSizeProperty = DependencyProperty.Register(nameof(ArrowSize), typeof(Size), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.ArrowSize, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ArrowEndsProperty = DependencyProperty.Register(nameof(ArrowEnds), typeof(ArrowHeadEnds), typeof(BaseConnection), new FrameworkPropertyMetadata(ArrowHeadEnds.End, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -137,6 +139,28 @@ namespace Nodify
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
+
+        private static void OnIsAnimatingDirectionalArrowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var con = (BaseConnection)d;
+            if (e.NewValue is true)
+            {
+                con.StartAnimation(con.DirectionalArrowsAnimationDuration);
+            }
+            else
+            {
+                con.StopAnimation();
+            }
+        }
+
+        private static void OnDirectionalArrowsAnimationDurationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var con = (BaseConnection)d;
+            if (con.IsAnimatingDirectionalArrows)
+            {
+                con.StartAnimation((double)e.NewValue);
+            }
+        }
 
         private static void OnOutlinePenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -240,6 +264,24 @@ namespace Nodify
         {
             get => (double)GetValue(DirectionalArrowsOffsetProperty);
             set => SetValue(DirectionalArrowsOffsetProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the directional arrows should be flowing through the connection wire.
+        /// </summary>
+        public bool IsAnimatingDirectionalArrows
+        {
+            get => (bool)GetValue(IsAnimatingDirectionalArrowsProperty);
+            set => SetValue(IsAnimatingDirectionalArrowsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the duration in seconds of a directional arrow flowing from <see cref="Source"/> to <see cref="Target"/>.
+        /// </summary>
+        public double DirectionalArrowsAnimationDuration
+        {
+            get => (double)GetValue(DirectionalArrowsAnimationDurationProperty);
+            set => SetValue(DirectionalArrowsAnimationDurationProperty, value);
         }
 
         /// <summary>
@@ -682,10 +724,8 @@ namespace Nodify
         /// <param name="duration">The duration for moving an arrowhead from <see cref="Source"/> to <see cref="Target"/>.</param>
         public void StartAnimation(double duration = 1.5d)
         {
-            if (DirectionalArrowsCount > 0)
-            {
-                this.StartLoopingAnimation(DirectionalArrowsOffsetProperty, DirectionalArrowsOffset + 1d, duration);
-            }
+            StopAnimation();
+            this.StartLoopingAnimation(DirectionalArrowsOffsetProperty, DirectionalArrowsOffset + 1d, duration);
         }
 
         /// <summary>Stops the animation started by <see cref="StartAnimation(double)"/></summary>

@@ -132,6 +132,8 @@
             <Setter Property="TargetOrientation" Value="{Binding Input.Node.Orientation}" />
             <Setter Property="DirectionalArrowsCount" Value="{Binding DirectionalArrowsCount, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="DirectionalArrowsOffset" Value="{Binding DirectionalArrowsOffset, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="IsAnimatingDirectionalArrows" Value="{Binding IsAnimatingConnections, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="DirectionalArrowsAnimationDuration" Value="{Binding DirectionalArrowsAnimationDuration, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
         </Style>
 
