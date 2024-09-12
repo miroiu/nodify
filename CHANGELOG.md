@@ -4,8 +4,13 @@
 
 > - Breaking Changes:
 > - Features:
->	- Added OutlineBrush and OutlineThickness dependency properties to BaseConnection to support increasing the selection area without increasing the stroke thickness
 > - Bugfixes:
+
+#### **Version 6.4.0**
+
+> - Features:
+>	- Added OutlineBrush and OutlineThickness dependency properties to BaseConnection to support increasing the selection area without increasing the stroke thickness
+>	- Added IsAnimatingDirectionalArrows and DirectionalArrowsAnimationDuration dependency properties to BaseConnection to support controlling the animation from XAML
 
 #### **Version 6.3.0**
 

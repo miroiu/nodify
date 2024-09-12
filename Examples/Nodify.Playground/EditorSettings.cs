@@ -119,6 +119,16 @@ namespace Nodify.Playground
                     val => Instance.DirectionalArrowsOffset = val,
                     "Directional arrows offset: ",
                     "Used to animate the directional arrowheads flowing in the direction of the connection (value is between 0 and 1)."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.IsAnimatingConnections,
+                    val => Instance.IsAnimatingConnections = val,
+                    "Animate directional arrows: ",
+                    "Used to animate the directional arrowheads by animating the DirectionalArrowsOffset value"),
+                new ProxySettingViewModel<double>(
+                    () => Instance.DirectionalArrowsAnimationDuration,
+                    val => Instance.DirectionalArrowsAnimationDuration = val,
+                    "Arrows animation duration: ",
+                    "The duration in seconds of a directional arrowhead flowing from start to end."),
                 new ProxySettingViewModel<ArrowHeadEnds>(
                     () => Instance.ArrowHeadEnds,
                     val => Instance.ArrowHeadEnds = val,
@@ -437,6 +447,20 @@ namespace Nodify.Playground
         {
             get => _directionalArrowsOffset;
             set => SetProperty(ref _directionalArrowsOffset, value);
+        }
+
+        private bool _isAnimatingConnections;
+        public bool IsAnimatingConnections
+        {
+            get => _isAnimatingConnections;
+            set => SetProperty(ref _isAnimatingConnections, value);
+        }
+
+        private double _directionalArrowsAnimationDuration = 2.0;
+        public double DirectionalArrowsAnimationDuration
+        {
+            get => _directionalArrowsAnimationDuration;
+            set => SetProperty(ref _directionalArrowsAnimationDuration, value);
         }
 
         private PointEditor _connectionArrowSize = new Size(8, 8);
