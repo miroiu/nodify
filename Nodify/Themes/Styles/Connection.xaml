@@ -4,9 +4,15 @@
 
     <Style TargetType="{x:Type local:BaseConnection}">
         <Style.Triggers>
-            <Trigger Property="local:CuttingLine.IsOverElement" Value="True">
+            <Trigger Property="local:CuttingLine.IsOverElement"
+                     Value="True">
                 <Setter Property="Opacity"
                         Value="0.4" />
+            </Trigger>
+            <Trigger Property="IsSelectable"
+                     Value="True">
+                <Setter Property="Cursor"
+                        Value="Hand" />
             </Trigger>
         </Style.Triggers>
     </Style>

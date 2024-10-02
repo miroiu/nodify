@@ -113,6 +113,7 @@ namespace Nodify
         #region Routed Events
 
         public static readonly RoutedEvent ViewportUpdatedEvent = EventManager.RegisterRoutedEvent(nameof(ViewportUpdated), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NodifyEditor));
+        public static readonly RoutedEvent SelectedConnectionChangedEvent = EventManager.RegisterRoutedEvent(nameof(SelectedConnectionChanged), RoutingStrategy.Bubble, typeof(SelectionChangedEventHandler), typeof(NodifyEditor));
 
         /// <summary>
         /// Occurs whenever the viewport updates.
@@ -121,6 +122,15 @@ namespace Nodify
         {
             add => AddHandler(ViewportUpdatedEvent, value);
             remove => RemoveHandler(ViewportUpdatedEvent, value);
+        }
+
+        /// <summary>
+        /// Occurs whenever the selected connection changes.
+        /// </summary>
+        public event RoutedEventHandler SelectedConnectionChanged
+        {
+            add => AddHandler(SelectedConnectionChangedEvent, value);
+            remove => RemoveHandler(SelectedConnectionChangedEvent, value);
         }
 
         /// <summary>
@@ -496,6 +506,7 @@ namespace Nodify
 
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
+        public static readonly DependencyProperty SelectedConnectionProperty = DependencyProperty.Register(nameof(SelectedConnection), typeof(object), typeof(NodifyEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedConnectionChanged));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
@@ -505,6 +516,9 @@ namespace Nodify
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
+
+        private static void OnSelectedConnectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).OnSelectedConnectionChanged(e.OldValue, e.NewValue);
 
         private static object OnCoerceGridCellSize(DependencyObject d, object value)
             => (uint)value > 0u ? value : BoxValue.UInt1;
@@ -560,6 +574,15 @@ namespace Nodify
         {
             get => (IList?)GetValue(SelectedItemsProperty);
             set => SetValue(SelectedItemsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets of sets the selected connection.
+        /// </summary>
+        public object? SelectedConnection
+        {
+            get => GetValue(SelectedConnectionProperty);
+            set => SetValue(SelectedConnectionProperty, value);
         }
 
         /// <summary>
@@ -815,6 +838,8 @@ namespace Nodify
             AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
 
             AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
+            AddHandler(BaseConnection.SelectedEvent, new ConnectionEventHandler(OnSelectConnection));
+            AddHandler(BaseConnection.UnselectedEvent, new ConnectionEventHandler(OnUnselectConnection));
 
             AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
             AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
@@ -1063,12 +1088,25 @@ namespace Nodify
         {
             OnRemoveConnection(e.Connection);
         }
-        
+
         protected void OnRemoveConnection(object? dataContext)
         {
             if (RemoveConnectionCommand?.CanExecute(dataContext) ?? false)
             {
                 RemoveConnectionCommand.Execute(dataContext);
+            }
+        }
+
+        private void OnSelectConnection(object sender, ConnectionEventArgs e)
+        {
+            SelectedConnection = e.Connection;
+        }
+
+        private void OnUnselectConnection(object sender, ConnectionEventArgs e)
+        {
+            if (SelectedConnection == e.Connection)
+            {
+                SelectedConnection = null;
             }
         }
 
@@ -1193,6 +1231,14 @@ namespace Nodify
         #endregion
 
         #region Selection Handlers
+
+        private void OnSelectedConnectionChanged(object oldValue, object newValue)
+        {
+            RaiseEvent(new SelectionChangedEventArgs(SelectedConnectionChangedEvent, new[] { oldValue }, new[] { newValue })
+            {
+                Source = this
+            });
+        }
 
         private void OnSelectedItemsSourceChanged(IList oldValue, IList newValue)
         {

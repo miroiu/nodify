@@ -23,6 +23,8 @@ namespace Nodify
         /// <inheritdoc />
         public override void Enter(EditorState? from)
         {
+            Editor.SelectedConnection = null;
+
             _canceled = false;
             Selection.Start(Editor.MouseLocation, _type);
         }

@@ -4,6 +4,9 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added SelectedConnection dependency property and SelectedConnectionChangedEvent routed event to NodifyEditor
+>	- Added IsSelected/IsSelectable dependency properties and SelectedEvent/UnselectedEvent to BaseConnection
+>	- Added EditorGestures.Connection.Select
 > - Bugfixes:
 
 #### **Version 6.4.0**

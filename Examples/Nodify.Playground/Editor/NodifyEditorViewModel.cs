@@ -9,13 +9,13 @@ namespace Nodify.Playground
         public NodifyEditorViewModel()
         {
             Schema = new GraphSchema();
-            
+
             PendingConnection = new PendingConnectionViewModel
             {
                 Graph = this
             };
 
-            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0);
+            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0 || SelectedConnection != null);
             CommentSelectionCommand = new RequeryCommand(() => Schema.AddCommentAroundNodes(SelectedNodes, "New comment"), () => SelectedNodes.Count > 0);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(c => c.Disconnect());
             CreateConnectionCommand = new DelegateCommand<object>(target => Schema.TryAddConnection(PendingConnection.Source!, target), target => PendingConnection.Source != null && target != null);
@@ -29,6 +29,11 @@ namespace Nodify.Playground
             // Called when the collection is cleared
             .WhenRemoved(c =>
             {
+                if (SelectedConnection == c)
+                {
+                    SelectedConnection = null;
+                }
+
                 c.Input.Connections.Remove(c);
                 c.Output.Connections.Remove(c);
             });
@@ -78,6 +83,14 @@ namespace Nodify.Playground
         }
 
         public PendingConnectionViewModel PendingConnection { get; }
+
+        private ConnectionViewModel? _selectedConnection;
+        public ConnectionViewModel? SelectedConnection
+        {
+            get => _selectedConnection;
+            set => SetProperty(ref _selectedConnection, value);
+        }
+
         public GraphSchema Schema { get; }
 
         public ICommand DeleteSelectionCommand { get; }
@@ -87,6 +100,8 @@ namespace Nodify.Playground
 
         private void DeleteSelection()
         {
+            SelectedConnection?.Remove();
+
             var selected = SelectedNodes.ToList();
 
             for (int i = 0; i < selected.Count; i++)
