@@ -495,6 +495,19 @@ public double OutlineThickness { get; set; }
   
 [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
+#### PrioritizeBaseConnectionForSelection  
+  
+Whether to prioritize controls of type [BaseConnection](#baseconnection-class) inside custom connections (connection wrappers) 
+            when setting the [BaseConnection.IsSelectableProperty](#baseconnection-class#isselectableproperty) and [BaseConnection.IsSelectedProperty](#baseconnection-class#isselectedproperty) attached properties.  
+  
+```csharp  
+public static bool PrioritizeBaseConnectionForSelection { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 #### Source  
   
 Gets or sets the start point of this connection.  
@@ -750,6 +763,34 @@ protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Poi
   
 `orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)  
   
+#### GetIsSelectable(UIElement)  
+  
+```csharp  
+public static bool GetIsSelectable(UIElement elem);  
+```  
+  
+**Parameters**  
+  
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+#### GetIsSelected(UIElement)  
+  
+```csharp  
+public static bool GetIsSelected(UIElement elem);  
+```  
+  
+**Parameters**  
+  
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 #### GetOffset()  
   
 Gets the resulting offset after applying the [BaseConnection.SourceOffsetMode](#baseconnection-class#sourceoffsetmode).  
@@ -810,6 +851,30 @@ protected override void OnRender(DrawingContext drawingContext);
   
 `drawingContext` [DrawingContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.DrawingContext)  
   
+#### SetIsSelectable(UIElement, Boolean)  
+  
+```csharp  
+public static void SetIsSelectable(UIElement elem, bool value);  
+```  
+  
+**Parameters**  
+  
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)  
+  
+`value` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+#### SetIsSelected(UIElement, Boolean)  
+  
+```csharp  
+public static void SetIsSelected(UIElement elem, bool value);  
+```  
+  
+**Parameters**  
+  
+`elem` [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement)  
+  
+`value` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 #### StartAnimation(Double)  
   
 Starts animating the directional arrows.  
@@ -844,12 +909,36 @@ public event ConnectionEventHandler Disconnect;
   
 [ConnectionEventHandler](#connectioneventhandler-delegate)  
   
+#### Selected  
+  
+Triggered by the Nodify.EditorGestures.ConnectionGestures.Selection gesture.  
+  
+```csharp  
+public event ConnectionEventHandler Selected;  
+```  
+  
+**Event Type**  
+  
+[ConnectionEventHandler](#connectioneventhandler-delegate)  
+  
 #### Split  
   
 Triggered by the Nodify.EditorGestures.ConnectionGestures.Split gesture.  
   
 ```csharp  
 public event ConnectionEventHandler Split;  
+```  
+  
+**Event Type**  
+  
+[ConnectionEventHandler](#connectioneventhandler-delegate)  
+  
+#### Unselected  
+  
+Triggered when IsSelected is set to false.  
+  
+```csharp  
+public event ConnectionEventHandler Unselected;  
 ```  
   
 **Event Type**  
@@ -1390,7 +1479,7 @@ public delegate void ConnectionEventHandler(object sender, ConnectionEventArgs e
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ConnectionGestures](#connectiongestures-class)  
   
-**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class)  
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class), [SelectionGestures](#selectiongestures-class)  
   
 ```csharp  
 public class ConnectionGestures  
@@ -1415,6 +1504,16 @@ public InputGestureRef Disconnect { get; set; }
 **Property Value**  
   
 [InputGestureRef](#inputgestureref-class)  
+  
+#### Selection  
+  
+```csharp  
+public SelectionGestures Selection { get; set; }  
+```  
+  
+**Property Value**  
+  
+[SelectionGestures](#selectiongestures-class)  
   
 #### Split  
   
@@ -3002,7 +3101,7 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorSelectingState](#editorselectingstate-class)  
   
-**References:** [NodifyEditor](#nodifyeditor-class), [SelectionType](#selectiontype-enum), [SelectionHelper](#selectionhelper-class), [EditorState](#editorstate-class)
+**References:** [NodifyEditor](#nodifyeditor-class), [SelectionType](#selectiontype-enum), [SelectionHelper](#selectionhelper-class), [EditorState](#editorstate-class)  
   
 The selecting state of the editor.  
   
@@ -5568,6 +5667,18 @@ public double BringIntoViewSpeed { get; set; }
   
 [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
+#### CanSelectMultipleConnections  
+  
+Gets or sets whether multiple connections can be selected.  
+  
+```csharp  
+public bool CanSelectMultipleConnections { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 #### ConnectionCompletedCommand  
   
 Invoked when the [PendingConnection](#pendingconnection-class) is completed. 
@@ -6107,9 +6218,33 @@ public Rect SelectedArea { get; set; }
   
 [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)  
   
+#### SelectedConnection  
+  
+Gets or sets the selected connection.  
+  
+```csharp  
+public object SelectedConnection { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object)  
+  
+#### SelectedConnections  
+  
+Gets or sets the selected connections in the [NodifyEditor](#nodifyeditor-class).  
+  
+```csharp  
+public IList SelectedConnections { get; set; }  
+```  
+  
+**Property Value**  
+  
+[IList](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.IList)  
+  
 #### SelectedItems  
   
-Gets or sets the items in the [NodifyEditor](#nodifyeditor-class) that are selected.  
+Gets or sets the selected items in the [NodifyEditor](#nodifyeditor-class).  
   
 ```csharp  
 public IList SelectedItems { get; set; }  
@@ -6317,7 +6452,7 @@ public void InvertSelection(Rect area, bool fit = false);
   
 `area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The area to look for [ItemContainer](#itemcontainer-class)s.  
   
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).  
   
 #### IsItemItsOwnContainerOverride(Object)  
   
@@ -6488,6 +6623,12 @@ public void PushState(EditorState state);
   
 `state` [EditorState](#editorstate-class): The new state of the editor.  
   
+#### SelectAllConnections()  
+  
+```csharp  
+public void SelectAllConnections();  
+```  
+  
 #### SelectArea(Rect, Boolean, Boolean)  
   
 Selects the [ItemContainer](#itemcontainer-class)s in the specified area.  
@@ -6502,7 +6643,13 @@ public void SelectArea(Rect area, bool append = false, bool fit = false);
   
 `append` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): If true, it will add to the existing selection.  
   
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).  
+  
+#### UnselectAllConnection()  
+  
+```csharp  
+public void UnselectAllConnection();  
+```  
   
 #### UnselectArea(Rect, Boolean)  
   
@@ -6516,7 +6663,7 @@ public void UnselectArea(Rect area, bool fit = false);
   
 `area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The area to look for [ItemContainer](#itemcontainer-class)s.  
   
-`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).
+`fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).  
   
 #### ZoomAtPosition(Double, Point)  
   
@@ -7243,7 +7390,7 @@ public delegate void ResizeEventHandler(object sender, ResizeEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [SelectionGestures](#selectiongestures-class)  
   
-**References:** [InputGestureRef](#inputgestureref-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class)  
+**References:** [InputGestureRef](#inputgestureref-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class), [ConnectionGestures](#connectiongestures-class)  
   
 ```csharp  
 public class SelectionGestures  
