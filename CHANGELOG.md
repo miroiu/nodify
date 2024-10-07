@@ -6,6 +6,7 @@
 > - Features:
 >	- Added SelectedConnection, SelectedConnections and CanSelectMultipleConnections dependency properties to NodifyEditor
 >	- Added IsSelected and IsSelectable attached dependency properties to BaseConnection
+>	- Added PrioritizeBaseConnectionForSelection static field to BaseConnection
 >	- Added EditorGestures.Connection.Selection
 > - Bugfixes:
 

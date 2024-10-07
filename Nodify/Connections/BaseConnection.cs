@@ -476,6 +476,15 @@ namespace Nodify
         #endregion
 
         /// <summary>
+        /// Whether to prioritize controls of type <see cref="BaseConnection"/> inside custom connections (connection wrappers) 
+        /// when setting the <see cref="IsSelectableProperty"/> and <see cref="IsSelectedProperty"/> attached properties.
+        /// </summary>
+        /// <remarks>
+        /// Will fallback to the first <see cref="UIElement"/> if no <see cref="BaseConnection"/> is found or the value is false.
+        /// </remarks>
+        public static bool PrioritizeBaseConnectionForSelection { get; set; } = true;
+
+        /// <summary>
         /// Gets a vector that has its coordinates set to 0.
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);

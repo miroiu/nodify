@@ -65,19 +65,10 @@ namespace Nodify
 
         #endregion
 
-        /// <summary>
-        /// Whether to prioritize controls of type <see cref="BaseConnection"/> inside custom connections (connection wrappers) 
-        /// when setting the <see cref="BaseConnection.IsSelectableProperty"/> and <see cref="BaseConnection.IsSelectedProperty"/> attached properties.
-        /// </summary>
-        /// <remarks>
-        /// Will fallback to the first <see cref="UIElement"/> if no <see cref="BaseConnection"/> is found or the value is false.
-        /// </remarks>
-        public static bool PrioritizeBaseConnectionForSelection { get; set; } = true;
-
         private ConnectionsMultiSelector Selector { get; }
 
         private UIElement? _connection;
-        private UIElement? Connection => _connection ??= PrioritizeBaseConnectionForSelection
+        private UIElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
             ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<UIElement>()
             : this.GetChildOfType<UIElement>();
 
