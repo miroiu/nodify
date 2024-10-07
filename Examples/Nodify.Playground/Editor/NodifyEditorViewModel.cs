@@ -15,7 +15,7 @@ namespace Nodify.Playground
                 Graph = this
             };
 
-            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0 || SelectedConnection != null);
+            DeleteSelectionCommand = new DelegateCommand(DeleteSelection, () => SelectedNodes.Count > 0 || SelectedConnections.Count > 0);
             CommentSelectionCommand = new RequeryCommand(() => Schema.AddCommentAroundNodes(SelectedNodes, "New comment"), () => SelectedNodes.Count > 0);
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(c => c.Disconnect());
             CreateConnectionCommand = new DelegateCommand<object>(target => Schema.TryAddConnection(PendingConnection.Source!, target), target => PendingConnection.Source != null && target != null);
@@ -68,6 +68,13 @@ namespace Nodify.Playground
             set => SetProperty(ref _selectedNodes, value);
         }
 
+        private NodifyObservableCollection<ConnectionViewModel> _selectedConnections = new NodifyObservableCollection<ConnectionViewModel>();
+        public NodifyObservableCollection<ConnectionViewModel> SelectedConnections
+        {
+            get => _selectedConnections;
+            set => SetProperty(ref _selectedConnections, value);
+        }
+
         private NodifyObservableCollection<ConnectionViewModel> _connections = new NodifyObservableCollection<ConnectionViewModel>();
         public NodifyObservableCollection<ConnectionViewModel> Connections
         {
@@ -100,7 +107,10 @@ namespace Nodify.Playground
 
         private void DeleteSelection()
         {
-            SelectedConnection?.Remove();
+            foreach (var connection in SelectedConnections.ToList())
+            {
+                connection.Remove();
+            }
 
             var selected = SelectedNodes.ToList();
 

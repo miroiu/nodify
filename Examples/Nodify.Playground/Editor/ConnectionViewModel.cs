@@ -26,11 +26,12 @@ namespace Nodify.Playground
             set => SetProperty(ref _output, value);
         }
 
-        public void Split(Point point)
-            => Graph.Schema.SplitConnection(this, point);
-
-        public void Remove()
-            => Graph.Connections.Remove(this);
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
 
         public ICommand SplitCommand { get; }
         public ICommand DisconnectCommand { get; }
@@ -40,5 +41,11 @@ namespace Nodify.Playground
             SplitCommand = new DelegateCommand<Point>(Split);
             DisconnectCommand = new DelegateCommand(Remove);
         }
+
+        public void Split(Point point)
+            => Graph.Schema.SplitConnection(this, point);
+
+        public void Remove()
+            => Graph.Connections.Remove(this);
     }
 }

@@ -86,6 +86,15 @@ namespace Nodify.Playground
                     val => Instance.AutoPanningEdgeDistance = val,
                     "Auto panning edge distance: ",
                     "Distance from edge to trigger auto panning"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.SelectableConnections,
+                    val => Instance.SelectableConnections = val,
+                    "Selectable connections: ",
+                    "Whether connections can be selected."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.CanSelectMultipleConnections,
+                    val => Instance.CanSelectMultipleConnections = val,
+                    "Can select multiple connections: "),
                 new ProxySettingViewModel<ConnectionStyle>(
                     () => Instance.ConnectionStyle,
                     val => Instance.ConnectionStyle = val,
@@ -363,6 +372,20 @@ namespace Nodify.Playground
         {
             get => _location;
             set => SetProperty(ref _location, value);
+        }
+
+        private bool _canSelectMultipleConnections = true;
+        public bool CanSelectMultipleConnections
+        {
+            get => _canSelectMultipleConnections;
+            set => SetProperty(ref _canSelectMultipleConnections, value);
+        }
+
+        private bool _selectableConnections = true;
+        public bool SelectableConnections
+        {
+            get => _selectableConnections;
+            set => SetProperty(ref _selectableConnections, value);
         }
 
         private ConnectionStyle _connectionStyle;

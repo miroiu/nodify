@@ -139,8 +139,30 @@ namespace Nodify
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
-        public static readonly DependencyProperty IsSelectableProperty = ItemContainer.IsSelectableProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty IsSelectedProperty = ItemContainer.IsSelectedProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+
+        public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.RegisterAttached("IsSelectable", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.RegisterAttached("IsSelected", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var container = d is BaseConnection conn ? conn.Container : ((UIElement)d).GetParentOfType<ConnectionContainer>();
+            if (container != null)
+            {
+                container.IsSelected = (bool)e.NewValue;
+            }
+        }
+
+        public static bool GetIsSelectable(UIElement elem)
+            => (bool)elem.GetValue(IsSelectableProperty);
+
+        public static void SetIsSelectable(UIElement elem, bool value)
+            => elem.SetValue(IsSelectableProperty, value);
+
+        public static bool GetIsSelected(UIElement elem)
+            => (bool)elem.GetValue(IsSelectedProperty);
+
+        public static void SetIsSelected(UIElement? elem, bool value)
+            => elem?.SetValue(IsSelectedProperty, value);
 
         private static void OnIsAnimatingDirectionalArrowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -167,14 +189,6 @@ namespace Nodify
         private static void OnOutlinePenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((BaseConnection)d)._outlinePen = null;
-        }
-
-        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var elem = (BaseConnection)d;
-            bool result = elem.IsSelectable && (bool)e.NewValue;
-            elem.IsSelected = result;
-            elem.RaiseSelectedEvent(result);
         }
 
         /// <summary>
@@ -422,25 +436,6 @@ namespace Nodify
             set => SetValue(FontStretchProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets whether this <see cref="BaseConnection"/> can be selected.
-        /// </summary>
-        public bool IsSelectable
-        {
-            get => (bool)GetValue(IsSelectableProperty);
-            set => SetValue(IsSelectableProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether this <see cref="BaseConnection"/> is selected.
-        /// Can only be set if <see cref="IsSelectable"/> is true.
-        /// </summary>
-        public bool IsSelected
-        {
-            get => (bool)GetValue(IsSelectedProperty);
-            set => SetValue(IsSelectedProperty, value);
-        }
-
         #endregion
 
         #region Routed Events
@@ -464,7 +459,7 @@ namespace Nodify
             remove => RemoveHandler(SplitEvent, value);
         }
 
-        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Select"/> gesture.</summary>
+        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Selection"/> gesture.</summary>
         public event ConnectionEventHandler Selected
         {
             add => AddHandler(SelectedEvent, value);
@@ -491,6 +486,9 @@ namespace Nodify
         {
             FillRule = FillRule.EvenOdd
         };
+
+        private ConnectionContainer? _container;
+        private ConnectionContainer? Container => _container ??= this.GetParentOfType<ConnectionContainer>();
 
         protected override Geometry DefiningGeometry
         {
@@ -530,34 +528,6 @@ namespace Nodify
 
                 return _geometry;
             }
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-
-            var editor = this.GetParentOfType<NodifyEditor>();
-            editor?.AddHandler(NodifyEditor.SelectedConnectionChangedEvent, new SelectionChangedEventHandler(OnSelectedConnectionChanged), true);
-        }
-
-        private void OnSelectedConnectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Contains(DataContext))
-            {
-                IsSelected = true;
-            }
-            else if (e.RemovedItems.Contains(DataContext))
-            {
-                IsSelected = false;
-            }
-        }
-
-        private void RaiseSelectedEvent(bool newValue)
-        {
-            RaiseEvent(new ConnectionEventArgs(DataContext)
-            {
-                RoutedEvent = newValue ? SelectedEvent : UnselectedEvent
-            });
         }
 
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
@@ -814,13 +784,7 @@ namespace Nodify
             this.CaptureMouseSafe();
 
             EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
-            if (gestures.Select.Matches(e.Source, e))
-            {
-                OnSelect();
-
-                e.Handled = true;
-            }
-            else if (gestures.Split.Matches(e.Source, e))
+            if (gestures.Split.Matches(e.Source, e))
             {
                 Point splitLocation = e.GetPosition(this);
                 OnSplit(splitLocation);
@@ -851,17 +815,6 @@ namespace Nodify
             {
                 SplitCommand.Execute(splitLocation);
             }
-        }
-
-        protected internal void OnSelect()
-        {
-            var args = new ConnectionEventArgs(DataContext)
-            {
-                RoutedEvent = SelectedEvent,
-                Source = this
-            };
-
-            RaiseEvent(args);
         }
 
         protected internal void OnDisconnect()

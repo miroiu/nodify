@@ -98,6 +98,11 @@
                     <Setter Property="Opacity"
                             Value="1" />
                 </Trigger>
+                <Trigger Property="IsSelectable"
+                         Value="True">
+                    <Setter Property="Cursor"
+                            Value="Hand" />
+                </Trigger>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
                         <Condition Property="IsMouseDirectlyOver"
@@ -106,7 +111,6 @@
                                    Value="False" />
                     </MultiTrigger.Conditions>
                     <MultiTrigger.Setters>
-
                         <Setter Property="OutlineBrush"
                                 Value="Transparent" />
                     </MultiTrigger.Setters>
@@ -121,7 +125,6 @@
                                      Opacity="0.15" />
                 </Setter.Value>
             </Setter>
-            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="ToolTip" Value="Double click to split"/>
             <Setter Property="Source" Value="{Binding Output.Anchor}" />
             <Setter Property="Target" Value="{Binding Input.Anchor}" />
@@ -143,7 +146,10 @@
             <Setter Property="IsAnimatingDirectionalArrows" Value="{Binding IsAnimatingConnections, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="DirectionalArrowsAnimationDuration" Value="{Binding DirectionalArrowsAnimationDuration, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
-            <Setter Property="IsSelectable" Value="True" />
+            <Setter Property="IsSelectable"
+                    Value="{Binding SelectableConnections, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="IsSelected"
+                    Value="{Binding IsSelected}" />
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
@@ -222,10 +228,12 @@
     <Grid>
         <nodify:NodifyEditor x:Name="Editor"
                              ItemsSource="{Binding Nodes}"
-                             Connections="{Binding Connections}"
-                             PendingConnection="{Binding PendingConnection}"
-                             SelectedConnection="{Binding SelectedConnection}"
                              SelectedItems="{Binding SelectedNodes}"
+                             Connections="{Binding Connections}"
+                             SelectedConnection="{Binding SelectedConnection}"
+                             SelectedConnections="{Binding SelectedConnections}"
+                             CanSelectMultipleConnections="{Binding CanSelectMultipleConnections, Source={x:Static local:EditorSettings.Instance}}"
+                             PendingConnection="{Binding PendingConnection}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                              ViewportLocation="{Binding Location.Value, Source={x:Static local:EditorSettings.Instance}}"
                              ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
