@@ -46,26 +46,5 @@ namespace Nodify
                 PushState(new EditorPanningState(Editor));
             }
         }
-
-        private static SelectionType GetSelectionType(MouseButtonEventArgs e)
-        {
-            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
-            if (gestures.Append.Matches(e.Source, e))
-            {
-                return SelectionType.Append;
-            }
-
-            if (gestures.Invert.Matches(e.Source, e))
-            {
-                return SelectionType.Invert;
-            }
-
-            if (gestures.Remove.Matches(e.Source, e))
-            {
-                return SelectionType.Remove;
-            }
-
-            return SelectionType.Replace;
-        }
     }
 }

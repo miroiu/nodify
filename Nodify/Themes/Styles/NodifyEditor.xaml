@@ -59,12 +59,15 @@
                                                 IsItemsHost="True"
                                                 Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
-                            <ItemsControl  x:Name="PART_ConnectionsHost"
-                                           ItemsSource="{TemplateBinding Connections}"
-                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
-                                           IsTabStop="False">
-                                <ItemsControl.Style>
-                                    <Style TargetType="ItemsControl">
+                            <local:ConnectionsMultiSelector  x:Name="PART_ConnectionsHost"
+                                                             ItemsSource="{TemplateBinding Connections}"
+                                                             SelectedItem="{Binding SelectedConnection, RelativeSource={RelativeSource TemplatedParent}}"
+                                                             SelectedItems="{TemplateBinding SelectedConnections}"
+                                                             CanSelectMultipleItems="{TemplateBinding CanSelectMultipleConnections}"
+                                                             ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                                             IsTabStop="False">
+                                <local:ConnectionsMultiSelector.Style>
+                                    <Style TargetType="local:ConnectionsMultiSelector">
                                         <Setter Property="Panel.ZIndex"
                                                 Value="-1" />
                                         <Style.Triggers>
@@ -75,13 +78,13 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </ItemsControl.Style>
-                                <ItemsControl.ItemsPanel>
+                                </local:ConnectionsMultiSelector.Style>
+                                <local:ConnectionsMultiSelector.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Canvas />
                                     </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                                </local:ConnectionsMultiSelector.ItemsPanel>
+                            </local:ConnectionsMultiSelector>
 
                             <ContentPresenter ContentSource="PendingConnection" />
 

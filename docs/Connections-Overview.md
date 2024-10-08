@@ -8,6 +8,16 @@ Connections are created between two points. The `Source` and `Target` dependency
 - [Bezier connection](#connection)
 - [Step connection](#step-connection)
 - [Pending connection](#pending-connection)
+- [Custom connection](#custom-connection)
+
+## Using connections
+
+In the `NodifyEditor`, you can customize both the default connection and the pending connection by assigning a custom `DataTemplate` to the `ConnectionTemplate` and `PendingConnectionTemplate` properties, respectively.
+
+- `ConnectionTemplate`: defines the appearance of established connections between nodes.
+- `PendingConnectionTemplate`: specifies the visual appearance of connections that are in the process of being created (i.e., while the connection is being dragged but not yet completed).
+
+To customize these, simply set your desired `DataTemplate` on the `NodifyEditor` instance.
 
 ## Base connection
 
@@ -88,3 +98,50 @@ There's also a `StartedCommand` which takes the `Source` as the parameter, respe
 
 > [!TIP]
 > Canceling a pending connection is done by releasing the right mouse button.
+
+## Custom connection
+
+In some cases, the built-in connections may not provide all the features you need, or your application may need to display hundreds of connections simultaneously. While the built-in connections are feature-rich, they may introduce some overhead that could impact performance. In such cases, you can implement a custom connection to better suit your needs.
+
+There are several ways to implement a custom connection:
+
+- Derive from one of the existing connection classes and override the appropriate methods.
+- Create a custom control or user control that wraps a built-in connection.
+- Implement a custom connection from scratch.
+
+**Considerations for Implementing a Custom Connection from Scratch**
+
+- The cutting line feature requires the connection type to be added to the `NodifyEditor.CuttingConnectionTypes` collection (see [Cuttline Line - Custom Connections](CuttingLine-Overview#custom-connections))
+- For selection functionality, you must set the `nodify:BaseConnection.IsSelectable` attached property to `true` on the root element.
+- To control the selection state, bind to the `nodify:BaseConnection.IsSelected` attached property on the root element.
+
+Example:
+
+```xml
+<Line X1="{Binding Source.Anchor.X}"
+      X2="{Binding Target.Anchor.X}"
+      Y1="{Binding Source.Anchor.Y}"
+      Y2="{Binding Target.Anchor.Y}"
+      StrokeThickness="5"
+      nodify:BaseConnection.IsSelectable="True"
+      nodify:BaseConnection.IsSelected="{Binding IsSelected}">
+    <Line.Style>
+        <Style TargetType="Line">
+            <Setter Property="Stroke"
+                    Value="Red" />
+            <Style.Triggers>
+                <Trigger Property="nodify:BaseConnection.IsSelected"
+                         Value="True">
+                    <Setter Property="Stroke"
+                            Value="Green" />
+                </Trigger>
+                <Trigger Property="nodify:BaseConnection.IsSelectable"
+                         Value="True">
+                    <Setter Property="Cursor"
+                            Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Line.Style>
+</Line>
+```

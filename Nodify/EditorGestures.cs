@@ -208,12 +208,16 @@ namespace Nodify
             public ConnectionGestures()
             {
                 Split = new MouseGesture(MouseAction.LeftDoubleClick);
+                Selection = new SelectionGestures(MouseAction.LeftClick);
                 Disconnect = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt);
             }
 
             /// <summary>Gesture to call the <see cref="BaseConnection.SplitCommand"/> command.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.LeftDoubleClick"/>.</remarks>
             public InputGestureRef Split { get; }
+
+            /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
+            public SelectionGestures Selection { get; }
 
             /// <summary>Gesture to call the <see cref="BaseConnection.DisconnectCommand"/> command.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
@@ -225,6 +229,7 @@ namespace Nodify
             {
                 Split.Value = gestures.Split.Value;
                 Disconnect.Value = gestures.Disconnect.Value;
+                Selection.Apply(gestures.Selection);
             }
         }
 

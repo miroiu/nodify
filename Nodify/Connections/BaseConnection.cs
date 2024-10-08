@@ -140,6 +140,30 @@ namespace Nodify
         public static readonly DependencyProperty FontStyleProperty = TextElement.FontStyleProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontStretchProperty = TextElement.FontStretchProperty.AddOwner(typeof(BaseConnection));
 
+        public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.RegisterAttached("IsSelectable", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.RegisterAttached("IsSelected", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var container = d is BaseConnection conn ? conn.Container : ((UIElement)d).GetParentOfType<ConnectionContainer>();
+            if (container != null)
+            {
+                container.IsSelected = (bool)e.NewValue;
+            }
+        }
+
+        public static bool GetIsSelectable(UIElement elem)
+            => (bool)elem.GetValue(IsSelectableProperty);
+
+        public static void SetIsSelectable(UIElement elem, bool value)
+            => elem.SetValue(IsSelectableProperty, value);
+
+        public static bool GetIsSelected(UIElement elem)
+            => (bool)elem.GetValue(IsSelectedProperty);
+
+        public static void SetIsSelected(UIElement? elem, bool value)
+            => elem?.SetValue(IsSelectedProperty, value);
+
         private static void OnIsAnimatingDirectionalArrowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var con = (BaseConnection)d;
@@ -436,6 +460,15 @@ namespace Nodify
         #endregion
 
         /// <summary>
+        /// Whether to prioritize controls of type <see cref="BaseConnection"/> inside custom connections (connection wrappers) 
+        /// when setting the <see cref="IsSelectableProperty"/> and <see cref="IsSelectedProperty"/> attached properties.
+        /// </summary>
+        /// <remarks>
+        /// Will fallback to the first <see cref="UIElement"/> if no <see cref="BaseConnection"/> is found or the value is false.
+        /// </remarks>
+        public static bool PrioritizeBaseConnectionForSelection { get; set; } = true;
+
+        /// <summary>
         /// Gets a vector that has its coordinates set to 0.
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
@@ -446,6 +479,9 @@ namespace Nodify
         {
             FillRule = FillRule.EvenOdd
         };
+
+        private ConnectionContainer? _container;
+        private ConnectionContainer? Container => _container ??= this.GetParentOfType<ConnectionContainer>();
 
         protected override Geometry DefiningGeometry
         {
@@ -758,8 +794,7 @@ namespace Nodify
 
         protected internal void OnSplit(Point splitLocation)
         {
-            object? connection = DataContext;
-            var args = new ConnectionEventArgs(connection)
+            var args = new ConnectionEventArgs(DataContext)
             {
                 RoutedEvent = SplitEvent,
                 SplitLocation = splitLocation,
@@ -777,8 +812,7 @@ namespace Nodify
 
         protected internal void OnDisconnect()
         {
-            object? connection = DataContext;
-            var args = new ConnectionEventArgs(connection)
+            var args = new ConnectionEventArgs(DataContext)
             {
                 RoutedEvent = DisconnectEvent,
                 Source = this

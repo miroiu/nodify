@@ -185,25 +185,27 @@
                         <Setter Property="Foreground"
                                 Value="{DynamicResource ForegroundBrush}" />
                         <Setter Property="Margin"
-                                Value="0 0 10 0" />
+                                Value="0 0 15 0" />
                     </Style>
                 </Grid.Resources>
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock ToolTip="The number of selected items.">
                         <TextBlock.Inlines>
-                            <Run Text="Selected: " />
+                            <Run Text="Selected nodes: " />
                             <Run Foreground="YellowGreen"
                                  Text="{Binding GraphViewModel.SelectedNodes.Count, Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The number of connections.">
+                    <TextBlock ToolTip="The number of selected connections.">
                         <TextBlock.Inlines>
-                            <Run Text="Connections: " />
+                            <Run Text="Selected connections: " />
                             <Run Foreground="YellowGreen"
-                                 Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
+                                 Text="{Binding GraphViewModel.SelectedConnections.Count, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>

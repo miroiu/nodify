@@ -98,11 +98,23 @@
                     <Setter Property="Opacity"
                             Value="1" />
                 </Trigger>
-                <Trigger Property="IsMouseDirectlyOver"
-                         Value="False">
-                    <Setter Property="OutlineBrush"
-                            Value="Transparent" />
+                <Trigger Property="IsSelectable"
+                         Value="True">
+                    <Setter Property="Cursor"
+                            Value="Hand" />
                 </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseDirectlyOver"
+                                   Value="False" />
+                        <Condition Property="IsSelected"
+                                   Value="False" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="OutlineBrush"
+                                Value="Transparent" />
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
             </Style.Triggers>
             <Setter Property="Opacity" Value="{Binding Source={StaticResource ConnectionAnimationPlaceholder}, Path=Opacity}" />
             <Setter Property="Stroke" Value="{DynamicResource Connection.StrokeBrush}"/>
@@ -113,7 +125,6 @@
                                      Opacity="0.15" />
                 </Setter.Value>
             </Setter>
-            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="ToolTip" Value="Double click to split"/>
             <Setter Property="Source" Value="{Binding Output.Anchor}" />
             <Setter Property="Target" Value="{Binding Input.Anchor}" />
@@ -135,6 +146,10 @@
             <Setter Property="IsAnimatingDirectionalArrows" Value="{Binding IsAnimatingConnections, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="DirectionalArrowsAnimationDuration" Value="{Binding DirectionalArrowsAnimationDuration, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="Text" Value="{Binding ConnectionText, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="IsSelectable"
+                    Value="{Binding SelectableConnections, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="IsSelected"
+                    Value="{Binding IsSelected}" />
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
@@ -213,9 +228,13 @@
     <Grid>
         <nodify:NodifyEditor x:Name="Editor"
                              ItemsSource="{Binding Nodes}"
-                             Connections="{Binding Connections}"
-                             PendingConnection="{Binding PendingConnection}"
                              SelectedItems="{Binding SelectedNodes}"
+                             CanSelectMultipleItems="{Binding CanSelectMultipleNodes, Source={x:Static local:EditorSettings.Instance}}"
+                             Connections="{Binding Connections}"
+                             SelectedConnection="{Binding SelectedConnection}"
+                             SelectedConnections="{Binding SelectedConnections}"
+                             CanSelectMultipleConnections="{Binding CanSelectMultipleConnections, Source={x:Static local:EditorSettings.Instance}}"
+                             PendingConnection="{Binding PendingConnection}"
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                              ViewportLocation="{Binding Location.Value, Source={x:Static local:EditorSettings.Instance}}"
                              ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
@@ -547,6 +566,53 @@
                 </Style>
             </nodify:Minimap.ItemContainerStyle>
         </nodify:Minimap>
+
+        <Border Width="250"
+                MaxHeight="300"
+                Margin="0 50"
+                CornerRadius="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Visibility="{Binding SelectedConnection, Converter={shared:BooleanToVisibilityConverter}}"
+                Background="{DynamicResource PanelBackgroundBrush}">
+            <StackPanel Margin="10">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type TextBlock}"
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Margin"
+                                Value="0 0 0 5" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <StackPanel Margin="0 0 0 14">
+                    <TextBlock Text="Selected connection"
+                               Foreground="{DynamicResource Node.ForegroundBrush}"
+                               FontWeight="Bold" />
+                </StackPanel>
+
+                <TextBlock TextWrapping="Wrap"
+                           Margin="0 0 0 14"
+                           Foreground="{DynamicResource Node.ForegroundBrush}">
+                        <Run>From</Run>
+                        <Run Text="{Binding SelectedConnection.Output.Node.Title}"
+                             Foreground="Red" />
+                        <Run> - </Run>
+                        <Run Text="{Binding SelectedConnection.Output.Title}"
+                             Foreground="Red" />
+                        <Run>to</Run>
+                        <Run Text="{Binding SelectedConnection.Input.Node.Title}"
+                             Foreground="Red" />
+                        <Run> - </Run>
+                        <Run Text="{Binding SelectedConnection.Input.Title}"
+                             Foreground="Red" />
+                </TextBlock>
+
+                <Button Command="{Binding SelectedConnection.DisconnectCommand}"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource HollowButton}"
+                        Content="Delete" />
+            </StackPanel>
+        </Border>
     </Grid>
 
 </UserControl>

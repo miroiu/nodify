@@ -496,12 +496,22 @@ namespace Nodify
 
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
+        public static readonly DependencyProperty SelectedConnectionsProperty = DependencyProperty.Register(nameof(SelectedConnections), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList)));
+        public static readonly DependencyProperty SelectedConnectionProperty = DependencyProperty.Register(nameof(SelectedConnection), typeof(object), typeof(NodifyEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisablePanningChanged));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
+        public static readonly DependencyProperty CanSelectMultipleConnectionsProperty = DependencyProperty.Register(nameof(CanSelectMultipleConnections), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));
+
+        private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).CanSelectMultipleItemsBase = (bool)e.NewValue;
+
+        private static object CoerceCanSelectMultipleItems(DependencyObject d, object baseValue)
+            => ((NodifyEditor)d).CanSelectMultipleItemsBase = (bool)baseValue;
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
@@ -554,7 +564,25 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the items in the <see cref="NodifyEditor"/> that are selected.
+        /// Gets or sets the selected connection.
+        /// </summary>
+        public object? SelectedConnection
+        {
+            get => GetValue(SelectedConnectionProperty);
+            set => SetValue(SelectedConnectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected connections in the <see cref="NodifyEditor"/>.
+        /// </summary>
+        public IList? SelectedConnections
+        {
+            get => (IList?)GetValue(SelectedConnectionsProperty);
+            set => SetValue(SelectedConnectionsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected items in the <see cref="NodifyEditor"/>.
         /// </summary>
         public new IList? SelectedItems
         {
@@ -588,6 +616,30 @@ namespace Nodify
         {
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether multiple connections can be selected.
+        /// </summary>
+        public bool CanSelectMultipleConnections
+        {
+            get => (bool)GetValue(CanSelectMultipleConnectionsProperty);
+            set => SetValue(CanSelectMultipleConnectionsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether multiple <see cref="ItemContainer" />s can be selected.
+        /// </summary>
+        public new bool CanSelectMultipleItems
+        {
+            get => (bool)GetValue(CanSelectMultipleItemsProperty);
+            set => SetValue(CanSelectMultipleItemsProperty, value);
+        }
+
+        private bool CanSelectMultipleItemsBase
+        {
+            get => base.CanSelectMultipleItems;
+            set => base.CanSelectMultipleItems = value;
         }
 
         #endregion
@@ -827,8 +879,6 @@ namespace Nodify
             SetValue(ViewportTransformPropertyKey, transform);
 
             _states.Push(GetInitialState());
-
-            CanSelectMultipleItems = true;
         }
 
         /// <inheritdoc />
@@ -1063,7 +1113,7 @@ namespace Nodify
         {
             OnRemoveConnection(e.Connection);
         }
-        
+
         protected void OnRemoveConnection(object? dataContext)
         {
             if (RemoveConnectionCommand?.CanExecute(dataContext) ?? false)
@@ -1222,6 +1272,9 @@ namespace Nodify
 
         private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            if (!CanSelectMultipleItems)
+                return;
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Reset:
@@ -1294,7 +1347,7 @@ namespace Nodify
             for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                if (container.IsPreviewingSelection == true)
+                if (container.IsPreviewingSelection == true && container.IsSelectable)
                 {
                     selected.Add(items[i]);
                 }
@@ -1402,6 +1455,28 @@ namespace Nodify
             }
             EndUpdateSelectedItems();
             IsSelecting = false;
+        }
+
+        /// <summary>
+        /// Unselect all <see cref="Connections"/>.
+        /// </summary>
+        public void UnselectAllConnection()
+        {
+            if (ConnectionsHost is MultiSelector selector)
+            {
+                selector.UnselectAll();
+            }
+        }
+
+        /// <summary>
+        /// Select all <see cref="Connections"/>.
+        /// </summary>
+        public void SelectAllConnections()
+        {
+            if (ConnectionsHost is MultiSelector selector)
+            {
+                selector.SelectAll();
+            }
         }
 
         #endregion

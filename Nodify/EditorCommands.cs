@@ -211,7 +211,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                e.CanExecute = !editor.IsSelecting;
+                e.CanExecute = !editor.IsSelecting && editor.CanSelectMultipleItems;
             }
         }
 

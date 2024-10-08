@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Nodify
 {
@@ -188,6 +189,27 @@ namespace Nodify
                     container.IsPreviewingSelection = !container.IsPreviewingSelection;
                 }
             }
+        }
+
+        internal static SelectionType GetSelectionType(MouseButtonEventArgs e)
+        {
+            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
+            if (gestures.Append.Matches(e.Source, e))
+            {
+                return SelectionType.Append;
+            }
+
+            if (gestures.Invert.Matches(e.Source, e))
+            {
+                return SelectionType.Invert;
+            }
+
+            if (gestures.Remove.Matches(e.Source, e))
+            {
+                return SelectionType.Remove;
+            }
+
+            return SelectionType.Replace;
         }
     }
 }

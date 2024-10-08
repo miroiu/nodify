@@ -28,6 +28,32 @@ namespace Nodify
             return (T)current;
         }
 
+        public static T? GetChildOfType<T>(this DependencyObject? depObj) where T : DependencyObject
+        {
+            if (depObj == null)
+            {
+                return default;
+            }
+
+            var count = VisualTreeHelper.GetChildrenCount(depObj);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                if (child is T result)
+                {
+                    return result;
+                }
+
+                if (GetChildOfType<T>(child) is T r)
+                {
+                    return r;
+                }
+            }
+
+            return default;
+        }
+
         public static T? GetElementUnderMouse<T>(this UIElement container)
             where T : UIElement
         {
