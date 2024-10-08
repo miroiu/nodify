@@ -10,16 +10,16 @@ namespace Nodify
     internal class ConnectionsMultiSelector : MultiSelector
     {
         public static readonly DependencyProperty SelectedItemsProperty = NodifyEditor.SelectedItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
-        public static readonly DependencyProperty CanSelectMultipleConnectionsProperty = NodifyEditor.CanSelectMultipleConnectionsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleConnectionsChanged, CoerceCanSelectMultipleConnections));
+        public static readonly DependencyProperty CanSelectMultipleItemsProperty = NodifyEditor.CanSelectMultipleItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));
 
-        private static object CoerceCanSelectMultipleConnections(DependencyObject d, object baseValue)
-            => ((ConnectionsMultiSelector)d).CanSelectMultipleItems = (bool)baseValue;
+        private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((ConnectionsMultiSelector)d).CanSelectMultipleItemsBase = (bool)e.NewValue;
+
+        private static object CoerceCanSelectMultipleItems(DependencyObject d, object baseValue)
+            => ((ConnectionsMultiSelector)d).CanSelectMultipleItemsBase = (bool)baseValue;
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((ConnectionsMultiSelector)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
-
-        private static void OnCanSelectMultipleConnectionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((ConnectionsMultiSelector)d).CanSelectMultipleItems = (bool)e.NewValue;
 
         /// <summary>
         /// Gets or sets the selected connections in the <see cref="NodifyEditor"/>.
@@ -33,21 +33,22 @@ namespace Nodify
         /// <summary>
         /// Gets or sets whether multiple connections can be selected.
         /// </summary>
-        public bool CanSelectMultipleConnections
+        public new bool CanSelectMultipleItems
         {
-            get => (bool)GetValue(CanSelectMultipleConnectionsProperty);
-            set => SetValue(CanSelectMultipleConnectionsProperty, value);
+            get => (bool)GetValue(CanSelectMultipleItemsProperty);
+            set => SetValue(CanSelectMultipleItemsProperty, value);
+        }
+
+        private bool CanSelectMultipleItemsBase
+        {
+            get => base.CanSelectMultipleItems;
+            set => base.CanSelectMultipleItems = value;
         }
 
         /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ConnectionsMultiSelector"/>.
         /// </summary>
         public NodifyEditor Editor { get; private set; } = default!;
-
-        public ConnectionsMultiSelector()
-        {
-            CanSelectMultipleItems = false;
-        }
 
         public override void OnApplyTemplate()
         {

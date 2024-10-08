@@ -229,6 +229,7 @@
         <nodify:NodifyEditor x:Name="Editor"
                              ItemsSource="{Binding Nodes}"
                              SelectedItems="{Binding SelectedNodes}"
+                             CanSelectMultipleItems="{Binding CanSelectMultipleNodes, Source={x:Static local:EditorSettings.Instance}}"
                              Connections="{Binding Connections}"
                              SelectedConnection="{Binding SelectedConnection}"
                              SelectedConnections="{Binding SelectedConnections}"

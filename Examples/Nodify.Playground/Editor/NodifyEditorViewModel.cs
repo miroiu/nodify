@@ -29,11 +29,6 @@ namespace Nodify.Playground
             // Called when the collection is cleared
             .WhenRemoved(c =>
             {
-                if (SelectedConnection == c)
-                {
-                    SelectedConnection = null;
-                }
-
                 c.Input.Connections.Remove(c);
                 c.Output.Connections.Remove(c);
             });

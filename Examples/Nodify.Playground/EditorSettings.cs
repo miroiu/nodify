@@ -27,6 +27,10 @@ namespace Nodify.Playground
                     "Realtime selection: ",
                     "Selects items when finished if disabled."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.CanSelectMultipleNodes,
+                    val => Instance.CanSelectMultipleNodes = val,
+                    "Can select multiple nodes: "),
+                new ProxySettingViewModel<bool>(
                     () => Instance.EnablePendingConnectionSnapping,
                     val => Instance.EnablePendingConnectionSnapping = val,
                     "Pending connection snapping: ",
@@ -379,6 +383,13 @@ namespace Nodify.Playground
         {
             get => _canSelectMultipleConnections;
             set => SetProperty(ref _canSelectMultipleConnections, value);
+        }
+
+        private bool _canSelectMultipleNodes = true;
+        public bool CanSelectMultipleNodes
+        {
+            get => _canSelectMultipleNodes;
+            set => SetProperty(ref _canSelectMultipleNodes, value);
         }
 
         private bool _selectableConnections = true;

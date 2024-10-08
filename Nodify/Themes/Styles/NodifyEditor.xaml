@@ -63,7 +63,7 @@
                                                              ItemsSource="{TemplateBinding Connections}"
                                                              SelectedItem="{Binding SelectedConnection, RelativeSource={RelativeSource TemplatedParent}}"
                                                              SelectedItems="{TemplateBinding SelectedConnections}"
-                                                             CanSelectMultipleConnections="{TemplateBinding CanSelectMultipleConnections}"
+                                                             CanSelectMultipleItems="{TemplateBinding CanSelectMultipleConnections}"
                                                              ItemTemplate="{TemplateBinding ConnectionTemplate}"
                                                              IsTabStop="False">
                                 <local:ConnectionsMultiSelector.Style>

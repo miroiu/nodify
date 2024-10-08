@@ -91,7 +91,10 @@ namespace Nodify
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            e.Handled = IsSelectable;
+            if (IsSelectable && EditorGestures.Mappings.Connection.Selection.Select.Matches(e.Source, e))
+            {
+                e.Handled = true;
+            }
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)

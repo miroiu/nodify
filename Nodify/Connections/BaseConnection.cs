@@ -442,8 +442,6 @@ namespace Nodify
 
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
         public static readonly RoutedEvent SplitEvent = EventManager.RegisterRoutedEvent(nameof(Split), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
-        public static readonly RoutedEvent SelectedEvent = EventManager.RegisterRoutedEvent(nameof(Selected), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
-        public static readonly RoutedEvent UnselectedEvent = EventManager.RegisterRoutedEvent(nameof(Unselected), RoutingStrategy.Bubble, typeof(ConnectionEventHandler), typeof(BaseConnection));
 
         /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Disconnect"/> gesture.</summary>
         public event ConnectionEventHandler Disconnect
@@ -457,20 +455,6 @@ namespace Nodify
         {
             add => AddHandler(SplitEvent, value);
             remove => RemoveHandler(SplitEvent, value);
-        }
-
-        /// <summary>Triggered by the <see cref="EditorGestures.ConnectionGestures.Selection"/> gesture.</summary>
-        public event ConnectionEventHandler Selected
-        {
-            add => AddHandler(SelectedEvent, value);
-            remove => RemoveHandler(SelectedEvent, value);
-        }
-
-        /// <summary>Triggered when <see cref="IsSelected"/> is set to false.</summary>
-        public event ConnectionEventHandler Unselected
-        {
-            add => AddHandler(UnselectedEvent, value);
-            remove => RemoveHandler(UnselectedEvent, value);
         }
 
         #endregion

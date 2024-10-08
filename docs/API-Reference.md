@@ -909,36 +909,12 @@ public event ConnectionEventHandler Disconnect;
   
 [ConnectionEventHandler](#connectioneventhandler-delegate)  
   
-#### Selected  
-  
-Triggered by the Nodify.EditorGestures.ConnectionGestures.Selection gesture.  
-  
-```csharp  
-public event ConnectionEventHandler Selected;  
-```  
-  
-**Event Type**  
-  
-[ConnectionEventHandler](#connectioneventhandler-delegate)  
-  
 #### Split  
   
 Triggered by the Nodify.EditorGestures.ConnectionGestures.Split gesture.  
   
 ```csharp  
 public event ConnectionEventHandler Split;  
-```  
-  
-**Event Type**  
-  
-[ConnectionEventHandler](#connectioneventhandler-delegate)  
-  
-#### Unselected  
-  
-Triggered when IsSelected is set to false.  
-  
-```csharp  
-public event ConnectionEventHandler Unselected;  
 ```  
   
 **Event Type**  
@@ -3123,7 +3099,7 @@ public EditorSelectingState(NodifyEditor editor, SelectionType type);
   
 `editor` [NodifyEditor](#nodifyeditor-class): The owner of the state.  
   
-`type` [SelectionType](#selectiontype-enum)  
+`type` [SelectionType](#selectiontype-enum): The selection strategy.  
   
 ### Properties  
   
@@ -5461,7 +5437,7 @@ protected override Size MeasureOverride(Size constraint);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Selector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.Selector) → [MultiSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.MultiSelector) → [NodifyEditor](#nodifyeditor-class)  
   
-**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)
+**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)  
   
 Groups [ItemContainer](#itemcontainer-class)s and [Connection](#connection-class)s in an area that you can drag, zoom and select.  
   
@@ -5673,6 +5649,18 @@ Gets or sets whether multiple connections can be selected.
   
 ```csharp  
 public bool CanSelectMultipleConnections { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+#### CanSelectMultipleItems  
+  
+Gets or sets whether multiple [ItemContainer](#itemcontainer-class)s can be selected.  
+  
+```csharp  
+public bool CanSelectMultipleItems { get; set; }  
 ```  
   
 **Property Value**  
@@ -6625,6 +6613,8 @@ public void PushState(EditorState state);
   
 #### SelectAllConnections()  
   
+Select all [NodifyEditor.Connections](#nodifyeditor-class#connections).  
+  
 ```csharp  
 public void SelectAllConnections();  
 ```  
@@ -6646,6 +6636,8 @@ public void SelectArea(Rect area, bool append = false, bool fit = false);
 `fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).  
   
 #### UnselectAllConnection()  
+  
+Unselect all [NodifyEditor.Connections](#nodifyeditor-class#connections).  
   
 ```csharp  
 public void UnselectAllConnection();  
