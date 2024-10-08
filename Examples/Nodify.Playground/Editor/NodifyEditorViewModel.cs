@@ -93,6 +93,13 @@ namespace Nodify.Playground
             set => SetProperty(ref _selectedConnection, value);
         }
 
+        private NodeViewModel? _selectedNode;
+        public NodeViewModel? SelectedNode
+        {
+            get => _selectedNode;
+            set => SetProperty(ref _selectedNode, value);
+        }
+
         public GraphSchema Schema { get; }
 
         public ICommand DeleteSelectionCommand { get; }

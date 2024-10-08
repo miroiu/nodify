@@ -1,16 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace Nodify.Playground
 {
     public class PlaygroundSettings : ObservableObject
     {
-        public IReadOnlyCollection<ISettingViewModel> Settings { get; }
+        private readonly IReadOnlyCollection<ISettingViewModel> _settings;
+        public IEnumerable<ISettingViewModel> Settings => FilterAndSort(_settings);
+
+        private string? _searchText;
+        public string? SearchText
+        {
+            get => _searchText;
+            set => SetProperty(ref _searchText, value)
+                .Then(() => OnPropertyChanged(nameof(Settings)));
+        }
 
         private PlaygroundSettings()
         {
-            Settings = new ObservableCollection<ISettingViewModel>()
+            _settings = new List<ISettingViewModel>()
             {
                 new ProxySettingViewModel<EditorGesturesMappings>(
                     () => Instance.EditorGesturesMappings,
@@ -77,6 +86,21 @@ namespace Nodify.Playground
                     val => Instance.PerformanceTestNodes = val,
                     "Performance test nodes:"),
             };
+        }
+
+        public IEnumerable<ISettingViewModel> FilterAndSort(IReadOnlyCollection<ISettingViewModel> settings)
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                return settings;
+            }
+
+            string searchText = SearchText!.ToLowerInvariant();
+
+            var matchingValues = settings.Where(s => s.Name.ToLowerInvariant().Contains(searchText) || (s.Description?.ToLowerInvariant()?.Contains(searchText) ?? false));
+            var sortedValues = matchingValues.OrderByDescending(s => s.Name.ToLowerInvariant().Contains(searchText));
+
+            return sortedValues;
         }
 
         public static PlaygroundSettings Instance { get; } = new PlaygroundSettings();

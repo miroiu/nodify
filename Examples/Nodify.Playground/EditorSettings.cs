@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Nodify.Playground
@@ -14,18 +13,33 @@ namespace Nodify.Playground
 
     public class EditorSettings : ObservableObject
     {
-        public IReadOnlyCollection<ISettingViewModel> Settings { get; }
-        public IReadOnlyCollection<ISettingViewModel> AdvancedSettings { get; }
+        private readonly IReadOnlyCollection<ISettingViewModel> _settings;
+        public IEnumerable<ISettingViewModel> Settings => PlaygroundSettings.Instance.FilterAndSort(_settings);
+
+        private readonly IReadOnlyCollection<ISettingViewModel> _advancedSettings;
+        public IEnumerable<ISettingViewModel> AdvancedSettings => PlaygroundSettings.Instance.FilterAndSort(_advancedSettings);
 
         private EditorSettings()
         {
-            Settings = new ObservableCollection<ISettingViewModel>()
+            PlaygroundSettings.Instance.PropertyChanged += OnSearchTextChanged;
+
+            _settings = new List<ISettingViewModel>()
             {
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableRealtimeSelection,
                     val => Instance.EnableRealtimeSelection = val,
                     "Realtime selection: ",
                     "Selects items when finished if disabled."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.SelectableNodes,
+                    val => Instance.SelectableNodes = val,
+                    "Selectable nodes: ",
+                    "Whether nodes can be selected."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.DraggableNodes,
+                    val => Instance.DraggableNodes= val,
+                    "Draggable nodes: ",
+                    "Whether nodes can be dragged."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.CanSelectMultipleNodes,
                     val => Instance.CanSelectMultipleNodes = val,
@@ -189,7 +203,7 @@ namespace Nodify.Playground
                     "Whether the grouping node is sticky or not"),
             };
 
-            AdvancedSettings = new ObservableCollection<ISettingViewModel>()
+            _advancedSettings = new List<ISettingViewModel>()
             {
                 new ProxySettingViewModel<double>(
                     () => Instance.HandleRightClickAfterPanningThreshold,
@@ -274,6 +288,15 @@ namespace Nodify.Playground
             };
 
             EnableCuttingLinePreview = true;
+        }
+
+        private void OnSearchTextChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlaygroundSettings.SearchText))
+            {
+                OnPropertyChanged(nameof(Settings));
+                OnPropertyChanged(nameof(AdvancedSettings));
+            }
         }
 
         public static EditorSettings Instance { get; } = new EditorSettings();
@@ -378,6 +401,13 @@ namespace Nodify.Playground
             set => SetProperty(ref _location, value);
         }
 
+        private bool _selectableConnections = true;
+        public bool SelectableConnections
+        {
+            get => _selectableConnections;
+            set => SetProperty(ref _selectableConnections, value);
+        }
+
         private bool _canSelectMultipleConnections = true;
         public bool CanSelectMultipleConnections
         {
@@ -385,18 +415,25 @@ namespace Nodify.Playground
             set => SetProperty(ref _canSelectMultipleConnections, value);
         }
 
+        private bool _draggableNodes = true;
+        public bool DraggableNodes
+        {
+            get => _draggableNodes;
+            set => SetProperty(ref _draggableNodes, value);
+        }
+
+        private bool _selectableNodes = true;
+        public bool SelectableNodes
+        {
+            get => _selectableNodes;
+            set => SetProperty(ref _selectableNodes, value);
+        }
+
         private bool _canSelectMultipleNodes = true;
         public bool CanSelectMultipleNodes
         {
             get => _canSelectMultipleNodes;
             set => SetProperty(ref _canSelectMultipleNodes, value);
-        }
-
-        private bool _selectableConnections = true;
-        public bool SelectableConnections
-        {
-            get => _selectableConnections;
-            set => SetProperty(ref _selectableConnections, value);
         }
 
         private ConnectionStyle _connectionStyle;

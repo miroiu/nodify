@@ -8,8 +8,8 @@
         xmlns:nodify="https://miroiu.github.io/nodify"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="600"
-        Width="1200">
+        Height="700"
+        Width="1300">
 
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
@@ -108,65 +108,76 @@
                 </Style>
             </Expander.Style>
 
-            <ScrollViewer>
-                <Grid IsSharedSizeScope="True"
-                      Width="330">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="0 0 5 10">
+                    <TextBlock Margin="0 0 0 3">Search:</TextBlock>
+                    <TextBox Text="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             Padding="4" />
+                </StackPanel>
+                <ScrollViewer Grid.Row="1">
+                    <Grid IsSharedSizeScope="True"
+                          Width="330">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <Expander Header="Playground Settings"
-                              Padding="0 5 0 0"
-                              BorderThickness="0 0 0 1"
-                              IsExpanded="True"
-                              BorderBrush="{DynamicResource BackgroundBrush}">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
-                                   BasedOn="{StaticResource {x:Type Expander}}">
-                                <Setter Property="Tag"
-                                        Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
-                        <Border BorderThickness="1"
-                                Padding="10"
-                                HorizontalAlignment="Stretch">
-                            <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
-                        </Border>
-                    </Expander>
+                        <Expander Header="Playground Settings"
+                                  Padding="0 5 0 0"
+                                  BorderThickness="0 0 0 1"
+                                  IsExpanded="True"
+                                  BorderBrush="{DynamicResource BackgroundBrush}">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}"
+                                       BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Tag"
+                                            Value="{StaticResource ExpandRightIcon}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsExpanded"
+                                                 Value="True">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandDownIcon}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>
+                            <Border BorderThickness="1"
+                                    Padding="10"
+                                    HorizontalAlignment="Stretch">
+                                <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
+                            </Border>
+                        </Expander>
 
-                    <Expander Header="Editor Settings"
-                              Padding="0 5 0 0"
-                              BorderThickness="0 0 0 1"
-                              IsExpanded="True"
-                              BorderBrush="{DynamicResource BackgroundBrush}"
-                              Grid.Row="1">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
-                                   BasedOn="{StaticResource {x:Type Expander}}">
-                                <Setter Property="Tag"
-                                        Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
+                        <Expander Header="Editor Settings"
+                                  Padding="0 5 0 0"
+                                  BorderThickness="0 0 0 1"
+                                  IsExpanded="True"
+                                  BorderBrush="{DynamicResource BackgroundBrush}"
+                                  Grid.Row="1">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}"
+                                       BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Tag"
+                                            Value="{StaticResource ExpandRightIcon}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsExpanded"
+                                                 Value="True">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandDownIcon}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>
 
-                        <local:EditorSettingsView />
-                    </Expander>
-                </Grid>
-            </ScrollViewer>
+                            <local:EditorSettingsView />
+                        </Expander>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Expander>
 
         <!--INFORMATION-->
@@ -236,7 +247,8 @@
                     <TextBlock ToolTip="The estimated frame rate. (my be buggy)">
                         <TextBlock.Inlines>
                             <Run Text="FPS: " />
-                            <Run Foreground="LawnGreen" Name="FPSText" />
+                            <Run Foreground="LawnGreen"
+                                 Name="FPSText" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>
