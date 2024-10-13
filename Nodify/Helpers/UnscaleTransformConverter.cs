@@ -40,7 +40,10 @@ namespace Nodify
     {
         public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
         {
-            Point result = (Point)((Vector)(Point)values[0] * (double)values[1]);
+            // MP! Check: Avalonia needs this.  Why is MultiValueConverter behavior different from WPF?
+            if (values.Any(x => x is UnsetValueType)) return false;
+
+            Point result = (Point)((Vector)(Point)values[0]! * (double)values[1]!);
             return result;
         }
 

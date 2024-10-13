@@ -21,6 +21,9 @@ namespace Nodify.Calculator
             }
         }
 
+        // MP! Fix: Context menu handling.
+        public Rect Bounds { get; set; }
+
         private Point _location;
         public Point Location
         {
@@ -43,7 +46,9 @@ namespace Nodify.Calculator
         }
 
         public NodifyObservableCollection<OperationInfoViewModel> AvailableOperations { get; }
+
         public INodifyCommand CreateOperationCommand { get; }
+
         private readonly CalculatorViewModel _calculator;
 
         public OperationsMenuViewModel(CalculatorViewModel calculator)

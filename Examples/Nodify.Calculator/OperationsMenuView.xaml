@@ -9,7 +9,13 @@
              MinWidth="250"
              d:DesignHeight="400"
              d:DesignWidth="250"
-             d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}">
+             x:DataType="local:OperationsMenuViewModel"
+             Bounds="{Binding Bounds,Mode=OneWayToSource}">
+             <!--
+             MP! Note: breaks design preview
+             d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}"
+             -->
+
     <UserControl.Resources>
         <ControlTheme TargetType="{x:Type TextBlock}" x:Key="{x:Type TextBlock}">
             <Setter Property="Foreground"
@@ -57,7 +63,7 @@
                                     </Setter>
                                     <Style Selector="^:pointerover /template/ Border#Border">
                                         <Setter Property="Background"
-                                                Value="{DynamicResource NodeInput.BorderBrush}" />                                        
+                                                Value="{DynamicResource NodeInput.BorderBrush}" />
                                     </Style>
                                 </ControlTheme>
                             </Button.Theme>
@@ -65,6 +71,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
         </Grid>
     </Border>
 </UserControl>
