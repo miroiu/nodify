@@ -48,7 +48,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.1.0" />
+    <PackageReference Include="Avalonia" Version="11.1.4" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Themes\*.xaml" />
