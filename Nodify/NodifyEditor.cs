@@ -25,7 +25,7 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(CuttingLineStyle), StyleTargetType = typeof(CuttingLine))]
     [ContentProperty(nameof(Decorators))]
     [DefaultProperty(nameof(Decorators))]
-    public class NodifyEditor : MultiSelector
+    public partial class NodifyEditor : MultiSelector
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
         protected const string ElementConnectionsHost = "PART_ConnectionsHost";
@@ -127,7 +127,11 @@ namespace Nodify
         /// Updates the <see cref="ViewportSize"/> and raises the <see cref="ViewportUpdatedEvent"/>.
         /// Called when the <see cref="UIElement.RenderSize"/> or <see cref="ViewportZoom"/> is changed.
         /// </summary>
-        protected void OnViewportUpdated() => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
+        protected void OnViewportUpdated()
+        {
+            UpdateScrollbars();
+            RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
+        }
 
         #endregion
 
