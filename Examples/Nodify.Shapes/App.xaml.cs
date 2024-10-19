@@ -10,6 +10,9 @@ namespace Nodify.Shapes
     {
         public App()
         {
+            NodifyEditor.EnableDraggingContainersOptimizations = false;
+            NodifyEditor.EnableCuttingLinePreview = true;
+
             EditorGestures.Mappings.Connection.Disconnect.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new MouseGesture(MouseAction.RightClick));
         }
     }

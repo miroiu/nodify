@@ -47,6 +47,9 @@
                              ItemsSelectStartedCommand="{Binding SelectShapesStartedCommand}"
                              ItemsSelectCompletedCommand="{Binding SelectShapesCompletedCommand}"
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
+                             MouseDown="Editor_MouseDown"
+                             MouseMove="Editor_MouseMove"
+                             MouseUp="Editor_MouseUp"
                              GridCellSize="5"
                              x:Name="Editor">
             <nodify:NodifyEditor.Style>
@@ -156,10 +159,12 @@
                                 <Setter Property="OutlineBrush"
                                         Value="Transparent" />
                                 <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
                                         <Setter Property="OutlineBrush">
                                             <Setter.Value>
-                                                <SolidColorBrush Color="White" Opacity="0.15" />
+                                                <SolidColorBrush Color="White"
+                                                                 Opacity="0.15" />
                                             </Setter.Value>
                                         </Setter>
                                     </Trigger>
@@ -475,8 +480,7 @@
                 HorizontalAlignment="Center"
                 Margin="0 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b"
-                MouseDown="Toolbar_MouseDown">
+                Background="#1e293b">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -594,8 +598,7 @@
                 HorizontalAlignment="Left"
                 Margin="20 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b"
-                MouseDown="Toolbar_MouseDown">
+                Background="#1e293b">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -649,8 +652,7 @@
                 HorizontalAlignment="Right"
                 Margin="0 0 20 20"
                 Height="38"
-                CornerRadius="3"
-                MouseDown="Toolbar_MouseDown">
+                CornerRadius="3">
 
             <ItemsControl ItemsSource="{Binding Cursors}">
                 <ItemsControl.ItemsPanel>
