@@ -9,6 +9,9 @@ namespace Nodify
 {
     public partial class NodifyEditor : IScrollInfo
     {
+        /// <summary>
+        /// The number of units the mouse wheel is rotated to scroll one line.
+        /// </summary>
         public static double ScrollIncrement { get; set; } = Mouse.MouseWheelDeltaForOneLine / 2;
 
         bool IScrollInfo.CanHorizontallyScroll { get; set; }

@@ -5437,12 +5437,14 @@ protected override Size MeasureOverride(Size constraint);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Selector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.Selector) → [MultiSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.MultiSelector) → [NodifyEditor](#nodifyeditor-class)  
   
+**Implements:** [IScrollInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.IScrollInfo)  
+  
 **References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)  
   
 Groups [ItemContainer](#itemcontainer-class)s and [Connection](#connection-class)s in an area that you can drag, zoom and select.  
   
 ```csharp  
-public class NodifyEditor : MultiSelector  
+public class NodifyEditor : MultiSelector, IScrollInfo  
 ```  
   
 ### Constructors  
@@ -6193,6 +6195,18 @@ public ICommand RemoveConnectionCommand { get; set; }
 **Property Value**  
   
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)  
+  
+#### ScrollIncrement  
+  
+The number of units the mouse wheel is rotated to scroll one line.  
+  
+```csharp  
+public static double ScrollIncrement { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
 #### SelectedArea  
   
