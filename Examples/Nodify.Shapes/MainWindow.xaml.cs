@@ -10,9 +10,6 @@ namespace Nodify.Shapes
         public MainWindow()
         {
             InitializeComponent();
-
-            NodifyEditor.EnableDraggingContainersOptimizations = false;
-            NodifyEditor.EnableCuttingLinePreview = true;
         }
     }
 }
