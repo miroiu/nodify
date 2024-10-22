@@ -16,11 +16,15 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>6.4.0</Version>
+    <Version>6.5.0</Version>
     <PackageReleaseNotes>
       > - Features:
-      >	  - Added OutlineBrush and OutlineThickness dependency properties to BaseConnection to support increasing the selection area without increasing the stroke thickness
-      >	  - Added IsAnimatingDirectionalArrows and DirectionalArrowsAnimationDuration dependency properties to BaseConnection to support controlling the animation from XAML
+      >	  - Added SelectedConnection, SelectedConnections, CanSelectMultipleConnections and CanSelectMultipleItems dependency properties to NodifyEditor
+      >	  - Added IsSelected and IsSelectable attached dependency properties to BaseConnection
+      >	  - Added PrioritizeBaseConnectionForSelection static field to BaseConnection
+      >	  - Added EditorGestures.Connection.Selection
+      >	  - Added support for ScrollViewer in NodifyEditor (implements IScrollInfo)
+      >	  - Added NodifyEditor.ScrollIncrement dependency property
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

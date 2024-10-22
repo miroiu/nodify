@@ -4,13 +4,17 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 6.5.0**
+
+> - Features:
 >	- Added SelectedConnection, SelectedConnections, CanSelectMultipleConnections and CanSelectMultipleItems dependency properties to NodifyEditor
 >	- Added IsSelected and IsSelectable attached dependency properties to BaseConnection
 >	- Added PrioritizeBaseConnectionForSelection static field to BaseConnection
 >	- Added EditorGestures.Connection.Selection
 >	- Added support for ScrollViewer in NodifyEditor (implements IScrollInfo)
 >	- Added NodifyEditor.ScrollIncrement dependency property
-> - Bugfixes:
 
 #### **Version 6.4.0**
 
