@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added InputGroupStyle and OutputGroupStyle to Node
 > - Bugfixes:
 
 #### **Version 6.5.0**
