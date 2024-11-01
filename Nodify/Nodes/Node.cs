@@ -155,7 +155,9 @@ namespace Nodify
 
         #endregion
 
+        /// <inheritdoc cref="ItemsControl.GroupStyle"/>
         public ObservableCollection<GroupStyle> InputGroupStyle { get; } = new ObservableCollection<GroupStyle>();
+        /// <inheritdoc cref="ItemsControl.GroupStyle"/>
         public ObservableCollection<GroupStyle> OutputGroupStyle { get; } = new ObservableCollection<GroupStyle>();
 
         protected ItemsControl? InputItemsControl { get; private set; }
