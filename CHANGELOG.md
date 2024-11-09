@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 >	- Added InputGroupStyle and OutputGroupStyle to Node
+>	- Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
 > - Bugfixes:
 
 #### **Version 6.5.0**
