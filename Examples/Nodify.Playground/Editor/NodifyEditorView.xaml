@@ -178,22 +178,25 @@
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
-            <nodify:CircuitConnection Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
-                                      Style="{StaticResource ConnectionStyle}" />
+            <nodify:CircuitConnection Style="{StaticResource ConnectionStyle}"
+                                      Angle="{Binding CircuitConnectionAngle, Source={x:Static local:EditorSettings.Instance}}"
+                                      CornerRadius="{Binding ConnectionCornerRadius, Source={x:Static local:EditorSettings.Instance}}" />
         </DataTemplate>
 
         <DataTemplate x:Key="StepConnectionTemplate">
             <nodify:StepConnection Style="{StaticResource ConnectionStyle}"
+                                   CornerRadius="{Binding ConnectionCornerRadius, Source={x:Static local:EditorSettings.Instance}}"
                                    SourcePosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Output}"
                                    TargetPosition="{Binding ., Converter={StaticResource FlowToConnectorPositionConverter}, ConverterParameter=Input}" />
         </DataTemplate>
 
-        <DataTemplate x:Key="ConnectionTemplate">
-            <nodify:Connection Style="{StaticResource ConnectionStyle}" />
+        <DataTemplate x:Key="LineConnectionTemplate">
+            <nodify:LineConnection Style="{StaticResource ConnectionStyle}"
+                                   CornerRadius="{Binding ConnectionCornerRadius, Source={x:Static local:EditorSettings.Instance}}" />
         </DataTemplate>
 
-        <DataTemplate x:Key="LineConnectionTemplate">
-            <nodify:LineConnection Style="{StaticResource ConnectionStyle}" />
+        <DataTemplate x:Key="ConnectionTemplate">
+            <nodify:Connection Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
 
         <ControlTemplate x:Key="SquareConnector"

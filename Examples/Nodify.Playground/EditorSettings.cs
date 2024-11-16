@@ -127,6 +127,11 @@ namespace Nodify.Playground
                     "Connection angle: ",
                     "Applies to circuit connection style"),
                 new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionCornerRadius,
+                    val => Instance.ConnectionCornerRadius = val,
+                    "Connection corner radius: ",
+                    "The corner radius between the line segments."),
+                new ProxySettingViewModel<double>(
                     () => Instance.ConnectionSpacing,
                     val => Instance.ConnectionSpacing = val,
                     "Connection spacing: ",
@@ -455,6 +460,13 @@ namespace Nodify.Playground
         {
             get => _circuitConnectionAngle;
             set => SetProperty(ref _circuitConnectionAngle, value);
+        }
+
+        private double _connectionCornerRadius = 10;
+        public double ConnectionCornerRadius
+        {
+            get => _connectionCornerRadius;
+            set => SetProperty(ref _connectionCornerRadius, value);
         }
 
         private double _connectionSpacing = 20;

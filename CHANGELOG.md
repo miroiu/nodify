@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 >	- Added InputGroupStyle and OutputGroupStyle to Node
+>	- Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
 > - Bugfixes:
 
 #### **Version 6.5.0**
