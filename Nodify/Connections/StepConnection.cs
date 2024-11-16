@@ -80,12 +80,14 @@ namespace Nodify
         {
             var (p0, p1, p2, p3) = GetLinePoints(source, target);
 
-            context.BeginFigure(source, false, false);
-            context.LineTo(p0, true, true);
-            context.LineTo(p1, true, true);
-            context.LineTo(p2, true, true);
-            context.LineTo(p3, true, true);
-            context.LineTo(target, true, true);
+            if (CornerRadius > 0)
+            {
+                DrawSmoothLine(context);
+            }
+            else
+            {
+                DrawDefaultLine(context);
+            }
 
             if (Spacing < 1d)
             {
@@ -93,6 +95,36 @@ namespace Nodify
             }
 
             return ((target, source), (source, target));
+
+            void DrawDefaultLine(StreamGeometryContext context)
+            {
+                context.BeginFigure(source, false, false);
+                context.LineTo(p0, true, true);
+                context.LineTo(p1, true, true);
+                context.LineTo(p2, true, true);
+                context.LineTo(p3, true, true);
+                context.LineTo(target, true, true);
+            }
+
+            void DrawSmoothLine(StreamGeometryContext context)
+            {
+                context.BeginFigure(source, false, false);
+                AddSmoothCorner(context, source, p0, p1, CornerRadius);
+
+                if (p1 == p2)
+                {
+                    // skip p1 or p2 because they overlap
+                    AddSmoothCorner(context, p0, p1, p3, CornerRadius);
+                }
+                else
+                {
+                    AddSmoothCorner(context, p0, p1, p2, CornerRadius);
+                    AddSmoothCorner(context, p1, p2, p3, CornerRadius);
+                }
+
+                AddSmoothCorner(context, p2, p3, target, CornerRadius);
+                context.LineTo(target, true, true);
+            }
         }
 
         protected override Point GetTextPosition(FormattedText text, Point source, Point target)
