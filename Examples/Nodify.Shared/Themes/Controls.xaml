@@ -234,6 +234,10 @@
 
     <Style TargetType="{x:Type ComboBoxItem}"
            BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
         <Setter Property="Background"
                 Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="BorderBrush"
