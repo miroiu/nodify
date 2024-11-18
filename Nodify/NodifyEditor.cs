@@ -136,6 +136,7 @@ namespace Nodify
         protected void OnViewportUpdated()
         {
             UpdateScrollbars();
+            UpdatePushedArea();
             RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
         }
 
@@ -855,6 +856,26 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Gets a list of all <see cref="ItemContainer"/>s.
+        /// </summary>
+        /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
+        protected internal IReadOnlyCollection<ItemContainer> ItemContainers
+        {
+            get
+            {
+                ItemCollection items = Items;
+                var containers = new List<ItemContainer>(items.Count);
+
+                for (var i = 0; i < items.Count; i++)
+                {
+                    containers.Add((ItemContainer)ItemContainerGenerator.ContainerFromIndex(i));
+                }
+
+                return containers;
+            }
+        }
+
         #endregion
 
         #region Construction
@@ -1502,13 +1523,13 @@ namespace Nodify
         {
             if (e.Canceled && ItemContainer.AllowDraggingCancellation)
             {
-                _draggingStrategy?.Abort(new Vector(e.HorizontalChange, e.VerticalChange));
+                _draggingStrategy?.Abort();
             }
             else
             {
                 IsBulkUpdatingItems = true;
 
-                _draggingStrategy?.End(new Vector(e.HorizontalChange, e.VerticalChange));
+                _draggingStrategy?.End();
 
                 IsBulkUpdatingItems = false;
 
@@ -1526,16 +1547,7 @@ namespace Nodify
         {
             IList selectedItems = base.SelectedItems;
 
-            if (EnableDraggingContainersOptimizations)
-            {
-                _draggingStrategy = new DraggingOptimized(this);
-            }
-            else
-            {
-                _draggingStrategy = new DraggingSimple(this);
-            }
-
-            _draggingStrategy.Start(new Vector(e.HorizontalOffset, e.VerticalOffset));
+            _draggingStrategy = CreateDraggingStrategy(SelectedContainers);
 
             if (selectedItems.Count > 0)
             {
@@ -1546,6 +1558,16 @@ namespace Nodify
 
                 e.Handled = true;
             }
+        }
+
+        private IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)
+        {
+            if (EnableDraggingContainersOptimizations)
+            {
+                return new DraggingOptimized(containers, GridCellSize);
+            }
+
+            return new DraggingSimple(containers, GridCellSize);
         }
 
         #endregion
@@ -1643,6 +1665,16 @@ namespace Nodify
         /// <returns>A location inside the graph</returns>
         public Point GetLocationInsideEditor(MouseEventArgs args)
             => args.GetPosition(ItemsHost);
+
+        /// <summary>
+        /// Snaps the given value down to the nearest multiple of the grid cell size.
+        /// </summary>
+        /// <param name="value">The value to be snapped to the grid.</param>
+        /// <returns>The largest multiple of the grid cell size less than or equal to the value.</returns>
+        public double SnapToGrid(double value)
+        {
+            return (int)value / GridCellSize * GridCellSize;
+        }
 
         #endregion
     }

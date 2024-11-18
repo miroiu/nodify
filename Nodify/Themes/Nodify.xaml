@@ -10,6 +10,7 @@
     <Color x:Key="NodifyEditor.BackgroundColor">#332155</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">#E8E1F3</Color>
     <Color x:Key="NodifyEditor.SelectionRectangleColor">#FD5618</Color>
+    <Color x:Key="NodifyEditor.PushedAreaColor">#9b44dd</Color>
     <Color x:Key="NodifyEditor.CuttingLineColor">Red</Color>
 
     <!--ITEM CONTAINER-->

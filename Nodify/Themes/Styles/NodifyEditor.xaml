@@ -29,6 +29,20 @@
         </Setter>
     </Style>
 
+    <Style x:Key="PushedAreaStyle"
+           TargetType="Border">
+        <Setter Property="BorderBrush"
+                Value="#74747c" />
+        <Setter Property="BorderThickness"
+                Value="2 0 0 0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Opacity="0.2"
+                                 Color="#74747c" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type local:NodifyEditor}">
         <Setter Property="ClipToBounds"
                 Value="True" />
@@ -44,6 +58,8 @@
                 Value="False" />
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource SelectionRectangleStyle}" />
+        <Setter Property="PushedAreaStyle"
+                Value="{StaticResource PushedAreaStyle}" />
         <Setter Property="ConnectionTemplate"
                 Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="PendingConnectionTemplate"
@@ -111,6 +127,29 @@
                                 </Rectangle.Height>
                             </Rectangle>
 
+                            <Border Style="{TemplateBinding PushedAreaStyle}"
+                                    RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
+                                    Canvas.Top="{Binding PushedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Canvas.Left="{Binding PushedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Visibility="{TemplateBinding IsPushingItems, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Border.Width>
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="PushedArea.Width"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Border.Width>
+                                <Border.Height>
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="PushedArea.Height"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Border.Height>
+                            </Border>
+
                             <local:CuttingLine Style="{TemplateBinding CuttingLineStyle}"
                                                Visibility="{TemplateBinding IsCutting, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}">
@@ -147,6 +186,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsPushingItems"
+                     Value="True">
+                <Setter Property="Cursor"
+                        Value="SizeWE" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

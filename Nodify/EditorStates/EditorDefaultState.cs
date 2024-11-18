@@ -35,6 +35,10 @@ namespace Nodify
             {
                 PushState(new EditorCuttingState(Editor));
             }
+            else if (gestures.PushItems.Matches(e.Source, e))
+            {
+                PushState(new EditorPushingItemsState(Editor));
+            }
             else if (gestures.Selection.Select.Matches(e.Source, e))
             {
                 SelectionType selectionType = GetSelectionType(e);

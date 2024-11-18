@@ -10,17 +10,17 @@ namespace Nodify
     /// </summary>
     internal class DraggingOptimized : IDraggingStrategy
     {
-        private readonly NodifyEditor _editor;
-        private Vector _dragAccumulator;
+        private readonly uint _gridCellSize;
         private readonly List<ItemContainer> _selectedContainers;
+        private Vector _dragAccumulator = new Vector(0, 0);
 
-        public DraggingOptimized(NodifyEditor editor)
+        public DraggingOptimized(IEnumerable<ItemContainer> containers, uint gridCellSize)
         {
-            _editor = editor;
-            _selectedContainers = _editor.SelectedContainers.Where(c => c.IsDraggable).ToList();
+            _gridCellSize = gridCellSize;
+            _selectedContainers = containers.Where(c => c.IsDraggable).ToList();
         }
 
-        public void Abort(Vector change)
+        public void Abort()
         {
             for (var i = 0; i < _selectedContainers.Count; i++)
             {
@@ -36,7 +36,7 @@ namespace Nodify
             _selectedContainers.Clear();
         }
 
-        public void End(Vector change)
+        public void End()
         {
             for (var i = 0; i < _selectedContainers.Count; i++)
             {
@@ -48,8 +48,8 @@ namespace Nodify
                 // Correct the final position
                 if (NodifyEditor.EnableSnappingCorrection && (r.X != 0 || r.Y != 0))
                 {
-                    result.X = (int)result.X / _editor.GridCellSize * _editor.GridCellSize;
-                    result.Y = (int)result.Y / _editor.GridCellSize * _editor.GridCellSize;
+                    result.X = (int)result.X / _gridCellSize * _gridCellSize;
+                    result.Y = (int)result.Y / _gridCellSize * _gridCellSize;
                 }
 
                 container.Location = result;
@@ -61,15 +61,10 @@ namespace Nodify
             _selectedContainers.Clear();
         }
 
-        public void Start(Vector change)
-        {
-            _dragAccumulator = new Vector(0, 0);
-        }
-
         public void Update(Vector change)
         {
             _dragAccumulator += change;
-            var delta = new Vector((int)_dragAccumulator.X / _editor.GridCellSize * _editor.GridCellSize, (int)_dragAccumulator.Y / _editor.GridCellSize * _editor.GridCellSize);
+            var delta = new Vector((int)_dragAccumulator.X / _gridCellSize * _gridCellSize, (int)_dragAccumulator.Y / _gridCellSize * _gridCellSize);
             _dragAccumulator -= delta;
 
             if (delta.X != 0 || delta.Y != 0)

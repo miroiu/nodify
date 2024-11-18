@@ -111,6 +111,7 @@ namespace Nodify
             {
                 Selection = new SelectionGestures();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
+                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
@@ -129,6 +130,10 @@ namespace Nodify
             /// <summary>Gesture used to start panning.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
             public InputGestureRef Pan { get; }
+
+            /// <summary>Gesture used to start pushing.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="ModifierKeys.Shift"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
+            public InputGestureRef PushItems { get; }
 
             /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
@@ -167,6 +172,7 @@ namespace Nodify
                 ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;
                 FitToScreen.Value = gestures.FitToScreen.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
+                PushItems.Value = gestures.PushItems.Value;
             }
         }
 
