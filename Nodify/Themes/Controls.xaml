@@ -19,12 +19,12 @@
     </Style>
 
     <Style x:Key="NodifyEditor.PushedAreaStyle"
-           TargetType="Border">
-        <Setter Property="BorderThickness"
-                Value="2 0 0 0" />
-        <Setter Property="BorderBrush"
-                Value="{DynamicResource NodifyEditor.PushedAreaBorderBrush}" />
-        <Setter Property="Background"
+           TargetType="Rectangle">
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource NodifyEditor.PushedAreaStrokeBrush}" />
+        <Setter Property="Fill"
                 Value="{StaticResource NodifyEditor.PushedAreaBackgroundBrush}" />
     </Style>
 

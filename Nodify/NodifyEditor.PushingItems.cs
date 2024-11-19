@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Nodify
 {
-    [StyleTypedProperty(Property = nameof(PushedAreaStyle), StyleTargetType = typeof(Border))]
+    [StyleTypedProperty(Property = nameof(PushedAreaStyle), StyleTargetType = typeof(Rectangle))]
     public partial class NodifyEditor
     {
         public static readonly DependencyProperty PushedAreaStyleProperty = DependencyProperty.Register(nameof(PushedAreaStyle), typeof(Style), typeof(NodifyEditor));
@@ -16,6 +16,9 @@ namespace Nodify
 
         protected static readonly DependencyPropertyKey IsPushingItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPushingItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsPushingItemsChanged));
         public static readonly DependencyProperty IsPushingItemsProperty = IsPushingItemsPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey PushOrientationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushOrientation), typeof(Orientation), typeof(NodifyEditor), new FrameworkPropertyMetadata(Orientation.Horizontal));
+        public static readonly DependencyProperty PushOrientationProperty = PushOrientationPropertyKey.DependencyProperty;
 
         private static void OnIsPushingItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -58,7 +61,16 @@ namespace Nodify
         public bool IsPushingItems
         {
             get => (bool)GetValue(IsPushingItemsProperty);
-            internal set => SetValue(IsPushingItemsPropertyKey, value);
+            private set => SetValue(IsPushingItemsPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Gets the orientation of the <see cref="PushedArea"/>.
+        /// </summary>
+        public Orientation PushOrientation
+        {
+            get => (Orientation)GetValue(PushOrientationProperty);
+            private set => SetValue(PushOrientationPropertyKey, value);
         }
 
         /// <summary>
@@ -75,19 +87,23 @@ namespace Nodify
         /// </summary>
         public static bool AllowPushItemsCancellation { get; set; } = true;
 
-        private const int _pushAreaOffscreenOffsetY = 100;
-        private const int _pushAreaMinWidth = 2;
-        private double _pushAreaInitialX;
-        private double _pushedAreaWidth;
+        private IPushStrategy? _pushStrategy;
 
-        protected internal void StartPushingItems(Point location)
+        protected internal void StartPushingItems(Point position, Orientation orientation)
         {
             IsPushingItems = true;
-            PushedArea = new Rect(location.X, ViewportLocation.Y, 0d, ViewportSize.Height);
+            PushOrientation = orientation;
 
-            _draggingStrategy = CreateDraggingStrategy(ItemContainers.Where(item => item.Location.X >= location.X));
-            _pushAreaInitialX = PushedArea.X;
-            _pushedAreaWidth = 0;
+            if (orientation == Orientation.Horizontal)
+            {
+                _pushStrategy = new HorizontalPushStrategy(this);
+            }
+            else
+            {
+                _pushStrategy = new VerticalPushStrategy(this);
+            }
+
+            _pushStrategy.Start(position);
         }
 
         protected internal void CancelPushingItems()
@@ -98,31 +114,25 @@ namespace Nodify
             Debug.Assert(IsPushingItems);
             if (IsPushingItems)
             {
-                _draggingStrategy?.Abort();
+                _pushStrategy?.Cancel();
                 IsPushingItems = false;
             }
         }
 
-        protected internal void PushItems(double offset)
+        protected internal void PushItems(Vector offset)
         {
             if (IsPushingItems)
             {
-                _draggingStrategy?.Update(new Vector(offset, 0));
-                _pushedAreaWidth += offset;
-
-                double newStart = _pushedAreaWidth >= 0 ? _pushAreaInitialX : SnapToGrid(_pushAreaInitialX + _pushedAreaWidth);
-                double newWidth = Math.Max(_pushAreaMinWidth, SnapToGrid(_pushedAreaWidth));
-
-                PushedArea = new Rect(newStart, ViewportLocation.Y - _pushAreaOffscreenOffsetY, newWidth, ViewportSize.Height + _pushAreaOffscreenOffsetY * 2);
+                _pushStrategy?.Push(offset);
             }
         }
 
-        protected internal void EndPushingItems(Point location)
+        protected internal void EndPushingItems()
         {
             Debug.Assert(IsPushingItems);
             if (IsPushingItems)
             {
-                _draggingStrategy?.End();
+                _pushStrategy?.End();
                 IsPushingItems = false;
             }
         }
@@ -131,7 +141,7 @@ namespace Nodify
         {
             if (IsPushingItems)
             {
-                PushedArea = new Rect(PushedArea.X, ViewportLocation.Y - _pushAreaOffscreenOffsetY, PushedArea.Width, ViewportSize.Height + _pushAreaOffscreenOffsetY * 2);
+                _pushStrategy?.OnViewportChanged();
             }
         }
     }

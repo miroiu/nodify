@@ -1560,7 +1560,7 @@ namespace Nodify
             }
         }
 
-        private IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)
+        internal IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)
         {
             if (EnableDraggingContainersOptimizations)
             {

@@ -21,7 +21,7 @@
                      Opacity="0.1"
                      Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
 
-    <SolidColorBrush x:Key="NodifyEditor.PushedAreaBorderBrush"
+    <SolidColorBrush x:Key="NodifyEditor.PushedAreaStrokeBrush"
                      o:Freeze="True"
                      Color="{DynamicResource NodifyEditor.PushedAreaColor}" />
 
