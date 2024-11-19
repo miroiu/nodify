@@ -17,8 +17,8 @@ namespace Nodify
         protected static readonly DependencyPropertyKey IsPushingItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPushingItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsPushingItemsChanged));
         public static readonly DependencyProperty IsPushingItemsProperty = IsPushingItemsPropertyKey.DependencyProperty;
 
-        protected static readonly DependencyPropertyKey PushOrientationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushOrientation), typeof(Orientation), typeof(NodifyEditor), new FrameworkPropertyMetadata(Orientation.Horizontal));
-        public static readonly DependencyProperty PushOrientationProperty = PushOrientationPropertyKey.DependencyProperty;
+        protected static readonly DependencyPropertyKey PushedAreaOrientationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushedAreaOrientation), typeof(Orientation), typeof(NodifyEditor), new FrameworkPropertyMetadata(Orientation.Horizontal));
+        public static readonly DependencyProperty PushedAreaOrientationProperty = PushedAreaOrientationPropertyKey.DependencyProperty;
 
         private static void OnIsPushingItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -67,10 +67,10 @@ namespace Nodify
         /// <summary>
         /// Gets the orientation of the <see cref="PushedArea"/>.
         /// </summary>
-        public Orientation PushOrientation
+        public Orientation PushedAreaOrientation
         {
-            get => (Orientation)GetValue(PushOrientationProperty);
-            private set => SetValue(PushOrientationPropertyKey, value);
+            get => (Orientation)GetValue(PushedAreaOrientationProperty);
+            private set => SetValue(PushedAreaOrientationPropertyKey, value);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nodify
         protected internal void StartPushingItems(Point position, Orientation orientation)
         {
             IsPushingItems = true;
-            PushOrientation = orientation;
+            PushedAreaOrientation = orientation;
 
             if (orientation == Orientation.Horizontal)
             {

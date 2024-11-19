@@ -813,7 +813,7 @@ namespace Nodify
         public static bool EnableCuttingLinePreview { get; set; } = false;
 
         /// <summary>
-        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement">.
+        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement" />.
         /// </summary>
         public static readonly HashSet<Type> CuttingConnectionTypes = new HashSet<Type>();
 

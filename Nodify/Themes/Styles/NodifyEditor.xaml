@@ -192,7 +192,7 @@
                 <MultiTrigger.Conditions>
                     <Condition Property="IsPushingItems"
                                Value="True" />
-                    <Condition Property="PushOrientation"
+                    <Condition Property="PushedAreaOrientation"
                                Value="Horizontal" />
                 </MultiTrigger.Conditions>
                 <Setter Property="Cursor"
@@ -202,7 +202,7 @@
                 <MultiTrigger.Conditions>
                     <Condition Property="IsPushingItems"
                                Value="True" />
-                    <Condition Property="PushOrientation"
+                    <Condition Property="PushedAreaOrientation"
                                Value="Vertical" />
                 </MultiTrigger.Conditions>
                 <Setter Property="Cursor"

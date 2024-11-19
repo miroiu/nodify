@@ -27,6 +27,7 @@
 - [EditorDefaultState Class](#editordefaultstate-class)  
 - [EditorGestures Class](#editorgestures-class)  
 - [EditorPanningState Class](#editorpanningstate-class)  
+- [EditorPushingItemsState Class](#editorpushingitemsstate-class)  
 - [EditorSelectingState Class](#editorselectingstate-class)  
 - [EditorState Class](#editorstate-class)  
 - [GeneratedInternalTypeHelper Class](#generatedinternaltypehelper-class)  
@@ -3069,6 +3070,92 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
   
 `e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)  
   
+## EditorPushingItemsState Class  
+  
+**Namespace:** Nodify  
+  
+**Assembly:** Nodify  
+  
+**Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorPushingItemsState](#editorpushingitemsstate-class)  
+  
+**References:** [NodifyEditor](#nodifyeditor-class), [EditorState](#editorstate-class)  
+  
+```csharp  
+public class EditorPushingItemsState : EditorState  
+```  
+  
+### Constructors  
+  
+#### EditorPushingItemsState(NodifyEditor)  
+  
+```csharp  
+public EditorPushingItemsState(NodifyEditor editor);  
+```  
+  
+**Parameters**  
+  
+`editor` [NodifyEditor](#nodifyeditor-class)  
+  
+### Properties  
+  
+#### Canceled  
+  
+```csharp  
+public bool Canceled { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### Methods  
+  
+#### Enter(EditorState)  
+  
+```csharp  
+public override void Enter(EditorState from);  
+```  
+  
+**Parameters**  
+  
+`from` [EditorState](#editorstate-class)  
+  
+#### Exit()  
+  
+```csharp  
+public override void Exit();  
+```  
+  
+#### HandleKeyUp(KeyEventArgs)  
+  
+```csharp  
+public override void HandleKeyUp(KeyEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)  
+  
+#### HandleMouseMove(MouseEventArgs)  
+  
+```csharp  
+public override void HandleMouseMove(MouseEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [MouseEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseEventArgs)  
+  
+#### HandleMouseUp(MouseButtonEventArgs)  
+  
+```csharp  
+public override void HandleMouseUp(MouseButtonEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)  
+  
 ## EditorSelectingState Class  
   
 **Namespace:** Nodify  
@@ -3191,9 +3278,9 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class)  
   
-**Derived:** [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class)  
+**Derived:** [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorPushingItemsState](#editorpushingitemsstate-class), [EditorSelectingState](#editorselectingstate-class)  
   
-**References:** [EditorCuttingState](#editorcuttingstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [NodifyEditor](#nodifyeditor-class)  
+**References:** [EditorCuttingState](#editorcuttingstate-class), [EditorPanningState](#editorpanningstate-class), [EditorPushingItemsState](#editorpushingitemsstate-class), [EditorSelectingState](#editorselectingstate-class), [NodifyEditor](#nodifyeditor-class)  
   
 The base class for editor states.  
   
@@ -4515,7 +4602,39 @@ public class LineConnection : BaseConnection
 public LineConnection();  
 ```  
   
+### Properties  
+  
+#### CornerRadius  
+  
+The radius of the corners between the line segments.  
+  
+```csharp  
+public double CornerRadius { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
 ### Methods  
+  
+#### AddSmoothCorner(StreamGeometryContext, Point, Point, Point, Double)  
+  
+```csharp  
+protected static void AddSmoothCorner(StreamGeometryContext context, Point start, Point corner, Point end, double radius);  
+```  
+  
+**Parameters**  
+  
+`context` [StreamGeometryContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.StreamGeometryContext)  
+  
+`start` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)  
+  
+`corner` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)  
+  
+`end` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)  
+  
+`radius` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
 #### DrawDefaultArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)  
   
@@ -5059,6 +5178,28 @@ public class Node : HeaderedContentControl
 public Node();  
 ```  
   
+### Fields  
+  
+#### ElementInputItemsControl  
+  
+```csharp  
+protected const string ElementInputItemsControl = "PART_Input";  
+```  
+  
+**Field Value**  
+  
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)  
+  
+#### ElementOutputItemsControl  
+  
+```csharp  
+protected const string ElementOutputItemsControl = "PART_Output";  
+```  
+  
+**Field Value**  
+  
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)  
+  
 ### Properties  
   
 #### ContentBrush  
@@ -5193,6 +5334,26 @@ public DataTemplate InputConnectorTemplate { get; set; }
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
   
+#### InputGroupStyle  
+  
+```csharp  
+public ObservableCollection<GroupStyle> InputGroupStyle { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ObservableCollection<GroupStyle>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+  
+#### InputItemsControl  
+  
+```csharp  
+protected ItemsControl InputItemsControl { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl)  
+  
 #### Output  
   
 Gets or sets the data for the output [Connector](#connector-class)s of this control.  
@@ -5216,6 +5377,34 @@ public DataTemplate OutputConnectorTemplate { get; set; }
 **Property Value**  
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
+  
+#### OutputGroupStyle  
+  
+```csharp  
+public ObservableCollection<GroupStyle> OutputGroupStyle { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ObservableCollection<GroupStyle>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+  
+#### OutputItemsControl  
+  
+```csharp  
+protected ItemsControl OutputItemsControl { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl)  
+  
+### Methods  
+  
+#### OnApplyTemplate()  
+  
+```csharp  
+public override void OnApplyTemplate();  
+```  
   
 ## NodeInput Class  
   
@@ -5437,12 +5626,14 @@ protected override Size MeasureOverride(Size constraint);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Selector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.Selector) → [MultiSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.MultiSelector) → [NodifyEditor](#nodifyeditor-class)  
   
-**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)  
+**Implements:** [IScrollInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.IScrollInfo)  
+  
+**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorPushingItemsState](#editorpushingitemsstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)  
   
 Groups [ItemContainer](#itemcontainer-class)s and [Connection](#connection-class)s in an area that you can drag, zoom and select.  
   
 ```csharp  
-public class NodifyEditor : MultiSelector  
+public class NodifyEditor : MultiSelector, IScrollInfo  
 ```  
   
 ### Constructors  
@@ -5458,6 +5649,8 @@ public NodifyEditor();
 ### Fields  
   
 #### CuttingConnectionTypes  
+  
+The list of supported connection types for cutting. Type must be derived from [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement).  
   
 ```csharp  
 public static HashSet<Type> CuttingConnectionTypes;  
@@ -5527,6 +5720,16 @@ public static DependencyPropertyKey IsPanningPropertyKey;
   
 [DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)  
   
+#### IsPushingItemsPropertyKey  
+  
+```csharp  
+protected static DependencyPropertyKey IsPushingItemsPropertyKey;  
+```  
+  
+**Field Value**  
+  
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)  
+  
 #### IsSelectingPropertyKey  
   
 ```csharp  
@@ -5541,6 +5744,26 @@ protected static DependencyPropertyKey IsSelectingPropertyKey;
   
 ```csharp  
 protected static DependencyPropertyKey MouseLocationPropertyKey;  
+```  
+  
+**Field Value**  
+  
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)  
+  
+#### PushedAreaOrientationPropertyKey  
+  
+```csharp  
+protected static DependencyPropertyKey PushedAreaOrientationPropertyKey;  
+```  
+  
+**Field Value**  
+  
+[DependencyPropertyKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyPropertyKey)  
+  
+#### PushedAreaPropertyKey  
+  
+```csharp  
+protected static DependencyPropertyKey PushedAreaPropertyKey;  
 ```  
   
 **Field Value**  
@@ -5582,6 +5805,18 @@ protected readonly TranslateTransform TranslateTransform;
 [TranslateTransform](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.TranslateTransform)  
   
 ### Properties  
+  
+#### AllowPushItemsCancellation  
+  
+Gets or sets whether push items cancellation is allowed.  
+  
+```csharp  
+public static bool AllowPushItemsCancellation { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
 #### AutoPanEdgeDistance  
   
@@ -6023,6 +6258,18 @@ public bool IsPanning { get; set; }
   
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
+#### IsPushingItems  
+  
+Gets a value that indicates whether a pushing operation is in progress.  
+  
+```csharp  
+public bool IsPushingItems { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 #### IsSelecting  
   
 Gets a value that indicates whether a selection operation is in progress.  
@@ -6180,6 +6427,42 @@ public DataTemplate PendingConnectionTemplate { get; set; }
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
   
+#### PushedArea  
+  
+Gets the currently pushed area while [NodifyEditor.IsPushingItems](#nodifyeditor-class#ispushingitems) is true.  
+  
+```csharp  
+public Rect PushedArea { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)  
+  
+#### PushedAreaOrientation  
+  
+Gets the orientation of the [NodifyEditor.PushedArea](#nodifyeditor-class#pushedarea).  
+  
+```csharp  
+public Orientation PushedAreaOrientation { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)  
+  
+#### PushedAreaStyle  
+  
+Gets or sets the style to use for the pushed area.  
+  
+```csharp  
+public Style PushedAreaStyle { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Style](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Style)  
+  
 #### RemoveConnectionCommand  
   
 Invoked when the [BaseConnection.Disconnect](#baseconnection-class#disconnect) event is raised. 
@@ -6193,6 +6476,18 @@ public ICommand RemoveConnectionCommand { get; set; }
 **Property Value**  
   
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)  
+  
+#### ScrollIncrement  
+  
+The number of units the mouse wheel is rotated to scroll one line.  
+  
+```csharp  
+public static double ScrollIncrement { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
 #### SelectedArea  
   
@@ -6635,6 +6930,22 @@ public void SelectArea(Rect area, bool append = false, bool fit = false);
   
 `fit` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): True to check if the area contains the [ItemContainer](#itemcontainer-class). False to check if area intersects the [ItemContainer](#itemcontainer-class).  
   
+#### SnapToGrid(Double)  
+  
+Snaps the given value down to the nearest multiple of the grid cell size.  
+  
+```csharp  
+public double SnapToGrid(double value);  
+```  
+  
+**Parameters**  
+  
+`value` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double): The value to be snapped to the grid.  
+  
+**Returns**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double): The largest multiple of the grid cell size less than or equal to the value.  
+  
 #### UnselectAllConnection()  
   
 Unselect all [NodifyEditor.Connections](#nodifyeditor-class#connections).  
@@ -6759,6 +7070,16 @@ public InputGestureRef FitToScreen { get; set; }
   
 ```csharp  
 public InputGestureRef Pan { get; set; }  
+```  
+  
+**Property Value**  
+  
+[InputGestureRef](#inputgestureref-class)  
+  
+#### PushItems  
+  
+```csharp  
+public InputGestureRef PushItems { get; set; }  
 ```  
   
 **Property Value**  

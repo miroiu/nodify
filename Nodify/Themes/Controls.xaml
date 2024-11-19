@@ -23,7 +23,7 @@
         <Setter Property="StrokeThickness"
                 Value="1" />
         <Setter Property="Stroke"
-                Value="{DynamicResource NodifyEditor.PushedAreaStrokeBrush}" />
+                Value="{StaticResource NodifyEditor.PushedAreaStrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource NodifyEditor.PushedAreaBackgroundBrush}" />
     </Style>
@@ -47,7 +47,7 @@
         <Setter Property="HighlightBrush"
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
         <Setter Property="BorderBrush"
-                Value="{DynamicResource ItemContainer.BorderBrush}" />
+                Value="{StaticResource ItemContainer.BorderBrush}" />
         <Setter Property="SelectedBrush"
                 Value="{StaticResource ItemContainer.SelectedBrush}" />
     </Style>
