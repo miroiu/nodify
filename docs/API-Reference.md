@@ -65,6 +65,7 @@
 - [ZoomEventArgs Class](#zoomeventargs-class)  
 - [ZoomEventHandler Delegate](#zoomeventhandler-delegate)  
   
+  
 ## Alignment Enum  
   
 **Namespace:** Nodify  
@@ -259,7 +260,7 @@ Rectangle = 2;
   
 **Derived:** [LineConnection](#lineconnection-class), [Connection](#connection-class)  
   
-**References:** [ConnectionEventHandler](#connectioneventhandler-delegate), [ConnectionDirection](#connectiondirection-enum), [ArrowHeadShape](#arrowheadshape-enum), [ConnectionOffsetMode](#connectionoffsetmode-enum), [ArrowHeadEnds](#arrowheadends-enum), [CuttingLine](#cuttingline-class), [LineConnection](#lineconnection-class), [ConnectionEventArgs](#connectioneventargs-class), [NodifyEditor](#nodifyeditor-class)  
+**References:** [ArrowHeadEnds](#arrowheadends-enum), [ArrowHeadShape](#arrowheadshape-enum), [ConnectionDirection](#connectiondirection-enum), [ConnectionEventArgs](#connectioneventargs-class), [ConnectionEventHandler](#connectioneventhandler-delegate), [ConnectionOffsetMode](#connectionoffsetmode-enum), [CuttingLine](#cuttingline-class), [NodifyEditor](#nodifyeditor-class)  
   
 Represents the base class for shapes that are drawn from a [BaseConnection.Source](#baseconnection-class#source) point to a [BaseConnection.Target](#baseconnection-class#target) point.  
   
@@ -1206,7 +1207,7 @@ protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### GetTextPosition(FormattedText, Point, Point)  
   
@@ -1282,7 +1283,7 @@ protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### GetTextPosition(FormattedText, Point, Point)  
   
@@ -1364,7 +1365,7 @@ Forward = 0;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.EventArgs) → [RoutedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventArgs) → [ConnectionEventArgs](#connectioneventargs-class)  
   
-**References:** [ConnectionEventHandler](#connectioneventhandler-delegate), [BaseConnection](#baseconnection-class)  
+**References:** [BaseConnection](#baseconnection-class), [ConnectionEventHandler](#connectioneventhandler-delegate)  
   
 Provides data for [BaseConnection](#baseconnection-class) related routed events.  
   
@@ -1434,7 +1435,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ConnectionEventHandler](#connectioneventhandler-delegate)  
   
-**References:** [ConnectionEventArgs](#connectioneventargs-class), [BaseConnection](#baseconnection-class)  
+**References:** [BaseConnection](#baseconnection-class), [ConnectionEventArgs](#connectioneventargs-class)  
   
 Represents the method that will handle [BaseConnection](#baseconnection-class) related routed events.  
   
@@ -1580,7 +1581,7 @@ Static = 4;
   
 **Derived:** [NodeInput](#nodeinput-class), [NodeOutput](#nodeoutput-class), [StateNode](#statenode-class)  
   
-**References:** [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [ConnectorEventHandler](#connectoreventhandler-delegate), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [Connection](#connection-class), [NodifyEditor](#nodifyeditor-class), [ConnectorEventArgs](#connectoreventargs-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [KnotNode](#knotnode-class), [Node](#node-class), [NodeInput](#nodeinput-class), [NodeOutput](#nodeoutput-class), [StateNode](#statenode-class)  
+**References:** [Connection](#connection-class), [ConnectorEventArgs](#connectoreventargs-class), [ConnectorEventHandler](#connectoreventhandler-delegate), [ItemContainer](#itemcontainer-class), [KnotNode](#knotnode-class), [Node](#node-class), [NodifyEditor](#nodifyeditor-class), [PendingConnection](#pendingconnection-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate)  
   
 Represents a connector control that can start and complete a [PendingConnection](#pendingconnection-class).
             Has a [Connector.ElementConnector](#connector-class#elementconnector) that the [Connector.Anchor](#connector-class#anchor) is calculated from for the [PendingConnection](#pendingconnection-class). Center of this control is used if missing.  
@@ -1935,7 +1936,7 @@ public event PendingConnectionEventHandler PendingConnectionStarted;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.EventArgs) → [RoutedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventArgs) → [ConnectorEventArgs](#connectoreventargs-class)  
   
-**References:** [ConnectorEventHandler](#connectoreventhandler-delegate), [Connector](#connector-class)  
+**References:** [Connector](#connector-class), [ConnectorEventHandler](#connectoreventhandler-delegate)  
   
 Provides data for [Connector](#connector-class) related routed events.  
   
@@ -2005,7 +2006,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ConnectorEventHandler](#connectoreventhandler-delegate)  
   
-**References:** [ConnectorEventArgs](#connectoreventargs-class), [Connector](#connector-class)  
+**References:** [Connector](#connector-class), [ConnectorEventArgs](#connectoreventargs-class)  
   
 Represents the method that will handle [Connector](#connector-class) related routed events.  
   
@@ -2131,7 +2132,7 @@ Top = 0;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ContainerState](#containerstate-class) → [ContainerDefaultState](#containerdefaultstate-class)  
   
-**References:** [ItemContainer](#itemcontainer-class), [ContainerState](#containerstate-class)  
+**References:** [ItemContainer](#itemcontainer-class)  
   
 The default state of the [ItemContainer](#itemcontainer-class).  
   
@@ -2203,7 +2204,7 @@ public override void ReEnter(ContainerState from);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ContainerState](#containerstate-class) → [ContainerDraggingState](#containerdraggingstate-class)  
   
-**References:** [ItemContainer](#itemcontainer-class), [ContainerState](#containerstate-class)  
+**References:** [ItemContainer](#itemcontainer-class)  
   
 Dragging state of the container.  
   
@@ -2659,7 +2660,7 @@ public event RoutedEventHandler LocationChanged;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorCommands](#editorcommands-class)  
   
-**References:** [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [InputGestureRef](#inputgestureref-class)  
+**References:** [InputGestureRef](#inputgestureref-class), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class)  
   
 ```csharp  
 public static class EditorCommands  
@@ -2749,7 +2750,7 @@ public static RoutedUICommand ZoomOut { get; set; }
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorCuttingState](#editorcuttingstate-class)  
   
-**References:** [NodifyEditor](#nodifyeditor-class), [EditorState](#editorstate-class)  
+**References:** [NodifyEditor](#nodifyeditor-class)  
   
 ```csharp  
 public class EditorCuttingState : EditorState  
@@ -2886,7 +2887,7 @@ public override void HandleMouseDown(MouseButtonEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorGestures](#editorgestures-class)  
   
-**References:** [NodifyEditorGestures](#nodifyeditorgestures-class), [ItemContainerGestures](#itemcontainergestures-class), [ConnectorGestures](#connectorgestures-class), [ConnectionGestures](#connectiongestures-class), [GroupingNodeGestures](#groupingnodegestures-class), [MinimapGestures](#minimapgestures-class), [NodifyEditor](#nodifyeditor-class)  
+**References:** [ConnectionGestures](#connectiongestures-class), [ConnectorGestures](#connectorgestures-class), [GroupingNodeGestures](#groupingnodegestures-class), [ItemContainerGestures](#itemcontainergestures-class), [MinimapGestures](#minimapgestures-class), [NodifyEditor](#nodifyeditor-class), [NodifyEditorGestures](#nodifyeditorgestures-class)  
   
 Gestures used by built-in controls inside the [NodifyEditor](#nodifyeditor-class).  
   
@@ -3010,7 +3011,7 @@ public void Apply(EditorGestures gestures);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorPanningState](#editorpanningstate-class)  
   
-**References:** [NodifyEditor](#nodifyeditor-class), [EditorState](#editorstate-class)  
+**References:** [NodifyEditor](#nodifyeditor-class)  
   
 The panning state of the editor.  
   
@@ -3078,7 +3079,7 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorPushingItemsState](#editorpushingitemsstate-class)  
   
-**References:** [NodifyEditor](#nodifyeditor-class), [EditorState](#editorstate-class)  
+**References:** [NodifyEditor](#nodifyeditor-class)  
   
 ```csharp  
 public class EditorPushingItemsState : EditorState  
@@ -3164,7 +3165,7 @@ public override void HandleMouseUp(MouseButtonEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorState](#editorstate-class) → [EditorSelectingState](#editorselectingstate-class)  
   
-**References:** [NodifyEditor](#nodifyeditor-class), [SelectionType](#selectiontype-enum), [SelectionHelper](#selectionhelper-class), [EditorState](#editorstate-class)  
+**References:** [NodifyEditor](#nodifyeditor-class), [SelectionHelper](#selectionhelper-class), [SelectionType](#selectiontype-enum)  
   
 The selecting state of the editor.  
   
@@ -3598,7 +3599,7 @@ Self = 1;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) → [HeaderedContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.HeaderedContentControl) → [GroupingNode](#groupingnode-class)  
   
-**References:** [ResizeEventHandler](#resizeeventhandler-delegate), [GroupingMovementMode](#groupingmovementmode-enum), [NodifyEditor](#nodifyeditor-class), [ItemContainer](#itemcontainer-class)  
+**References:** [GroupingMovementMode](#groupingmovementmode-enum), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [ResizeEventHandler](#resizeeventhandler-delegate)  
   
 Defines a panel with a header that groups [ItemContainer](#itemcontainer-class)s inside it and can be resized.  
   
@@ -3938,7 +3939,7 @@ public virtual void Arrange(Rect rect);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [InputGesture](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.InputGesture) → [InputGestureRef](#inputgestureref-class)  
   
-**References:** [SelectionGestures](#selectiongestures-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class), [ConnectorGestures](#connectorgestures-class), [ConnectionGestures](#connectiongestures-class), [MinimapGestures](#minimapgestures-class), [EditorCommands](#editorcommands-class)  
+**References:** [ConnectionGestures](#connectiongestures-class), [ConnectorGestures](#connectorgestures-class), [EditorCommands](#editorcommands-class), [ItemContainerGestures](#itemcontainergestures-class), [MinimapGestures](#minimapgestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class), [SelectionGestures](#selectiongestures-class)  
   
 An input gesture that allows changing its logic at runtime without changing its reference.
             Useful for classes that capture the object reference without the posibility of updating it. (e.g. [EditorCommands](#editorcommands-class))  
@@ -3989,7 +3990,7 @@ public override bool Matches(object targetElement, InputEventArgs inputEventArgs
   
 **Implements:** [INodifyCanvasItem](#inodifycanvasitem-interface)  
   
-**References:** [Connector](#connector-class), [ContainerDefaultState](#containerdefaultstate-class), [ContainerDraggingState](#containerdraggingstate-class), [ContainerState](#containerstate-class), [NodifyEditor](#nodifyeditor-class), [PreviewLocationChanged](#previewlocationchanged-delegate), [GroupingNode](#groupingnode-class), [PendingConnection](#pendingconnection-class), [EditorCommands](#editorcommands-class), [SelectionHelper](#selectionhelper-class)  
+**References:** [Connector](#connector-class), [ContainerDefaultState](#containerdefaultstate-class), [ContainerDraggingState](#containerdraggingstate-class), [ContainerState](#containerstate-class), [EditorCommands](#editorcommands-class), [GroupingNode](#groupingnode-class), [NodifyEditor](#nodifyeditor-class), [PendingConnection](#pendingconnection-class), [PreviewLocationChanged](#previewlocationchanged-delegate), [SelectionHelper](#selectionhelper-class)  
   
 The container for all the items generated by the [ItemsControl.ItemsSource](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl.itemssource) of the [NodifyEditor](#nodifyeditor-class).  
   
@@ -4494,7 +4495,7 @@ public event RoutedEventHandler Unselected;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [ItemContainerGestures](#itemcontainergestures-class)  
   
-**References:** [EditorGestures](#editorgestures-class), [SelectionGestures](#selectiongestures-class), [InputGestureRef](#inputgestureref-class)  
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class), [SelectionGestures](#selectiongestures-class)  
   
 ```csharp  
 public class ItemContainerGestures  
@@ -4586,7 +4587,7 @@ public KnotNode();
   
 **Derived:** [CircuitConnection](#circuitconnection-class), [StepConnection](#stepconnection-class)  
   
-**References:** [ConnectionDirection](#connectiondirection-enum), [BaseConnection](#baseconnection-class)  
+**References:** [ConnectionDirection](#connectiondirection-enum)  
   
 Represents a line that has an arrow indicating its [BaseConnection.Direction](#baseconnection-class#direction).  
   
@@ -4684,7 +4685,7 @@ protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### InterpolateLine(Point, Point, Point, Point, Double)  
   
@@ -4706,7 +4707,7 @@ protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Poi
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### InterpolateLine(Point, Point, Point, Double)  
   
@@ -4726,7 +4727,7 @@ protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Poi
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, Point>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### InterpolateLineSegment(Point, Point, Double)  
   
@@ -4780,7 +4781,7 @@ Any = 0;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Minimap](#minimap-class)  
   
-**References:** [ZoomEventHandler](#zoomeventhandler-delegate), [MinimapItem](#minimapitem-class), [NodifyEditor](#nodifyeditor-class), [ZoomEventArgs](#zoomeventargs-class)  
+**References:** [MinimapItem](#minimapitem-class), [NodifyEditor](#nodifyeditor-class), [ZoomEventArgs](#zoomeventargs-class), [ZoomEventHandler](#zoomeventhandler-delegate)  
   
 A minimap control that can position the viewport, and zoom in and out.  
   
@@ -5414,7 +5415,7 @@ public override void OnApplyTemplate();
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [Connector](#connector-class) → [NodeInput](#nodeinput-class)  
   
-**References:** [Node](#node-class), [Connector](#connector-class)  
+**References:** [Node](#node-class)  
   
 Represents the default control for the [Node.InputConnectorTemplate](#node-class#inputconnectortemplate).  
   
@@ -5486,7 +5487,7 @@ public Orientation Orientation { get; set; }
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [Connector](#connector-class) → [NodeOutput](#nodeoutput-class)  
   
-**References:** [Node](#node-class), [Connector](#connector-class)  
+**References:** [Node](#node-class)  
   
 Represents the default control for the [Node.OutputConnectorTemplate](#node-class#outputconnectortemplate).  
   
@@ -5628,7 +5629,7 @@ protected override Size MeasureOverride(Size constraint);
   
 **Implements:** [IScrollInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.IScrollInfo)  
   
-**References:** [ContainerState](#containerstate-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorPanningState](#editorpanningstate-class), [EditorPushingItemsState](#editorpushingitemsstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [SelectionHelper](#selectionhelper-class), [ItemContainer](#itemcontainer-class), [PendingConnection](#pendingconnection-class), [GroupingNode](#groupingnode-class), [Connector](#connector-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorGestures](#editorgestures-class), [Minimap](#minimap-class), [Connection](#connection-class), [BaseConnection](#baseconnection-class)  
+**References:** [BaseConnection](#baseconnection-class), [Connection](#connection-class), [Connector](#connector-class), [ContainerState](#containerstate-class), [CuttingLine](#cuttingline-class), [DecoratorContainer](#decoratorcontainer-class), [EditorCommands](#editorcommands-class), [EditorCuttingState](#editorcuttingstate-class), [EditorDefaultState](#editordefaultstate-class), [EditorGestures](#editorgestures-class), [EditorPanningState](#editorpanningstate-class), [EditorPushingItemsState](#editorpushingitemsstate-class), [EditorSelectingState](#editorselectingstate-class), [EditorState](#editorstate-class), [GroupingNode](#groupingnode-class), [ItemContainer](#itemcontainer-class), [Minimap](#minimap-class), [PendingConnection](#pendingconnection-class), [SelectionHelper](#selectionhelper-class)  
   
 Groups [ItemContainer](#itemcontainer-class)s and [Connection](#connection-class)s in an area that you can drag, zoom and select.  
   
@@ -7020,7 +7021,7 @@ public event RoutedEventHandler ViewportUpdated;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [NodifyEditorGestures](#nodifyeditorgestures-class)  
   
-**References:** [EditorGestures](#editorgestures-class), [SelectionGestures](#selectiongestures-class), [InputGestureRef](#inputgestureref-class)  
+**References:** [EditorGestures](#editorgestures-class), [InputGestureRef](#inputgestureref-class), [SelectionGestures](#selectiongestures-class)  
   
 ```csharp  
 public class NodifyEditorGestures  
@@ -7156,7 +7157,7 @@ public void Apply(NodifyEditorGestures gestures);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) → [PendingConnection](#pendingconnection-class)  
   
-**References:** [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [ConnectionDirection](#connectiondirection-enum), [NodifyEditor](#nodifyeditor-class), [Connector](#connector-class), [ItemContainer](#itemcontainer-class), [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [StateNode](#statenode-class)  
+**References:** [ConnectionDirection](#connectiondirection-enum), [Connector](#connector-class), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [StateNode](#statenode-class)  
   
 Represents a pending connection usually started by a [Connector](#connector-class) which invokes the [PendingConnection.CompletedCommand](#pendingconnection-class#completedcommand) when completed.  
   
@@ -7449,7 +7450,7 @@ public static void SetIsOverElement(UIElement elem, bool value);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.EventArgs) → [RoutedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventArgs) → [PendingConnectionEventArgs](#pendingconnectioneventargs-class)  
   
-**References:** [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate), [PendingConnection](#pendingconnection-class), [Connector](#connector-class)  
+**References:** [Connector](#connector-class), [PendingConnection](#pendingconnection-class), [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate)  
   
 Provides data for [PendingConnection](#pendingconnection-class) related routed events.  
   
@@ -7567,7 +7568,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [PendingConnectionEventHandler](#pendingconnectioneventhandler-delegate)  
   
-**References:** [PendingConnectionEventArgs](#pendingconnectioneventargs-class), [Connector](#connector-class), [PendingConnection](#pendingconnection-class)  
+**References:** [Connector](#connector-class), [PendingConnection](#pendingconnection-class), [PendingConnectionEventArgs](#pendingconnectioneventargs-class)  
   
 Represents the method that will handle [PendingConnection](#pendingconnection-class) related routed events.  
   
@@ -7681,7 +7682,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ResizeEventHandler](#resizeeventhandler-delegate)  
   
-**References:** [ResizeEventArgs](#resizeeventargs-class), [GroupingNode](#groupingnode-class)  
+**References:** [GroupingNode](#groupingnode-class), [ResizeEventArgs](#resizeeventargs-class)  
   
 Represents the method that will handle resize related routed events.  
   
@@ -7703,7 +7704,7 @@ public delegate void ResizeEventHandler(object sender, ResizeEventArgs e);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [SelectionGestures](#selectiongestures-class)  
   
-**References:** [InputGestureRef](#inputgestureref-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class), [ConnectionGestures](#connectiongestures-class)  
+**References:** [ConnectionGestures](#connectiongestures-class), [InputGestureRef](#inputgestureref-class), [ItemContainerGestures](#itemcontainergestures-class), [NodifyEditorGestures](#nodifyeditorgestures-class)  
   
 ```csharp  
 public class SelectionGestures  
@@ -7821,7 +7822,7 @@ public void Apply(SelectionGestures gestures);
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [SelectionHelper](#selectionhelper-class)  
   
-**References:** [EditorSelectingState](#editorselectingstate-class), [NodifyEditor](#nodifyeditor-class), [SelectionType](#selectiontype-enum), [ItemContainer](#itemcontainer-class)  
+**References:** [EditorSelectingState](#editorselectingstate-class), [ItemContainer](#itemcontainer-class), [NodifyEditor](#nodifyeditor-class), [SelectionType](#selectiontype-enum)  
   
 Helps with selecting [ItemContainer](#itemcontainer-class)s and updating the [NodifyEditor.SelectedArea](#nodifyeditor-class#selectedarea) and [NodifyEditor.IsSelecting](#nodifyeditor-class#isselecting) properties.  
   
@@ -7933,7 +7934,7 @@ Replace = 0;
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [Connector](#connector-class) → [StateNode](#statenode-class)  
   
-**References:** [Connector](#connector-class), [PendingConnection](#pendingconnection-class)  
+**References:** [PendingConnection](#pendingconnection-class)  
   
 Represents a control that acts as a [Connector](#connector-class).  
   
@@ -8131,7 +8132,7 @@ protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>
   
 **Returns**  
   
-[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)
+[ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
   
 #### GetTextPosition(FormattedText, Point, Point)  
   
@@ -8159,7 +8160,7 @@ protected override Point GetTextPosition(FormattedText text, Point source, Point
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.EventArgs) → [RoutedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.RoutedEventArgs) → [ZoomEventArgs](#zoomeventargs-class)  
   
-**References:** [ZoomEventHandler](#zoomeventhandler-delegate), [Minimap](#minimap-class)  
+**References:** [Minimap](#minimap-class), [ZoomEventHandler](#zoomeventhandler-delegate)  
   
 Provides data for [Minimap.Zoom](#minimap-class#zoom) routed event.  
   
@@ -8231,7 +8232,7 @@ protected override void InvokeEventHandler(Delegate genericHandler, object gener
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [Delegate](https://docs.microsoft.com/en-us/dotnet/api/System.Delegate) → [MulticastDelegate](https://docs.microsoft.com/en-us/dotnet/api/System.MulticastDelegate) → [ZoomEventHandler](#zoomeventhandler-delegate)  
   
-**References:** [ZoomEventArgs](#zoomeventargs-class), [Minimap](#minimap-class)  
+**References:** [Minimap](#minimap-class), [ZoomEventArgs](#zoomeventargs-class)  
   
 Represents the method that will handle [Minimap.Zoom](#minimap-class#zoom) routed event.  
   
