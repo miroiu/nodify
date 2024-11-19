@@ -20,6 +20,7 @@
 - [Zooming](Editor-Overview#zooming)
 - [Scrolling](Editor-Overview#scrolling)
 - [Selecting items](Editor-Overview#selecting)
+- [Pushing items](Editor-Overview#pushing-items)
 - [Snapping to grid](Editor-Overview#snapping)
 - [Commands](Editor-Overview#commands)
 
