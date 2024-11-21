@@ -8,6 +8,8 @@
         xmlns:nodify="https://miroiu.github.io/nodify"
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
+        Background="{DynamicResource NodifyEditor.BackgroundBrush}"
+        Foreground="{DynamicResource ForegroundBrush}"
         Title="State Machine Editor"
         Height="500"
         Width="930">
