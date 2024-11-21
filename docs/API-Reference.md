@@ -2877,6 +2877,16 @@ public override void HandleMouseDown(MouseButtonEventArgs e);
   
 `e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)  
   
+#### HandleMouseWheel(MouseWheelEventArgs)  
+  
+```csharp  
+public override void HandleMouseWheel(MouseWheelEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [MouseWheelEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseWheelEventArgs)  
+  
 ## EditorGestures Class  
   
 **Namespace:** Nodify  
@@ -5059,6 +5069,28 @@ public class Node : HeaderedContentControl
 public Node();  
 ```  
   
+### Fields  
+  
+#### ElementInputItemsControl  
+  
+```csharp  
+protected const string ElementInputItemsControl = "PART_Input";  
+```  
+  
+**Field Value**  
+  
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)  
+  
+#### ElementOutputItemsControl  
+  
+```csharp  
+protected const string ElementOutputItemsControl = "PART_Output";  
+```  
+  
+**Field Value**  
+  
+[String](https://docs.microsoft.com/en-us/dotnet/api/System.String)  
+  
 ### Properties  
   
 #### ContentBrush  
@@ -5193,6 +5225,26 @@ public DataTemplate InputConnectorTemplate { get; set; }
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
   
+#### InputGroupStyle  
+  
+```csharp  
+public ObservableCollection<GroupStyle> InputGroupStyle { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ObservableCollection<GroupStyle>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+  
+#### InputItemsControl  
+  
+```csharp  
+protected ItemsControl InputItemsControl { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl)  
+  
 #### Output  
   
 Gets or sets the data for the output [Connector](#connector-class)s of this control.  
@@ -5216,6 +5268,34 @@ public DataTemplate OutputConnectorTemplate { get; set; }
 **Property Value**  
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
+  
+#### OutputGroupStyle  
+  
+```csharp  
+public ObservableCollection<GroupStyle> OutputGroupStyle { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ObservableCollection<GroupStyle>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+  
+#### OutputItemsControl  
+  
+```csharp  
+protected ItemsControl OutputItemsControl { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl)  
+  
+### Methods  
+  
+#### OnApplyTemplate()  
+  
+```csharp  
+public override void OnApplyTemplate();  
+```  
   
 ## NodeInput Class  
   
@@ -6778,6 +6858,36 @@ public InputGestureRef Pan { get; set; }
 **Property Value**  
   
 [InputGestureRef](#inputgestureref-class)  
+  
+#### PanHorizontalModifierKey  
+  
+```csharp  
+public ModifierKeys PanHorizontalModifierKey { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)  
+  
+#### PanVerticalModifierKey  
+  
+```csharp  
+public ModifierKeys PanVerticalModifierKey { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)  
+  
+#### PanWithMouseWheel  
+  
+```csharp  
+public bool PanWithMouseWheel { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
 #### ResetViewportLocation  
   
