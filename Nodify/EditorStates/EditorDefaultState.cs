@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using static Nodify.SelectionHelper;
 
 namespace Nodify
@@ -48,6 +49,24 @@ namespace Nodify
             else if (!Editor.DisablePanning && gestures.Pan.Matches(e.Source, e))
             {
                 PushState(new EditorPanningState(Editor));
+            }
+        }
+
+        public override void HandleMouseWheel(MouseWheelEventArgs e)
+        {
+            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+            if (gestures.PanWithMouseWheel)
+            {
+                if (Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
+                {
+                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X - e.Delta / Editor.ViewportZoom, Editor.ViewportLocation.Y);
+                    e.Handled = true;
+                }
+                else if (Keyboard.Modifiers == gestures.PanVerticalModifierKey)
+                {
+                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X, Editor.ViewportLocation.Y - e.Delta / Editor.ViewportZoom);
+                    e.Handled = true;
+                }
             }
         }
     }

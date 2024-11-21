@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 >	- Added InputGroupStyle and OutputGroupStyle to Node
+>	- Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
 >	- Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
 >	- Added EditorGestures.Editor.PushItems gesture used to start pushing ItemContainers vertically or horizontally
 >	- Added PushedAreaStyle, PushedAreaOrientation and IsPushingItems dependency properties to NodifyEditor

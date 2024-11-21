@@ -2879,6 +2879,16 @@ public override void HandleMouseDown(MouseButtonEventArgs e);
   
 `e` [MouseButtonEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseButtonEventArgs)  
   
+#### HandleMouseWheel(MouseWheelEventArgs)  
+  
+```csharp  
+public override void HandleMouseWheel(MouseWheelEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [MouseWheelEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseWheelEventArgs)  
+  
 ## EditorGestures Class  
   
 **Namespace:** Nodify  
@@ -7076,6 +7086,36 @@ public InputGestureRef Pan { get; set; }
 **Property Value**  
   
 [InputGestureRef](#inputgestureref-class)  
+  
+#### PanHorizontalModifierKey  
+  
+```csharp  
+public ModifierKeys PanHorizontalModifierKey { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)  
+  
+#### PanVerticalModifierKey  
+  
+```csharp  
+public ModifierKeys PanVerticalModifierKey { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)  
+  
+#### PanWithMouseWheel  
+  
+```csharp  
+public bool PanWithMouseWheel { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
 #### PushItems  
   
