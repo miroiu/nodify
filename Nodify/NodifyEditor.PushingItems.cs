@@ -52,7 +52,7 @@ namespace Nodify
         public Rect PushedArea
         {
             get => (Rect)GetValue(PushedAreaProperty);
-            internal set => SetValue(PushedAreaPropertyKey, value);
+            private set => SetValue(PushedAreaPropertyKey, value);
         }
 
         /// <summary>
@@ -94,16 +94,9 @@ namespace Nodify
             IsPushingItems = true;
             PushedAreaOrientation = orientation;
 
-            if (orientation == Orientation.Horizontal)
-            {
-                _pushStrategy = new HorizontalPushStrategy(this);
-            }
-            else
-            {
-                _pushStrategy = new VerticalPushStrategy(this);
-            }
+            _pushStrategy = CreatePushStrategy(orientation);
 
-            _pushStrategy.Start(position);
+            PushedArea = _pushStrategy.Start(position);
         }
 
         protected internal void CancelPushingItems()
@@ -114,17 +107,15 @@ namespace Nodify
             Debug.Assert(IsPushingItems);
             if (IsPushingItems)
             {
-                _pushStrategy?.Cancel();
+                PushedArea = _pushStrategy!.Cancel();
                 IsPushingItems = false;
             }
         }
 
         protected internal void PushItems(Vector offset)
         {
-            if (IsPushingItems)
-            {
-                _pushStrategy?.Push(offset);
-            }
+            Debug.Assert(IsPushingItems);
+            PushedArea = _pushStrategy!.Push(offset);
         }
 
         protected internal void EndPushingItems()
@@ -132,7 +123,8 @@ namespace Nodify
             Debug.Assert(IsPushingItems);
             if (IsPushingItems)
             {
-                _pushStrategy?.End();
+                PushedArea = _pushStrategy!.End();
+                _pushStrategy = null;
                 IsPushingItems = false;
             }
         }
@@ -141,8 +133,18 @@ namespace Nodify
         {
             if (IsPushingItems)
             {
-                _pushStrategy?.OnViewportChanged();
+                PushedArea = _pushStrategy!.OnViewportChanged();
             }
+        }
+
+        private IPushStrategy CreatePushStrategy(Orientation orientation)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return new HorizontalPushStrategy(this);
+            }
+
+            return new VerticalPushStrategy(this);
         }
     }
 }

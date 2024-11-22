@@ -8,7 +8,7 @@ namespace Nodify
     /// <summary>
     /// Commits the position changes at the end of the operation. Updates the RenderTransform to preview the container position.
     /// </summary>
-    internal class DraggingOptimized : IDraggingStrategy
+    internal sealed class DraggingOptimized : IDraggingStrategy
     {
         private readonly uint _gridCellSize;
         private readonly List<ItemContainer> _selectedContainers;

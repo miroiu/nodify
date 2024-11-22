@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -6,114 +8,117 @@ namespace Nodify
 {
     internal interface IPushStrategy
     {
-        void Start(Point position);
-        void Push(Vector offset);
-        void End();
-        void Cancel();
-        void OnViewportChanged();
+        Rect Start(Point position);
+        Rect Push(Vector amount);
+        Rect End();
+        Rect Cancel();
+        Rect OnViewportChanged();
     }
 
-    internal class HorizontalPushStrategy : IPushStrategy
+    internal abstract class BasePushStrategy : IPushStrategy
     {
-        private const int _offscreenOffsetY = 100;
-        private const int _minWidth = 2;
-        private double _initialPosition;
-        private double _actualWidth;
-
-        private readonly NodifyEditor _editor;
         private IDraggingStrategy? _draggingStrategy;
+        private const double _minOffset = 2;
+        private double _actualOffset;
+        private double _initialPosition;
 
-        public HorizontalPushStrategy(NodifyEditor editor)
+        protected readonly NodifyEditor Editor;
+        protected const double OffscreenOffset = 100d;
+
+        public BasePushStrategy(NodifyEditor editor)
         {
-            _editor = editor;
+            Editor = editor;
         }
 
-        public void Start(Point position)
+        public Rect Start(Point position)
         {
-            _draggingStrategy = _editor.CreateDraggingStrategy(_editor.ItemContainers.Where(item => item.Location.X >= position.X));
+            var containers = GetFilteredContainers(position);
+            _draggingStrategy = Editor.CreateDraggingStrategy(containers);
 
-            _initialPosition = position.X;
-            _actualWidth = 0;
-            _editor.PushedArea = new Rect(position.X, _editor.ViewportLocation.Y - _offscreenOffsetY, 0d, _editor.ViewportSize.Height + _offscreenOffsetY * 2);
+            _initialPosition = GetInitialPosition(position);
+            _actualOffset = 0;
+
+            return CalculatePushedArea(_initialPosition, _actualOffset);
         }
 
-        public void Push(Vector offset)
+        public Rect Push(Vector amount)
         {
-            _draggingStrategy?.Update(new Vector(offset.X, 0));
+            Debug.Assert(_draggingStrategy != null);
 
-            _actualWidth += offset.X;
+            var offset = GetPushOffset(amount);
+            _draggingStrategy!.Update(offset);
 
-            double newStart = _actualWidth >= 0 ? _initialPosition : _editor.SnapToGrid(_initialPosition + _actualWidth);
-            double newWidth = Math.Max(_minWidth, _editor.SnapToGrid(_actualWidth));
+            _actualOffset += offset.X;
+            _actualOffset += offset.Y;
 
-            _editor.PushedArea = new Rect(newStart, _editor.ViewportLocation.Y - _offscreenOffsetY, newWidth, _editor.ViewportSize.Height + _offscreenOffsetY * 2);
+            double newPosition = _actualOffset >= 0 ? _initialPosition : Editor.SnapToGrid(_initialPosition + _actualOffset);
+            double newOffset = Math.Max(_minOffset, Editor.SnapToGrid(_actualOffset));
+
+            return CalculatePushedArea(newPosition, newOffset);
         }
 
-        public void End()
+        public Rect End()
         {
-            _draggingStrategy?.End();
+            Debug.Assert(_draggingStrategy != null);
+            _draggingStrategy!.End();
+            return new Rect();
         }
 
-        public void Cancel()
+        public Rect Cancel()
         {
-            _draggingStrategy?.Abort();
+            Debug.Assert(_draggingStrategy != null);
+            _draggingStrategy!.Abort();
+            return new Rect();
         }
 
-        public void OnViewportChanged()
-        {
-            _editor.PushedArea = new Rect(_editor.PushedArea.X, _editor.ViewportLocation.Y - _offscreenOffsetY, _editor.PushedArea.Width, _editor.ViewportSize.Height + _offscreenOffsetY * 2);
-        }
+        protected abstract IEnumerable<ItemContainer> GetFilteredContainers(Point position);
+        protected abstract double GetInitialPosition(Point position);
+        protected abstract Vector GetPushOffset(Vector offset);
+        protected abstract Rect CalculatePushedArea(double position, double offset);
+        public abstract Rect OnViewportChanged();
     }
 
-    internal class VerticalPushStrategy : IPushStrategy
+    internal sealed class HorizontalPushStrategy : BasePushStrategy
     {
-        private const int _offscreenOffsetX = 100;
-        private const int _minHeight = 2;
-        private double _initialPosition;
-        private double _actualHeight;
-
-        private readonly NodifyEditor _editor;
-        private IDraggingStrategy? _draggingStrategy;
-
-        public VerticalPushStrategy(NodifyEditor editor)
+        public HorizontalPushStrategy(NodifyEditor editor) : base(editor)
         {
-            _editor = editor;
         }
 
-        public void Start(Point position)
-        {
-            _draggingStrategy = _editor.CreateDraggingStrategy(_editor.ItemContainers.Where(item => item.Location.Y >= position.Y));
+        protected override IEnumerable<ItemContainer> GetFilteredContainers(Point position)
+            => Editor.ItemContainers.Where(item => item.Location.X >= position.X);
 
-            _initialPosition = position.Y;
-            _actualHeight = 0;
-            _editor.PushedArea = new Rect(_editor.ViewportLocation.X - _offscreenOffsetX, position.Y, _editor.ViewportSize.Width + _offscreenOffsetX * 2, 0d);
+        protected override double GetInitialPosition(Point position)
+            => position.X;
+
+        protected override Vector GetPushOffset(Vector offset)
+            => new Vector(offset.X, 0d);
+
+        protected override Rect CalculatePushedArea(double position, double offset)
+            => new Rect(position, Editor.ViewportLocation.Y - OffscreenOffset, offset, Editor.ViewportSize.Height + OffscreenOffset * 2);
+
+        public override Rect OnViewportChanged()
+            => CalculatePushedArea(Editor.PushedArea.X, Editor.PushedArea.Width);
+    }
+
+    internal sealed class VerticalPushStrategy : BasePushStrategy
+    {
+        public VerticalPushStrategy(NodifyEditor editor) : base(editor)
+        {
         }
 
-        public void Push(Vector offset)
-        {
-            _draggingStrategy?.Update(new Vector(0, offset.Y));
+        protected override IEnumerable<ItemContainer> GetFilteredContainers(Point position)
+            => Editor.ItemContainers.Where(item => item.Location.Y >= position.Y);
 
-            _actualHeight += offset.Y;
+        protected override double GetInitialPosition(Point position)
+            => position.Y;
 
-            double newStart = _actualHeight >= 0 ? _initialPosition : _editor.SnapToGrid(_initialPosition + _actualHeight);
-            double newHeight = Math.Max(_minHeight, _editor.SnapToGrid(_actualHeight));
+        protected override Vector GetPushOffset(Vector offset)
+            => new Vector(0d, offset.Y);
 
-            _editor.PushedArea = new Rect(_editor.ViewportLocation.X - _offscreenOffsetX, newStart, _editor.ViewportSize.Width + _offscreenOffsetX * 2, newHeight);
-        }
+        protected override Rect CalculatePushedArea(double position, double offset)
+            => new Rect(Editor.ViewportLocation.X - OffscreenOffset, position, Editor.ViewportSize.Width + OffscreenOffset * 2, offset);
 
-        public void End()
-        {
-            _draggingStrategy?.End();
-        }
-
-        public void Cancel()
-        {
-            _draggingStrategy?.Abort();
-        }
-
-        public void OnViewportChanged()
-        {
-            _editor.PushedArea = new Rect(_editor.ViewportLocation.X - _offscreenOffsetX, _editor.PushedArea.Y, _editor.ViewportSize.Width + _offscreenOffsetX * 2, _editor.PushedArea.Height);
-        }
+        public override Rect OnViewportChanged()
+            => CalculatePushedArea(Editor.PushedArea.Y, Editor.PushedArea.Height);
     }
 }

@@ -11,7 +11,7 @@ namespace Nodify
         void Abort();
     }
 
-    internal class DraggingSimple : IDraggingStrategy
+    internal sealed class DraggingSimple : IDraggingStrategy
     {
         private readonly uint _gridCellSize;
         private readonly List<ItemContainer> _selectedContainers;
