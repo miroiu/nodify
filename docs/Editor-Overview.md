@@ -6,6 +6,7 @@
 - [Selecting items](#selecting)
   - [Selection API](#selection-api)
 - [Snapping to grid](#snapping)
+- [Pushing items](#pushing-items)
 - [Commands](#commands)
 - [Editor API](#editor-api)
 
@@ -90,9 +91,13 @@ Default values:
 
 The following methods can be called on a NodifyEditor instance.
 
+- SelectAll
+- UnselectAll
 - SelectArea
 - InvertSelection
 - UnselectArea
+- SelectAllConnections
+- UnselectAllConnections
 
 ## Snapping
 
@@ -105,6 +110,16 @@ Default values:
 
 - `GridCellSize`: 1
 - `EnableSnappingCorrection`: true
+
+## Pushing Items
+
+The Pushing Items feature allows users to interactively move items within the editor by performing a drag gesture.
+
+To initiate the push operation, hold `CTRL+SHIFT` and click with the **Left Mouse Button**. During the push items operation, the `IsPushingItems` dependency property is set to `true`, the `PushOrientation` dependency property is initialized with the direction the user is dragging, and the `PushedArea` dependency property updates in real time to reflect the interaction state.
+
+To cancel the push operation, press the `Escape` key or release `CTRL+SHIFT` and click the **Right Mouse Button**. You can configure the default keybindings by modifying the `EditorGestures.Editor.PushItems` gesture. To prevent cancellation, set `NodifyEditor.AllowPushItemsCancellation` to `false`.
+
+The visual appearance of the push area can be customized by setting the `PushedAreaStyle` property.
 
 ## Commands
 

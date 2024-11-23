@@ -111,6 +111,7 @@ namespace Nodify
             {
                 Selection = new SelectionGestures();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
+                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
@@ -145,7 +146,11 @@ namespace Nodify
             /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>.</remarks>
             public ModifierKeys PanHorizontalModifierKey { get; set; }
 
-            /// <summary>The modifier key required to start zooming with the mouse wheel.</summary>
+            /// <summary>Gesture used to start pushing.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="ModifierKeys.Shift"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
+            public InputGestureRef PushItems { get; }
+
+            /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
             public ModifierKeys ZoomModifierKey { get; set; }
 
@@ -185,6 +190,7 @@ namespace Nodify
                 PanWithMouseWheel = gestures.PanWithMouseWheel;
                 PanHorizontalModifierKey = gestures.PanHorizontalModifierKey;
                 PanVerticalModifierKey = gestures.PanVerticalModifierKey;
+                PushItems.Value = gestures.PushItems.Value;
             }
         }
 
