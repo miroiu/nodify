@@ -83,22 +83,33 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets whether push items cancellation is allowed.
+        /// Gets or sets whether push items cancellation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).
         /// </summary>
         public static bool AllowPushItemsCancellation { get; set; } = true;
 
         private IPushStrategy? _pushStrategy;
 
-        protected internal void StartPushingItems(Point position, Orientation orientation)
+        /// <summary>
+        /// Starts the pushing items operation at the specified location with the specified orientation.
+        /// </summary>
+        /// <param name="location">The starting location for pushing items, in graph space coordinates.</param>
+        /// <param name="orientation">The orientation of the <see cref="PushedArea"/>.</param>
+        protected internal void StartPushingItems(Point location, Orientation orientation)
         {
+            Debug.Assert(!IsPushingItems);
+
             IsPushingItems = true;
             PushedAreaOrientation = orientation;
 
             _pushStrategy = CreatePushStrategy(orientation);
 
-            PushedArea = _pushStrategy.Start(position);
+            PushedArea = _pushStrategy.Start(location);
         }
 
+        /// <summary>
+        /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if pushing item cancellation is not allowed (see <see cref="AllowPushItemsCancellation"/>).</exception>
         protected internal void CancelPushingItems()
         {
             if (!AllowPushItemsCancellation)
@@ -112,12 +123,22 @@ namespace Nodify
             }
         }
 
-        protected internal void PushItems(Vector offset)
+        /// <summary>
+        /// Updates the pushed area based on the specified amount.
+        /// </summary>
+        /// <param name="offset">The amount to adjust the pushed area by.</param>
+        /// <remarks>
+        /// This method adjusts the pushed area incrementally. It should only be called while a pushing operation is active (see <see cref="StartPushingItems(Point, Orientation)"/>).
+        /// </remarks>
+        protected internal void PushItems(Vector amount)
         {
             Debug.Assert(IsPushingItems);
-            PushedArea = _pushStrategy!.Push(offset);
+            PushedArea = _pushStrategy!.Push(amount);
         }
 
+        /// <summary>
+        /// Ends the current pushing operation and finalizes the pushed area state.
+        /// </summary>
         protected internal void EndPushingItems()
         {
             Debug.Assert(IsPushingItems);
