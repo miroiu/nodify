@@ -2,6 +2,7 @@ name: Build
 
 on:
   push:
+    branches: ["master", "release-v*"]
     paths-ignore:
       - "docs/**"
   pull_request:
