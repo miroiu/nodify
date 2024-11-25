@@ -11,6 +11,7 @@
 >	- Added PushedAreaStyle, PushedAreaOrientation and IsPushingItems dependency properties to NodifyEditor
 >	- Added NodifyEditor.SnapToGrid utility function
 > - Bugfixes:
+>	- Fixed ItemContainer.BorderBrush and ItemContainer.SelectedBrush not reacting to theme changes
 
 #### **Version 6.5.0**
 

@@ -51,7 +51,7 @@
                   TileMode="Tile">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="{DynamicResource ItemContainer.BorderBrush}">
+                <GeometryDrawing Brush="{StaticResource ItemContainer.BorderBrush}">
                     <GeometryDrawing.Geometry>
                         <GeometryGroup>
                             <RectangleGeometry Rect="0 0 50 50" />

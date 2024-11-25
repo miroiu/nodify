@@ -47,9 +47,9 @@
         <Setter Property="HighlightBrush"
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource ItemContainer.BorderBrush}" />
+                Value="{DynamicResource ItemContainer.BorderBrush}" />
         <Setter Property="SelectedBrush"
-                Value="{StaticResource ItemContainer.SelectedBrush}" />
+                Value="{DynamicResource ItemContainer.SelectedBrush}" />
     </Style>
 
     <!--DECORATOR CONTAINER-->
