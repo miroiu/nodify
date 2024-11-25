@@ -15,16 +15,18 @@
     <PackageProjectUrl>https://github.com/miroiu/nodify</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
-    <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>6.5.0</Version>
+    <PackageTags>wpf mvvm node network node-editor graph controls</PackageTags>
+    <Version>6.6.0</Version>
     <PackageReleaseNotes>
       > - Features:
-      >	  - Added SelectedConnection, SelectedConnections, CanSelectMultipleConnections and CanSelectMultipleItems dependency properties to NodifyEditor
-      >	  - Added IsSelected and IsSelectable attached dependency properties to BaseConnection
-      >	  - Added PrioritizeBaseConnectionForSelection static field to BaseConnection
-      >	  - Added EditorGestures.Connection.Selection
-      >	  - Added support for ScrollViewer in NodifyEditor (implements IScrollInfo)
-      >	  - Added NodifyEditor.ScrollIncrement dependency property
+      >	  - Added InputGroupStyle and OutputGroupStyle to Node
+      >	  - Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
+      >	  - Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
+      >	  - Added EditorGestures.Editor.PushItems gesture used to start pushing ItemContainers vertically or horizontally
+      >	  - Added PushedAreaStyle, PushedAreaOrientation and IsPushingItems dependency properties to NodifyEditor
+      >	  - Added NodifyEditor.SnapToGrid utility function
+      > - Bugfixes:
+      >	  - Fixed ItemContainer.BorderBrush and ItemContainer.SelectedBrush not reacting to theme changes
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

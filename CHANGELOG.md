@@ -4,6 +4,12 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+	
+#### **Version 6.6.0**
+
+> - Breaking Changes:
+> - Features:
 >	- Added InputGroupStyle and OutputGroupStyle to Node
 >	- Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
 >	- Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
