@@ -25,7 +25,7 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(CuttingLineStyle), StyleTargetType = typeof(CuttingLine))]
     [ContentProperty(nameof(Decorators))]
     [DefaultProperty(nameof(Decorators))]
-    public class NodifyEditor : MultiSelector
+    public partial class NodifyEditor : MultiSelector
     {
         protected const string ElementItemsHost = "PART_ItemsHost";
         protected const string ElementConnectionsHost = "PART_ConnectionsHost";
@@ -37,13 +37,19 @@ namespace Nodify
         public static readonly DependencyProperty MaxViewportZoomProperty = DependencyProperty.Register(nameof(MaxViewportZoom), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaxViewportZoomChanged, CoerceMaxViewportZoom));
         public static readonly DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnViewportLocationChanged));
         public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Size));
-        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
+        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnItemsExtentChanged));
         public static readonly DependencyProperty DecoratorsExtentProperty = DependencyProperty.Register(nameof(DecoratorsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
 
         protected internal static readonly DependencyPropertyKey ViewportTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty ViewportTransformProperty = ViewportTransformPropertyKey.DependencyProperty;
 
         #region Callbacks
+
+        private static void OnItemsExtentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = (NodifyEditor)d;
+            editor.UpdateScrollbars();
+        }
 
         private static void OnViewportLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -127,7 +133,12 @@ namespace Nodify
         /// Updates the <see cref="ViewportSize"/> and raises the <see cref="ViewportUpdatedEvent"/>.
         /// Called when the <see cref="UIElement.RenderSize"/> or <see cref="ViewportZoom"/> is changed.
         /// </summary>
-        protected void OnViewportUpdated() => RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
+        protected void OnViewportUpdated()
+        {
+            UpdateScrollbars();
+            UpdatePushedArea();
+            RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
+        }
 
         #endregion
 
@@ -496,12 +507,22 @@ namespace Nodify
 
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
+        public static readonly DependencyProperty SelectedConnectionsProperty = DependencyProperty.Register(nameof(SelectedConnections), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList)));
+        public static readonly DependencyProperty SelectedConnectionProperty = DependencyProperty.Register(nameof(SelectedConnection), typeof(object), typeof(NodifyEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisablePanningChanged));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
+        public static readonly DependencyProperty CanSelectMultipleConnectionsProperty = DependencyProperty.Register(nameof(CanSelectMultipleConnections), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));
+
+        private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).CanSelectMultipleItemsBase = (bool)e.NewValue;
+
+        private static object CoerceCanSelectMultipleItems(DependencyObject d, object baseValue)
+            => ((NodifyEditor)d).CanSelectMultipleItemsBase = (bool)baseValue;
 
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((NodifyEditor)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
@@ -554,7 +575,25 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the items in the <see cref="NodifyEditor"/> that are selected.
+        /// Gets or sets the selected connection.
+        /// </summary>
+        public object? SelectedConnection
+        {
+            get => GetValue(SelectedConnectionProperty);
+            set => SetValue(SelectedConnectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected connections in the <see cref="NodifyEditor"/>.
+        /// </summary>
+        public IList? SelectedConnections
+        {
+            get => (IList?)GetValue(SelectedConnectionsProperty);
+            set => SetValue(SelectedConnectionsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected items in the <see cref="NodifyEditor"/>.
         /// </summary>
         public new IList? SelectedItems
         {
@@ -588,6 +627,30 @@ namespace Nodify
         {
             get => (bool)GetValue(EnableRealtimeSelectionProperty);
             set => SetValue(EnableRealtimeSelectionProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether multiple connections can be selected.
+        /// </summary>
+        public bool CanSelectMultipleConnections
+        {
+            get => (bool)GetValue(CanSelectMultipleConnectionsProperty);
+            set => SetValue(CanSelectMultipleConnectionsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether multiple <see cref="ItemContainer" />s can be selected.
+        /// </summary>
+        public new bool CanSelectMultipleItems
+        {
+            get => (bool)GetValue(CanSelectMultipleItemsProperty);
+            set => SetValue(CanSelectMultipleItemsProperty, value);
+        }
+
+        private bool CanSelectMultipleItemsBase
+        {
+            get => base.CanSelectMultipleItems;
+            set => base.CanSelectMultipleItems = value;
         }
 
         #endregion
@@ -750,7 +813,7 @@ namespace Nodify
         public static bool EnableCuttingLinePreview { get; set; } = false;
 
         /// <summary>
-        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement">.
+        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement" />.
         /// </summary>
         public static readonly HashSet<Type> CuttingConnectionTypes = new HashSet<Type>();
 
@@ -793,6 +856,26 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Gets a list of all <see cref="ItemContainer"/>s.
+        /// </summary>
+        /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
+        protected internal IReadOnlyCollection<ItemContainer> ItemContainers
+        {
+            get
+            {
+                ItemCollection items = Items;
+                var containers = new List<ItemContainer>(items.Count);
+
+                for (var i = 0; i < items.Count; i++)
+                {
+                    containers.Add((ItemContainer)ItemContainerGenerator.ContainerFromIndex(i));
+                }
+
+                return containers;
+            }
+        }
+
         #endregion
 
         #region Construction
@@ -827,8 +910,6 @@ namespace Nodify
             SetValue(ViewportTransformPropertyKey, transform);
 
             _states.Push(GetInitialState());
-
-            CanSelectMultipleItems = true;
         }
 
         /// <inheritdoc />
@@ -1063,7 +1144,7 @@ namespace Nodify
         {
             OnRemoveConnection(e.Connection);
         }
-        
+
         protected void OnRemoveConnection(object? dataContext)
         {
             if (RemoveConnectionCommand?.CanExecute(dataContext) ?? false)
@@ -1222,6 +1303,9 @@ namespace Nodify
 
         private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            if (!CanSelectMultipleItems)
+                return;
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Reset:
@@ -1294,7 +1378,7 @@ namespace Nodify
             for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                if (container.IsPreviewingSelection == true)
+                if (container.IsPreviewingSelection == true && container.IsSelectable)
                 {
                     selected.Add(items[i]);
                 }
@@ -1322,7 +1406,7 @@ namespace Nodify
         /// Inverts the <see cref="ItemContainer"/>s selection in the specified <paramref name="area"/>.
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
-        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br />False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void InvertSelection(Rect area, bool fit = false)
         {
             ItemCollection items = Items;
@@ -1356,7 +1440,7 @@ namespace Nodify
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
         /// <param name="append">If true, it will add to the existing selection.</param>
-        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br />False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
             if (!append)
@@ -1385,7 +1469,7 @@ namespace Nodify
         /// Unselect the <see cref="ItemContainer"/>s in the specified <paramref name="area"/>.
         /// </summary>
         /// <param name="area">The area to look for <see cref="ItemContainer"/>s.</param>
-        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br /> False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
+        /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br />False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void UnselectArea(Rect area, bool fit = false)
         {
             IList items = base.SelectedItems;
@@ -1404,6 +1488,28 @@ namespace Nodify
             IsSelecting = false;
         }
 
+        /// <summary>
+        /// Unselect all <see cref="Connections"/>.
+        /// </summary>
+        public void UnselectAllConnection()
+        {
+            if (ConnectionsHost is MultiSelector selector)
+            {
+                selector.UnselectAll();
+            }
+        }
+
+        /// <summary>
+        /// Select all <see cref="Connections"/>.
+        /// </summary>
+        public void SelectAllConnections()
+        {
+            if (ConnectionsHost is MultiSelector selector)
+            {
+                selector.SelectAll();
+            }
+        }
+
         #endregion
 
         #region Dragging
@@ -1417,13 +1523,13 @@ namespace Nodify
         {
             if (e.Canceled && ItemContainer.AllowDraggingCancellation)
             {
-                _draggingStrategy?.Abort(new Vector(e.HorizontalChange, e.VerticalChange));
+                _draggingStrategy?.Abort();
             }
             else
             {
                 IsBulkUpdatingItems = true;
 
-                _draggingStrategy?.End(new Vector(e.HorizontalChange, e.VerticalChange));
+                _draggingStrategy?.End();
 
                 IsBulkUpdatingItems = false;
 
@@ -1441,16 +1547,7 @@ namespace Nodify
         {
             IList selectedItems = base.SelectedItems;
 
-            if (EnableDraggingContainersOptimizations)
-            {
-                _draggingStrategy = new DraggingOptimized(this);
-            }
-            else
-            {
-                _draggingStrategy = new DraggingSimple(this);
-            }
-
-            _draggingStrategy.Start(new Vector(e.HorizontalOffset, e.VerticalOffset));
+            _draggingStrategy = CreateDraggingStrategy(SelectedContainers);
 
             if (selectedItems.Count > 0)
             {
@@ -1461,6 +1558,16 @@ namespace Nodify
 
                 e.Handled = true;
             }
+        }
+
+        internal IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)
+        {
+            if (EnableDraggingContainersOptimizations)
+            {
+                return new DraggingOptimized(containers, GridCellSize);
+            }
+
+            return new DraggingSimple(containers, GridCellSize);
         }
 
         #endregion
@@ -1558,6 +1665,16 @@ namespace Nodify
         /// <returns>A location inside the graph</returns>
         public Point GetLocationInsideEditor(MouseEventArgs args)
             => args.GetPosition(ItemsHost);
+
+        /// <summary>
+        /// Snaps the given value down to the nearest multiple of the grid cell size.
+        /// </summary>
+        /// <param name="value">The value to be snapped to the grid.</param>
+        /// <returns>The largest multiple of the grid cell size less than or equal to the value.</returns>
+        public double SnapToGrid(double value)
+        {
+            return (int)value / GridCellSize * GridCellSize;
+        }
 
         #endregion
     }

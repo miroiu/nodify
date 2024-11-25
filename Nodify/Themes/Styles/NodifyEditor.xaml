@@ -29,6 +29,20 @@
         </Setter>
     </Style>
 
+    <Style x:Key="PushedAreaStyle"
+           TargetType="Rectangle">
+        <Setter Property="Stroke"
+                Value="#74747c" />
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Fill">
+            <Setter.Value>
+                <SolidColorBrush Opacity="0.2"
+                                 Color="#74747c" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type local:NodifyEditor}">
         <Setter Property="ClipToBounds"
                 Value="True" />
@@ -44,6 +58,8 @@
                 Value="False" />
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource SelectionRectangleStyle}" />
+        <Setter Property="PushedAreaStyle"
+                Value="{StaticResource PushedAreaStyle}" />
         <Setter Property="ConnectionTemplate"
                 Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="PendingConnectionTemplate"
@@ -59,12 +75,15 @@
                                                 IsItemsHost="True"
                                                 Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
-                            <ItemsControl  x:Name="PART_ConnectionsHost"
-                                           ItemsSource="{TemplateBinding Connections}"
-                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
-                                           IsTabStop="False">
-                                <ItemsControl.Style>
-                                    <Style TargetType="ItemsControl">
+                            <local:ConnectionsMultiSelector  x:Name="PART_ConnectionsHost"
+                                                             ItemsSource="{TemplateBinding Connections}"
+                                                             SelectedItem="{Binding SelectedConnection, RelativeSource={RelativeSource TemplatedParent}}"
+                                                             SelectedItems="{TemplateBinding SelectedConnections}"
+                                                             CanSelectMultipleItems="{TemplateBinding CanSelectMultipleConnections}"
+                                                             ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                                             IsTabStop="False">
+                                <local:ConnectionsMultiSelector.Style>
+                                    <Style TargetType="local:ConnectionsMultiSelector">
                                         <Setter Property="Panel.ZIndex"
                                                 Value="-1" />
                                         <Style.Triggers>
@@ -75,13 +94,13 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </ItemsControl.Style>
-                                <ItemsControl.ItemsPanel>
+                                </local:ConnectionsMultiSelector.Style>
+                                <local:ConnectionsMultiSelector.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Canvas />
                                     </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                                </local:ConnectionsMultiSelector.ItemsPanel>
+                            </local:ConnectionsMultiSelector>
 
                             <ContentPresenter ContentSource="PendingConnection" />
 
@@ -101,6 +120,29 @@
                                 <Rectangle.Height>
                                     <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
                                         <Binding Path="SelectedArea.Height"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Rectangle.Height>
+                            </Rectangle>
+
+                            <Rectangle Style="{TemplateBinding PushedAreaStyle}"
+                                    RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
+                                    Canvas.Top="{Binding PushedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Canvas.Left="{Binding PushedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Visibility="{TemplateBinding IsPushingItems, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Rectangle.Width>
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="PushedArea.Width"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ViewportZoom"
+                                                 RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Rectangle.Width>
+                                <Rectangle.Height>
+                                    <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
+                                        <Binding Path="PushedArea.Height"
                                                  RelativeSource="{RelativeSource TemplatedParent}" />
                                         <Binding Path="ViewportZoom"
                                                  RelativeSource="{RelativeSource TemplatedParent}" />
@@ -144,6 +186,29 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsPushingItems"
+                               Value="True" />
+                    <Condition Property="PushedAreaOrientation"
+                               Value="Horizontal" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Cursor"
+                        Value="SizeWE" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsPushingItems"
+                               Value="True" />
+                    <Condition Property="PushedAreaOrientation"
+                               Value="Vertical" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Cursor"
+                        Value="SizeNS" />
+            </MultiTrigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

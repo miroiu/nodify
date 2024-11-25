@@ -14,6 +14,7 @@ namespace Nodify
 
         /// <summary>Constructs an instance of the <see cref="EditorSelectingState"/> state.</summary>
         /// <param name="editor">The owner of the state.</param>
+        /// <param name="type">The selection strategy.</param>
         public EditorSelectingState(NodifyEditor editor, SelectionType type) : base(editor)
         {
             Selection = new SelectionHelper(editor);
@@ -23,6 +24,8 @@ namespace Nodify
         /// <inheritdoc />
         public override void Enter(EditorState? from)
         {
+            Editor.UnselectAllConnection();
+
             _canceled = false;
             Selection.Start(Editor.MouseLocation, _type);
         }

@@ -3,28 +3,27 @@ name: Create release branch
 on:
   push:
     tags:
-      - 'v*.0.0'
+      - "v*.0.0"
 
 jobs:
   create-release:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2      
-    - name: Save tag version
-      uses: little-core-labs/get-git-tag@v3.0.1
-      id: tagName
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2.1.0
-      with:
-        dotnet-version: '8.0.x'
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Create release branch
-      uses: peterjgrainger/action-create-branch@v2.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        branch: release-${{ steps.tagName.outputs.tag }}
-    
+      - uses: actions/checkout@v4
+      - name: Save tag version
+        uses: little-core-labs/get-git-tag@v3.0.1
+        id: tagName
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Create release branch
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: release-${{ steps.tagName.outputs.tag }}

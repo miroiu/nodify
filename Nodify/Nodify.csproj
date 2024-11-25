@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net8-windows;net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
+    <TargetFrameworks>net9-windows;net8-windows;net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -15,15 +15,18 @@
     <PackageProjectUrl>https://github.com/miroiu/nodify</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
-    <PackageTags>wpf mvvm node-editor controls</PackageTags>
-    <Version>6.3.0</Version>
+    <PackageTags>wpf mvvm node network node-editor graph controls</PackageTags>
+    <Version>6.6.0</Version>
     <PackageReleaseNotes>
       > - Features:
-      >	  - Added a CuttingLine control that removes intersecting connections
-      >	  - Added CuttingLineStyle, CuttingStartedCommand, CuttingCompletedCommand, IsCutting, EnableCuttingLinePreview and CuttingConnectionTypes to NodifyEditor
-      >	  - Added EditorGestures.Editor.Cutting and EditorGestures.Editor.CancelAction
+      >	  - Added InputGroupStyle and OutputGroupStyle to Node
+      >	  - Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
+      >	  - Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
+      >	  - Added EditorGestures.Editor.PushItems gesture used to start pushing ItemContainers vertically or horizontally
+      >	  - Added PushedAreaStyle, PushedAreaOrientation and IsPushingItems dependency properties to NodifyEditor
+      >	  - Added NodifyEditor.SnapToGrid utility function
       > - Bugfixes:
-      >	  - Fixed connection styles not inheriting from the BaseConnection style
+      >	  - Fixed ItemContainer.BorderBrush and ItemContainer.SelectedBrush not reacting to theme changes
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -8,6 +8,8 @@
         xmlns:nodify="https://miroiu.github.io/nodify"
         ResizeMode="CanResizeWithGrip"
         mc:Ignorable="d"
+        Background="{DynamicResource NodifyEditor.BackgroundBrush}"
+        Foreground="{DynamicResource ForegroundBrush}"
         Title="State Machine Editor"
         Height="500"
         Width="930">
@@ -29,193 +31,197 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <nodify:NodifyEditor x:Name="Editor"
-                             ItemsSource="{Binding States}"
-                             SelectedItem="{Binding SelectedState}"
-                             SelectedItems="{Binding SelectedStates}"
-                             Connections="{Binding Transitions}"
-                             PendingConnection="{Binding PendingTransition}"
-                             DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
-                             ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
-                             RemoveConnectionCommand="{Binding DeleteTransitionCommand}"
-                             Grid.Column="1">
-            <nodify:NodifyEditor.PendingConnectionTemplate>
-                <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                    <nodify:PendingConnection Source="{Binding Source, Mode=OneWayToSource}"
-                                              Target="{Binding Target, Mode=OneWayToSource}"
-                                              StrokeDashArray=""
-                                              EnablePreview="True">
-                        <nodify:PendingConnection.Template>
-                            <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
-                                <nodify:LineConnection Source="{TemplateBinding SourceAnchor}"
-                                                              Target="{TemplateBinding TargetAnchor}"
-                                                              StrokeThickness="{TemplateBinding StrokeThickness}"
-                                                              StrokeDashArray="{TemplateBinding StrokeDashArray}"
-                                                              SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
-                                                              Spacing="0"
-                                                              SourceOffsetMode="Edge"
-                                                              TargetOffsetMode="None" />
-                            </ControlTemplate>
-                        </nodify:PendingConnection.Template>
-                    </nodify:PendingConnection>
-                </DataTemplate>
-            </nodify:NodifyEditor.PendingConnectionTemplate>
+        <ScrollViewer CanContentScroll="True"
+                      PreviewMouseWheel="ScrollViewer_MouseWheel"
+                      PreviewKeyDown="ScrollViewer_PreviewKeyDown"
+                      Grid.Column="1">
+            <nodify:NodifyEditor x:Name="Editor"
+                                 ItemsSource="{Binding States}"
+                                 SelectedItem="{Binding SelectedState}"
+                                 SelectedItems="{Binding SelectedStates}"
+                                 Connections="{Binding Transitions}"
+                                 PendingConnection="{Binding PendingTransition}"
+                                 DisconnectConnectorCommand="{Binding DisconnectStateCommand}"
+                                 ConnectionCompletedCommand="{Binding CreateTransitionCommand}"
+                                 RemoveConnectionCommand="{Binding DeleteTransitionCommand}">
+                <nodify:NodifyEditor.PendingConnectionTemplate>
+                    <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                        <nodify:PendingConnection Source="{Binding Source, Mode=OneWayToSource}"
+                                                  Target="{Binding Target, Mode=OneWayToSource}"
+                                                  StrokeDashArray=""
+                                                  EnablePreview="True">
+                            <nodify:PendingConnection.Template>
+                                <ControlTemplate TargetType="{x:Type nodify:PendingConnection}">
+                                    <nodify:LineConnection Source="{TemplateBinding SourceAnchor}"
+                                                           Target="{TemplateBinding TargetAnchor}"
+                                                           StrokeThickness="{TemplateBinding StrokeThickness}"
+                                                           StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                                                           SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                                           Spacing="0"
+                                                           SourceOffsetMode="Edge"
+                                                           TargetOffsetMode="None" />
+                                </ControlTemplate>
+                            </nodify:PendingConnection.Template>
+                        </nodify:PendingConnection>
+                    </DataTemplate>
+                </nodify:NodifyEditor.PendingConnectionTemplate>
 
-            <nodify:NodifyEditor.ConnectionTemplate>
-                <DataTemplate DataType="{x:Type local:TransitionViewModel}">
-                    <nodify:LineConnection Source="{Binding Source.Anchor}"
-                                                  Target="{Binding Target.Anchor}"
-                                                  SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
-                                                  TargetOffset="{Binding Target.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
-                                                  Spacing="0"
-                                                  SourceOffsetMode="Edge"
-                                                  TargetOffsetMode="Edge"
-                                                  Tag="{Binding}">
-                        <nodify:LineConnection.Style>
-                            <Style TargetType="{x:Type nodify:LineConnection}"
-                                   BasedOn="{StaticResource {x:Type nodify:LineConnection}}">
-                                <Setter Property="StrokeThickness"
-                                        Value="3" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsActive}"
-                                                 Value="True">
-                                        <Setter Property="Stroke"
-                                                Value="{DynamicResource ActiveStateBrush}" />
-                                        <Setter Property="StrokeThickness"
-                                                Value="6" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </nodify:LineConnection.Style>
-                        <nodify:LineConnection.ContextMenu>
-                            <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
-                                <MenuItem Header="_Delete"
-                                          Icon="{StaticResource DeleteIcon}"
-                                          Command="{Binding DeleteTransitionCommand}"
-                                          CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                            </ContextMenu>
-                        </nodify:LineConnection.ContextMenu>
-                    </nodify:LineConnection>
-                </DataTemplate>
-            </nodify:NodifyEditor.ConnectionTemplate>
+                <nodify:NodifyEditor.ConnectionTemplate>
+                    <DataTemplate DataType="{x:Type local:TransitionViewModel}">
+                        <nodify:LineConnection Source="{Binding Source.Anchor}"
+                                               Target="{Binding Target.Anchor}"
+                                               SourceOffset="{Binding Source.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                               TargetOffset="{Binding Target.Size, Converter={StaticResource ConnectorOffsetConverter}, ConverterParameter=5}"
+                                               Spacing="0"
+                                               SourceOffsetMode="Edge"
+                                               TargetOffsetMode="Edge"
+                                               Tag="{Binding}">
+                            <nodify:LineConnection.Style>
+                                <Style TargetType="{x:Type nodify:LineConnection}"
+                                       BasedOn="{StaticResource {x:Type nodify:LineConnection}}">
+                                    <Setter Property="StrokeThickness"
+                                            Value="3" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsActive}"
+                                                     Value="True">
+                                            <Setter Property="Stroke"
+                                                    Value="{DynamicResource ActiveStateBrush}" />
+                                            <Setter Property="StrokeThickness"
+                                                    Value="6" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </nodify:LineConnection.Style>
+                            <nodify:LineConnection.ContextMenu>
+                                <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
+                                    <MenuItem Header="_Delete"
+                                              Icon="{StaticResource DeleteIcon}"
+                                              Command="{Binding DeleteTransitionCommand}"
+                                              CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                                </ContextMenu>
+                            </nodify:LineConnection.ContextMenu>
+                        </nodify:LineConnection>
+                    </DataTemplate>
+                </nodify:NodifyEditor.ConnectionTemplate>
 
-            <nodify:NodifyEditor.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:StateViewModel}">
-                    <!--If IsConnected is false, Anchor won't be updated-->
-                    <nodify:StateNode Content="{Binding}"
-                                      IsConnected="True"
-                                      Anchor="{Binding Anchor, Mode=OneWayToSource}">
-                        <nodify:StateNode.ContentTemplate>
-                            <DataTemplate DataType="{x:Type local:StateViewModel}">
-                                <shared:EditableTextBlock Text="{Binding Name}"
-                                                          IsEditing="{Binding IsRenaming}"
-                                                          IsEditable="{Binding IsEditable}"
-                                                          MaxLength="30" />
-                            </DataTemplate>
-                        </nodify:StateNode.ContentTemplate>
-                        <nodify:StateNode.Style>
-                            <Style TargetType="{x:Type nodify:StateNode}"
-                                   BasedOn="{StaticResource {x:Type nodify:StateNode}}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsEditable}"
-                                                 Value="False">
-                                        <Setter Property="BorderBrush"
-                                                Value="{DynamicResource ReadOnlyStateBrush}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsActive}"
-                                                 Value="True">
-                                        <Setter Property="BorderBrush"
-                                                Value="{DynamicResource ActiveStateBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </nodify:StateNode.Style>
-                    </nodify:StateNode>
-                </DataTemplate>
-            </nodify:NodifyEditor.ItemTemplate>
+                <nodify:NodifyEditor.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:StateViewModel}">
+                        <!--If IsConnected is false, Anchor won't be updated-->
+                        <nodify:StateNode Content="{Binding}"
+                                          IsConnected="True"
+                                          Anchor="{Binding Anchor, Mode=OneWayToSource}">
+                            <nodify:StateNode.ContentTemplate>
+                                <DataTemplate DataType="{x:Type local:StateViewModel}">
+                                    <shared:EditableTextBlock Text="{Binding Name}"
+                                                              IsEditing="{Binding IsRenaming}"
+                                                              IsEditable="{Binding IsEditable}"
+                                                              MaxLength="30" />
+                                </DataTemplate>
+                            </nodify:StateNode.ContentTemplate>
+                            <nodify:StateNode.Style>
+                                <Style TargetType="{x:Type nodify:StateNode}"
+                                       BasedOn="{StaticResource {x:Type nodify:StateNode}}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEditable}"
+                                                     Value="False">
+                                            <Setter Property="BorderBrush"
+                                                    Value="{DynamicResource ReadOnlyStateBrush}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsActive}"
+                                                     Value="True">
+                                            <Setter Property="BorderBrush"
+                                                    Value="{DynamicResource ActiveStateBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </nodify:StateNode.Style>
+                        </nodify:StateNode>
+                    </DataTemplate>
+                </nodify:NodifyEditor.ItemTemplate>
 
-            <nodify:NodifyEditor.ItemContainerStyle>
-                <Style TargetType="{x:Type nodify:ItemContainer}"
-                       BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
-                    <Setter Property="BorderBrush"
-                            Value="Transparent" />
-                    <Setter Property="Location"
-                            Value="{Binding Location}" />
-                    <Setter Property="ActualSize"
-                            Value="{Binding Size, Mode=OneWayToSource}" />
-                    <Setter Property="ContextMenu">
-                        <Setter.Value>
-                            <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
-                                <MenuItem Header="_Delete"
-                                          Icon="{StaticResource DeleteIcon}"
-                                          Command="{Binding DeleteSelectionCommand}" />
-                                <MenuItem Header="Di_sconnect"
-                                          Icon="{StaticResource DisconnectIcon}"
-                                          Command="{Binding DisconnectSelectionCommand}" />
-                                <MenuItem Header="_Rename"
-                                          Icon="{StaticResource RenameIcon}"
-                                          Command="{Binding RenameStateCommand}" />
-                                <MenuItem Header="_Alignment"
-                                          Icon="{StaticResource AlignTopIcon}">
-                                    <MenuItem Header="_Top"
-                                              Icon="{StaticResource AlignTopIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Top" />
-                                    <MenuItem Header="_Left"
-                                              Icon="{StaticResource AlignLeftIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Left" />
-                                    <MenuItem Header="_Bottom"
-                                              Icon="{StaticResource AlignBottomIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Bottom" />
-                                    <MenuItem Header="_Right"
-                                              Icon="{StaticResource AlignRightIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Right" />
-                                    <MenuItem Header="_Middle"
-                                              Icon="{StaticResource AlignMiddleIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Middle" />
-                                    <MenuItem Header="_Center"
-                                              Icon="{StaticResource AlignCenterIcon}"
-                                              Command="{x:Static nodify:EditorCommands.Align}"
-                                              CommandParameter="Center" />
-                                </MenuItem>
-                            </ContextMenu>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </nodify:NodifyEditor.ItemContainerStyle>
+                <nodify:NodifyEditor.ItemContainerStyle>
+                    <Style TargetType="{x:Type nodify:ItemContainer}"
+                           BasedOn="{StaticResource {x:Type nodify:ItemContainer}}">
+                        <Setter Property="BorderBrush"
+                                Value="Transparent" />
+                        <Setter Property="Location"
+                                Value="{Binding Location}" />
+                        <Setter Property="ActualSize"
+                                Value="{Binding Size, Mode=OneWayToSource}" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
+                                    <MenuItem Header="_Delete"
+                                              Icon="{StaticResource DeleteIcon}"
+                                              Command="{Binding DeleteSelectionCommand}" />
+                                    <MenuItem Header="Di_sconnect"
+                                              Icon="{StaticResource DisconnectIcon}"
+                                              Command="{Binding DisconnectSelectionCommand}" />
+                                    <MenuItem Header="_Rename"
+                                              Icon="{StaticResource RenameIcon}"
+                                              Command="{Binding RenameStateCommand}" />
+                                    <MenuItem Header="_Alignment"
+                                              Icon="{StaticResource AlignTopIcon}">
+                                        <MenuItem Header="_Top"
+                                                  Icon="{StaticResource AlignTopIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Top" />
+                                        <MenuItem Header="_Left"
+                                                  Icon="{StaticResource AlignLeftIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Left" />
+                                        <MenuItem Header="_Bottom"
+                                                  Icon="{StaticResource AlignBottomIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Bottom" />
+                                        <MenuItem Header="_Right"
+                                                  Icon="{StaticResource AlignRightIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Right" />
+                                        <MenuItem Header="_Middle"
+                                                  Icon="{StaticResource AlignMiddleIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Middle" />
+                                        <MenuItem Header="_Center"
+                                                  Icon="{StaticResource AlignCenterIcon}"
+                                                  Command="{x:Static nodify:EditorCommands.Align}"
+                                                  CommandParameter="Center" />
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </nodify:NodifyEditor.ItemContainerStyle>
 
-            <nodify:NodifyEditor.ContextMenu>
-                <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
-                    <MenuItem Header="_Add State"
-                              Icon="{StaticResource AddStateIcon}"
-                              InputGestureText="Shift+A"
-                              Command="{Binding AddStateCommand}"
-                              CommandParameter="{Binding PlacementTarget.MouseLocation, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                    <MenuItem Header="_Delete"
-                              Icon="{StaticResource DeleteIcon}"
-                              InputGestureText="Delete"
-                              Command="{Binding DeleteSelectionCommand}" />
-                    <Separator Background="{DynamicResource BorderBrush}" />
-                    <MenuItem Header="_Select All"
-                              Icon="{StaticResource SelectAllIcon}"
-                              InputGestureText="Ctrl+A"
-                              Command="{x:Static nodify:EditorCommands.SelectAll}" />
-                </ContextMenu>
-            </nodify:NodifyEditor.ContextMenu>
+                <nodify:NodifyEditor.ContextMenu>
+                    <ContextMenu DataContext="{Binding DataContext, Source={StaticResource EditorProxy}}">
+                        <MenuItem Header="_Add State"
+                                  Icon="{StaticResource AddStateIcon}"
+                                  InputGestureText="Shift+A"
+                                  Command="{Binding AddStateCommand}"
+                                  CommandParameter="{Binding PlacementTarget.MouseLocation, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="_Delete"
+                                  Icon="{StaticResource DeleteIcon}"
+                                  InputGestureText="Delete"
+                                  Command="{Binding DeleteSelectionCommand}" />
+                        <Separator Background="{DynamicResource BorderBrush}" />
+                        <MenuItem Header="_Select All"
+                                  Icon="{StaticResource SelectAllIcon}"
+                                  InputGestureText="Ctrl+A"
+                                  Command="{x:Static nodify:EditorCommands.SelectAll}" />
+                    </ContextMenu>
+                </nodify:NodifyEditor.ContextMenu>
 
-            <nodify:NodifyEditor.InputBindings>
-                <KeyBinding Key="Delete"
-                            Command="{Binding DeleteSelectionCommand}" />
-                <KeyBinding Key="A"
-                            Modifiers="Shift"
-                            Command="{Binding AddStateCommand}"
-                            CommandParameter="{Binding MouseLocation, RelativeSource={RelativeSource AncestorType={x:Type nodify:NodifyEditor}}}" />
-            </nodify:NodifyEditor.InputBindings>
-        </nodify:NodifyEditor>
+                <nodify:NodifyEditor.InputBindings>
+                    <KeyBinding Key="Delete"
+                                Command="{Binding DeleteSelectionCommand}" />
+                    <KeyBinding Key="A"
+                                Modifiers="Shift"
+                                Command="{Binding AddStateCommand}"
+                                CommandParameter="{Binding MouseLocation, RelativeSource={RelativeSource AncestorType={x:Type nodify:NodifyEditor}}}" />
+                </nodify:NodifyEditor.InputBindings>
+            </nodify:NodifyEditor>
+        </ScrollViewer>
 
         <!--TOOLBAR-->
         <Border CornerRadius="2"

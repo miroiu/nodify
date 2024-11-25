@@ -10,12 +10,22 @@
 
     <Style x:Key="NodifyEditor.SelectionRectangleStyle"
            TargetType="Rectangle">
-        <Setter Property="Stroke"
-                Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
         <Setter Property="StrokeThickness"
                 Value="1" />
+        <Setter Property="Stroke"
+                Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
         <Setter Property="Fill"
                 Value="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}" />
+    </Style>
+
+    <Style x:Key="NodifyEditor.PushedAreaStyle"
+           TargetType="Rectangle">
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Stroke"
+                Value="{StaticResource NodifyEditor.PushedAreaStrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource NodifyEditor.PushedAreaBackgroundBrush}" />
     </Style>
 
     <Style TargetType="{x:Type local:NodifyEditor}"
@@ -26,6 +36,8 @@
                 Value="{StaticResource NodifyEditor.ForegroundBrush}" />
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource NodifyEditor.SelectionRectangleStyle}" />
+        <Setter Property="PushedAreaStyle"
+                Value="{StaticResource NodifyEditor.PushedAreaStyle}" />
     </Style>
 
     <!--ITEM CONTAINER-->
@@ -35,9 +47,9 @@
         <Setter Property="HighlightBrush"
                 Value="{StaticResource ItemContainer.HighlightBrush}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource ItemContainer.BorderBrush}" />
+                Value="{DynamicResource ItemContainer.BorderBrush}" />
         <Setter Property="SelectedBrush"
-                Value="{StaticResource ItemContainer.SelectedBrush}" />
+                Value="{DynamicResource ItemContainer.SelectedBrush}" />
     </Style>
 
     <!--DECORATOR CONTAINER-->

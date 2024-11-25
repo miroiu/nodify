@@ -111,6 +111,7 @@ namespace Nodify
             {
                 Selection = new SelectionGestures();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
+                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
@@ -118,6 +119,9 @@ namespace Nodify
                 ResetViewportLocation = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
+                PanWithMouseWheel = false;
+                PanHorizontalModifierKey = ModifierKeys.Shift;
+                PanVerticalModifierKey = ModifierKeys.None;
             }
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
@@ -129,6 +133,22 @@ namespace Nodify
             /// <summary>Gesture used to start panning.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
             public InputGestureRef Pan { get; }
+
+            /// <summary>Whether panning using mouse wheel is allowed.</summary>
+            /// <remarks>Set the <see cref="ZoomModifierKey"/> to allow zooming using the mouse wheel.</remarks>
+            public bool PanWithMouseWheel { get; set; }
+
+            /// <summary>The modifier key required to start panning vertically with the mouse wheel (see <see cref="PanWithMouseWheel"/>)</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
+            public ModifierKeys PanVerticalModifierKey { get; set; }
+
+            /// <summary>The modifier key required to start panning horizontally with the mouse wheel (see <see cref="PanWithMouseWheel"/>)</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>.</remarks>
+            public ModifierKeys PanHorizontalModifierKey { get; set; }
+
+            /// <summary>Gesture used to start pushing.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="ModifierKeys.Shift"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
+            public InputGestureRef PushItems { get; }
 
             /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
@@ -167,6 +187,10 @@ namespace Nodify
                 ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;
                 FitToScreen.Value = gestures.FitToScreen.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
+                PanWithMouseWheel = gestures.PanWithMouseWheel;
+                PanHorizontalModifierKey = gestures.PanHorizontalModifierKey;
+                PanVerticalModifierKey = gestures.PanVerticalModifierKey;
+                PushItems.Value = gestures.PushItems.Value;
             }
         }
 
@@ -208,12 +232,16 @@ namespace Nodify
             public ConnectionGestures()
             {
                 Split = new MouseGesture(MouseAction.LeftDoubleClick);
+                Selection = new SelectionGestures(MouseAction.LeftClick);
                 Disconnect = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt);
             }
 
             /// <summary>Gesture to call the <see cref="BaseConnection.SplitCommand"/> command.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.LeftDoubleClick"/>.</remarks>
             public InputGestureRef Split { get; }
+
+            /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
+            public SelectionGestures Selection { get; }
 
             /// <summary>Gesture to call the <see cref="BaseConnection.DisconnectCommand"/> command.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
@@ -225,6 +253,7 @@ namespace Nodify
             {
                 Split.Value = gestures.Split.Value;
                 Disconnect.Value = gestures.Disconnect.Value;
+                Selection.Apply(gestures.Selection);
             }
         }
 

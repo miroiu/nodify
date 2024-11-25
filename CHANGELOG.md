@@ -5,6 +5,35 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+	
+#### **Version 6.6.0**
+
+> - Breaking Changes:
+> - Features:
+>	- Added InputGroupStyle and OutputGroupStyle to Node
+>	- Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
+>	- Added CornerRadius dependency property to LineConnection, CircuitConnection and StepConnection
+>	- Added EditorGestures.Editor.PushItems gesture used to start pushing ItemContainers vertically or horizontally
+>	- Added PushedAreaStyle, PushedAreaOrientation and IsPushingItems dependency properties to NodifyEditor
+>	- Added NodifyEditor.SnapToGrid utility function
+> - Bugfixes:
+>	- Fixed ItemContainer.BorderBrush and ItemContainer.SelectedBrush not reacting to theme changes
+
+#### **Version 6.5.0**
+
+> - Features:
+>	- Added SelectedConnection, SelectedConnections, CanSelectMultipleConnections and CanSelectMultipleItems dependency properties to NodifyEditor
+>	- Added IsSelected and IsSelectable attached dependency properties to BaseConnection
+>	- Added PrioritizeBaseConnectionForSelection static field to BaseConnection
+>	- Added EditorGestures.Connection.Selection
+>	- Added support for ScrollViewer in NodifyEditor (implements IScrollInfo)
+>	- Added NodifyEditor.ScrollIncrement dependency property
+
+#### **Version 6.4.0**
+
+> - Features:
+>	- Added OutlineBrush and OutlineThickness dependency properties to BaseConnection to support increasing the selection area without increasing the stroke thickness
+>	- Added IsAnimatingDirectionalArrows and DirectionalArrowsAnimationDuration dependency properties to BaseConnection to support controlling the animation from XAML
 
 #### **Version 6.3.0**
 

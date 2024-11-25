@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using static Nodify.SelectionHelper;
 
 namespace Nodify
@@ -35,6 +36,10 @@ namespace Nodify
             {
                 PushState(new EditorCuttingState(Editor));
             }
+            else if (gestures.PushItems.Matches(e.Source, e))
+            {
+                PushState(new EditorPushingItemsState(Editor));
+            }
             else if (gestures.Selection.Select.Matches(e.Source, e))
             {
                 SelectionType selectionType = GetSelectionType(e);
@@ -47,25 +52,22 @@ namespace Nodify
             }
         }
 
-        private static SelectionType GetSelectionType(MouseButtonEventArgs e)
+        public override void HandleMouseWheel(MouseWheelEventArgs e)
         {
-            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
-            if (gestures.Append.Matches(e.Source, e))
+            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+            if (gestures.PanWithMouseWheel)
             {
-                return SelectionType.Append;
+                if (Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
+                {
+                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X - e.Delta / Editor.ViewportZoom, Editor.ViewportLocation.Y);
+                    e.Handled = true;
+                }
+                else if (Keyboard.Modifiers == gestures.PanVerticalModifierKey)
+                {
+                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X, Editor.ViewportLocation.Y - e.Delta / Editor.ViewportZoom);
+                    e.Handled = true;
+                }
             }
-
-            if (gestures.Invert.Matches(e.Source, e))
-            {
-                return SelectionType.Invert;
-            }
-
-            if (gestures.Remove.Matches(e.Source, e))
-            {
-                return SelectionType.Remove;
-            }
-
-            return SelectionType.Replace;
         }
     }
 }

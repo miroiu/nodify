@@ -10,6 +10,17 @@ namespace Nodify
     /// </summary>
     public class LineConnection : BaseConnection
     {
+        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(double), typeof(LineConnection), new FrameworkPropertyMetadata(BoxValue.Double5, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        /// <summary>
+        /// The radius of the corners between the line segments.
+        /// </summary>
+        public double CornerRadius
+        {
+            get => (double)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
+        }
+
         static LineConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LineConnection), new FrameworkPropertyMetadata(typeof(LineConnection)));
@@ -21,8 +32,16 @@ namespace Nodify
             var (p0, p1) = GetLinePoints(source, target);
 
             context.BeginFigure(source, false, false);
-            context.LineTo(p0, true, true);
-            context.LineTo(p1, true, true);
+            if (CornerRadius > 0 && Spacing > 0)
+            {
+                AddSmoothCorner(context, source, p0, p1, CornerRadius);
+                AddSmoothCorner(context, p0, p1, target, CornerRadius);
+            }
+            else
+            {
+                context.LineTo(p0, true, true);
+                context.LineTo(p1, true, true);
+            }
             context.LineTo(target, true, true);
 
             return ((target, source), (source, target));
@@ -125,6 +144,30 @@ namespace Nodify
             }
 
             return ((p1, p2), InterpolateLineSegment(p1, p2, (t - ratio1) / ratio2));
+        }
+
+        protected static void AddSmoothCorner(StreamGeometryContext context, Point start, Point corner, Point end, double radius)
+        {
+            double distAB = (corner - start).LengthSquared;
+            double distBC = (end - corner).LengthSquared;
+
+            double bendSize = Math.Sqrt(Math.Min(distAB, distBC)) / 2;
+            radius = Math.Min(bendSize, radius);
+
+            Vector directionToCorner = corner - start;
+            Vector directionFromCorner = end - corner;
+
+            if (directionToCorner.LengthSquared != 0)
+                directionToCorner.Normalize();
+
+            if (directionFromCorner.LengthSquared != 0)
+                directionFromCorner.Normalize();
+
+            Point curveStart = corner - directionToCorner * radius;
+            Point curveEnd = corner + directionFromCorner * radius;
+
+            context.LineTo(curveStart, true, true);
+            context.QuadraticBezierTo(corner, curveEnd, true, true);
         }
     }
 }

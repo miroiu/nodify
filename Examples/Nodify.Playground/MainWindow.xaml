@@ -8,21 +8,12 @@
         xmlns:nodify="https://miroiu.github.io/nodify"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="600"
-        Width="1200">
+        Height="700"
+        Width="1300">
 
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
         <shared:ToStringConverter x:Key="ToStringConverter" />
-
-        <Storyboard RepeatBehavior="Forever"
-                    x:Key="{x:Static local:MainWindow.AnimateDirectionalArrowsStoryboardKey}">
-            <DoubleAnimation Duration="0:0:2"
-                             From="0"
-                             To="1"
-                             Storyboard.Target="{Binding .,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
-                             Storyboard.TargetProperty="DirectionalArrowsOffset" />
-        </Storyboard>
     </Window.Resources>
 
     <Window.DataContext>
@@ -117,65 +108,76 @@
                 </Style>
             </Expander.Style>
 
-            <ScrollViewer>
-                <Grid IsSharedSizeScope="True"
-                      Width="330">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="0 0 5 10">
+                    <TextBlock Margin="0 0 0 3">Search:</TextBlock>
+                    <TextBox Text="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             Padding="4" />
+                </StackPanel>
+                <ScrollViewer Grid.Row="1">
+                    <Grid IsSharedSizeScope="True"
+                          Width="330">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <Expander Header="Playground Settings"
-                              Padding="0 5 0 0"
-                              BorderThickness="0 0 0 1"
-                              IsExpanded="True"
-                              BorderBrush="{DynamicResource BackgroundBrush}">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
-                                   BasedOn="{StaticResource {x:Type Expander}}">
-                                <Setter Property="Tag"
-                                        Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
-                        <Border BorderThickness="1"
-                                Padding="10"
-                                HorizontalAlignment="Stretch">
-                            <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
-                        </Border>
-                    </Expander>
+                        <Expander Header="Playground Settings"
+                                  Padding="0 5 0 0"
+                                  BorderThickness="0 0 0 1"
+                                  IsExpanded="True"
+                                  BorderBrush="{DynamicResource BackgroundBrush}">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}"
+                                       BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Tag"
+                                            Value="{StaticResource ExpandRightIcon}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsExpanded"
+                                                 Value="True">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandDownIcon}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>
+                            <Border BorderThickness="1"
+                                    Padding="10"
+                                    HorizontalAlignment="Stretch">
+                                <local:SettingsView Items="{Binding Source={x:Static local:PlaygroundSettings.Instance}, Path=Settings}" />
+                            </Border>
+                        </Expander>
 
-                    <Expander Header="Editor Settings"
-                              Padding="0 5 0 0"
-                              BorderThickness="0 0 0 1"
-                              IsExpanded="True"
-                              BorderBrush="{DynamicResource BackgroundBrush}"
-                              Grid.Row="1">
-                        <Expander.Style>
-                            <Style TargetType="{x:Type Expander}"
-                                   BasedOn="{StaticResource {x:Type Expander}}">
-                                <Setter Property="Tag"
-                                        Value="{StaticResource ExpandRightIcon}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsExpanded"
-                                             Value="True">
-                                        <Setter Property="Tag"
-                                                Value="{StaticResource ExpandDownIcon}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Expander.Style>
+                        <Expander Header="Editor Settings"
+                                  Padding="0 5 0 0"
+                                  BorderThickness="0 0 0 1"
+                                  IsExpanded="True"
+                                  BorderBrush="{DynamicResource BackgroundBrush}"
+                                  Grid.Row="1">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}"
+                                       BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Tag"
+                                            Value="{StaticResource ExpandRightIcon}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsExpanded"
+                                                 Value="True">
+                                            <Setter Property="Tag"
+                                                    Value="{StaticResource ExpandDownIcon}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Expander.Style>
 
-                        <local:EditorSettingsView />
-                    </Expander>
-                </Grid>
-            </ScrollViewer>
+                            <local:EditorSettingsView />
+                        </Expander>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Expander>
 
         <!--INFORMATION-->
@@ -194,25 +196,27 @@
                         <Setter Property="Foreground"
                                 Value="{DynamicResource ForegroundBrush}" />
                         <Setter Property="Margin"
-                                Value="0 0 10 0" />
+                                Value="0 0 15 0" />
                     </Style>
                 </Grid.Resources>
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock ToolTip="The number of selected items.">
                         <TextBlock.Inlines>
-                            <Run Text="Selected: " />
+                            <Run Text="Selected nodes: " />
                             <Run Foreground="YellowGreen"
                                  Text="{Binding GraphViewModel.SelectedNodes.Count, Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{Binding GraphViewModel.Nodes.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
-                    <TextBlock ToolTip="The number of connections.">
+                    <TextBlock ToolTip="The number of selected connections.">
                         <TextBlock.Inlines>
-                            <Run Text="Connections: " />
+                            <Run Text="Selected connections: " />
                             <Run Foreground="YellowGreen"
-                                 Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
+                                 Text="{Binding GraphViewModel.SelectedConnections.Count, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>
@@ -243,7 +247,8 @@
                     <TextBlock ToolTip="The estimated frame rate. (my be buggy)">
                         <TextBlock.Inlines>
                             <Run Text="FPS: " />
-                            <Run Foreground="LawnGreen" Name="FPSText" />
+                            <Run Foreground="LawnGreen"
+                                 Name="FPSText" />
                         </TextBlock.Inlines>
                     </TextBlock>
                 </StackPanel>

@@ -1,15 +1,16 @@
 ﻿<UserControl x:Class="Nodify.Calculator.EditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Nodify.Calculator"
              xmlns:nodify="https://miroiu.github.io/nodify"
-             xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared" 
+             xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              d:DataContext="{d:DesignInstance Type=local:EditorViewModel}"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450"
+             d:DesignWidth="800">
     <UserControl.Resources>
         <GeometryDrawing x:Key="SmallGridGeometry"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
@@ -34,38 +35,59 @@
                       Transform="{Binding ViewportTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
-        <LinearGradientBrush x:Key="AnimatedBrush" StartPoint="0 0" EndPoint="1 0">
-            <GradientStop Color="#6366f1" Offset="0" />
-            <GradientStop Color="#a855f7" Offset="0.5" />
-            <GradientStop Color="#ec4899" Offset="1" />
+        <LinearGradientBrush x:Key="AnimatedBrush"
+                             StartPoint="0 0"
+                             EndPoint="1 0">
+            <GradientStop Color="#6366f1"
+                          Offset="0" />
+            <GradientStop Color="#a855f7"
+                          Offset="0.5" />
+            <GradientStop Color="#ec4899"
+                          Offset="1" />
         </LinearGradientBrush>
-        <Border x:Key="AnimatedBorderPlaceholder" BorderBrush="{StaticResource AnimatedBrush}" />
+        <Border x:Key="AnimatedBorderPlaceholder"
+                BorderBrush="{StaticResource AnimatedBrush}" />
 
-        <Storyboard x:Key="AnimateBorder" RepeatBehavior="Forever">
+        <Storyboard x:Key="AnimateBorder"
+                    RepeatBehavior="Forever">
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
-                                    Duration="0:0:2" To="1 0" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="1 0" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="1 1" BeginTime="0:0:2" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="1 1"
+                            BeginTime="0:0:2" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="0 1" BeginTime="0:0:4" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="0 1"
+                            BeginTime="0:0:4" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.StartPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="0 0" BeginTime="0:0:6" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="0 0"
+                            BeginTime="0:0:6" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="1 1" />
-            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)" 
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
-                                    Duration="0:0:2" To="0 1" BeginTime="0:0:2" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="1 1" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="0 0" BeginTime="0:0:4" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="0 1"
+                            BeginTime="0:0:2" />
             <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
-                                                    Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}" 
-                                    Duration="0:0:2" To="1 0" BeginTime="0:0:6" />
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="0 0"
+                            BeginTime="0:0:4" />
+            <PointAnimation Storyboard.TargetProperty="BorderBrush.(LinearGradientBrush.EndPoint)"
+                            Storyboard.Target="{StaticResource AnimatedBorderPlaceholder}"
+                            Duration="0:0:2"
+                            To="1 0"
+                            BeginTime="0:0:6" />
         </Storyboard>
 
         <local:ItemToListConverter x:Key="ItemToListConverter" />
@@ -95,8 +117,10 @@
                     Value="{Binding IsSelected}" />
             <Setter Property="ActualSize"
                     Value="{Binding Size, Mode=OneWayToSource}" />
-            <Setter Property="BorderBrush" Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
-            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush"
+                    Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
+            <Setter Property="BorderThickness"
+                    Value="2" />
         </Style>
     </UserControl.Resources>
 
@@ -184,37 +208,39 @@
                             </DataTemplate>
                         </nodify:GroupingNode.HeaderTemplate>
                         <Grid>
-                            <nodify:NodifyEditor Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}"
-                                                 DataContext="{Binding InnerCalculator}"
-                                                 ItemsSource="{Binding Operations}"
-                                                 Connections="{Binding Connections}"
-                                                 SelectedItems="{Binding SelectedOperations}"
-                                                 DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
-                                                 PendingConnection="{Binding PendingConnection}"
-                                                 PendingConnectionTemplate="{StaticResource PendingConnectionTemplate}"
-                                                 ConnectionTemplate="{StaticResource ConnectionTemplate}"
-                                                 ItemContainerStyle="{StaticResource ItemContainerStyle}"
-                                                 Background="Transparent"
-                                                 GridCellSize="15"                    
-                                                 AllowDrop="True"
-                                                 Drop="OnDropNode"
-                                                 Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
+                            <ScrollViewer CanContentScroll="True">
+                                <nodify:NodifyEditor Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}"
+                                                     DataContext="{Binding InnerCalculator}"
+                                                     ItemsSource="{Binding Operations}"
+                                                     Connections="{Binding Connections}"
+                                                     SelectedItems="{Binding SelectedOperations}"
+                                                     DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
+                                                     PendingConnection="{Binding PendingConnection}"
+                                                     PendingConnectionTemplate="{StaticResource PendingConnectionTemplate}"
+                                                     ConnectionTemplate="{StaticResource ConnectionTemplate}"
+                                                     ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                                                     Background="Transparent"
+                                                     GridCellSize="15"
+                                                     AllowDrop="True"
+                                                     Drop="OnDropNode"
+                                                     Visibility="{Binding DataContext.IsExpanded, RelativeSource={RelativeSource AncestorType=nodify:GroupingNode}, Converter={shared:BooleanToVisibilityConverter}}">
 
-                                <nodify:NodifyEditor.InputBindings>
-                                    <KeyBinding Key="Delete"
-                                                Command="{Binding DeleteSelectionCommand}" />
-                                    <KeyBinding Key="C"
-                                                Command="{Binding GroupSelectionCommand}" />
-                                </nodify:NodifyEditor.InputBindings>
+                                    <nodify:NodifyEditor.InputBindings>
+                                        <KeyBinding Key="Delete"
+                                                    Command="{Binding DeleteSelectionCommand}" />
+                                        <KeyBinding Key="C"
+                                                    Command="{Binding GroupSelectionCommand}" />
+                                    </nodify:NodifyEditor.InputBindings>
 
-                                <CompositeCollection>
-                                    <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
-                                                               Location="{Binding Location}">
-                                        <local:OperationsMenuView />
-                                    </nodify:DecoratorContainer>
-                                </CompositeCollection>
-                            </nodify:NodifyEditor>
-
+                                    <CompositeCollection>
+                                        <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
+                                                                   Location="{Binding Location}">
+                                            <local:OperationsMenuView />
+                                        </nodify:DecoratorContainer>
+                                    </CompositeCollection>
+                                </nodify:NodifyEditor>
+                            </ScrollViewer>
+                            
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -344,7 +370,8 @@
 
             <nodify:NodifyEditor.Triggers>
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                    <BeginStoryboard Name="AnimateBorder" Storyboard="{StaticResource AnimateBorder}" />
+                    <BeginStoryboard Name="AnimateBorder"
+                                     Storyboard="{StaticResource AnimateBorder}" />
                 </EventTrigger>
             </nodify:NodifyEditor.Triggers>
 
@@ -359,7 +386,7 @@
         <Grid Background="{StaticResource LargeGridLinesDrawingBrush}"
               Panel.ZIndex="-2" />
 
-        <Border HorizontalAlignment="Right" 
+        <Border HorizontalAlignment="Right"
                 MinWidth="200"
                 MaxWidth="300"
                 Padding="7"
@@ -374,19 +401,23 @@
                 <ItemsControl ItemsSource="{Binding Calculator.OperationsMenu.AvailableOperations}">
                     <ItemsControl.ItemContainerStyle>
                         <Style>
-                            <Setter Property="FrameworkElement.Margin" Value="5"/>
-                            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Left"/>
-                            <Setter Property="FrameworkElement.Cursor" Value="Hand"/>
-                            <Setter Property="FrameworkElement.ToolTip" Value="Drag and drop into the editor"/>
+                            <Setter Property="FrameworkElement.Margin"
+                                    Value="5" />
+                            <Setter Property="FrameworkElement.HorizontalAlignment"
+                                    Value="Left" />
+                            <Setter Property="FrameworkElement.Cursor"
+                                    Value="Hand" />
+                            <Setter Property="FrameworkElement.ToolTip"
+                                    Value="Drag and drop into the editor" />
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type local:OperationViewModel}">
                             <nodify:Node Content="{Binding Title}"
-                                     Input="{Binding Input}"
-                                     BorderBrush="{StaticResource AnimatedBrush}"
-                                     BorderThickness="2"
-                                     MouseMove="OnNodeDrag">
+                                         Input="{Binding Input}"
+                                         BorderBrush="{StaticResource AnimatedBrush}"
+                                         BorderThickness="2"
+                                         MouseMove="OnNodeDrag">
                                 <nodify:Node.Output>
                                     <CompositeCollection>
                                         <sys:String>Output</sys:String>

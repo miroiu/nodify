@@ -21,6 +21,15 @@
                      Opacity="0.1"
                      Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
 
+    <SolidColorBrush x:Key="NodifyEditor.PushedAreaStrokeBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource NodifyEditor.PushedAreaColor}" />
+
+    <SolidColorBrush x:Key="NodifyEditor.PushedAreaBackgroundBrush"
+                     o:Freeze="True"
+                     Opacity="0.2"
+                     Color="{DynamicResource NodifyEditor.PushedAreaColor}" />
+
     <SolidColorBrush x:Key="NodifyEditor.CuttingLineStrokeBrush"
                      o:Freeze="True"
                      Color="{DynamicResource NodifyEditor.CuttingLineColor}" />
@@ -42,7 +51,7 @@
                   TileMode="Tile">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="{DynamicResource ItemContainer.BorderBrush}">
+                <GeometryDrawing Brush="{StaticResource ItemContainer.BorderBrush}">
                     <GeometryDrawing.Geometry>
                         <GeometryGroup>
                             <RectangleGeometry Rect="0 0 50 50" />

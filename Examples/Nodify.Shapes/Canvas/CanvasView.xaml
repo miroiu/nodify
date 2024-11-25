@@ -47,6 +47,9 @@
                              ItemsSelectStartedCommand="{Binding SelectShapesStartedCommand}"
                              ItemsSelectCompletedCommand="{Binding SelectShapesCompletedCommand}"
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
+                             MouseDown="Editor_MouseDown"
+                             MouseMove="Editor_MouseMove"
+                             MouseUp="Editor_MouseUp"
                              GridCellSize="5"
                              x:Name="Editor">
             <nodify:NodifyEditor.Style>
@@ -144,12 +147,39 @@
                                            SourcePosition="{Binding Source.Position}"
                                            TargetPosition="{Binding Target.Position}"
                                            Cursor="Hand"
+                                           IsSelectable="True"
                                            Fill="Transparent"
                                            StrokeThickness="3">
                         <nodify:StepConnection.Stroke>
                             <SolidColorBrush Color="White"
                                              Opacity="0.7" />
                         </nodify:StepConnection.Stroke>
+                        <nodify:StepConnection.Style>
+                            <Style TargetType="{x:Type nodify:StepConnection}">
+                                <Setter Property="OutlineBrush"
+                                        Value="Transparent" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+                                        <Setter Property="OutlineBrush">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="White"
+                                                                 Opacity="0.15" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected"
+                                             Value="True">
+                                        <Setter Property="OutlineBrush">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="DodgerBlue"
+                                                                 Opacity="0.25" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </nodify:StepConnection.Style>
                     </nodify:StepConnection>
                 </DataTemplate>
             </nodify:NodifyEditor.ConnectionTemplate>
@@ -358,7 +388,8 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type shared:Resizer}">
-                                <Grid Margin="-3 -6 -6 -3" Background="Transparent">
+                                <Grid Margin="-3 -6 -6 -3"
+                                      Background="Transparent">
                                     <Rectangle Height="12"
                                                Width="3"
                                                Fill="#d2d4d7"
@@ -449,8 +480,7 @@
                 HorizontalAlignment="Center"
                 Margin="0 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b"
-                MouseDown="Toolbar_MouseDown">
+                Background="#1e293b">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -568,8 +598,7 @@
                 HorizontalAlignment="Left"
                 Margin="20 0 0 20"
                 CornerRadius="3"
-                Background="#1e293b"
-                MouseDown="Toolbar_MouseDown">
+                Background="#1e293b">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
@@ -623,8 +652,7 @@
                 HorizontalAlignment="Right"
                 Margin="0 0 20 20"
                 Height="38"
-                CornerRadius="3"
-                MouseDown="Toolbar_MouseDown">
+                CornerRadius="3">
 
             <ItemsControl ItemsSource="{Binding Cursors}">
                 <ItemsControl.ItemsPanel>
