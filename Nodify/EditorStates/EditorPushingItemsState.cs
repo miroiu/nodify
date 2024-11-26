@@ -25,11 +25,7 @@ namespace Nodify
 
         public override void Exit()
         {
-            if (!Editor.IsPushingItems)
-            {
-                return;
-            }
-
+            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
             if (Canceled)
             {
                 Editor.CancelPushingItems();
@@ -44,18 +40,18 @@ namespace Nodify
         {
             if (Editor.IsPushingItems)
             {
-                Editor.PushItems(Editor.MouseLocation - _prevPosition);
+                Editor.UpdatePushedArea(Editor.MouseLocation - _prevPosition);
                 _prevPosition = Editor.MouseLocation;
             }
             else
             {
                 if (Math.Abs(Editor.MouseLocation.X - _prevPosition.X) >= _minDragDistance)
                 {
-                    Editor.StartPushingItems(_prevPosition, Orientation.Horizontal);
+                    Editor.BeginPushingItems(_prevPosition, Orientation.Horizontal);
                 }
                 else if (Math.Abs(Editor.MouseLocation.Y - _prevPosition.Y) >= _minDragDistance)
                 {
-                    Editor.StartPushingItems(_prevPosition, Orientation.Vertical);
+                    Editor.BeginPushingItems(_prevPosition, Orientation.Vertical);
                 }
             }
         }
