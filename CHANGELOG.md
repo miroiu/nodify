@@ -3,12 +3,13 @@
 #### **In development**
 
 > - Breaking Changes:
+>	- Made the setter of NodifyEditor.IsPanning private
 > - Features:
+>	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 > - Bugfixes:
 	
 #### **Version 6.6.0**
 
-> - Breaking Changes:
 > - Features:
 >	- Added InputGroupStyle and OutputGroupStyle to Node
 >	- Added PanWithMouseWheel, PanHorizontalModifierKey and PanVerticalModifierKey to EditorGestures.Editor
