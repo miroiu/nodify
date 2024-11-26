@@ -21,7 +21,7 @@ namespace Nodify
             => elem.SetValue(IsOverElementProperty, value);
 
         /// <summary>
-        /// Gets or sets whether cancelling a cutting operation is allowed.
+        /// Gets or sets whether cancelling a cutting operation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).
         /// </summary>
         public static bool AllowCuttingCancellation { get; set; } = true;
 
