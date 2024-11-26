@@ -7,7 +7,7 @@
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
->	- Added UpdateCutting to NodifyEditor
+>	- Added UpdateCuttingLine to NodifyEditor
 > - Bugfixes:
 	
 #### **Version 6.6.0**
