@@ -21,7 +21,6 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(ItemContainer))]
     [StyleTypedProperty(Property = nameof(DecoratorContainerStyle), StyleTargetType = typeof(DecoratorContainer))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
-    [StyleTypedProperty(Property = nameof(CuttingLineStyle), StyleTargetType = typeof(CuttingLine))]
     [ContentProperty(nameof(Decorators))]
     [DefaultProperty(nameof(Decorators))]
     public partial class NodifyEditor : MultiSelector
@@ -252,7 +251,6 @@ namespace Nodify
         public static readonly DependencyProperty DecoratorTemplateProperty = DependencyProperty.Register(nameof(DecoratorTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
-        public static readonly DependencyProperty CuttingLineStyleProperty = DependencyProperty.Register(nameof(CuttingLineStyle), typeof(Style), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
 
         /// <summary>
@@ -320,15 +318,6 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the style to use for the cutting line.
-        /// </summary>
-        public Style CuttingLineStyle
-        {
-            get => (Style)GetValue(CuttingLineStyleProperty);
-            set => SetValue(CuttingLineStyleProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets the style to use for the <see cref="DecoratorContainer"/>.
         /// </summary>
         public Style DecoratorContainerStyle
@@ -346,15 +335,6 @@ namespace Nodify
 
         protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsSelectingChanged));
         public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
-
-        protected static readonly DependencyPropertyKey CuttingLineStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CuttingLineStart), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
-        public static readonly DependencyProperty CuttingLineStartProperty = CuttingLineStartPropertyKey.DependencyProperty;
-
-        protected static readonly DependencyPropertyKey CuttingLineEndPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CuttingLineEnd), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
-        public static readonly DependencyProperty CuttingLineEndProperty = CuttingLineEndPropertyKey.DependencyProperty;
-
-        protected static readonly DependencyPropertyKey IsCuttingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCutting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsCuttingChanged));
-        public static readonly DependencyProperty IsCuttingProperty = IsCuttingPropertyKey.DependencyProperty;
 
         protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
@@ -380,27 +360,6 @@ namespace Nodify
                 ItemsSelectStartedCommand.Execute(DataContext);
         }
 
-        private static void OnIsCuttingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = (NodifyEditor)d;
-            if ((bool)e.NewValue == true)
-                editor.OnCuttingStarted();
-            else
-                editor.OnCuttingCompleted();
-        }
-
-        private void OnCuttingCompleted()
-        {
-            if (CuttingCompletedCommand?.CanExecute(DataContext) ?? false)
-                CuttingCompletedCommand.Execute(DataContext);
-        }
-
-        private void OnCuttingStarted()
-        {
-            if (CuttingStartedCommand?.CanExecute(DataContext) ?? false)
-                CuttingStartedCommand.Execute(DataContext);
-        }
-
         /// <summary>
         /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
         /// </summary>
@@ -417,33 +376,6 @@ namespace Nodify
         {
             get => (bool)GetValue(IsSelectingProperty);
             internal set => SetValue(IsSelectingPropertyKey, value);
-        }
-
-        /// <summary>
-        /// Gets the start point of the <see cref="CuttingLine"/> while <see cref="IsCutting"/> is true.
-        /// </summary>
-        public Point CuttingLineStart
-        {
-            get => (Point)GetValue(CuttingLineStartProperty);
-            private set => SetValue(CuttingLineStartPropertyKey, value);
-        }
-
-        /// <summary>
-        /// Gets the end point of the <see cref="CuttingLine"/> while <see cref="IsCutting"/> is true.
-        /// </summary>
-        public Point CuttingLineEnd
-        {
-            get => (Point)GetValue(CuttingLineEndProperty);
-            protected internal set => SetValue(CuttingLineEndPropertyKey, value);
-        }
-
-        /// <summary>
-        /// Gets a value that indicates whether a cutting operation is in progress.
-        /// </summary>
-        public bool IsCutting
-        {
-            get => (bool)GetValue(IsCuttingProperty);
-            private set => SetValue(IsCuttingPropertyKey, value);
         }
 
         /// <summary>
@@ -603,8 +535,6 @@ namespace Nodify
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsSelectStartedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsSelectCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty CuttingStartedCommandProperty = DependencyProperty.Register(nameof(CuttingStartedCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty CuttingCompletedCommandProperty = DependencyProperty.Register(nameof(CuttingCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
@@ -682,20 +612,6 @@ namespace Nodify
             set => SetValue(ItemsSelectCompletedCommandProperty, value);
         }
 
-        /// <summary>Invoked when a cutting operation is started.</summary>
-        public ICommand? CuttingStartedCommand
-        {
-            get => (ICommand?)GetValue(CuttingStartedCommandProperty);
-            set => SetValue(CuttingStartedCommandProperty, value);
-        }
-
-        /// <summary>Invoked when a cutting operation is completed.</summary>
-        public ICommand? CuttingCompletedCommand
-        {
-            get => (ICommand?)GetValue(CuttingCompletedCommandProperty);
-            set => SetValue(CuttingCompletedCommandProperty, value);
-        }
-
         #endregion
 
         #region Fields
@@ -730,19 +646,6 @@ namespace Nodify
         /// Gets or sets if the current position of containers that are being dragged should not be committed until the end of the dragging operation.
         /// </summary>
         public static bool EnableDraggingContainersOptimizations { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets whether the cutting line should apply the preview style to the interesected elements.
-        /// </summary>
-        /// <remarks>
-        /// This may hurt performance because intersection must be calculated on mouse move.
-        /// </remarks>
-        public static bool EnableCuttingLinePreview { get; set; } = false;
-
-        /// <summary>
-        /// The list of supported connection types for cutting. Type must be derived from <see cref="FrameworkElement" />.
-        /// </summary>
-        public static readonly HashSet<Type> CuttingConnectionTypes = new HashSet<Type>();
 
         /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
@@ -1433,62 +1336,6 @@ namespace Nodify
             }
 
             return new DraggingSimple(containers, GridCellSize);
-        }
-
-        #endregion
-
-        #region Cutting
-
-        /// <summary>
-        /// Starts the cutting operation at the specified location. Call <see cref="EndCutting"/> to finish cutting.
-        /// </summary>
-        protected internal void StartCutting(Point location)
-        {
-            CuttingLineStart = location;
-            CuttingLineEnd = location;
-            IsCutting = true;
-        }
-
-        /// <summary>
-        /// Cancels the cutting operation.
-        /// </summary>
-        protected internal void CancelCutting()
-        {
-            if (IsCutting)
-            {
-                IsCutting = false;
-            }
-        }
-
-        /// <summary>
-        /// Ends the cutting operation at the specified location.
-        /// </summary>
-        protected internal void EndCutting(Point location)
-        {
-            CuttingLineEnd = location;
-
-            var lineGeometry = new LineGeometry(CuttingLineStart, CuttingLineEnd);
-            var connections = ConnectionsHost.GetIntersectingElements(lineGeometry, CuttingConnectionTypes);
-
-            if (RemoveConnectionCommand != null)
-            {
-                foreach (var connection in connections)
-                {
-                    OnRemoveConnection(connection.DataContext);
-                }
-            }
-            else
-            {
-                foreach (var connection in connections)
-                {
-                    if (connection is BaseConnection bc)
-                    {
-                        bc.OnDisconnect();
-                    }
-                }
-            }
-
-            IsCutting = false;
         }
 
         #endregion

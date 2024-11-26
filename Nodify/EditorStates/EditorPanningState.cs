@@ -21,6 +21,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void Exit()
         {
+            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
             if (Canceled)
             {
                 Editor.CancelPanning();

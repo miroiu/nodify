@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Input;
 
 namespace Nodify
 {
     public class EditorCuttingState : EditorState
     {
-        private readonly LineGeometry _lineGeometry = new LineGeometry();
-        private List<FrameworkElement>? _previousConnections;
-
         public bool Canceled { get; set; } = CuttingLine.AllowCuttingCancellation;
 
         public EditorCuttingState(NodifyEditor editor) : base(editor)
@@ -20,17 +14,11 @@ namespace Nodify
         {
             Canceled = false;
 
-            var startLocation = Editor.MouseLocation;
-            Editor.StartCutting(startLocation);
-
-            _lineGeometry.StartPoint = startLocation;
-            _lineGeometry.EndPoint = startLocation;
+            Editor.BeginCutting(Editor.MouseLocation);
         }
 
         public override void Exit()
         {
-            ResetConnectionStyle();
-
             // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
             if (Canceled)
             {
@@ -38,7 +26,7 @@ namespace Nodify
             }
             else
             {
-                Editor.EndCutting(Editor.MouseLocation);
+                Editor.EndCutting();
             }
         }
 
@@ -60,32 +48,7 @@ namespace Nodify
 
         public override void HandleMouseMove(MouseEventArgs e)
         {
-            Editor.CuttingLineEnd = Editor.MouseLocation;
-
-            if (NodifyEditor.EnableCuttingLinePreview)
-            {
-                ResetConnectionStyle();
-
-                _lineGeometry.EndPoint = Editor.MouseLocation;
-                var connections = Editor.ConnectionsHost.GetIntersectingElements(_lineGeometry, NodifyEditor.CuttingConnectionTypes);
-                foreach (var connection in connections)
-                {
-                    CuttingLine.SetIsOverElement(connection, true);
-                }
-
-                _previousConnections = connections;
-            }
-        }
-
-        private void ResetConnectionStyle()
-        {
-            if (_previousConnections != null)
-            {
-                foreach (var connection in _previousConnections)
-                {
-                    CuttingLine.SetIsOverElement(connection, false);
-                }
-            }
+            Editor.UpdateCuttingLine(Editor.MouseLocation);
         }
 
         public override void HandleKeyUp(KeyEventArgs e)
