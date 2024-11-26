@@ -9,6 +9,7 @@
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
+>	- Added BeginSelection, UpdateSelection, EndSelection, CancelSelection and AllowSelectionCancellation to NodifyEditor
 > - Bugfixes:
 	
 #### **Version 6.6.0**

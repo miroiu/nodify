@@ -1,96 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Nodify
 {
     /// <summary>
-    /// Helps with selecting <see cref="ItemContainer"/>s and updating the <see cref="NodifyEditor.SelectedArea"/> and <see cref="NodifyEditor.IsSelecting"/> properties.
+    /// Helps with selecting <see cref="ItemContainer"/>s.
     /// </summary>
-    public sealed class SelectionHelper
+    internal sealed class SelectionHelper
     {
-        private readonly NodifyEditor _host;
         private Point _startLocation;
+        private Point _endLocation;
         private SelectionType _selectionType;
         private bool _isRealtime;
-        private IReadOnlyList<ItemContainer> _initialSelection = new List<ItemContainer>();
-
-        /// <summary>Constructs a new instance of a <see cref="SelectionHelper"/>.</summary>
-        /// <param name="host">The editor to select items from.</param>
-        public SelectionHelper(NodifyEditor host)
-            => _host = host;
-
-        /// <summary>Available selection logic.</summary>
-        public enum SelectionType
-        {
-            /// <summary>Replaces the old selection.</summary>
-            Replace,
-            /// <summary>Removes items from existing selection.</summary>
-            Remove,
-            /// <summary>Adds items to the current selection.</summary>
-            Append,
-            /// <summary>Inverts the selection.</summary>
-            Invert
-        }
+        private IReadOnlyCollection<ItemContainer> _items = Array.Empty<ItemContainer>();
+        private IReadOnlyList<ItemContainer> _initialSelection = Array.Empty<ItemContainer>();
+        private Rect _selectedArea;
 
         /// <summary>Attempts to start a new selection.</summary>
+        /// <param name="containers">The containers that can be part of the selection.</param>
         /// <param name="location">The location inside the graph.</param>
         /// <param name="selectionType">The type of selection.</param>
         /// <remarks>Will not do anything if selection is in progress.</remarks>
-        public void Start(Point location, SelectionType selectionType)
+        public Rect Start(IEnumerable<ItemContainer> containers, Point location, SelectionType selectionType, bool realtime)
         {
-            if (!_host.IsSelecting)
-            {
-                _selectionType = selectionType;
-                _initialSelection = _host.SelectedContainers;
+            _items = containers.Where(x => x.IsSelectable).ToList();
+            _initialSelection = containers.Where(x => x.IsSelected).ToList();
 
-                _isRealtime = _host.EnableRealtimeSelection;
-                _startLocation = location;
+            _selectionType = selectionType;
 
-                _host.SelectedArea = new Rect();
-                _host.IsSelecting = true;
-            }
+            _isRealtime = realtime;
+            _startLocation = location;
+            _endLocation = location;
+
+            _selectedArea = new Rect();
+            return _selectedArea;
         }
 
         /// <summary>Update the end location for the selection.</summary>
         /// <param name="endLocation">An absolute location.</param>
-        public void Update(Point endLocation)
+        public Rect Update(Point endLocation)
         {
-            double left = endLocation.X < _startLocation.X ? endLocation.X : _startLocation.X;
-            double top = endLocation.Y < _startLocation.Y ? endLocation.Y : _startLocation.Y;
-            double width = Math.Abs(endLocation.X - _startLocation.X);
-            double height = Math.Abs(endLocation.Y - _startLocation.Y);
+            _endLocation = endLocation;
 
-            _host.SelectedArea = new Rect(left, top, width, height);
+            double left = _endLocation.X < _startLocation.X ? _endLocation.X : _startLocation.X;
+            double top = _endLocation.Y < _startLocation.Y ? _endLocation.Y : _startLocation.Y;
+            double width = Math.Abs(_endLocation.X - _startLocation.X);
+            double height = Math.Abs(_endLocation.Y - _startLocation.Y);
+
+            _selectedArea = new Rect(left, top, width, height);
 
             if (_isRealtime)
             {
-                PreviewSelection(_host.SelectedArea);
+                PreviewSelection(_selectedArea);
             }
+
+            return _selectedArea;
+        }
+
+        /// <summary>Increase the selected area by the specified amount.</summary>
+        public Rect Update(Vector amount)
+        {
+            _endLocation += amount;
+
+            return Update(_endLocation);
         }
 
         /// <summary>Commits the current selection to the editor.</summary>
-        public void End()
+        public Rect End()
         {
-            if (_host.IsSelecting)
-            {
-                PreviewSelection(_host.SelectedArea);
+            PreviewSelection(_selectedArea);
+            _items = Array.Empty<ItemContainer>();
+            _initialSelection = Array.Empty<ItemContainer>();
 
-                _host.ApplyPreviewingSelection();
-                _host.IsSelecting = false;
-            }
-        }
-
-        /// <summary>Aborts the current selection.</summary>
-        public void Abort()
-        {
-            if (_host.IsSelecting)
-            {
-                _host.ClearPreviewingSelection();
-                _host.IsSelecting = false;
-            }
+            return _selectedArea;
         }
 
         private void PreviewSelection(Rect area)
@@ -128,10 +113,8 @@ namespace Nodify
 
         private void PreviewUnselectAll()
         {
-            ItemCollection items = _host.Items;
-            for (var i = 0; i < items.Count; i++)
+            foreach (var container in _items)
             {
-                var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
                 container.IsPreviewingSelection = false;
             }
         }
@@ -145,10 +128,8 @@ namespace Nodify
 
             if (area.X != 0 || area.Y != 0 || area.Width > 0 || area.Height > 0)
             {
-                ItemCollection items = _host.Items;
-                for (var i = 0; i < items.Count; i++)
+                foreach (var container in _items)
                 {
-                    var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
                     if (container.IsSelectableInArea(area, fit))
                     {
                         container.IsPreviewingSelection = true;
@@ -159,10 +140,8 @@ namespace Nodify
 
         private void PreviewUnselectArea(Rect area, bool fit = false)
         {
-            ItemCollection items = _host.Items;
-            for (var i = 0; i < items.Count; i++)
+            foreach (var container in _items)
             {
-                var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
                 if (container.IsSelectableInArea(area, fit))
                 {
                     container.IsPreviewingSelection = false;
@@ -180,10 +159,8 @@ namespace Nodify
 
         private void PreviewInvertSelection(Rect area, bool fit = false)
         {
-            ItemCollection items = _host.Items;
-            for (var i = 0; i < items.Count; i++)
+            foreach (var container in _items)
             {
-                var container = (ItemContainer)_host.ItemContainerGenerator.ContainerFromIndex(i);
                 if (container.IsSelectableInArea(area, fit))
                 {
                     container.IsPreviewingSelection = !container.IsPreviewingSelection;

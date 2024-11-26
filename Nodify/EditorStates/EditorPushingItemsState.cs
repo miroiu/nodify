@@ -10,7 +10,7 @@ namespace Nodify
         private Point _prevPosition;
         private const int _minDragDistance = 10;
 
-        public bool Canceled { get; set; } = NodifyEditor.AllowPushItemsCancellation;
+        private bool Canceled { get; set; } = NodifyEditor.AllowPushItemsCancellation;
 
         public EditorPushingItemsState(NodifyEditor editor) : base(editor)
         {
