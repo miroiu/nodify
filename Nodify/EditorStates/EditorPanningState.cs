@@ -10,6 +10,8 @@ namespace Nodify
         private Point _previousMousePosition;
         private Point _currentMousePosition;
 
+        private bool Canceled { get; set; } = NodifyEditor.AllowPanningCancellation;
+
         /// <summary>Constructs an instance of the <see cref="EditorPanningState"/> state.</summary>
         /// <param name="editor">The owner of the state.</param>
         public EditorPanningState(NodifyEditor editor) : base(editor)
@@ -18,22 +20,34 @@ namespace Nodify
 
         /// <inheritdoc />
         public override void Exit()
-            => Editor.IsPanning = false;
+        {
+            if (Canceled)
+            {
+                Editor.CancelPanning();
+            }
+            else
+            {
+                Editor.EndPanning();
+            }
+        }
 
         /// <inheritdoc />
         public override void Enter(EditorState? from)
         {
+            Canceled = false;
+
             _initialMousePosition = Mouse.GetPosition(Editor);
             _previousMousePosition = _initialMousePosition;
             _currentMousePosition = _initialMousePosition;
-            Editor.IsPanning = true;
+
+            Editor.BeginPanning();
         }
 
         /// <inheritdoc />
         public override void HandleMouseMove(MouseEventArgs e)
         {
             _currentMousePosition = e.GetPosition(Editor);
-            Editor.ViewportLocation -= (_currentMousePosition - _previousMousePosition) / Editor.ViewportZoom;
+            Editor.UpdatePanning((_currentMousePosition - _previousMousePosition) / Editor.ViewportZoom);
             _previousMousePosition = _currentMousePosition;
         }
 
@@ -64,6 +78,23 @@ namespace Nodify
                     PopState();
                     PushState(new EditorPanningState(Editor));
                 }
+            }
+            else if (NodifyEditor.AllowPanningCancellation && gestures.CancelAction.Matches(e.Source, e))
+            {
+                Canceled = true;
+                e.Handled = true;   // prevents opening context menu
+
+                PopState();
+            }
+        }
+
+        public override void HandleKeyUp(KeyEventArgs e)
+        {
+            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+            if (NodifyEditor.AllowPanningCancellation && gestures.CancelAction.Matches(e.Source, e))
+            {
+                Canceled = true;
+                PopState();
             }
         }
     }

@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace Nodify
 {
@@ -249,18 +248,12 @@ namespace Nodify
         public static readonly DependencyProperty BringIntoViewSpeedProperty = DependencyProperty.Register(nameof(BringIntoViewSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1000));
         public static readonly DependencyProperty BringIntoViewMaxDurationProperty = DependencyProperty.Register(nameof(BringIntoViewMaxDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1));
         public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
-        public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
-        public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorTemplateProperty = DependencyProperty.Register(nameof(DecoratorTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
         public static readonly DependencyProperty CuttingLineStyleProperty = DependencyProperty.Register(nameof(CuttingLineStyle), typeof(Style), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
-
-        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
         /// <summary>
         /// Gets or sets the maximum animation duration in seconds for bringing a location into view.
@@ -288,33 +281,6 @@ namespace Nodify
         {
             get => (bool)GetValue(DisplayConnectionsOnTopProperty);
             set => SetValue(DisplayConnectionsOnTopProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets whether to disable the auto panning when selecting or dragging near the edge of the editor configured by <see cref="AutoPanEdgeDistance"/>.
-        /// </summary>
-        public bool DisableAutoPanning
-        {
-            get => (bool)GetValue(DisableAutoPanningProperty);
-            set => SetValue(DisableAutoPanningProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the speed used when auto-panning scaled by <see cref="AutoPanningTickRate"/>
-        /// </summary>
-        public double AutoPanSpeed
-        {
-            get => (double)GetValue(AutoPanSpeedProperty);
-            set => SetValue(AutoPanSpeedProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum distance in pixels from the edge of the editor that will trigger auto-panning.
-        /// </summary>
-        public double AutoPanEdgeDistance
-        {
-            get => (double)GetValue(AutoPanEdgeDistanceProperty);
-            set => SetValue(AutoPanEdgeDistanceProperty, value);
         }
 
         /// <summary>
@@ -389,9 +355,6 @@ namespace Nodify
 
         protected static readonly DependencyPropertyKey IsCuttingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCutting), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsCuttingChanged));
         public static readonly DependencyProperty IsCuttingProperty = IsCuttingPropertyKey.DependencyProperty;
-
-        public static readonly DependencyPropertyKey IsPanningPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty IsPanningProperty = IsPanningPropertyKey.DependencyProperty;
 
         protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
@@ -484,15 +447,6 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a value that indicates whether a panning operation is in progress.
-        /// </summary>
-        public bool IsPanning
-        {
-            get => (bool)GetValue(IsPanningProperty);
-            protected internal set => SetValue(IsPanningPropertyKey, value);
-        }
-
-        /// <summary>
         /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
         /// </summary>
         public Point MouseLocation
@@ -512,7 +466,6 @@ namespace Nodify
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
-        public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisablePanningChanged));
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty CanSelectMultipleConnectionsProperty = DependencyProperty.Register(nameof(CanSelectMultipleConnections), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
@@ -531,12 +484,6 @@ namespace Nodify
             => (uint)value > 0u ? value : BoxValue.UInt1;
 
         private static void OnGridCellSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
-
-        private static void OnDisablePanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = (NodifyEditor)d;
-            editor.OnDisableAutoPanningChanged(editor.DisableAutoPanning || editor.DisablePanning);
-        }
 
         /// <summary>
         /// Gets or sets the items that will be rendered in the decorators layer via <see cref="DecoratorContainer"/>s.
@@ -608,15 +555,6 @@ namespace Nodify
         {
             get => (bool)GetValue(DisableZoomingProperty);
             set => SetValue(DisableZoomingProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets whether panning should be disabled.
-        /// </summary>
-        public bool DisablePanning
-        {
-            get => (bool)GetValue(DisablePanningProperty);
-            set => SetValue(DisablePanningProperty, value);
         }
 
         /// <summary>
@@ -763,20 +701,9 @@ namespace Nodify
         #region Fields
 
         /// <summary>
-        /// Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
-        /// Useful for <see cref="ContextMenu"/>s to appear if mouse only moved a bit or not at all.
-        /// </summary>
-        public static double HandleRightClickAfterPanningThreshold { get; set; } = 12d;
-
-        /// <summary>
         /// Correct <see cref="ItemContainer"/>'s position after moving if starting position is not snapped to grid.
         /// </summary>
         public static bool EnableSnappingCorrection { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets how often the new <see cref="ViewportLocation"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
-        /// </summary>
-        public static double AutoPanningTickRate { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets if <see cref="NodifyEditor"/>s should enable optimizations based on <see cref="OptimizeRenderingMinimumContainers"/> and <see cref="OptimizeRenderingZoomOutPercent"/>.
@@ -833,7 +760,6 @@ namespace Nodify
         protected internal UIElement ConnectionsHost { get; private set; } = default!;
 
         private IDraggingStrategy? _draggingStrategy;
-        private DispatcherTimer? _autoPanningTimer;
 
         /// <summary>
         /// Gets a list of <see cref="ItemContainer"/>s that are selected.
@@ -989,7 +915,7 @@ namespace Nodify
 
             if (animated && newLocation != ViewportLocation)
             {
-                IsPanning = true;
+                BeginPanning();
                 DisablePanning = true;
                 DisableZooming = true;
 
@@ -999,7 +925,7 @@ namespace Nodify
 
                 this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
-                    IsPanning = false;
+                    EndPanning();
                     DisablePanning = false;
                     DisableZooming = false;
 
@@ -1039,67 +965,6 @@ namespace Nodify
 
                 ZoomAtPosition(zoom, center);
                 BringIntoView(center, animated: false);
-            }
-        }
-
-        #endregion
-
-        #region Auto panning
-
-        private void HandleAutoPanning(object? sender, EventArgs e)
-        {
-            if (!IsPanning && IsMouseCaptureWithin)
-            {
-                Point mousePosition = Mouse.GetPosition(this);
-                double edgeDistance = AutoPanEdgeDistance;
-                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate) / (ViewportZoom * 2);
-                double x = ViewportLocation.X;
-                double y = ViewportLocation.Y;
-
-                if (mousePosition.X <= edgeDistance)
-                {
-                    x -= autoPanSpeed;
-                }
-                else if (mousePosition.X >= ActualWidth - edgeDistance)
-                {
-                    x += autoPanSpeed;
-                }
-
-                if (mousePosition.Y <= edgeDistance)
-                {
-                    y -= autoPanSpeed;
-                }
-                else if (mousePosition.Y >= ActualHeight - edgeDistance)
-                {
-                    y += autoPanSpeed;
-                }
-
-                ViewportLocation = new Point(x, y);
-                MouseLocation = Mouse.GetPosition(ItemsHost);
-
-                State.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
-            }
-        }
-
-        /// <summary>
-        /// Called when the <see cref="DisableAutoPanning"/> changes.
-        /// </summary>
-        /// <param name="shouldDisable">Whether to enable or disable auto panning.</param>
-        protected virtual void OnDisableAutoPanningChanged(bool shouldDisable)
-        {
-            if (shouldDisable)
-            {
-                _autoPanningTimer?.Stop();
-            }
-            else if (_autoPanningTimer == null)
-            {
-                _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate),
-                    DispatcherPriority.Background, HandleAutoPanning, Dispatcher);
-            }
-            else
-            {
-                _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
-                _autoPanningTimer.Start();
             }
         }
 
