@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using System;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
@@ -92,11 +91,15 @@ namespace Nodify
         /// <summary>
         /// Starts the pushing items operation at the specified location with the specified orientation.
         /// </summary>
+        /// <remarks>This method has no effect if a pushing operation is already in progress.</remarks>
         /// <param name="location">The starting location for pushing items, in graph space coordinates.</param>
         /// <param name="orientation">The orientation of the <see cref="PushedArea"/>.</param>
-        protected internal void StartPushingItems(Point location, Orientation orientation)
+        public void BeginPushingItems(Point location, Orientation orientation)
         {
-            Debug.Assert(!IsPushingItems);
+            if(IsPushingItems)
+            {
+                return;
+            }
 
             IsPushingItems = true;
             PushedAreaOrientation = orientation;
@@ -107,30 +110,28 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state.
+        /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state if <see cref="AllowPushItemsCancellation"/> is true.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if pushing item cancellation is not allowed (see <see cref="AllowPushItemsCancellation"/>).</exception>
-        protected internal void CancelPushingItems()
+        /// <remarks>This method has no effect if there's no pushing operation in progress.</remarks>
+        public void CancelPushingItems()
         {
-            if (!AllowPushItemsCancellation)
-                throw new InvalidOperationException("Push items cancellation is not allowed");
-
-            Debug.Assert(IsPushingItems);
-            if (IsPushingItems)
+            if (!AllowPushItemsCancellation || !IsPushingItems)
             {
-                PushedArea = _pushStrategy!.Cancel();
-                IsPushingItems = false;
+                return;
             }
+
+            PushedArea = _pushStrategy!.Cancel();
+            IsPushingItems = false;
         }
 
         /// <summary>
-        /// Updates the pushed area based on the specified amount.
+        /// Updates the pushed area based on the specified amount taking the <see cref="PushedAreaOrientation"/> into account.
         /// </summary>
-        /// <param name="offset">The amount to adjust the pushed area by.</param>
+        /// <param name="amount">The amount to adjust the pushed area by.</param>
         /// <remarks>
-        /// This method adjusts the pushed area incrementally. It should only be called while a pushing operation is active (see <see cref="StartPushingItems(Point, Orientation)"/>).
+        /// This method adjusts the pushed area incrementally. It should only be called while a pushing operation is active (see <see cref="BeginPushingItems(Point, Orientation)"/>).
         /// </remarks>
-        protected internal void PushItems(Vector amount)
+        public void UpdatePushedArea(Vector amount)
         {
             Debug.Assert(IsPushingItems);
             PushedArea = _pushStrategy!.Push(amount);
@@ -139,15 +140,17 @@ namespace Nodify
         /// <summary>
         /// Ends the current pushing operation and finalizes the pushed area state.
         /// </summary>
-        protected internal void EndPushingItems()
+        /// <remarks>This method has no effect if there's no pushing operation in progress.</remarks>
+        public void EndPushingItems()
         {
-            Debug.Assert(IsPushingItems);
-            if (IsPushingItems)
+            if (!IsPushingItems)
             {
-                PushedArea = _pushStrategy!.End();
-                _pushStrategy = null;
-                IsPushingItems = false;
+                return;
             }
+
+            PushedArea = _pushStrategy!.End();
+            _pushStrategy = null;
+            IsPushingItems = false;
         }
 
         private void UpdatePushedArea()
