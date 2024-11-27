@@ -108,7 +108,8 @@ namespace Nodify
         /// Updates the position of the items being dragged by a specified offset.
         /// </summary>
         /// <param name="amount">The vector by which to adjust the position of the dragged items.</param>
-        /// This method adjusts the items positions incrementally. It should only be called while a dragging operation is in progress (see <see cref="BeginDragging"/>).
+        /// <remarks>
+        /// This method adjusts the items positions incrementally. It should only be called while a dragging operation is in progress (see <see cref="BeginDragging" />).
         /// </remarks>
         public void UpdateDragging(Vector amount)
         {
