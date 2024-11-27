@@ -21,7 +21,7 @@ namespace Nodify
         {
             Canceled = false;
 
-            Editor.BeginSelection(Editor.MouseLocation, _type);
+            Editor.BeginSelecting(Editor.MouseLocation, _type);
         }
 
         /// <inheritdoc />
@@ -30,11 +30,11 @@ namespace Nodify
             // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
             if (Canceled)
             {
-                Editor.CancelSelection();
+                Editor.CancelSelecting();
             }
             else
             {
-                Editor.EndSelection();
+                Editor.EndSelecting();
             }
         }
 

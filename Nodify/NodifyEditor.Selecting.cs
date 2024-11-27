@@ -332,7 +332,7 @@ namespace Nodify
         /// <summary>
         /// Unselect all <see cref="Connections"/>.
         /// </summary>
-        public void UnselectAllConnection()
+        public void UnselectAllConnections()
         {
             if (ConnectionsHost is MultiSelector selector)
             {
@@ -356,14 +356,14 @@ namespace Nodify
         /// <remarks>This method has no effect if a selection operation is already in progress.</remarks>
         /// <param name="location">The starting point for the selection, in graph space coordinates.</param>
         /// <param name="type">The type of selection to perform. Defaults to <see cref="SelectionType.Replace"/>.</param>
-        public void BeginSelection(Point location, SelectionType type = SelectionType.Replace)
+        public void BeginSelecting(Point location, SelectionType type = SelectionType.Replace)
         {
             if (IsSelecting)
             {
                 return;
             }
 
-            UnselectAllConnection();
+            UnselectAllConnections();
             SelectedArea = _selection.Start(ItemContainers, location, type, EnableRealtimeSelection);
             IsSelecting = true;
         }
@@ -392,7 +392,7 @@ namespace Nodify
         /// Completes the selection operation and applies any pending changes.
         /// </summary>
         /// <remarks>This method has no effect if there's no selection operation in progress.</remarks>
-        public void EndSelection()
+        public void EndSelecting()
         {
             if (!IsSelecting)
             {
@@ -408,7 +408,7 @@ namespace Nodify
         /// Cancels the current selection operation and reverts any changes made during the selection process. 
         /// </summary>
         /// <remarks>This method has no effect if there's no selection operation in progress.</remarks>
-        public void CancelSelection()
+        public void CancelSelecting()
         {
             if (!IsSelecting)
             {

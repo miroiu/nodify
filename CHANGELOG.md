@@ -6,10 +6,11 @@
 >	- Made the setter of NodifyEditor.IsPanning private
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
+>	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
->	- Added BeginSelection, UpdateSelection, EndSelection, CancelSelection and AllowSelectionCancellation to NodifyEditor
+>	- Added BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 > - Bugfixes:
 	
 #### **Version 6.6.0**
