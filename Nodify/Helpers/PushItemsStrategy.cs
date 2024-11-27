@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -12,12 +11,11 @@ namespace Nodify
         Rect Push(Vector amount);
         Rect End();
         Rect Cancel();
-        Rect OnViewportChanged();
+        Rect GetPushedArea();
     }
 
     internal abstract class BasePushStrategy : IPushStrategy
     {
-        private IDraggingStrategy? _draggingStrategy;
         private const double _minOffset = 2;
         private double _actualOffset;
         private double _initialPosition;
@@ -33,7 +31,7 @@ namespace Nodify
         public Rect Start(Point position)
         {
             var containers = GetFilteredContainers(position);
-            _draggingStrategy = Editor.CreateDraggingStrategy(containers);
+            Editor.BeginDragging(containers);
 
             _initialPosition = GetInitialPosition(position);
             _actualOffset = 0;
@@ -43,10 +41,8 @@ namespace Nodify
 
         public Rect Push(Vector amount)
         {
-            Debug.Assert(_draggingStrategy != null);
-
             var offset = GetPushOffset(amount);
-            _draggingStrategy!.Update(offset);
+            Editor.UpdateDragging(offset);
 
             _actualOffset += offset.X;
             _actualOffset += offset.Y;
@@ -59,15 +55,13 @@ namespace Nodify
 
         public Rect End()
         {
-            Debug.Assert(_draggingStrategy != null);
-            _draggingStrategy!.End();
+            Editor.EndDragging();
             return new Rect();
         }
 
         public Rect Cancel()
         {
-            Debug.Assert(_draggingStrategy != null);
-            _draggingStrategy!.Abort();
+            Editor.CancelDragging();
             return new Rect();
         }
 
@@ -75,7 +69,7 @@ namespace Nodify
         protected abstract double GetInitialPosition(Point position);
         protected abstract Vector GetPushOffset(Vector offset);
         protected abstract Rect CalculatePushedArea(double position, double offset);
-        public abstract Rect OnViewportChanged();
+        public abstract Rect GetPushedArea();
     }
 
     internal sealed class HorizontalPushStrategy : BasePushStrategy
@@ -96,7 +90,7 @@ namespace Nodify
         protected override Rect CalculatePushedArea(double position, double offset)
             => new Rect(position, Editor.ViewportLocation.Y - OffscreenOffset, offset, Editor.ViewportSize.Height + OffscreenOffset * 2);
 
-        public override Rect OnViewportChanged()
+        public override Rect GetPushedArea()
             => CalculatePushedArea(Editor.PushedArea.X, Editor.PushedArea.Width);
     }
 
@@ -118,7 +112,7 @@ namespace Nodify
         protected override Rect CalculatePushedArea(double position, double offset)
             => new Rect(Editor.ViewportLocation.X - OffscreenOffset, position, Editor.ViewportSize.Width + OffscreenOffset * 2, offset);
 
-        public override Rect OnViewportChanged()
+        public override Rect GetPushedArea()
             => CalculatePushedArea(Editor.PushedArea.Y, Editor.PushedArea.Height);
     }
 }
