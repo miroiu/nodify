@@ -4,7 +4,7 @@ namespace Nodify
 {
     public class EditorCuttingState : EditorState
     {
-        public bool Canceled { get; set; } = CuttingLine.AllowCuttingCancellation;
+        private bool Canceled { get; set; } = CuttingLine.AllowCuttingCancellation;
 
         public EditorCuttingState(NodifyEditor editor) : base(editor)
         {

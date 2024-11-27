@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using static Nodify.SelectionHelper;
 
 namespace Nodify
 {
@@ -32,23 +31,22 @@ namespace Nodify
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (gestures.Cutting.Matches(e.Source, e))
+            if (Editor.CanSelectMultipleItems && gestures.Selection.Select.Matches(e.Source, e))
+            {
+                SelectionType selectionType = SelectionHelper.GetSelectionType(e);
+                PushState(new EditorSelectingState(Editor, selectionType));
+            }
+            else if (!Editor.DisablePanning && gestures.Pan.Matches(e.Source, e))
+            {
+                PushState(new EditorPanningState(Editor));
+            }
+            else if (gestures.Cutting.Matches(e.Source, e))
             {
                 PushState(new EditorCuttingState(Editor));
             }
             else if (gestures.PushItems.Matches(e.Source, e))
             {
                 PushState(new EditorPushingItemsState(Editor));
-            }
-            else if (gestures.Selection.Select.Matches(e.Source, e))
-            {
-                SelectionType selectionType = GetSelectionType(e);
-                var selecting = new EditorSelectingState(Editor, selectionType);
-                PushState(selecting);
-            }
-            else if (!Editor.DisablePanning && gestures.Pan.Matches(e.Source, e))
-            {
-                PushState(new EditorPanningState(Editor));
             }
         }
 
