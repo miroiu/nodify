@@ -13,37 +13,11 @@ namespace Nodify
         protected static readonly DependencyPropertyKey PushedAreaPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushedArea), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
         public static readonly DependencyProperty PushedAreaProperty = PushedAreaPropertyKey.DependencyProperty;
 
-        protected static readonly DependencyPropertyKey IsPushingItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPushingItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnIsPushingItemsChanged));
+        protected static readonly DependencyPropertyKey IsPushingItemsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPushingItems), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPushingItemsProperty = IsPushingItemsPropertyKey.DependencyProperty;
 
         protected static readonly DependencyPropertyKey PushedAreaOrientationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushedAreaOrientation), typeof(Orientation), typeof(NodifyEditor), new FrameworkPropertyMetadata(Orientation.Horizontal));
         public static readonly DependencyProperty PushedAreaOrientationProperty = PushedAreaOrientationPropertyKey.DependencyProperty;
-
-        private static void OnIsPushingItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var editor = (NodifyEditor)d;
-
-            if ((bool)e.NewValue == true)
-            {
-                editor.OnItemsPushStarted();
-            }
-            else
-            {
-                editor.OnItemsPushCompleted();
-            }
-        }
-
-        private void OnItemsPushCompleted()
-        {
-            if (ItemsDragCompletedCommand?.CanExecute(DataContext) ?? false)
-                ItemsDragCompletedCommand.Execute(DataContext);
-        }
-
-        private void OnItemsPushStarted()
-        {
-            if (ItemsDragStartedCommand?.CanExecute(DataContext) ?? false)
-                ItemsDragStartedCommand.Execute(DataContext);
-        }
 
         /// <summary>
         /// Gets the currently pushed area while <see cref="IsPushingItems"/> is true.
@@ -110,26 +84,11 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state if <see cref="AllowPushItemsCancellation"/> is true.
-        /// </summary>
-        /// <remarks>This method has no effect if there's no pushing operation in progress.</remarks>
-        public void CancelPushingItems()
-        {
-            if (!AllowPushItemsCancellation || !IsPushingItems)
-            {
-                return;
-            }
-
-            PushedArea = _pushStrategy!.Cancel();
-            IsPushingItems = false;
-        }
-
-        /// <summary>
         /// Updates the pushed area based on the specified amount taking the <see cref="PushedAreaOrientation"/> into account.
         /// </summary>
         /// <param name="amount">The amount to adjust the pushed area by.</param>
         /// <remarks>
-        /// This method adjusts the pushed area incrementally. It should only be called while a pushing operation is active (see <see cref="BeginPushingItems(Point, Orientation)"/>).
+        /// This method adjusts the pushed area incrementally. It should only be called while a pushing operation is in progress (see <see cref="BeginPushingItems(Point, Orientation)"/>).
         /// </remarks>
         public void UpdatePushedArea(Vector amount)
         {
@@ -153,11 +112,26 @@ namespace Nodify
             IsPushingItems = false;
         }
 
+        /// <summary>
+        /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state if <see cref="AllowPushItemsCancellation"/> is true.
+        /// </summary>
+        /// <remarks>This method has no effect if there's no pushing operation in progress.</remarks>
+        public void CancelPushingItems()
+        {
+            if (!AllowPushItemsCancellation || !IsPushingItems)
+            {
+                return;
+            }
+
+            PushedArea = _pushStrategy!.Cancel();
+            IsPushingItems = false;
+        }
+
         private void UpdatePushedArea()
         {
             if (IsPushingItems)
             {
-                PushedArea = _pushStrategy!.OnViewportChanged();
+                PushedArea = _pushStrategy!.GetPushedArea();
             }
         }
 

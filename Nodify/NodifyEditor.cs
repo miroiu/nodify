@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -35,7 +34,7 @@ namespace Nodify
         public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect, OnItemsExtentChanged));
         public static readonly DependencyProperty DecoratorsExtentProperty = DependencyProperty.Register(nameof(DecoratorsExtent), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
 
-        protected internal static readonly DependencyPropertyKey ViewportTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
+        protected static readonly DependencyPropertyKey ViewportTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty ViewportTransformProperty = ViewportTransformPropertyKey.DependencyProperty;
 
         #region Callbacks
@@ -317,7 +316,7 @@ namespace Nodify
 
         #region Readonly Dependency Properties
 
-        protected static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
+        private static readonly DependencyPropertyKey MouseLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MouseLocation), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty MouseLocationProperty = MouseLocationPropertyKey.DependencyProperty;
 
         /// <summary>
@@ -397,8 +396,6 @@ namespace Nodify
         public static readonly DependencyProperty ConnectionStartedCommandProperty = DependencyProperty.Register(nameof(ConnectionStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty DisconnectConnectorCommandProperty = DependencyProperty.Register(nameof(DisconnectConnectorCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty RemoveConnectionCommandProperty = DependencyProperty.Register(nameof(RemoveConnectionCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
-        public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
         /// <summary>
         /// Invoked when the <see cref="Nodify.PendingConnection"/> is completed. <br />
@@ -444,24 +441,6 @@ namespace Nodify
             set => SetValue(RemoveConnectionCommandProperty, value);
         }
 
-        /// <summary>
-        /// Invoked when a drag operation starts for the <see cref="SelectedItems"/>, or when <see cref="IsPushingItems"/> is set to true.
-        /// </summary>
-        public ICommand? ItemsDragStartedCommand
-        {
-            get => (ICommand?)GetValue(ItemsDragStartedCommandProperty);
-            set => SetValue(ItemsDragStartedCommandProperty, value);
-        }
-
-        /// <summary>
-        /// Invoked when a drag operation is completed for the <see cref="SelectedItems"/>, or when <see cref="IsPushingItems"/> is set to false.
-        /// </summary>
-        public ICommand? ItemsDragCompletedCommand
-        {
-            get => (ICommand?)GetValue(ItemsDragCompletedCommandProperty);
-            set => SetValue(ItemsDragCompletedCommandProperty, value);
-        }
-
         #endregion
 
         #region Fields
@@ -493,11 +472,6 @@ namespace Nodify
         public static double FitToScreenExtentMargin { get; set; } = 30;
 
         /// <summary>
-        /// Gets or sets if the current position of containers that are being dragged should not be committed until the end of the dragging operation.
-        /// </summary>
-        public static bool EnableDraggingContainersOptimizations { get; set; } = true;
-
-        /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
         /// </summary>
         public bool IsBulkUpdatingItems { get; protected set; }
@@ -511,8 +485,6 @@ namespace Nodify
         /// Gets the element that holds all the <see cref="BaseConnection"/>s and custom connections.
         /// </summary>
         protected internal UIElement ConnectionsHost { get; private set; } = default!;
-
-        private IDraggingStrategy? _draggingStrategy;
 
         /// <summary>
         /// Gets a list of all <see cref="ItemContainer"/>s.
@@ -557,9 +529,7 @@ namespace Nodify
 
             AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
 
-            AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-            AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
+            RegisterDragEvents();
 
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
@@ -867,66 +837,6 @@ namespace Nodify
 
         protected override void OnKeyDown(KeyEventArgs e)
             => State.HandleKeyDown(e);
-
-        #endregion
-
-        #region Dragging
-
-        private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            _draggingStrategy?.Update(new Vector(e.HorizontalChange, e.VerticalChange));
-        }
-
-        private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            if (e.Canceled && ItemContainer.AllowDraggingCancellation)
-            {
-                _draggingStrategy?.Abort();
-            }
-            else
-            {
-                IsBulkUpdatingItems = true;
-
-                _draggingStrategy?.End();
-
-                IsBulkUpdatingItems = false;
-
-                // Draw the containers at the new position.
-                ItemsHost.InvalidateArrange();
-            }
-
-            if (ItemsDragCompletedCommand?.CanExecute(DataContext) ?? false)
-            {
-                ItemsDragCompletedCommand.Execute(DataContext);
-            }
-        }
-
-        private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
-        {
-            IList selectedItems = base.SelectedItems;
-
-            _draggingStrategy = CreateDraggingStrategy(SelectedContainers);
-
-            if (selectedItems.Count > 0)
-            {
-                if (ItemsDragStartedCommand?.CanExecute(DataContext) ?? false)
-                {
-                    ItemsDragStartedCommand.Execute(DataContext);
-                }
-
-                e.Handled = true;
-            }
-        }
-
-        internal IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)
-        {
-            if (EnableDraggingContainersOptimizations)
-            {
-                return new DraggingOptimized(containers, GridCellSize);
-            }
-
-            return new DraggingSimple(containers, GridCellSize);
-        }
 
         #endregion
 
