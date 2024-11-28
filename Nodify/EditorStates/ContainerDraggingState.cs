@@ -25,7 +25,6 @@ namespace Nodify
             _initialMousePosition = Editor.MouseLocation;
             _previousMousePosition = _initialMousePosition;
 
-            Container.Select(SelectionType.Append);
             Container.BeginDragging();
         }
 

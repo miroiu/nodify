@@ -54,14 +54,12 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
-            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (gestures.Selection.Select.Matches(e.Source, e))
+            if (_selectionType.HasValue)
             {
-                var selectionType = gestures.Selection.GetSelectionType(e);
                 bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected;
-                if (!(selectionType == SelectionType.Replace && allowContextMenu))
+                if (!(_selectionType == SelectionType.Replace && allowContextMenu))
                 {
-                    Container.Select(selectionType);
+                    Container.Select(_selectionType.Value);
                 }
             }
 
