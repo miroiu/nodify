@@ -150,9 +150,6 @@ namespace Nodify
 
         #region Routed Events
 
-        public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent(nameof(DragStarted), RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(ItemContainer));
-        public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent(nameof(DragCompleted), RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(ItemContainer));
-        public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent(nameof(DragDelta), RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(ItemContainer));
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(ItemContainer));
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(ItemContainer));
         public static readonly RoutedEvent LocationChangedEvent = EventManager.RegisterRoutedEvent(nameof(LocationChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ItemContainer));
@@ -164,33 +161,6 @@ namespace Nodify
         {
             add => AddHandler(LocationChangedEvent, value);
             remove => RemoveHandler(LocationChangedEvent, value);
-        }
-
-        /// <summary>
-        /// Occurs when this <see cref="ItemContainer"/> is the instigator of a drag operation.
-        /// </summary>
-        public event DragStartedEventHandler DragStarted
-        {
-            add => AddHandler(DragStartedEvent, value);
-            remove => RemoveHandler(DragStartedEvent, value);
-        }
-
-        /// <summary>
-        /// Occurs when this <see cref="ItemContainer"/> is being dragged.
-        /// </summary>
-        public event DragDeltaEventHandler DragDelta
-        {
-            add => AddHandler(DragDeltaEvent, value);
-            remove => RemoveHandler(DragDeltaEvent, value);
-        }
-
-        /// <summary>
-        /// Occurs when this <see cref="ItemContainer"/> completed the drag operation.
-        /// </summary>
-        public event DragCompletedEventHandler DragCompleted
-        {
-            add => AddHandler(DragCompletedEvent, value);
-            remove => RemoveHandler(DragCompletedEvent, value);
         }
 
         /// <summary>
@@ -336,10 +306,14 @@ namespace Nodify
         }
 
         /// <inheritdoc cref="NodifyEditor.BeginDragging()" />
-        /// <remarks>Appends the container to the selection.</remarks>
+        /// <remarks>Replaces the selection if the container is not selected.</remarks>
         public void BeginDragging()
         {
-            Select(SelectionType.Append);
+            if (!IsSelected)
+            {
+                Select(SelectionType.Replace);
+            }
+
             Editor.BeginDragging();
         }
 
@@ -443,7 +417,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (IsSelectableLocation(e.GetPosition(this)) && IsMouseCaptured)
+            if (IsMouseCaptured)
             {
                 State.HandleMouseUp(e);
             }
@@ -456,16 +430,12 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            State.HandleMouseMove(e);
-        }
+        protected override void OnMouseMove(MouseEventArgs e) 
+            => State.HandleMouseMove(e);
 
         /// <inheritdoc />
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            State.HandleMouseWheel(e);
-        }
+        protected override void OnMouseWheel(MouseWheelEventArgs e) 
+            => State.HandleMouseWheel(e);
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)

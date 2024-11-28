@@ -8,6 +8,7 @@
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
+>	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor

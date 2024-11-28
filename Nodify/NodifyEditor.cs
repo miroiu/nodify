@@ -529,8 +529,6 @@ namespace Nodify
 
             AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
 
-            RegisterDragEvents();
-
             var transform = new TransformGroup();
             transform.Children.Add(ScaleTransform);
             transform.Children.Add(TranslateTransform);

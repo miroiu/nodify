@@ -9,7 +9,7 @@ namespace Nodify
         private Point _initialMousePosition;
         private Point _previousMousePosition;
         
-        public bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;
+        private bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;
 
         /// <summary>Constructs an instance of the <see cref="ContainerDraggingState"/> state.</summary>
         /// <param name="container">The owner of the state.</param>
@@ -23,8 +23,10 @@ namespace Nodify
             Canceled = false;
 
             _initialMousePosition = Editor.MouseLocation;
-            Container.BeginDragging();
             _previousMousePosition = _initialMousePosition;
+
+            Container.Select(SelectionType.Append);
+            Container.BeginDragging();
         }
 
         /// <inheritdoc />

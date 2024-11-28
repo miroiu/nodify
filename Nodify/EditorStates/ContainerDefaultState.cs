@@ -5,8 +5,8 @@ namespace Nodify
     /// <summary>The default state of the <see cref="ItemContainer"/>.</summary>
     public class ContainerDefaultState : ContainerState
     {
-        private bool _canBeDragging;
-        private bool _canceled;
+        private SelectionType? _selectionType;
+        private bool _isDragging;
 
         /// <summary>Creates a new instance of the <see cref="ContainerDefaultState"/>.</summary>
         /// <param name="container">The owner of the state.</param>
@@ -17,30 +17,37 @@ namespace Nodify
         /// <inheritdoc />
         public override void ReEnter(ContainerState from)
         {
-            if (from is ContainerDraggingState drag)
-            {
-                Container.IsSelected = true;
-                _canceled = drag.Canceled;
-            }
-
-            _canBeDragging = false;
+            _isDragging = false;
+            _selectionType = null;
         }
 
         /// <inheritdoc />
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            _canceled = false;
-
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
             if (gestures.Drag.Matches(e.Source, e))
             {
-                _canBeDragging = Container.IsDraggable;
+                _isDragging = Container.IsDraggable;
+            }
 
-                // Clear the selection if dragging an item that is not part of the selection will not add it to the selection
-                if (_canBeDragging && !Container.IsSelected && !gestures.Selection.Append.Matches(e.Source, e) && !gestures.Selection.Invert.Matches(e.Source, e))
+            if (gestures.Selection.Select.Matches(e.Source, e))
+            {
+                _selectionType = gestures.Selection.GetSelectionType(e);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void HandleMouseMove(MouseEventArgs e)
+        {
+            if (_isDragging)
+            {
+                if (!Container.IsSelected)
                 {
-                    Editor.UnselectAll();
+                    var selectionType = GetSelectionTypeForDragging(_selectionType);
+                    Container.Select(selectionType);
                 }
+
+                PushState(new ContainerDraggingState(Container));
             }
         }
 
@@ -48,7 +55,7 @@ namespace Nodify
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (!_canceled && gestures.Selection.Select.Matches(e.Source, e))
+            if (gestures.Selection.Select.Matches(e.Source, e))
             {
                 var selectionType = gestures.Selection.GetSelectionType(e);
                 bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected;
@@ -56,25 +63,18 @@ namespace Nodify
                 {
                     Container.Select(selectionType);
                 }
-
-                _canBeDragging = false;
             }
 
-            if (!_canceled && gestures.Drag.Matches(e.Source, e))
-            {
-                _canBeDragging = false;
-            }
-
-            _canceled = false;
+            _isDragging = false;
+            _selectionType = null;
         }
 
-        /// <inheritdoc />
-        public override void HandleMouseMove(MouseEventArgs e)
+        private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
         {
-            if (_canBeDragging)
-            {
-                PushState(new ContainerDraggingState(Container));
-            }
+            // we should always select the container when dragging
+            return selectionType == SelectionType.Remove
+                ? SelectionType.Replace
+                : selectionType.GetValueOrDefault(SelectionType.Replace);
         }
     }
 }
