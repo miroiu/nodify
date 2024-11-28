@@ -1,7 +1,6 @@
 ﻿using System.Windows.Input;
 using System.Windows;
 using System.Collections.Generic;
-using System.Windows.Controls.Primitives;
 using System.Diagnostics;
 
 namespace Nodify
@@ -73,13 +72,6 @@ namespace Nodify
         public static bool EnableDraggingContainersOptimizations { get; set; } = true;
 
         private IDraggingStrategy? _draggingStrategy;
-
-        private void RegisterDragEvents()
-        {
-            AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-            AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
-        }
 
         /// <summary>
         /// Initiates the dragging operation using the currently selected <see cref="ItemContainer" />s.
@@ -162,29 +154,6 @@ namespace Nodify
             }
 
             return new DraggingSimple(containers, GridCellSize);
-        }
-
-        private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
-        {
-            BeginDragging();
-            e.Handled = true;
-        }
-
-        private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            UpdateDragging(new Vector(e.HorizontalChange, e.VerticalChange));
-        }
-
-        private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            if (e.Canceled)
-            {
-                CancelDragging();
-            }
-            else
-            {
-                EndDragging();
-            }
         }
     }
 }
