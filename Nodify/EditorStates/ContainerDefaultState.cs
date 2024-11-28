@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Nodify
 {
     /// <summary>The default state of the <see cref="ItemContainer"/>.</summary>
     public class ContainerDefaultState : ContainerState
     {
+        private Point _initialPosition;
         private SelectionType? _selectionType;
         private bool _isDragging;
 
@@ -19,6 +21,7 @@ namespace Nodify
         {
             _isDragging = false;
             _selectionType = null;
+            _initialPosition = Editor.MouseLocation;
         }
 
         /// <inheritdoc />
@@ -34,12 +37,17 @@ namespace Nodify
             {
                 _selectionType = gestures.Selection.GetSelectionType(e);
             }
+
+            _initialPosition = Editor.MouseLocation;
         }
 
         /// <inheritdoc />
         public override void HandleMouseMove(MouseEventArgs e)
         {
-            if (_isDragging)
+            double dragThreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
+            double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
+
+            if (_isDragging && (dragDistance > dragThreshold))
             {
                 if (!Container.IsSelected)
                 {
@@ -69,7 +77,7 @@ namespace Nodify
 
         private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
         {
-            // we should always select the container when dragging
+            // Always select the container when dragging
             return selectionType == SelectionType.Remove
                 ? SelectionType.Replace
                 : selectionType.GetValueOrDefault(SelectionType.Replace);

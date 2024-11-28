@@ -55,11 +55,13 @@ namespace Nodify
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
             if (gestures.Drag.Matches(e.Source, e))
             {
-                // Handle right click if dragging or canceled and moved the mouse more than threshold so context menus don't open
+                // Suppress the context menu if the mouse moved beyond the defined drag threshold
                 if (e.ChangedButton == MouseButton.Right)
                 {
-                    double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                    if ((Editor.MouseLocation - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    double dragThreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
+                    double dragDistance = (Editor.MouseLocation - _initialMousePosition).LengthSquared;
+
+                    if (dragDistance > dragThreshold)
                     {
                         e.Handled = true;
                     }
