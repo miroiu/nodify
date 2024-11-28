@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 >	- Made the setter of NodifyEditor.IsPanning private
+>	- Made SelectionHelper internal
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
@@ -12,7 +13,9 @@
 >	- Added UpdateCuttingLine to NodifyEditor
 >	- Added BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
+>	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 > - Bugfixes:
+>	- Fixed ItemContainer being selected by releasing the mouse button on it without having the mouse captured
 	
 #### **Version 6.6.0**
 

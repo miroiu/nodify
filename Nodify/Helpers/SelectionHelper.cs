@@ -167,10 +167,12 @@ namespace Nodify
                 }
             }
         }
+    }
 
-        internal static SelectionType GetSelectionType(MouseButtonEventArgs e)
+    internal static class SelectionGesturesExtensions
+    {
+        public static SelectionType GetSelectionType(this EditorGestures.SelectionGestures gestures, MouseButtonEventArgs e)
         {
-            EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
             if (gestures.Append.Matches(e.Source, e))
             {
                 return SelectionType.Append;

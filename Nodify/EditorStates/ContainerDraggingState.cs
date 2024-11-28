@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Nodify
@@ -9,8 +8,8 @@ namespace Nodify
     {
         private Point _initialMousePosition;
         private Point _previousMousePosition;
-        private Point _currentMousePosition;
-        public bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;   // Because of LostMouseCapture that calls Exit
+        
+        public bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;
 
         /// <summary>Constructs an instance of the <see cref="ContainerDraggingState"/> state.</summary>
         /// <param name="container">The owner of the state.</param>
@@ -21,63 +20,56 @@ namespace Nodify
         /// <inheritdoc />
         public override void Enter(ContainerState? from)
         {
-            _initialMousePosition = Mouse.GetPosition(Editor.ItemsHost);
+            Canceled = false;
 
-            Container.IsSelected = true;
-            Container.IsPreviewingLocation = true;
-            Container.RaiseEvent(new DragStartedEventArgs(_initialMousePosition.X, _initialMousePosition.Y)
-            {
-                RoutedEvent = ItemContainer.DragStartedEvent
-            });
-
+            _initialMousePosition = Editor.MouseLocation;
+            Container.BeginDragging();
             _previousMousePosition = _initialMousePosition;
         }
 
         /// <inheritdoc />
         public override void Exit()
         {
-            Container.IsPreviewingLocation = false;
-            var delta = _currentMousePosition - _initialMousePosition;
-            Container.RaiseEvent(new DragCompletedEventArgs(delta.X, delta.Y, Canceled)
+            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
+            if (Canceled)
             {
-                RoutedEvent = ItemContainer.DragCompletedEvent
-            });
+                Container.CancelDragging();
+            }
+            else
+            {
+                Container.EndDragging();
+            }
         }
 
         /// <inheritdoc />
         public override void HandleMouseMove(MouseEventArgs e)
         {
-            _currentMousePosition = e.GetPosition(Editor.ItemsHost);
-            var delta = _currentMousePosition - _previousMousePosition;
-            Container.RaiseEvent(new DragDeltaEventArgs(delta.X, delta.Y)
-            {
-                RoutedEvent = ItemContainer.DragDeltaEvent
-            });
-
-            _previousMousePosition = _currentMousePosition;
+            Container.UpdateDragging(Editor.MouseLocation - _previousMousePosition);
+            _previousMousePosition = Editor.MouseLocation;
         }
 
         /// <inheritdoc />
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-
-            bool canCancel = gestures.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
-            bool canComplete = gestures.Drag.Matches(e.Source, e);
-            if (canCancel || canComplete)
+            if (gestures.Drag.Matches(e.Source, e))
             {
-                // Prevent canceling if drag and cancel are bound to the same mouse action
-                Canceled = !canComplete && canCancel;
-
                 // Handle right click if dragging or canceled and moved the mouse more than threshold so context menus don't open
                 if (e.ChangedButton == MouseButton.Right)
                 {
                     double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                    if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    if ((Editor.MouseLocation - _initialMousePosition).LengthSquared > contextMenuTreshold)
                     {
                         e.Handled = true;
                     }
                 }
+
+                PopState();
+            }
+            else if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
+            {
+                Canceled = true;
+                e.Handled = true;
 
                 PopState();
             }
@@ -86,9 +78,10 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleKeyUp(KeyEventArgs e)
         {
-            Canceled = EditorGestures.Mappings.ItemContainer.CancelAction.Matches(e.Source, e) && ItemContainer.AllowDraggingCancellation;
-            if (Canceled)
+            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+            if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
             {
+                Canceled = true;
                 PopState();
             }
         }

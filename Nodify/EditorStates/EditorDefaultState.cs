@@ -33,7 +33,7 @@ namespace Nodify
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
             if (Editor.CanSelectMultipleItems && gestures.Selection.Select.Matches(e.Source, e))
             {
-                SelectionType selectionType = SelectionHelper.GetSelectionType(e);
+                SelectionType selectionType = gestures.Selection.GetSelectionType(e);
                 PushState(new EditorSelectingState(Editor, selectionType));
             }
             else if (!Editor.DisablePanning && gestures.Pan.Matches(e.Source, e))

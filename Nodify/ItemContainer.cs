@@ -335,6 +335,50 @@ namespace Nodify
             return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
+        /// <inheritdoc cref="NodifyEditor.BeginDragging()" />
+        /// <remarks>Appends the container to the selection.</remarks>
+        public void BeginDragging()
+        {
+            Select(SelectionType.Append);
+            Editor.BeginDragging();
+        }
+
+        /// <inheritdoc cref="NodifyEditor.UpdateDragging(Vector)" />
+        public void UpdateDragging(Vector amount)
+            => Editor.UpdateDragging(amount);
+
+        /// <inheritdoc cref="NodifyEditor.CancelDragging" />
+        public void CancelDragging()
+            => Editor.CancelDragging();
+
+        /// <inheritdoc cref="NodifyEditor.EndDragging" />
+        public void EndDragging()
+            => Editor.EndDragging();
+
+        /// <summary>
+        /// Modifies the selection state of the current item based on the specified selection type.
+        /// </summary>
+        /// <param name="type">The type of selection to perform.</param>
+        public void Select(SelectionType type)
+        {
+            switch (type)
+            {
+                case SelectionType.Append:
+                    IsSelected = true;
+                    break;
+                case SelectionType.Remove:
+                    IsSelected = false;
+                    break;
+                case SelectionType.Invert:
+                    IsSelected = !IsSelected;
+                    break;
+                case SelectionType.Replace:
+                    Editor.UnselectAll();
+                    IsSelected = true;
+                break;
+            }
+        }
+
         #region State Handling
 
         private readonly Stack<ContainerState> _states = new Stack<ContainerState>();
@@ -399,7 +443,7 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (IsSelectableLocation(e.GetPosition(this)) || IsMouseCaptured)
+            if (IsSelectableLocation(e.GetPosition(this)) && IsMouseCaptured)
             {
                 State.HandleMouseUp(e);
             }

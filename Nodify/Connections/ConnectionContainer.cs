@@ -102,28 +102,36 @@ namespace Nodify
             EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
             if (gestures.Selection.Select.Matches(e.Source, e))
             {
-                if (gestures.Selection.Append.Matches(e.Source, e))
+                var selectionType = gestures.Selection.GetSelectionType(e);
+                bool allowContextMenu = e.ChangedButton == MouseButton.Right && IsSelected;
+                if (!(selectionType == SelectionType.Replace && allowContextMenu))
                 {
-                    IsSelected = true;
+                    Select(selectionType);
                 }
-                else if (gestures.Selection.Invert.Matches(e.Source, e))
-                {
-                    IsSelected = !IsSelected;
-                }
-                else if (gestures.Selection.Remove.Matches(e.Source, e))
-                {
-                    IsSelected = false;
-                }
-                else
-                {
-                    // Allow context menu on selection
-                    if (!(e.ChangedButton == MouseButton.Right && e.RightButton == MouseButtonState.Released) || !IsSelected)
-                    {
-                        Selector.UnselectAll();
-                    }
+            }
+        }
 
+        /// <summary>
+        /// Modifies the selection state of the current item based on the specified selection type.
+        /// </summary>
+        /// <param name="type">The type of selection to perform.</param>
+        private void Select(SelectionType type)
+        {
+            switch (type)
+            {
+                case SelectionType.Append:
                     IsSelected = true;
-                }
+                    break;
+                case SelectionType.Remove:
+                    IsSelected = false;
+                    break;
+                case SelectionType.Invert:
+                    IsSelected = !IsSelected;
+                    break;
+                case SelectionType.Replace:
+                    Selector.UnselectAll();
+                    IsSelected = true;
+                    break;
             }
         }
     }

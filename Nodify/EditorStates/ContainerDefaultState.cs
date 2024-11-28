@@ -50,33 +50,17 @@ namespace Nodify
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
             if (!_canceled && gestures.Selection.Select.Matches(e.Source, e))
             {
-                if (gestures.Selection.Append.Matches(e.Source, e))
+                var selectionType = gestures.Selection.GetSelectionType(e);
+                bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected;
+                if (!(selectionType == SelectionType.Replace && allowContextMenu))
                 {
-                    Container.IsSelected = true;
-                }
-                else if (gestures.Selection.Invert.Matches(e.Source, e))
-                {
-                    Container.IsSelected = !Container.IsSelected;
-                }
-                else if (gestures.Selection.Remove.Matches(e.Source, e))
-                {
-                    Container.IsSelected = false;
-                }
-                else
-                {
-                    // Allow context menu on selection
-                    if (!(e.ChangedButton == MouseButton.Right && e.RightButton == MouseButtonState.Released) || !Container.IsSelected)
-                    {
-                        Editor.UnselectAll();
-                    }
-
-                    Container.IsSelected = true;
+                    Container.Select(selectionType);
                 }
 
                 _canBeDragging = false;
             }
 
-            if(!_canceled && gestures.Drag.Matches(e.Source, e))
+            if (!_canceled && gestures.Drag.Matches(e.Source, e))
             {
                 _canBeDragging = false;
             }
