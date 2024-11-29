@@ -1,28 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Nodify
 {
     public static class EditorCommands
     {
-        /// <summary>
-        /// Specifies the possible alignment values used by the <see cref="Align"/> command.
-        /// </summary>
-        public enum Alignment
-        {
-            Top,
-            Left,
-            Bottom,
-            Right,
-            Middle,
-            Center
-        }
-
         /// <summary>
         /// Zoom in relative to the editor's viewport center.
         /// </summary>
@@ -62,7 +45,7 @@ namespace Nodify
         });
 
         /// <summary>
-        /// Aligns <see cref="NodifyEditor.SelectedItems"/> using the specified alignment method.
+        /// Aligns the <see cref="NodifyEditor.SelectedContainers"/> using the specified alignment method.
         /// Parameter is of type <see cref="Alignment"/> or a string that can be converted to an alignment.
         /// </summary>
         public static RoutedUICommand Align { get; } = new RoutedUICommand("Align", nameof(Align), typeof(EditorCommands));
@@ -81,7 +64,7 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                e.CanExecute = ((MultiSelector)editor).SelectedItems.Count > 1;
+                e.CanExecute = editor.SelectedContainersCount > 1;
             }
         }
 
@@ -89,78 +72,18 @@ namespace Nodify
         {
             if (sender is NodifyEditor editor)
             {
-                IList selected = ((MultiSelector)editor).SelectedItems;
-                if (selected.Count > 0)
+                if (e.Parameter is Alignment alignment)
                 {
-                    if (editor.ItemsDragStartedCommand?.CanExecute(null) ?? false)
-                    {
-                        editor.ItemsDragStartedCommand.Execute(null);
-                    }
-
-                    var containers = new List<ItemContainer>(selected.Count);
-
-                    for (var i = 0; i < selected.Count; i++)
-                    {
-                        containers.Add((ItemContainer)editor.ItemContainerGenerator.ContainerFromItem(selected[i]));
-                    }
-
-                    if (e.Parameter is Alignment alignment)
-                    {
-                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
-                    }
-                    else if (e.Parameter is string str && Enum.TryParse(str, true, out alignment))
-                    {
-                        AlignContainers(containers, alignment, e.OriginalSource as ItemContainer);
-                    }
-                    else
-                    {
-                        AlignContainers(containers, Alignment.Top, e.OriginalSource as ItemContainer);
-                    }
-
-                    if (editor.ItemsDragCompletedCommand?.CanExecute(null) ?? false)
-                    {
-                        editor.ItemsDragCompletedCommand.Execute(null);
-                    }
+                    editor.AlignSelection(alignment, e.OriginalSource as ItemContainer);
                 }
-            }
-        }
-
-        private static void AlignContainers(List<ItemContainer> containers, Alignment alignment, ItemContainer? instigator = default)
-        {
-            switch (alignment)
-            {
-                case Alignment.Top:
-                    double top = instigator?.Location.Y ?? containers.Min(x => x.Location.Y);
-                    containers.ForEach(c => c.Location = new Point(c.Location.X, top));
-                    break;
-
-                case Alignment.Left:
-                    double left = instigator?.Location.X ?? containers.Min(x => x.Location.X);
-                    containers.ForEach(c => c.Location = new Point(left, c.Location.Y));
-                    break;
-
-                case Alignment.Bottom:
-                    double bottom = instigator != null ? instigator.Location.Y + instigator.ActualHeight : containers.Max(x => x.Location.Y + x.ActualHeight);
-                    containers.ForEach(c => c.Location = new Point(c.Location.X, bottom - c.ActualHeight));
-                    break;
-
-                case Alignment.Right:
-                    double right = instigator != null ? instigator.Location.X + instigator.ActualWidth : containers.Max(x => x.Location.X + x.ActualWidth);
-                    containers.ForEach(c => c.Location = new Point(right - c.ActualWidth, c.Location.Y));
-                    break;
-
-                case Alignment.Middle:
-                    double mid = instigator != null ? instigator.Location.Y + instigator.ActualHeight / 2 : containers.Average(c => c.Location.Y + c.ActualHeight / 2);
-                    containers.ForEach(c => c.Location = new Point(c.Location.X, mid - c.ActualHeight / 2));
-                    break;
-
-                case Alignment.Center:
-                    double center = instigator != null ? instigator.Location.X + instigator.ActualWidth / 2 : containers.Average(c => c.Location.X + c.ActualWidth / 2);
-                    containers.ForEach(c => c.Location = new Point(center - c.ActualWidth / 2, c.Location.Y));
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
+                else if (e.Parameter is string str && Enum.TryParse(str, true, out alignment))
+                {
+                    editor.AlignSelection(alignment, e.OriginalSource as ItemContainer);
+                }
+                else
+                {
+                    editor.AlignSelection(Alignment.Top, e.OriginalSource as ItemContainer);
+                }
             }
         }
 

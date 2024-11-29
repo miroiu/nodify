@@ -177,7 +177,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets a list of <see cref="ItemContainer"/>s that are selected.
+        /// Gets a list of <see cref="ItemContainer"/>s that are selected (see <see cref="SelectedContainersCount"/>).
         /// </summary>
         /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
         protected internal IReadOnlyList<ItemContainer> SelectedContainers
@@ -196,6 +196,11 @@ namespace Nodify
                 return selectedContainers;
             }
         }
+
+        /// <summary>
+        /// Gets the number of selected containers, without allocating (see <see cref="SelectedContainers"/>).
+        /// </summary>
+        public int SelectedContainersCount => base.SelectedItems.Count;
 
         /// <summary>
         /// Gets or sets whether cancelling a selection operation is allowed (see <see cref="EditorGestures.SelectionGestures.Cancel"/>).

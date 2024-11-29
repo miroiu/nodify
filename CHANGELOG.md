@@ -15,11 +15,14 @@
 >	- Added UpdateCuttingLine to NodifyEditor
 >	- Added BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
+>	- Added AlignSelection and AlignContainers to NodifyEditor
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the Home button caused the editor to fail to display items when contained within a ScrollViewer
+>	- Fixed an issue where connector optimization did not work when SelectedItems was not data-bound
+>	- Fixed an issue where EditorCommands.Align caused multiple arrange invalidations, one for each aligned container
 	
 #### **Version 6.6.0**
 
