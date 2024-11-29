@@ -44,7 +44,7 @@ namespace Nodify
         /// <inheritdoc />
         public override void HandleMouseMove(MouseEventArgs e)
         {
-            double dragThreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
+            double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
             double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
 
             if (_isDragging && (dragDistance > dragThreshold))
@@ -64,7 +64,13 @@ namespace Nodify
         {
             if (_selectionType.HasValue)
             {
-                bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected;
+                // Determine whether the current selection should remain intact or be replaced by the clicked item. 
+                // If the right mouse button is pressed on an already selected item, and the item either has an 
+                // explicit context menu or is configured to preserve the selection on right-click, the selection 
+                // remains unchanged. This ensures that the context menu applies to the entire selection rather 
+                // than only the clicked item.
+                bool hasContextMenu = Container.ContextMenu != null || ItemContainer.PreserveSelectionOnRightClick;
+                bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected && hasContextMenu;
                 if (!(_selectionType == SelectionType.Replace && allowContextMenu))
                 {
                     Container.Select(_selectionType.Value);

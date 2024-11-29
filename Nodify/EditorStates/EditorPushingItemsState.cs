@@ -8,7 +8,7 @@ namespace Nodify
     public class EditorPushingItemsState : EditorState
     {
         private Point _prevPosition;
-        private const int _minDragDistance = 10;
+        private Point _initialPosition;
 
         private bool Canceled { get; set; } = NodifyEditor.AllowPushItemsCancellation;
 
@@ -20,7 +20,8 @@ namespace Nodify
         {
             Canceled = false;
 
-            _prevPosition = Editor.MouseLocation;
+            _initialPosition = Editor.MouseLocation;
+            _prevPosition = _initialPosition;
         }
 
         public override void Exit()
@@ -45,11 +46,11 @@ namespace Nodify
             }
             else
             {
-                if (Math.Abs(Editor.MouseLocation.X - _prevPosition.X) >= _minDragDistance)
+                if (Math.Abs(Editor.MouseLocation.X - _prevPosition.X) >= NodifyEditor.MouseActionSuppressionThreshold)
                 {
                     Editor.BeginPushingItems(_prevPosition, Orientation.Horizontal);
                 }
-                else if (Math.Abs(Editor.MouseLocation.Y - _prevPosition.Y) >= _minDragDistance)
+                else if (Math.Abs(Editor.MouseLocation.Y - _prevPosition.Y) >= NodifyEditor.MouseActionSuppressionThreshold)
                 {
                     Editor.BeginPushingItems(_prevPosition, Orientation.Vertical);
                 }
@@ -61,6 +62,18 @@ namespace Nodify
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
             if (gestures.PushItems.Matches(e.Source, e))
             {
+                // Suppress the context menu if the mouse moved beyond the defined drag threshold
+                if (e.ChangedButton == MouseButton.Right && Editor.ContextMenu != null)
+                {
+                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
+                    double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
+
+                    if (dragDistance > dragThreshold)
+                    {
+                        e.Handled = true;
+                    }
+                }
+
                 PopState();
             }
             else if (NodifyEditor.AllowPushItemsCancellation && gestures.CancelAction.Matches(e.Source, e))

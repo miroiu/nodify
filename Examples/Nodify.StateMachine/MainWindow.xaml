@@ -32,7 +32,6 @@
         </Grid.ColumnDefinitions>
 
         <ScrollViewer CanContentScroll="True"
-                      PreviewMouseWheel="ScrollViewer_MouseWheel"
                       PreviewKeyDown="ScrollViewer_PreviewKeyDown"
                       Grid.Column="1">
             <nodify:NodifyEditor x:Name="Editor"

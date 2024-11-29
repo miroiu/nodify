@@ -58,11 +58,13 @@ namespace Nodify
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
             if (gestures.Pan.Matches(e.Source, e))
             {
-                // Handle right click if panning and moved the mouse more than threshold so context menu doesn't open
-                if (e.ChangedButton == MouseButton.Right)
+                // Suppress the context menu if the mouse moved beyond the defined drag threshold or the editor is selecting
+                if (e.ChangedButton == MouseButton.Right && Editor.ContextMenu != null)
                 {
-                    double contextMenuTreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
-                    if ((_currentMousePosition - _initialMousePosition).LengthSquared > contextMenuTreshold)
+                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
+                    double dragDistance = (_currentMousePosition - _initialMousePosition).LengthSquared;
+
+                    if (dragDistance > dragThreshold || Editor.IsSelecting)
                     {
                         e.Handled = true;
                     }

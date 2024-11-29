@@ -56,9 +56,9 @@ namespace Nodify
             if (gestures.Drag.Matches(e.Source, e))
             {
                 // Suppress the context menu if the mouse moved beyond the defined drag threshold
-                if (e.ChangedButton == MouseButton.Right)
+                if (e.ChangedButton == MouseButton.Right && Editor.ContextMenu != null)
                 {
-                    double dragThreshold = NodifyEditor.HandleRightClickAfterPanningThreshold * NodifyEditor.HandleRightClickAfterPanningThreshold;
+                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
                     double dragDistance = (Editor.MouseLocation - _initialMousePosition).LengthSquared;
 
                     if (dragDistance > dragThreshold)

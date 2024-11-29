@@ -1,9 +1,11 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Nodify
 {
     public class EditorCuttingState : EditorState
     {
+        private Point _initialPosition;
         private bool Canceled { get; set; } = CuttingLine.AllowCuttingCancellation;
 
         public EditorCuttingState(NodifyEditor editor) : base(editor)
@@ -14,7 +16,8 @@ namespace Nodify
         {
             Canceled = false;
 
-            Editor.BeginCutting(Editor.MouseLocation);
+            _initialPosition = Editor.MouseLocation;
+            Editor.BeginCutting(_initialPosition);
         }
 
         public override void Exit()
@@ -35,6 +38,18 @@ namespace Nodify
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
             if (gestures.Cutting.Matches(e.Source, e))
             {
+                // Suppress the context menu if the mouse moved beyond the defined drag threshold
+                if (e.ChangedButton == MouseButton.Right && Editor.ContextMenu != null)
+                {
+                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
+                    double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
+
+                    if (dragDistance > dragThreshold)
+                    {
+                        e.Handled = true;
+                    }
+                }
+
                 PopState();
             }
             else if (CuttingLine.AllowCuttingCancellation && gestures.CancelAction.Matches(e.Source, e))

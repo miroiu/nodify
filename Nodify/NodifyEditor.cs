@@ -472,6 +472,12 @@ namespace Nodify
         public static double FitToScreenExtentMargin { get; set; } = 30;
 
         /// <summary>
+        /// Gets or sets the maximum distance, in pixels, that the mouse can move before suppressing certain mouse actions. 
+        /// This is useful for suppressing actions like showing a <see cref="ContextMenu"/> if the mouse has moved significantly.
+        /// </summary>
+        public static double MouseActionSuppressionThreshold { get; set; } = 12d;
+
+        /// <summary>
         /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
         /// </summary>
         public bool IsBulkUpdatingItems { get; protected set; }
@@ -793,12 +799,6 @@ namespace Nodify
             {
                 ReleaseMouseCapture();
             }
-
-            // Disable context menu if selecting
-            if (IsSelecting)
-            {
-                e.Handled = true;
-            }
         }
 
         /// <inheritdoc />
@@ -809,26 +809,15 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        protected override void OnLostMouseCapture(MouseEventArgs e)
-            => PopAllStates();
-
-        /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
+            MouseLocation = e.GetPosition(ItemsHost);
             State.HandleMouseWheel(e);
-
-            if (!e.Handled && EditorGestures.Mappings.Editor.ZoomModifierKey == Keyboard.Modifiers)
-            {
-                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-                ZoomAtPosition(zoom, e.GetPosition(ItemsHost));
-
-                // Handle it for nested editors
-                if (e.Source is NodifyEditor)
-                {
-                    e.Handled = true;
-                }
-            }
         }
+
+        /// <inheritdoc />
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => PopAllStates();
 
         protected override void OnKeyUp(KeyEventArgs e)
             => State.HandleKeyUp(e);

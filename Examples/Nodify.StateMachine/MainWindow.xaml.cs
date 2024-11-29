@@ -15,25 +15,7 @@ namespace Nodify.StateMachine
 
             EditorGestures.Mappings.Connection.Disconnect.Value = MultiGesture.None;
             EditorGestures.Mappings.Editor.ZoomModifierKey = ModifierKeys.Control;
-        }
-
-        private void ScrollViewer_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (Keyboard.Modifiers != ModifierKeys.Shift)
-                return;
-
-            var scrollViewer = (ScrollViewer)sender;
-
-            if (e.Delta < 0)
-            {
-                scrollViewer.LineRight();
-            }
-            else
-            {
-                scrollViewer.LineLeft();
-            }
-
-            e.Handled = true;
+            EditorGestures.Mappings.Editor.PanWithMouseWheel = true;
         }
 
         private void ScrollViewer_PreviewKeyDown(object sender, KeyEventArgs e)
