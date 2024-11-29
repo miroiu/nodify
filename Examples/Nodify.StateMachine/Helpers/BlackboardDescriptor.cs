@@ -128,7 +128,7 @@ namespace Nodify.StateMachine
             for (int i = 0; i < types.Length; i++)
             {
                 var type = types[i];
-                if (type.IsClass && !type.IsAbstract && ourType.IsAssignableFrom(type))
+                if (type.IsClass && !type.IsAbstract && ourType.IsAssignableFrom(type) && type.GetCustomAttribute<BlackboardItemAttribute>() != null)
                 {
                     result.Add(GetReference(type));
                 }

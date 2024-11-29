@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Nodify
 {
     /// <summary>The selecting state of the editor.</summary>
     public class EditorSelectingState : EditorState
     {
+        private Point _initialPosition;
         private readonly SelectionType _type;
         private bool Canceled { get; set; } = NodifyEditor.AllowSelectionCancellation;
 
@@ -21,7 +23,8 @@ namespace Nodify
         {
             Canceled = false;
 
-            Editor.BeginSelecting(Editor.MouseLocation, _type);
+            _initialPosition = Editor.MouseLocation;
+            Editor.BeginSelecting(_initialPosition, _type);
         }
 
         /// <inheritdoc />
@@ -39,7 +42,7 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public override void HandleMouseMove(MouseEventArgs e) 
+        public override void HandleMouseMove(MouseEventArgs e)
             => Editor.UpdateSelection(Editor.MouseLocation);
 
         /// <inheritdoc />
@@ -55,11 +58,23 @@ namespace Nodify
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             EditorGestures.SelectionGestures gestures = EditorGestures.Mappings.Editor.Selection;
-            if(gestures.Select.Matches(e.Source, e))
+            if (gestures.Select.Matches(e.Source, e))
             {
+                // Suppress the context menu if the mouse moved beyond the defined drag threshold
+                if (e.ChangedButton == MouseButton.Right && Editor.ContextMenu != null)
+                {
+                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
+                    double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
+
+                    if (dragDistance > dragThreshold)
+                    {
+                        e.Handled = true;
+                    }
+                }
+
                 PopState();
             }
-            else if(NodifyEditor.AllowSelectionCancellation && gestures.Cancel.Matches(e.Source, e))
+            else if (NodifyEditor.AllowSelectionCancellation && gestures.Cancel.Matches(e.Source, e))
             {
                 Canceled = true;
                 e.Handled = true;   // prevents opening context menu

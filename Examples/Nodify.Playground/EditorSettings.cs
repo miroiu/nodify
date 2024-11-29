@@ -211,10 +211,10 @@ namespace Nodify.Playground
             _advancedSettings = new List<ISettingViewModel>()
             {
                 new ProxySettingViewModel<double>(
-                    () => Instance.HandleRightClickAfterPanningThreshold,
-                    val => Instance.HandleRightClickAfterPanningThreshold = val,
-                    "Disable context menu after panning: ",
-                    "Disable after mouse moved this far"),
+                    () => Instance.MouseActionSuppressionThreshold,
+                    val => Instance.MouseActionSuppressionThreshold = val,
+                    "Context menu suppression threshold: ",
+                    "Disable context menu after mouse moved this far"),
                 new ProxySettingViewModel<double>(
                     () => Instance.AutoPanningTickRate,
                     val => Instance.AutoPanningTickRate = val,
@@ -585,10 +585,10 @@ namespace Nodify.Playground
 
         #region Advanced settings
 
-        public double HandleRightClickAfterPanningThreshold
+        public double MouseActionSuppressionThreshold
         {
-            get => NodifyEditor.HandleRightClickAfterPanningThreshold;
-            set => NodifyEditor.HandleRightClickAfterPanningThreshold = value;
+            get => NodifyEditor.MouseActionSuppressionThreshold;
+            set => NodifyEditor.MouseActionSuppressionThreshold = value;
         }
 
         public double AutoPanningTickRate

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify
@@ -53,18 +54,23 @@ namespace Nodify
         public override void HandleMouseWheel(MouseWheelEventArgs e)
         {
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (gestures.PanWithMouseWheel)
+            if (gestures.PanWithMouseWheel && Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
             {
-                if (Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
-                {
-                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X - e.Delta / Editor.ViewportZoom, Editor.ViewportLocation.Y);
-                    e.Handled = true;
-                }
-                else if (Keyboard.Modifiers == gestures.PanVerticalModifierKey)
-                {
-                    Editor.ViewportLocation = new Point(Editor.ViewportLocation.X, Editor.ViewportLocation.Y - e.Delta / Editor.ViewportZoom);
-                    e.Handled = true;
-                }
+                double offset = Math.Sign(e.Delta) * Mouse.MouseWheelDeltaForOneLine / 2 / Editor.ViewportZoom;
+                Editor.UpdatePanning(new Vector(offset, 0d));
+                e.Handled = true;
+            }
+            else if (gestures.PanWithMouseWheel && Keyboard.Modifiers == gestures.PanVerticalModifierKey)
+            {
+                double offset = Math.Sign(e.Delta) * Mouse.MouseWheelDeltaForOneLine / 2 / Editor.ViewportZoom;
+                Editor.UpdatePanning(new Vector(0d, offset));
+                e.Handled = true;
+            }
+            else if (gestures.ZoomModifierKey == Keyboard.Modifiers)
+            {
+                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+                Editor.ZoomAtPosition(zoom, Editor.MouseLocation);
+                e.Handled = true;
             }
         }
     }

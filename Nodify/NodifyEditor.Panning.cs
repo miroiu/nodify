@@ -76,12 +76,6 @@ namespace Nodify
         public static bool AllowPanningCancellation { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
-        /// Useful for <see cref="ContextMenu"/>s to appear if mouse only moved a bit or not at all.
-        /// </summary>
-        public static double HandleRightClickAfterPanningThreshold { get; set; } = 12d;
-
-        /// <summary>
         /// Gets or sets how often the new <see cref="ViewportLocation"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
         /// </summary>
         public static double AutoPanningTickRate { get; set; } = 1;
@@ -119,11 +113,9 @@ namespace Nodify
         /// <param name="amount">The amount to pan the viewport.</param>
         /// <remarks>
         /// This method adjusts the current <see cref="ViewportLocation"/> incrementally based on the provided amount.
-        /// It should only be called while a panning operation is active (see <see cref="BeginPanning(Point)"/>).
         /// </remarks>
         public void UpdatePanning(Vector amount)
         {
-            Debug.Assert(IsPanning);
             ViewportLocation -= amount;
         }
 

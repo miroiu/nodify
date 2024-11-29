@@ -85,13 +85,13 @@ namespace Nodify
 
         void IScrollInfo.SetHorizontalOffset(double offset)
         {
-            _horizontalOffset = offset;
+            _horizontalOffset = double.IsInfinity(offset) ? 0d : offset;
             UpdateViewportLocationOnScroll();
         }
 
         void IScrollInfo.SetVerticalOffset(double offset)
         {
-            _verticalOffset = offset;
+            _verticalOffset = double.IsInfinity(offset) ? 0d : offset;
             UpdateViewportLocationOnScroll();
         }
 

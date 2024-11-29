@@ -222,6 +222,12 @@ namespace Nodify
         public static bool AllowDraggingCancellation { get; set; } = true;
 
         /// <summary>
+        /// Indicates whether right-click on the container should preserve the current selection. 
+        /// </summary>
+        /// <remarks>Has no effect if the container has a context menu.</remarks>
+        public static bool PreserveSelectionOnRightClick { get; set; }
+
+        /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public NodifyEditor Editor { get; }
