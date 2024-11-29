@@ -94,6 +94,5 @@ namespace Nodify
                 c.Location = new Point(center - c.ActualWidth / 2, c.Location.Y);
             }
         }
-
     }
 }
