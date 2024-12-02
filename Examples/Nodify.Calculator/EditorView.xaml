@@ -135,6 +135,7 @@
                              ConnectionTemplate="{StaticResource ConnectionTemplate}"
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
                              ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                             HasCustomContextMenu="True"
                              GridCellSize="15"
                              AllowDrop="True"
                              Drop="OnDropNode"

@@ -15,7 +15,8 @@
 >	- Added UpdateCuttingLine to NodifyEditor
 >	- Added BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
->	- Added AlignSelection and AlignContainers to NodifyEditor
+>	- Added AlignSelection and AlignContainers methods to NodifyEditor
+>	- Added HasCustomContextMenu dependency property to NodifyEditor and ItemContainer
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 > - Bugfixes:

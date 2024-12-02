@@ -349,6 +349,7 @@ namespace Nodify
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+        public static readonly DependencyProperty HasCustomContextMenuProperty = DependencyProperty.Register(nameof(HasCustomContextMenu), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
 
         private static object OnCoerceGridCellSize(DependencyObject d, object value)
@@ -400,6 +401,21 @@ namespace Nodify
             get => (bool)GetValue(DisableZoomingProperty);
             set => SetValue(DisableZoomingProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the editor uses a custom context menu.
+        /// </summary>
+        /// <remarks>When set to true, the editor handles the right-click event for specific operations.</remarks>
+        public bool HasCustomContextMenu
+        {
+            get => (bool)GetValue(HasCustomContextMenuProperty);
+            set => SetValue(HasCustomContextMenuProperty, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the editor has a context menu.
+        /// </summary>
+        public bool HasContextMenu => ContextMenu != null || HasCustomContextMenu;
 
         #endregion
 
