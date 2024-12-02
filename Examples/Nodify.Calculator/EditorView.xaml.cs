@@ -16,7 +16,7 @@ namespace Nodify.Calculator
 
         private void OpenOperationsMenu(object sender, MouseButtonEventArgs e)
         {
-            if (!e.Handled && e.OriginalSource is NodifyEditor editor && !editor.IsPanning && editor.DataContext is CalculatorViewModel calculator)
+            if (!e.Handled && e.OriginalSource is NodifyEditor editor && editor.DataContext is CalculatorViewModel calculator)
             {
                 e.Handled = true;
                 calculator.OperationsMenu.OpenAt(editor.MouseLocation);

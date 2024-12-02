@@ -69,7 +69,7 @@ namespace Nodify
                 // explicit context menu or is configured to preserve the selection on right-click, the selection 
                 // remains unchanged. This ensures that the context menu applies to the entire selection rather 
                 // than only the clicked item.
-                bool hasContextMenu = Container.ContextMenu != null || ItemContainer.PreserveSelectionOnRightClick;
+                bool hasContextMenu = Container.HasContextMenu || ItemContainer.PreserveSelectionOnRightClick;
                 bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected && hasContextMenu;
                 if (!(_selectionType == SelectionType.Replace && allowContextMenu))
                 {

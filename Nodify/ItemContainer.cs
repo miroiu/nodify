@@ -33,6 +33,18 @@ namespace Nodify
         private static readonly DependencyPropertyKey IsPreviewingLocationPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPreviewingLocation), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPreviewingLocationProperty = IsPreviewingLocationPropertyKey.DependencyProperty;
         public static readonly DependencyProperty IsDraggableProperty = DependencyProperty.Register(nameof(IsDraggable), typeof(bool), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+        public static readonly DependencyProperty HasCustomContextMenuProperty = NodifyEditor.HasCustomContextMenuProperty.AddOwner(typeof(ItemContainer));
+
+        private static void OnLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var item = (ItemContainer)d;
+            item.OnLocationChanged();
+
+            if (item.Editor.IsLoaded && !item.Editor.IsBulkUpdatingItems)
+            {
+                item.Editor.ItemsHost.InvalidateArrange();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the brush used when the <see cref="PendingConnection.IsOverElementProperty"/> attached property is true for this <see cref="ItemContainer"/>.
@@ -135,16 +147,20 @@ namespace Nodify
             set => SetValue(IsDraggableProperty, value);
         }
 
-        private static void OnLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// Gets or sets a value indicating whether the container uses a custom context menu.
+        /// </summary>
+        /// <remarks>When set to true, the container handles the right-click event for specific operations.</remarks>
+        public bool HasCustomContextMenu
         {
-            var item = (ItemContainer)d;
-            item.OnLocationChanged();
-
-            if (item.Editor.IsLoaded && !item.Editor.IsBulkUpdatingItems)
-            {
-                item.Editor.ItemsHost.InvalidateArrange();
-            }
+            get => (bool)GetValue(HasCustomContextMenuProperty);
+            set => SetValue(HasCustomContextMenuProperty, value);
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the container has a context menu.
+        /// </summary>
+        public bool HasContextMenu => ContextMenu != null || HasCustomContextMenu;
 
         #endregion
 
