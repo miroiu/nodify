@@ -40,7 +40,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Invoked when a drag operation starts for the <see cref="SelectedItems"/>, or when <see cref="IsPushingItems"/> is set to true.
+        /// Invoked when a drag operation starts for the <see cref="SelectedContainers"/>, or when <see cref="IsPushingItems"/> is set to true.
         /// </summary>
         public ICommand? ItemsDragStartedCommand
         {
@@ -49,7 +49,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Invoked when a drag operation is completed for the <see cref="SelectedItems"/>, or when <see cref="IsPushingItems"/> is set to false.
+        /// Invoked when a drag operation is completed for the <see cref="SelectedContainers"/>, or when <see cref="IsPushingItems"/> is set to false.
         /// </summary>
         public ICommand? ItemsDragCompletedCommand
         {

@@ -11,6 +11,19 @@ using System.Windows.Media;
 namespace Nodify
 {
     /// <summary>
+    /// Specifies the possible alignment values used by the <see cref="NodifyEditor.AlignSelection(Alignment)"/> method.
+    /// </summary>
+    public enum Alignment
+    {
+        Top,
+        Left,
+        Bottom,
+        Right,
+        Middle,
+        Center
+    }
+
+    /// <summary>
     /// Groups <see cref="ItemContainer"/>s and <see cref="Connection"/>s in an area that you can drag, zoom and select.
     /// </summary>
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
@@ -672,6 +685,41 @@ namespace Nodify
                 ZoomAtPosition(zoom, center);
                 BringIntoView(center, animated: false);
             }
+        }
+
+        /// <summary>
+        /// Aligns the selected containers based on the specified alignment.
+        /// </summary>
+        /// <param name="alignment">The alignment type to apply to the selected containers.</param>
+        /// <param name="relativeTo">An optional container to use as a reference for alignment. If null, the alignment is based on the containers themselves.</param>
+        /// <remarks>This method has no effect if a dragging operation is in progress.</remarks>
+        public void AlignSelection(Alignment alignment, ItemContainer? relativeTo = default)
+            => AlignContainers(SelectedContainers, alignment, relativeTo);
+
+        /// <summary>
+        /// Aligns a collection of containers based on the specified alignment.
+        /// </summary>
+        /// <param name="containers">The collection of item containers to align.</param>
+        /// <param name="alignment">The alignment type to apply to the containers.</param>
+        /// <param name="relativeTo">An optional container to use as a reference for alignment. If null, the alignment is based on the containers themselves.</param>
+        /// <remarks>This method has no effect if a dragging operation is in progress.</remarks>
+        public void AlignContainers(IEnumerable<ItemContainer> containers, Alignment alignment, ItemContainer? relativeTo = default)
+        {
+            if (IsDragging)
+            {
+                return;
+            }
+
+            IsDragging = true;
+            IsBulkUpdatingItems = true;
+
+            AlignmentHelper.Align(containers, alignment, relativeTo);
+
+            IsBulkUpdatingItems = false;
+            // Draw the containers at the new position.
+            ItemsHost.InvalidateArrange();
+
+            IsDragging = false;
         }
 
         #endregion

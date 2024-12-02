@@ -140,7 +140,7 @@ namespace Nodify
             var item = (ItemContainer)d;
             item.OnLocationChanged();
 
-            if (!item.Editor.IsBulkUpdatingItems)
+            if (item.Editor.IsLoaded && !item.Editor.IsBulkUpdatingItems)
             {
                 item.Editor.ItemsHost.InvalidateArrange();
             }

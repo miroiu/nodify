@@ -252,8 +252,7 @@ namespace Nodify
             // Update only connectors that are connected
             if (Editor != null && IsConnected)
             {
-                bool shouldOptimize = EnableOptimizations && Editor.SelectedItems?.Count > OptimizeMinimumSelectedItems;
-
+                bool shouldOptimize = EnableOptimizations && Editor.SelectedContainersCount >= OptimizeMinimumSelectedItems;
                 if (shouldOptimize)
                 {
                     UpdateAnchorBasedOnLocation(Editor, location);
