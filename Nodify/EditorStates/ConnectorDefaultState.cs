@@ -15,7 +15,14 @@ namespace Nodify
             }
             else if (gestures.Connect.Matches(e.Source, e))
             {
-                Connector.PushState(new ConnectorConnectingState(Connector));
+                if (Connector.EnableStickyConnections)
+                {
+                    Connector.PushState(new ConnectorConnectingStickyState(Connector));
+                }
+                else
+                {
+                    Connector.PushState(new ConnectorConnectingState(Connector));
+                }
             }
 
             e.Handled = true;   // prevent interacting with the container
