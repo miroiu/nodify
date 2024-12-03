@@ -254,7 +254,7 @@ namespace Nodify
             {
                 e.Handled = true;
                 e.Canceled = !StartedCommand?.CanExecute(e.SourceConnector) ?? false;
-                    
+
                 Target = null;
                 IsVisible = !e.Canceled;
                 SourceAnchor = e.Anchor;
@@ -266,7 +266,7 @@ namespace Nodify
                     StartedCommand?.Execute(Source);
                 }
 
-                if(EnablePreview)
+                if (EnablePreview)
                 {
                     PreviewTarget = e.SourceConnector;
                 }
@@ -283,7 +283,7 @@ namespace Nodify
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
                     // Look for a potential connector
-                    FrameworkElement? connector = GetPotentialConnector(Editor, AllowOnlyConnectors);
+                    FrameworkElement? connector = GetPotentialConnector(Editor, TargetAnchor, AllowOnlyConnectors);
 
                     // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)
@@ -342,7 +342,7 @@ namespace Nodify
                     }
                 }
 
-                if(EnablePreview)
+                if (EnablePreview)
                 {
                     PreviewTarget = null;
                 }
@@ -356,17 +356,18 @@ namespace Nodify
         /// <summary>Searches for a potential connector prioritizing <see cref="Connector"/>s</summary>
         /// <param name="editor">The editor to scan for connectors or item containers.</param>
         /// <param name="allowOnlyConnectors">Will also look for <see cref="ItemContainer"/>s if false.</param>
+        /// <param name="position">A position in the editor to verify intersections.</param>
         /// <returns>A connector, an item container, the editor or null.</returns>
-        internal static FrameworkElement? GetPotentialConnector(NodifyEditor editor, bool allowOnlyConnectors)
+        internal static FrameworkElement? GetPotentialConnector(NodifyEditor editor, Point position, bool allowOnlyConnectors)
         {
-            Connector? connector = editor.ItemsHost.GetElementUnderMouse<Connector>();
+            Connector? connector = editor.ItemsHost.GetElementAtPosition<Connector>(position);
             if (connector != null && connector.Editor == editor)
                 return connector;
 
             if (allowOnlyConnectors)
                 return null;
 
-            var itemContainer = editor.ItemsHost.GetElementUnderMouse<ItemContainer>();
+            var itemContainer = editor.ItemsHost.GetElementAtPosition<ItemContainer>(position);
             if (itemContainer != null && itemContainer.Editor == editor)
                 return itemContainer;
 

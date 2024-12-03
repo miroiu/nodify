@@ -19,6 +19,8 @@
 >	- Added HasCustomContextMenu dependency property to NodifyEditor and ItemContainer
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
+>	- Added State, GetInitialState, PushState, PopState and PopAllStates to Connector
+>	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the Home button caused the editor to fail to display items when contained within a ScrollViewer
