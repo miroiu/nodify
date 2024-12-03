@@ -36,6 +36,8 @@ namespace Nodify
             {
                 Connector.EndConnecting();
                 PopState();
+
+                e.Handled = true;  // prevent interacting with the container
             }
         }
 

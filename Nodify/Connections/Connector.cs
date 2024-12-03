@@ -540,6 +540,7 @@ namespace Nodify
         /// <summary>
         /// Removes all connections associated with this connector.
         /// </summary>
+        /// <remarks>This method has no effect if a pending connection is already in progress or the connector is not connected (see <see cref="IsConnected"/>).</remarks>
         public void RemoveConnections()
         {
             if (!IsConnected || IsPendingConnection)
