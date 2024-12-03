@@ -54,7 +54,7 @@ namespace Nodify
             return default;
         }
 
-        public static T? GetElementUnderMouse<T>(this UIElement container)
+        public static T? GetElementAtPosition<T>(this UIElement container, Point position)
             where T : UIElement
         {
             T? result = default;
@@ -80,7 +80,7 @@ namespace Nodify
                     return HitTestResultBehavior.Stop;
                 }
                 return HitTestResultBehavior.Continue;
-            }, new PointHitTestParameters(Mouse.GetPosition(container)));
+            }, new PointHitTestParameters(position));
 
             return result;
         }

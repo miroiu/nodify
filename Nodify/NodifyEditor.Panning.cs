@@ -104,6 +104,7 @@ namespace Nodify
         /// <summary>
         /// Starts the panning operation from the current <see cref="ViewportLocation" />.
         /// </summary>
+        /// <remarks>This method has no effect if a panning operation is already in progress.</remarks>
         public void BeginPanning()
             => BeginPanning(ViewportLocation);
 

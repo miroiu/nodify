@@ -105,6 +105,11 @@ namespace Nodify.Playground
                     "Auto panning edge distance: ",
                     "Distance from edge to trigger auto panning"),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.EnableStickyConnectors,
+                    val => Instance.EnableStickyConnectors = val,
+                    "Enable sticky connectors: ",
+                    "The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"),
+                new ProxySettingViewModel<bool>(
                     () => Instance.SelectableConnections,
                     val => Instance.SelectableConnections = val,
                     "Selectable connections: ",
@@ -226,6 +231,21 @@ namespace Nodify.Playground
                     "Allow cutting cancellation: ",
                     "Right click to cancel cutting."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPushItemsCancellation,
+                    val => Instance.AllowPushItemsCancellation = val,
+                    "Allow push nodes cancellation: ",
+                    "Right click to cancel pushing nodes."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningCancellation,
+                    val => Instance.AllowPanningCancellation= val,
+                    "Allow panning cancellation: ",
+                    "Press Escape to cancel panning."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowSelectionCancellation,
+                    val => Instance.AllowSelectionCancellation = val,
+                    "Allow selection cancellation: ",
+                    "Press Escape to cancel selecting."),
+                new ProxySettingViewModel<bool>(
                     () => Instance.AllowDraggingCancellation,
                     val => Instance.AllowDraggingCancellation = val,
                     "Allow dragging cancellation: ",
@@ -285,11 +305,6 @@ namespace Nodify.Playground
                     val => Instance.FitToScreenExtentMargin = val,
                     "Fit to screen extent margin: ",
                     "Adds some margin to the nodes extent when fit to screen"),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.EnableStickyConnectors,
-                    val => Instance.EnableStickyConnectors = val,
-                    "Enable sticky connectors: ",
-                    "The connection can be completed in two steps (e.g. click to create pending connection, click to connect)"),
             };
 
             EnableCuttingLinePreview = true;
@@ -601,6 +616,24 @@ namespace Nodify.Playground
         {
             get => CuttingLine.AllowCuttingCancellation;
             set => CuttingLine.AllowCuttingCancellation = value;
+        }
+
+        public bool AllowPushItemsCancellation
+        {
+            get => NodifyEditor.AllowPushItemsCancellation;
+            set => NodifyEditor.AllowPushItemsCancellation = value;
+        }
+
+        public bool AllowPanningCancellation
+        {
+            get => NodifyEditor.AllowPanningCancellation;
+            set => NodifyEditor.AllowPanningCancellation = value;
+        }
+
+        public bool AllowSelectionCancellation
+        {
+            get => NodifyEditor.AllowSelectionCancellation;
+            set => NodifyEditor.AllowSelectionCancellation = value;
         }
 
         public bool AllowDraggingCancellation

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -61,7 +63,7 @@ namespace Nodify
         public static readonly DependencyProperty IsPendingConnectionProperty = IsPendingConnectionPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets the location where <see cref="Connection"/>s can be attached to. 
+        /// Gets the location in graph space coordinates where <see cref="Connection"/>s can be attached to. 
         /// Bind with <see cref="System.Windows.Data.BindingMode.OneWayToSource"/>
         /// </summary>
         public Point Anchor
@@ -106,12 +108,18 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
+        public Connector()
+        {
+            _states.Push(GetInitialState());
+        }
+
         #region Fields
 
+        private FrameworkElement? _thumb;
         /// <summary>
         /// Gets the <see cref="FrameworkElement"/> used to calculate the <see cref="Anchor"/>.
         /// </summary>
-        protected FrameworkElement? Thumb { get; private set; }
+        protected internal FrameworkElement Thumb => _thumb ??= Template.FindName(ElementConnector, this) as FrameworkElement ?? this;
 
         /// <summary>
         /// Gets the <see cref="ItemContainer"/> that contains this <see cref="Connector"/>.
@@ -149,7 +157,7 @@ namespace Nodify
         public static bool EnableStickyConnections { get; set; }
 
         private Point _lastUpdatedContainerPosition;
-        private Point _thumbCenter;
+        private Point _pendingConnectionEndPosition;
         private bool _isHooked;
 
         #endregion
@@ -159,8 +167,6 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
-            Thumb = Template.FindName(ElementConnector, this) as FrameworkElement ?? this;
-
             Container = this.GetParentOfType<ItemContainer>();
             Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
 
@@ -168,7 +174,7 @@ namespace Nodify
             Unloaded += OnConnectorUnloaded;
         }
 
-        #region Update connector
+        #region Update Anchor
 
         // Toggle events that could be used to update the Anchor
         private void TrySetAnchorUpdateEvents(bool value)
@@ -308,13 +314,52 @@ namespace Nodify
 
         #endregion
 
-        #region Event Handlers
+        #region State Handling
 
-        /// <inheritdoc />
-        protected override void OnLostMouseCapture(MouseEventArgs e)
+        private readonly Stack<ConnectorState> _states = new Stack<ConnectorState>();
+
+        /// <summary>The current state of the connector.</summary>
+        public ConnectorState State => _states.Peek();
+
+        /// <summary>Creates the initial state of the connector.</summary>
+        /// <returns>The initial state.</returns>
+        protected virtual ConnectorState GetInitialState()
+            => new ConnectorDefaultState(this);
+
+        /// <summary>Pushes the given state to the stack.</summary>
+        /// <param name="state">The new state of the connector.</param>
+        /// <remarks>Calls <see cref="ConnectorState.Enter"/> on the new state.</remarks>
+        public void PushState(ConnectorState state)
         {
-            // Always cancel if lost capture
-            OnConnectorDragCompleted(cancel: true);
+            var prev = State;
+            _states.Push(state);
+            state.Enter(prev);
+        }
+
+        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
+        /// <br />Calls <see cref="ConnectorState.Exit"/> on the current state.
+        /// <br />Calls <see cref="ConnectorState.ReEnter"/> on the previous state.
+        /// </remarks>
+        public void PopState()
+        {
+            // Never remove the default state
+            if (_states.Count > 1)
+            {
+                ConnectorState prev = _states.Pop();
+                prev.Exit();
+                State.ReEnter(prev);
+            }
+        }
+
+        /// <summary>Pops all states from the connector.</summary>
+        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
+        public void PopAllStates()
+        {
+            while (_states.Count > 1)
+            {
+                PopState();
+            }
         }
 
         /// <inheritdoc />
@@ -324,96 +369,63 @@ namespace Nodify
 
             this.CaptureMouseSafe();
 
-            e.Handled = true;
-
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (gestures.Disconnect.Matches(e.Source, e))
-            {
-                OnDisconnect();
-            }
-            else if (gestures.Connect.Matches(e.Source, e))
-            {
-                if (EnableStickyConnections && IsPendingConnection)
-                {
-                    OnConnectorDragCompleted();
-                }
-                else
-                {
-                    UpdateAnchor();
-                    OnConnectorDragStarted();
-                }
-            }
+            State.HandleMouseDown(e);
         }
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            // Don't select the ItemContainer when starting a pending connecton for sticky connections
-            e.Handled = EnableStickyConnections && IsPendingConnection;
+            State.HandleMouseUp(e);
 
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (!EnableStickyConnections && gestures.Connect.Matches(e.Source, e))
+            // Release the mouse capture if all the mouse buttons are released and there's no sticky connection pending
+            if (!IsPendingConnection && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
-                OnConnectorDragCompleted();
-                e.Handled = true;
-            }
-            else if (AllowPendingConnectionCancellation && IsPendingConnection && gestures.CancelAction.Matches(e.Source, e))
-            {
-                // Cancel pending connection
-                OnConnectorDragCompleted(cancel: true);
-                ReleaseMouseCapture();
-
-                // Don't show context menu
-                e.Handled = true;
-            }
-
-            if (IsMouseCaptured && !IsPendingConnection)
-            {
-                ReleaseMouseCapture();
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            if (AllowPendingConnectionCancellation && EditorGestures.Mappings.Connector.CancelAction.Matches(e.Source, e))
-            {
-                // Cancel pending connection
-                OnConnectorDragCompleted(cancel: true);
                 ReleaseMouseCapture();
             }
         }
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
+            => State.HandleMouseMove(e);
+
+        /// <inheritdoc />
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+            => State.HandleMouseWheel(e);
+
+        /// <inheritdoc />
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => PopAllStates();
+
+        protected override void OnKeyUp(KeyEventArgs e)
+            => State.HandleKeyUp(e);
+
+        protected override void OnKeyDown(KeyEventArgs e)
+            => State.HandleKeyDown(e);
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Initiates a new pending connection from this connector (see <see cref="IsPendingConnection"/>).
+        /// </summary>
+        /// <remarks>This method has no effect if a pending connection is already in progress.</remarks>
+        public void BeginConnecting()
+            => BeginConnecting(new Vector(0, 0));
+
+        /// <summary>
+        /// Initiates a new pending connection from this connector with the specified offset (see <see cref="IsPendingConnection"/>).
+        /// </summary>
+        /// <remarks>This method has no effect if a pending connection is already in progress.</remarks>
+        public void BeginConnecting(Vector offset)
         {
             if (IsPendingConnection)
             {
-                Vector offset = e.GetPosition(Thumb) - _thumbCenter;
-                OnConnectorDrag(offset);
+                return;
             }
-        }
 
-        protected virtual void OnConnectorDrag(Vector offset)
-        {
-            var args = new PendingConnectionEventArgs(DataContext)
-            {
-                RoutedEvent = PendingConnectionDragEvent,
-                OffsetX = offset.X,
-                OffsetY = offset.Y,
-                Anchor = Anchor,
-                Source = this
-            };
-
-            RaiseEvent(args);
-        }
-
-        protected virtual void OnConnectorDragStarted()
-        {
-            if (Thumb != null)
-            {
-                _thumbCenter = new Point(Thumb.ActualWidth / 2, Thumb.ActualHeight / 2);
-            }
+            UpdateAnchor();
+            _pendingConnectionEndPosition = Anchor + offset;
 
             var args = new PendingConnectionEventArgs(DataContext)
             {
@@ -424,52 +436,131 @@ namespace Nodify
 
             RaiseEvent(args);
             IsPendingConnection = !args.Canceled;
-
-            if (IsMouseCaptured && !IsPendingConnection)
-            {
-                ReleaseMouseCapture();
-            }
         }
 
-        protected virtual void OnConnectorDragCompleted(bool cancel = false)
+        /// <summary>
+        /// Updates the endpoint of the pending connection by adjusting its position with the specified offset.
+        /// </summary>
+        /// <param name="offset">The amount to adjust the pending connection's endpoint.</param>
+        public void UpdatePendingConnection(Vector offset)
+            => UpdatePendingConnection(_pendingConnectionEndPosition + offset);
+
+        /// <summary>
+        /// Updates the endpoint of the pending connection to the specified position.
+        /// </summary>
+        /// <param name="position">The new position for the connection's endpoint.</param>
+        public void UpdatePendingConnection(Point position)
         {
-            if (IsPendingConnection)
+            Debug.Assert(IsPendingConnection);
+
+            _pendingConnectionEndPosition = position;
+
+            var args = new PendingConnectionEventArgs(DataContext)
             {
-                FrameworkElement? elem = Editor != null ? PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor)) : null;
+                RoutedEvent = PendingConnectionDragEvent,
+                OffsetX = _pendingConnectionEndPosition.X - Anchor.X,
+                OffsetY = _pendingConnectionEndPosition.Y - Anchor.Y,
+                Anchor = Anchor,
+                Source = this
+            };
 
-                var args = new PendingConnectionEventArgs(DataContext)
-                {
-                    TargetConnector = elem?.DataContext,
-                    RoutedEvent = PendingConnectionCompletedEvent,
-                    Anchor = Anchor,
-                    Source = this,
-                    Canceled = cancel
-                };
-
-                IsPendingConnection = false;
-                RaiseEvent(args);
-            }
+            RaiseEvent(args);
         }
 
-        protected virtual void OnDisconnect()
+        /// <summary>
+        /// Cancels the current pending connection without completing it.
+        /// </summary>
+        /// <remarks>This method has no effect if there's no pending connection.</remarks>
+        public void CancelConnecting()
         {
-            if (IsConnected && !IsPendingConnection)
+            if (!IsPendingConnection)
             {
-                object? connector = DataContext;
-                var args = new ConnectorEventArgs(connector)
-                {
-                    RoutedEvent = DisconnectEvent,
-                    Anchor = Anchor,
-                    Source = this
-                };
+                return;
+            }
 
-                RaiseEvent(args);
+            var args = new PendingConnectionEventArgs(DataContext)
+            {
+                RoutedEvent = PendingConnectionCompletedEvent,
+                Anchor = Anchor,
+                Source = this,
+                Canceled = true
+            };
+            RaiseEvent(args);
 
-                // Raise DisconnectCommand if event is Disconnect not handled
-                if (!args.Handled && (DisconnectCommand?.CanExecute(connector) ?? false))
-                {
-                    DisconnectCommand.Execute(connector);
-                }
+            IsPendingConnection = false;
+        }
+
+        /// <summary>
+        /// Completes the current pending connection.
+        /// </summary>
+        /// <remarks>
+        /// Attempts to identify a target connector near the connection's endpoint and completes the pending connection.
+        /// If no target connector is found, the connection may be completed without a valid target.
+        /// This method has no effect if there's no pending connection.
+        /// </remarks>
+        public void EndConnecting()
+        {
+            if (!IsPendingConnection)
+            {
+                return;
+            }
+
+            FrameworkElement? elem = Editor != null ? PendingConnection.GetPotentialConnector(Editor, _pendingConnectionEndPosition, PendingConnection.GetAllowOnlyConnectorsAttached(Editor)) : null;
+            EndConnecting(elem);
+        }
+
+        /// <summary>
+        /// Completes the current pending connection using the specified connector as the target.
+        /// </summary>
+        /// <param name="connector">The connector to use as the connection target.</param>
+        /// <remarks>This method has no effect if there's no pending connection.</remarks>
+        public void EndConnecting(Connector connector)
+            => EndConnecting((FrameworkElement)connector);
+
+        private void EndConnecting(FrameworkElement? elem)
+        {
+            if (!IsPendingConnection)
+            {
+                return;
+            }
+
+            var args = new PendingConnectionEventArgs(DataContext)
+            {
+                TargetConnector = elem?.DataContext,
+                RoutedEvent = PendingConnectionCompletedEvent,
+                Anchor = Anchor,
+                Source = this
+            };
+            RaiseEvent(args);
+
+            IsPendingConnection = false;
+            _pendingConnectionEndPosition = Anchor;
+        }
+
+        /// <summary>
+        /// Removes all connections associated with this connector.
+        /// </summary>
+        public void RemoveConnections()
+        {
+            if (!IsConnected || IsPendingConnection)
+            {
+                return;
+            }
+
+            object? connector = DataContext;
+            var args = new ConnectorEventArgs(connector)
+            {
+                RoutedEvent = DisconnectEvent,
+                Anchor = Anchor,
+                Source = this
+            };
+
+            RaiseEvent(args);
+
+            // Raise DisconnectCommand if event is not handled
+            if (!args.Handled && (DisconnectCommand?.CanExecute(connector) ?? false))
+            {
+                DisconnectCommand.Execute(connector);
             }
         }
 
