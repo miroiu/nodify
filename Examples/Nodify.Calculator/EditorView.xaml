@@ -220,6 +220,7 @@
                                                      PendingConnectionTemplate="{StaticResource PendingConnectionTemplate}"
                                                      ConnectionTemplate="{StaticResource ConnectionTemplate}"
                                                      ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                                                     HasCustomContextMenu="True"
                                                      Background="Transparent"
                                                      GridCellSize="15"
                                                      AllowDrop="True"
