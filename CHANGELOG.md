@@ -10,6 +10,7 @@
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
+>	- Replaced the System.Windows.Input.MouseGesture with Nodify.MouseGesture
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
@@ -21,6 +22,7 @@
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added State, GetInitialState, PushState, PopState and PopAllStates to Connector
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
+>	- Added a custom MouseGesture with support for key combinations
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the Home button caused the editor to fail to display items when contained within a ScrollViewer
