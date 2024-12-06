@@ -355,6 +355,15 @@ namespace Nodify
                 selector.SelectAll();
             }
         }
+
+        /// <summary>
+        /// Initiates a selection operation from the current <see cref="MouseLocation"/>.
+        /// </summary>
+        /// <remarks>This method has no effect if a selection operation is already in progress.</remarks>
+        /// <param name="type">The type of selection to perform. Defaults to <see cref="SelectionType.Replace"/>.</param>
+        public void BeginSelecting(SelectionType type = SelectionType.Replace)
+            => BeginSelecting(MouseLocation, type);
+
         /// <summary>
         /// Initiates a selection operation from the specified location.
         /// </summary>

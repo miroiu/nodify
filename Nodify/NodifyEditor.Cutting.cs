@@ -112,6 +112,13 @@ namespace Nodify
         private readonly LineGeometry _cuttingLineGeometry = new LineGeometry();
 
         /// <summary>
+        /// Starts the cutting operation at the current <see cref="MouseLocation"/>. Call <see cref="EndCutting"/> to complete the operation or <see cref="CancelCutting"/> to abort it.
+        /// </summary>
+        /// <remarks>This method has no effect if a cutting operation is already in progress.</remarks>
+        public void BeginCutting()
+            => BeginCutting(MouseLocation);
+
+        /// <summary>
         /// Starts the cutting operation at the specified location. Call <see cref="EndCutting"/> to complete the operation or <see cref="CancelCutting"/> to abort it.
         /// </summary>
         /// <remarks>This method has no effect if a cutting operation is already in progress.</remarks>

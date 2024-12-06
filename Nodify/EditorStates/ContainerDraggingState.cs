@@ -4,89 +4,35 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>Dragging state of the container.</summary>
-    public class ContainerDraggingState : ContainerState
+    public sealed class ContainerDraggingState : InputElementStateStack<ItemContainer>.ElementOperationState
     {
-        private Point _initialMousePosition;
         private Point _previousMousePosition;
-        
-        private bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;
 
         /// <summary>Constructs an instance of the <see cref="ContainerDraggingState"/> state.</summary>
         /// <param name="container">The owner of the state.</param>
-        public ContainerDraggingState(ItemContainer container) : base(container)
+        public ContainerDraggingState(InputElementStateStack<ItemContainer> stack)
+            : base(stack, EditorGestures.Mappings.ItemContainer.Drag, EditorGestures.Mappings.ItemContainer.CancelAction)
         {
+            PositionElement = Element.Editor;
+        }
+
+        protected override void OnBegin(InputElementStateStack<ItemContainer>.InputElementState? from)
+        {
+            _previousMousePosition = Element.Editor.MouseLocation;
+            Element.BeginDragging();
         }
 
         /// <inheritdoc />
-        public override void Enter(ContainerState? from)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            Canceled = false;
-
-            _initialMousePosition = Editor.MouseLocation;
-            _previousMousePosition = _initialMousePosition;
-
-            Container.BeginDragging();
+            Element.UpdateDragging(Element.Editor.MouseLocation - _previousMousePosition);
+            _previousMousePosition = Element.Editor.MouseLocation;
         }
 
-        /// <inheritdoc />
-        public override void Exit()
-        {
-            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
-            if (Canceled)
-            {
-                Container.CancelDragging();
-            }
-            else
-            {
-                Container.EndDragging();
-            }
-        }
+        protected override void OnEnd(InputEventArgs e)
+            => Element.EndDragging();
 
-        /// <inheritdoc />
-        public override void HandleMouseMove(MouseEventArgs e)
-        {
-            Container.UpdateDragging(Editor.MouseLocation - _previousMousePosition);
-            _previousMousePosition = Editor.MouseLocation;
-        }
-
-        /// <inheritdoc />
-        public override void HandleMouseUp(MouseButtonEventArgs e)
-        {
-            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (gestures.Drag.Matches(e.Source, e))
-            {
-                // Suppress the context menu if the mouse moved beyond the defined drag threshold
-                if (e.ChangedButton == MouseButton.Right && (Container.HasContextMenu || Editor.HasContextMenu))
-                {
-                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
-                    double dragDistance = (Editor.MouseLocation - _initialMousePosition).LengthSquared;
-
-                    if (dragDistance > dragThreshold)
-                    {
-                        e.Handled = true;
-                    }
-                }
-
-                PopState();
-            }
-            else if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                e.Handled = true;
-
-                PopState();
-            }
-        }
-
-        /// <inheritdoc />
-        public override void HandleKeyUp(KeyEventArgs e)
-        {
-            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                PopState();
-            }
-        }
+        protected override void OnCancel(InputEventArgs e)
+            => Element.CancelDragging();
     }
 }

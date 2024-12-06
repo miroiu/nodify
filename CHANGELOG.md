@@ -11,6 +11,8 @@
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
 >	- Replaced the System.Windows.Input.MouseGesture with Nodify.MouseGesture
+>	- Removed State, GetInitialState, PushState, PopState and PopAllStates from NodifyEditor and ItemContainer
+>	- Replaced EditorState and ContainerState with InputElementState
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
@@ -20,14 +22,16 @@
 >	- Added HasCustomContextMenu dependency property to NodifyEditor and ItemContainer
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
->	- Added State, GetInitialState, PushState, PopState and PopAllStates to Connector
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
 >	- Added a custom MouseGesture with support for key combinations
+>	- Added InputProcessor to NodifyEditor, ItemContainer and Connector, enabling the extension of controls with custom states
+>	- Added ElementOperationState to simplify the creation of complex control states
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the Home button caused the editor to fail to display items when contained within a ScrollViewer
 >	- Fixed an issue where connector optimization did not work when SelectedItems was not data-bound
 >	- Fixed an issue where EditorCommands.Align caused multiple arrange invalidations, one for each aligned container
+>	- Fixed an issue where controls would capture the mouse unnecessarily; they now capture it only in response to a defined gesture
 	
 #### **Version 6.6.0**
 

@@ -180,6 +180,7 @@ namespace Nodify
             {
                 Selection.Apply(gestures.Selection);
                 Cutting.Value = gestures.Cutting.Value;
+                PushItems.Value = gestures.PushItems.Value;
                 Pan.Value = gestures.Pan.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
@@ -190,7 +191,6 @@ namespace Nodify
                 PanWithMouseWheel = gestures.PanWithMouseWheel;
                 PanHorizontalModifierKey = gestures.PanHorizontalModifierKey;
                 PanVerticalModifierKey = gestures.PanVerticalModifierKey;
-                PushItems.Value = gestures.PushItems.Value;
             }
         }
 

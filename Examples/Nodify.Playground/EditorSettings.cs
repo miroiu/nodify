@@ -220,6 +220,11 @@ namespace Nodify.Playground
                     val => Instance.MouseActionSuppressionThreshold = val,
                     "Context menu suppression threshold: ",
                     "Disable context menu after mouse moved this far"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.PreserveSelectionOnRightClick,
+                    val => Instance.PreserveSelectionOnRightClick = val,
+                    "Preserve selection on right click: ",
+                    "Whether right-click on the container should preserve the current selection."),
                 new ProxySettingViewModel<double>(
                     () => Instance.AutoPanningTickRate,
                     val => Instance.AutoPanningTickRate = val,
@@ -599,6 +604,12 @@ namespace Nodify.Playground
         #endregion
 
         #region Advanced settings
+
+        public bool PreserveSelectionOnRightClick
+        {
+            get => ItemContainer.PreserveSelectionOnRightClick;
+            set => ItemContainer.PreserveSelectionOnRightClick = value;
+        }
 
         public double MouseActionSuppressionThreshold
         {

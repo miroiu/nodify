@@ -287,14 +287,8 @@ namespace Nodify
         public ItemContainer(NodifyEditor editor)
         {
             Editor = editor;
-            _states.Push(GetInitialState());
-        }
 
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            State.Enter(null);
+            InputProcessor.AddHandler(new ContainerDefaultState(this));
         }
 
         /// <inheritdoc />
@@ -309,7 +303,7 @@ namespace Nodify
         /// </summary>
         /// <param name="position">A position relative to this <see cref="ItemContainer"/>.</param>
         /// <returns>True if <paramref name="position"/> is selectable.</returns>
-        protected virtual bool IsSelectableLocation(Point position)
+        protected internal virtual bool IsSelectableLocation(Point position)
         {
             Size size = DesiredSizeForSelection ?? RenderSize;
             return position.X >= 0 && position.Y >= 0 && position.X <= size.Width && position.Y <= size.Height;
@@ -371,78 +365,22 @@ namespace Nodify
                 case SelectionType.Replace:
                     Editor.UnselectAll();
                     IsSelected = true;
-                break;
+                    break;
             }
         }
 
-        #region State Handling
+        #region Gesture Handling
 
-        private readonly Stack<ContainerState> _states = new Stack<ContainerState>();
-
-        /// <summary>The current state of the container.</summary>
-        public ContainerState State => _states.Peek();
-
-        /// <summary>Creates the initial state of the container.</summary>
-        /// <returns>The initial state.</returns>
-        protected virtual ContainerState GetInitialState()
-            => new ContainerDefaultState(this);
-
-        /// <summary>Pushes the given state to the stack.</summary>
-        /// <param name="state">The new state of the container.</param>
-        /// <remarks>Calls <see cref="ContainerState.Enter"/> on the new state.</remarks>
-        public void PushState(ContainerState state)
-        {
-            var prev = State;
-            _states.Push(state);
-            state.Enter(prev);
-        }
-
-        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
-        /// <br />Calls <see cref="ContainerState.Exit"/> on the current state.
-        /// <br />Calls <see cref="ContainerState.ReEnter"/> on the previous state.
-        /// </remarks>
-        public void PopState()
-        {
-            // Never remove the default state
-            if (_states.Count > 1)
-            {
-                ContainerState prev = _states.Pop();
-                prev.Exit();
-                State.ReEnter(prev);
-            }
-        }
-
-        /// <summary>Pops all states from the container.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
-        public void PopAllStates()
-        {
-            while (_states.Count > 1)
-            {
-                PopState();
-            }
-        }
+        protected InputProcessor InputProcessor { get; } = new InputProcessor { ProcessHandledEvents = true };
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            if (IsSelectableLocation(e.GetPosition(this)))
-            {
-                Focus();
-
-                this.CaptureMouseSafe();
-
-                State.HandleMouseDown(e);
-            }
-        }
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (IsMouseCaptured)
-            {
-                State.HandleMouseUp(e);
-            }
+            InputProcessor.Process(e);
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
@@ -452,22 +390,24 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        protected override void OnMouseMove(MouseEventArgs e) 
-            => State.HandleMouseMove(e);
+        protected override void OnMouseMove(MouseEventArgs e)
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
-        protected override void OnMouseWheel(MouseWheelEventArgs e) 
-            => State.HandleMouseWheel(e);
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => PopAllStates();
+            => InputProcessor.Process(e);
 
+        /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
-            => State.HandleKeyUp(e);
+            => InputProcessor.Process(e);
 
+        /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
-            => State.HandleKeyDown(e);
+            => InputProcessor.Process(e);
 
         #endregion
     }

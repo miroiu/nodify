@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -146,6 +145,11 @@ namespace Nodify
 
         #region Auto panning
 
+        private readonly MouseEventArgs _autoPanningEventArgs = new MouseEventArgs(Mouse.PrimaryDevice, 0, Stylus.CurrentStylusDevice)
+        {
+            RoutedEvent = MouseMoveEvent
+        };
+
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
             if (!IsPanning && IsMouseCaptureWithin)
@@ -177,7 +181,9 @@ namespace Nodify
                 ViewportLocation = new Point(x, y);
                 MouseLocation = Mouse.GetPosition(ItemsHost);
 
-                State.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
+                _autoPanningEventArgs.Handled = false;
+                _autoPanningEventArgs.Source = this;
+                InputProcessor.Process(_autoPanningEventArgs);
             }
         }
 

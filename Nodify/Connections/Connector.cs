@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -110,7 +109,8 @@ namespace Nodify
 
         public Connector()
         {
-            _states.Push(GetInitialState());
+            InputProcessor.AddHandler(new ConnectorDisconnectState(this));
+            InputProcessor.AddHandler(new ConnectorConnectingState(this));
         }
 
         #region Fields
@@ -314,68 +314,18 @@ namespace Nodify
 
         #endregion
 
-        #region State Handling
+        #region Gesture Handling
 
-        private readonly Stack<ConnectorState> _states = new Stack<ConnectorState>();
-
-        /// <summary>The current state of the connector.</summary>
-        public ConnectorState State => _states.Peek();
-
-        /// <summary>Creates the initial state of the connector.</summary>
-        /// <returns>The initial state.</returns>
-        protected virtual ConnectorState GetInitialState()
-            => new ConnectorDefaultState(this);
-
-        /// <summary>Pushes the given state to the stack.</summary>
-        /// <param name="state">The new state of the connector.</param>
-        /// <remarks>Calls <see cref="ConnectorState.Enter"/> on the new state.</remarks>
-        public void PushState(ConnectorState state)
-        {
-            var prev = State;
-            _states.Push(state);
-            state.Enter(prev);
-        }
-
-        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
-        /// <br />Calls <see cref="ConnectorState.Exit"/> on the current state.
-        /// <br />Calls <see cref="ConnectorState.ReEnter"/> on the previous state.
-        /// </remarks>
-        public void PopState()
-        {
-            // Never remove the default state
-            if (_states.Count > 1)
-            {
-                ConnectorState prev = _states.Pop();
-                prev.Exit();
-                State.ReEnter(prev);
-            }
-        }
-
-        /// <summary>Pops all states from the connector.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
-        public void PopAllStates()
-        {
-            while (_states.Count > 1)
-            {
-                PopState();
-            }
-        }
+        protected InputProcessor InputProcessor { get; } = new InputProcessor();
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            Focus();
-
-            this.CaptureMouseSafe();
-
-            State.HandleMouseDown(e);
-        }
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            State.HandleMouseUp(e);
+            InputProcessor.Process(e);
 
             // Release the mouse capture if all the mouse buttons are released and there's no sticky connection pending
             if (!IsPendingConnection && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
@@ -386,21 +336,30 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
-            => State.HandleMouseMove(e);
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
-            => State.HandleMouseWheel(e);
+            => InputProcessor.Process(e);
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => PopAllStates();
+            => InputProcessor.Process(e);
 
+        /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
-            => State.HandleKeyUp(e);
+        {
+            InputProcessor.Process(e);
 
+            if(!IsPendingConnection && IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+            }
+        }
+
+        /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
-            => State.HandleKeyDown(e);
+            => InputProcessor.Process(e);
 
         #endregion
 
@@ -473,7 +432,7 @@ namespace Nodify
         /// <remarks>This method has no effect if there's no pending connection.</remarks>
         public void CancelConnecting()
         {
-            if (!IsPendingConnection)
+            if (!AllowPendingConnectionCancellation || !IsPendingConnection)
             {
                 return;
             }

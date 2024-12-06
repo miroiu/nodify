@@ -3,93 +3,31 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public class ConnectorConnectingState : ConnectorState
+    public class ConnectorConnectingState : ElementOperationState<Connector>
     {
-        protected bool Canceled { get; set; } = Connector.AllowPendingConnectionCancellation;
-
-        public ConnectorConnectingState(Connector connector) : base(connector) { }
-
-        public override void Enter(ConnectorState? from)
+        public ConnectorConnectingState(Connector connector)
+            : base(connector, EditorGestures.Mappings.Connector.Connect, EditorGestures.Mappings.Connector.CancelAction)
         {
-            Canceled = false;
-            Connector.BeginConnecting();
+            PositionElement = Element.Editor ?? (IInputElement)Element;
         }
 
-        public override void Exit()
+        protected override bool IsToggle => Connector.EnableStickyConnections;
+
+        protected override void OnBegin(InputEventArgs e)
+            => Element.BeginConnecting();
+
+        protected override void OnEnd(InputEventArgs e)
+            => Element.EndConnecting();
+
+        protected override void OnCancel(InputEventArgs e)
+            => Element.CancelConnecting();
+
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
-            if (Canceled)
-            {
-                Connector.CancelConnecting();
-                Connector.ReleaseMouseCapture();
-            }
-            else
-            {
-                Connector.EndConnecting();
-            }
-        }
+            Vector thumbOffset = e.GetPosition(Element.Thumb) - new Point(Element.Thumb.ActualWidth / 2, Element.Thumb.ActualHeight / 2);
+            Point editorPosition = Element.Anchor + thumbOffset;
 
-        public override void HandleMouseMove(MouseEventArgs e)
-        {
-            Vector thumbOffset = e.GetPosition(Connector.Thumb) - new Point(Connector.Thumb.ActualWidth / 2, Connector.Thumb.ActualHeight / 2);
-            Point editorPosition = Connector.Anchor + thumbOffset;
-
-            Connector.UpdatePendingConnection(editorPosition);
-        }
-
-        public override void HandleMouseUp(MouseButtonEventArgs e)
-        {
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (gestures.Connect.Matches(e.Source, e))
-            {
-                e.Handled = true;   // prevents opening context menu
-                PopState();
-            }
-            else if (Connector.AllowPendingConnectionCancellation && Connector.IsPendingConnection && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                e.Handled = true;   // prevents opening context menu
-
-                PopState();
-            }
-        }
-
-        public override void HandleKeyUp(KeyEventArgs e)
-        {
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (Connector.AllowPendingConnectionCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                PopState();
-            }
-        }
-    }
-
-    public class ConnectorConnectingStickyState : ConnectorConnectingState
-    {
-        public ConnectorConnectingStickyState(Connector connector) : base(connector) { }
-
-        public override void HandleMouseDown(MouseButtonEventArgs e)
-        {
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (Connector.IsPendingConnection && !gestures.CancelAction.Matches(e.Source, e))
-            {
-                PopState();
-
-                e.Handled = true;  // prevent interacting with the container
-            }
-        }
-
-        public override void HandleMouseUp(MouseButtonEventArgs e)
-        {
-            e.Handled = Connector.IsPendingConnection;
-
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (Connector.AllowPendingConnectionCancellation && Connector.IsPendingConnection && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                PopState();
-            }
+            Element.UpdatePendingConnection(editorPosition);
         }
     }
 }

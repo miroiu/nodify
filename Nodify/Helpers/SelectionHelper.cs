@@ -171,7 +171,7 @@ namespace Nodify
 
     internal static class SelectionGesturesExtensions
     {
-        public static SelectionType GetSelectionType(this EditorGestures.SelectionGestures gestures, MouseButtonEventArgs e)
+        public static SelectionType GetSelectionType(this EditorGestures.SelectionGestures gestures, InputEventArgs e)
         {
             if (gestures.Append.Matches(e.Source, e))
             {
