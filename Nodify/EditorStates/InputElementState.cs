@@ -3,33 +3,77 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public abstract class InputElementState<TState>
-        where TState : InputElementState<TState>
+    public interface IInputHandler
     {
+        void HandleEvent(InputEventArgs e);
+    }
+
+    public abstract class InputElementState<TElement> : IInputHandler
+        where TElement : FrameworkElement
+    {
+        /// <summary>The owner of the state.</summary>
+        protected TElement Element { get; }
+
+        protected InputElementState(TElement element)
+        {
+            Element = element;
+        }
+
         /// <inheritdoc cref="UIElement.OnMouseDown(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
+        protected virtual void OnMouseDown(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseUp(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
+        protected virtual void OnMouseUp(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseMove(MouseEventArgs)"/>
-        public virtual void HandleMouseMove(MouseEventArgs e) { }
+        protected virtual void OnMouseMove(MouseEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseWheel(MouseWheelEventArgs)"/>
-        public virtual void HandleMouseWheel(MouseWheelEventArgs e) { }
+        protected virtual void OnMouseWheel(MouseWheelEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnKeyUp(KeyEventArgs)"/>
-        public virtual void HandleKeyUp(KeyEventArgs e) { }
+        protected virtual void OnKeyUp(KeyEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnKeyDown(KeyEventArgs)"/>
-        public virtual void HandleKeyDown(KeyEventArgs e) { }
+        protected virtual void OnKeyDown(KeyEventArgs e) { }
 
-        /// <param name="from">The state we enter from (is null for root state).</param>
-        public virtual void Enter(TState? from) { }
+        /// <inheritdoc cref="UIElement.OnLostMouseCapture(MouseEventArgs)"/>
+        protected virtual void OnLostMouseCapture(MouseEventArgs e) { }
 
-        public virtual void Exit() { }
+        protected virtual void OnEvent(InputEventArgs e) { }
 
-        /// <param name="from">The state we re-enter from.</param>
-        public virtual void ReEnter(TState from) { }
+        public void HandleEvent(InputEventArgs e)
+        {
+            if (e.RoutedEvent == UIElement.MouseMoveEvent)
+            {
+                OnMouseMove((MouseEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseDownEvent)
+            {
+                OnMouseDown((MouseButtonEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseUpEvent)
+            {
+                OnMouseUp((MouseButtonEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseWheelEvent)
+            {
+                OnMouseWheel((MouseWheelEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.LostMouseCaptureEvent)
+            {
+                OnLostMouseCapture((MouseEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.KeyDownEvent)
+            {
+                OnKeyDown((KeyEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.KeyUpEvent)
+            {
+                OnKeyUp((KeyEventArgs)e);
+            }
+
+            OnEvent(e);
+        }
     }
 }

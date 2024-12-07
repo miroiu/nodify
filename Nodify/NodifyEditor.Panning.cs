@@ -192,7 +192,7 @@ namespace Nodify
 
                 _autoPanningEventArgs.Handled = false;
                 _autoPanningEventArgs.Source = this;
-                State.HandleAutoPanning(_autoPanningEventArgs);
+                InputProcessor.Process(_autoPanningEventArgs);
             }
         }
 

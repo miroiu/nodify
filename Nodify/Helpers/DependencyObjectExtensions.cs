@@ -85,16 +85,6 @@ namespace Nodify
             return result;
         }
 
-        public static bool CaptureMouseSafe(this UIElement elem)
-        {
-            if (Mouse.Captured == null || elem.IsMouseCaptured)
-            {
-                return elem.CaptureMouse();
-            }
-
-            return false;
-        }
-
         public static List<FrameworkElement> GetIntersectingElements(this UIElement container, Geometry geometry, IReadOnlyCollection<Type> supportedTypes)
         {
             var result = new List<FrameworkElement>();

@@ -124,6 +124,11 @@ namespace Nodify
         public Key Key { get; set; }
 
         /// <summary>
+        /// Whether to ignore modifier keys when releasing the mouse button.
+        /// </summary>
+        public bool IgnoreModifierKeysOnRelease { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MouseGesture"/> class with the specified mouse action, modifier keys, and a specific key.
         /// </summary>
         /// <param name="action">The action associated with this gesture.</param>
@@ -145,8 +150,21 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public MouseGesture(MouseAction action, ModifierKeys modifiers) : base(action, modifiers)
+        public MouseGesture(MouseAction action, ModifierKeys modifiers) 
+            : base(action, modifiers)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MouseGesture"/> class with the specified mouse action and modifier keys.
+        /// </summary>
+        /// <param name="action">The action associated with this gesture.</param>
+        /// <param name="modifiers">The modifiers required to match the gesture.</param>
+        /// <param name="ignoreModifierKeysOnRelease">Whether to ignore modifiers when releasing the mouse button.</param>
+        public MouseGesture(MouseAction action, ModifierKeys modifiers, bool ignoreModifierKeysOnRelease) 
+            : base(action, modifiers)
+        {
+            IgnoreModifierKeysOnRelease = ignoreModifierKeysOnRelease;
         }
 
         /// <inheritdoc />
@@ -164,7 +182,17 @@ namespace Nodify
         {
             if (inputEventArgs is MouseButtonEventArgs || inputEventArgs is MouseWheelEventArgs)
             {
-                return base.Matches(targetElement, inputEventArgs) && MatchesKeyboard();
+                bool matches = base.Matches(targetElement, inputEventArgs);
+
+                if (IgnoreModifierKeysOnRelease && IsButtonReleased(inputEventArgs))
+                {
+                    ModifierKeys prevModifiers = Modifiers;
+                    Modifiers = ModifierKeys.None;
+                    matches |= base.Matches(targetElement, inputEventArgs);
+                    Modifiers = prevModifiers;
+                }
+
+                return matches && MatchesKeyboard();
             }
 
             return false;
@@ -211,5 +239,16 @@ namespace Nodify
         /// </summary>
         private static bool IsAnyKeyPressed()
             => _allKeys.Any(Keyboard.IsKeyDown);
+
+        private static bool IsButtonReleased(InputEventArgs e)
+        {
+            if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Released)
+                return true;
+
+            if (e is MouseWheelEventArgs mwe && mwe.MiddleButton == MouseButtonState.Released)
+                return true;
+
+            return false;
+        }
     }
 }
