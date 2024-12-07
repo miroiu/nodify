@@ -11,6 +11,8 @@
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
 >	- Replaced the System.Windows.Input.MouseGesture with Nodify.MouseGesture
+>	- Moved AllowCuttingCancellation from CuttingLine to NodifyEditor
+>	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor

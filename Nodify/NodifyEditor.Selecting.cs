@@ -26,6 +26,8 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     public partial class NodifyEditor : MultiSelector
     {
+        #region Dependency properties
+
         public static readonly DependencyProperty ItemsSelectStartedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsSelectCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsSelectCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
@@ -175,6 +177,8 @@ namespace Nodify
             get => (Style)GetValue(SelectionRectangleStyleProperty);
             set => SetValue(SelectionRectangleStyleProperty, value);
         }
+
+        #endregion
 
         /// <summary>
         /// Gets a list of <see cref="ItemContainer"/>s that are selected (see <see cref="SelectedContainersCount"/>).
@@ -410,18 +414,23 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the current selection operation and reverts any changes made during the selection process. 
+        /// Cancels the current selection operation and reverts any changes made during the selection process if <see cref="AllowSelectionCancellation"/> is true.
+        /// Otherwise, it ends the selection operation by calling <see cref="EndSelecting"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no selection operation in progress.</remarks>
         public void CancelSelecting()
         {
-            if (!IsSelecting)
+            if(!AllowSelectionCancellation)
             {
+                EndSelecting();
                 return;
             }
 
-            ClearPreviewingSelection();
-            IsSelecting = false;
+            if (IsSelecting)
+            {
+                ClearPreviewingSelection();
+                IsSelecting = false;
+            }
         }
 
         #endregion

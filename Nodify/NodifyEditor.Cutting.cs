@@ -10,6 +10,8 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(CuttingLineStyle), StyleTargetType = typeof(CuttingLine))]
     public partial class NodifyEditor
     {
+        #region Dependency properties
+
         protected static readonly DependencyPropertyKey CuttingLineStartPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CuttingLineStart), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point));
         public static readonly DependencyProperty CuttingLineStartProperty = CuttingLineStartPropertyKey.DependencyProperty;
 
@@ -95,6 +97,13 @@ namespace Nodify
             set => SetValue(CuttingCompletedCommandProperty, value);
         }
 
+        #endregion
+
+        /// <summary>
+        /// Gets or sets whether cancelling a cutting operation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).
+        /// </summary>
+        public static bool AllowCuttingCancellation { get; set; } = true;
+
         /// <summary>
         /// Gets or sets whether the cutting line should apply the preview style to the interesected elements.
         /// </summary>
@@ -110,6 +119,13 @@ namespace Nodify
 
         private List<FrameworkElement>? _cuttingLinePreviousConnections;
         private readonly LineGeometry _cuttingLineGeometry = new LineGeometry();
+
+        /// <summary>
+        /// Starts the cutting operation at the current <see cref="MouseLocation"/>. Call <see cref="EndCutting"/> to complete the operation or <see cref="CancelCutting"/> to abort it.
+        /// </summary>
+        /// <remarks>This method has no effect if a cutting operation is already in progress.</remarks>
+        public void BeginCutting()
+            => BeginCutting(MouseLocation);
 
         /// <summary>
         /// Starts the cutting operation at the specified location. Call <see cref="EndCutting"/> to complete the operation or <see cref="CancelCutting"/> to abort it.
@@ -161,18 +177,23 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the current cutting operation without applying any changes.
+        /// Cancels the current cutting operation without applying any changes if <see cref="AllowCuttingCancellation"/> is true.
+        /// Otherwise, it ends the cutting operation by calling <see cref="EndCutting"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no cutting operation in progress.</remarks>
         public void CancelCutting()
         {
-            if (!CuttingLine.AllowCuttingCancellation || !IsCutting)
+            if (!AllowCuttingCancellation)
             {
+                EndCutting();
                 return;
             }
 
-            ResetConnectionStyle();
-            IsCutting = false;
+            if (IsCutting)
+            {
+                ResetConnectionStyle();
+                IsCutting = false;
+            }
         }
 
         /// <summary>

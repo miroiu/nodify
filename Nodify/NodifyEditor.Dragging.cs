@@ -7,6 +7,8 @@ namespace Nodify
 {
     public partial class NodifyEditor
     {
+        #region Dependency properties
+
         public static readonly DependencyProperty ItemsDragStartedCommandProperty = DependencyProperty.Register(nameof(ItemsDragStartedCommand), typeof(ICommand), typeof(NodifyEditor));
         public static readonly DependencyProperty ItemsDragCompletedCommandProperty = DependencyProperty.Register(nameof(ItemsDragCompletedCommand), typeof(ICommand), typeof(NodifyEditor));
 
@@ -66,6 +68,13 @@ namespace Nodify
             private set => SetValue(IsDraggingPropertyKey, value);
         }
 
+        #endregion
+
+        /// <summary>
+        /// Gets or sets whether cancelling a dragging operation is allowed.
+        /// </summary>
+        public static bool AllowDraggingCancellation { get; set; } = true;
+
         /// <summary>
         /// Gets or sets if the current position of containers that are being dragged should not be committed until the end of the dragging operation.
         /// </summary>
@@ -77,7 +86,7 @@ namespace Nodify
         /// Initiates the dragging operation using the currently selected <see cref="ItemContainer" />s.
         /// </summary>
         /// <remarks>This method has no effect if a dragging operation is already in progress.</remarks>
-        public void BeginDragging() 
+        public void BeginDragging()
             => BeginDragging(SelectedContainers);
 
         /// <summary>
@@ -87,7 +96,7 @@ namespace Nodify
         /// <remarks>This method has no effect if a dragging operation is already in progress.</remarks>
         public void BeginDragging(IEnumerable<ItemContainer> containers)
         {
-            if(IsDragging)
+            if (IsDragging)
             {
                 return;
             }
@@ -132,18 +141,23 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the ongoing dragging operation, reverting any changes made to the positions of the dragged items.
+        /// Cancels the ongoing dragging operation, reverting any changes made to the positions of the dragged items if <see cref="AllowDraggingCancellation"/> is true.
+        /// Otherwise, it ends the dragging operation by calling <see cref="EndDragging"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no dragging operation in progress.</remarks>
         public void CancelDragging()
         {
-            if (!ItemContainer.AllowDraggingCancellation || !IsDragging)
+            if (!AllowDraggingCancellation)
             {
+                EndDragging();
                 return;
             }
 
-            _draggingStrategy!.Abort();
-            IsDragging = false;
+            if (IsDragging)
+            {
+                _draggingStrategy!.Abort();
+                IsDragging = false;
+            }
         }
 
         private IDraggingStrategy CreateDraggingStrategy(IEnumerable<ItemContainer> containers)

@@ -9,7 +9,7 @@ namespace Nodify
         private Point _initialMousePosition;
         private Point _previousMousePosition;
         
-        private bool Canceled { get; set; } = ItemContainer.AllowDraggingCancellation;
+        private bool Canceled { get; set; } = NodifyEditor.AllowDraggingCancellation;
 
         /// <summary>Constructs an instance of the <see cref="ContainerDraggingState"/> state.</summary>
         /// <param name="container">The owner of the state.</param>
@@ -69,7 +69,7 @@ namespace Nodify
 
                 PopState();
             }
-            else if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
+            else if (NodifyEditor.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
             {
                 Canceled = true;
                 e.Handled = true;
@@ -82,7 +82,7 @@ namespace Nodify
         public override void HandleKeyUp(KeyEventArgs e)
         {
             EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (ItemContainer.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
+            if (NodifyEditor.AllowDraggingCancellation && gestures.CancelAction.Matches(e.Source, e))
             {
                 Canceled = true;
                 PopState();

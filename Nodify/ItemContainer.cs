@@ -233,11 +233,6 @@ namespace Nodify
         #region Fields
 
         /// <summary>
-        /// Gets or sets whether cancelling a dragging operation is allowed.
-        /// </summary>
-        public static bool AllowDraggingCancellation { get; set; } = true;
-
-        /// <summary>
         /// Indicates whether right-click on the container should preserve the current selection. 
         /// </summary>
         /// <remarks>Has no effect if the container has a context menu.</remarks>
