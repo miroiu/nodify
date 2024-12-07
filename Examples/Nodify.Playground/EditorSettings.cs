@@ -625,8 +625,8 @@ namespace Nodify.Playground
 
         public bool AllowCuttingCancellation
         {
-            get => CuttingLine.AllowCuttingCancellation;
-            set => CuttingLine.AllowCuttingCancellation = value;
+            get => NodifyEditor.AllowCuttingCancellation;
+            set => NodifyEditor.AllowCuttingCancellation = value;
         }
 
         public bool AllowPushItemsCancellation
@@ -649,8 +649,8 @@ namespace Nodify.Playground
 
         public bool AllowDraggingCancellation
         {
-            get => ItemContainer.AllowDraggingCancellation;
-            set => ItemContainer.AllowDraggingCancellation = value;
+            get => NodifyEditor.AllowDraggingCancellation;
+            set => NodifyEditor.AllowDraggingCancellation = value;
         }
 
         public bool AllowPendingConnectionCancellation

@@ -13,6 +13,8 @@
 >	- Replaced the System.Windows.Input.MouseGesture with Nodify.MouseGesture
 >	- Removed State, GetInitialState, PushState, PopState and PopAllStates from NodifyEditor and ItemContainer
 >	- Replaced EditorState and ContainerState with InputElementState
+>	- Moved AllowCuttingCancellation from CuttingLine to NodifyEditor
+>	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
