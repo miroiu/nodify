@@ -5,6 +5,7 @@ namespace Nodify
     public class EditorCuttingState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
+        protected override bool CanCancel => NodifyEditor.AllowCuttingCancellation;
 
         public EditorCuttingState(NodifyEditor editor)
             : base(editor, EditorGestures.Mappings.Editor.Cutting, EditorGestures.Mappings.Editor.CancelAction)

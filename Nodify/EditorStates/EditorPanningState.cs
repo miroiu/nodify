@@ -9,6 +9,7 @@ namespace Nodify
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanBegin => !Element.DisablePanning;
+        protected override bool CanCancel => NodifyEditor.AllowPanningCancellation;
 
         private Point _prevPosition;
 

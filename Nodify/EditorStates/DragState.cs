@@ -11,6 +11,7 @@ namespace Nodify
 
         protected virtual bool HasContextMenu => Element.ContextMenu != null;
         protected virtual bool CanBegin { get; } = true;
+        protected virtual bool CanCancel { get; } = true;
         protected virtual bool IsToggle { get; }
         protected IInputElement PositionElement { get; set; }
 
@@ -33,7 +34,7 @@ namespace Nodify
 
         void IInputHandler.HandleEvent(InputEventArgs e)
         {
-            if (!_canReceiveInput && IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e) && CanBegin)
+            if (!_canReceiveInput && IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
             {
                 BeginDrag(e);
                 return;
@@ -45,7 +46,7 @@ namespace Nodify
                 return;
             }
 
-            if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
+            if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CanCancel && CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
             {
                 CancelDrag(e);
                 return;

@@ -8,6 +8,7 @@ namespace Nodify
     public class EditorPushingItemsState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
+        protected override bool CanCancel => NodifyEditor.AllowPushItemsCancellation;
 
         private Point _prevPosition;
 

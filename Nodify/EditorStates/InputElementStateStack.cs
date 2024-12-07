@@ -94,6 +94,7 @@ namespace Nodify
             protected InputGesture? CancelGesture { get; }
 
             protected virtual bool HasContextMenu => Element.ContextMenu != null;
+            protected virtual bool CanCancel { get; } = true;
             protected IInputElement PositionElement { get; set; }
 
             private bool _canReceiveInput;
@@ -141,7 +142,7 @@ namespace Nodify
                     return;
                 }
 
-                if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
+                if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CanCancel && CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
                 {
                     CancelDrag(e);
                     return;

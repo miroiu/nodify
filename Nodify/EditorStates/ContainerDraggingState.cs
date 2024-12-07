@@ -6,6 +6,8 @@ namespace Nodify
     /// <summary>Dragging state of the container.</summary>
     internal sealed class ContainerDraggingState : InputElementStateStack<ItemContainer>.DragState
     {
+        protected override bool CanCancel => NodifyEditor.AllowDraggingCancellation;
+
         private Point _previousMousePosition;
 
         /// <summary>Constructs an instance of the <see cref="ContainerDraggingState"/> state.</summary>

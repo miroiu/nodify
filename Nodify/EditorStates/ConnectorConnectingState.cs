@@ -5,6 +5,8 @@ namespace Nodify
 {
     public class ConnectorConnectingState : DragState<Connector>
     {
+        protected override bool CanCancel => Connector.AllowPendingConnectionCancellation;
+
         public ConnectorConnectingState(Connector connector)
             : base(connector, EditorGestures.Mappings.Connector.Connect, EditorGestures.Mappings.Connector.CancelAction)
         {

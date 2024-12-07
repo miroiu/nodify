@@ -427,26 +427,31 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Cancels the current pending connection without completing it.
+        /// Cancels the current pending connection without completing it if <see cref="AllowPendingConnectionCancellation"/> is true.
+        /// Otherwise, it completes the pending connection by calling <see cref="EndConnecting()"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no pending connection.</remarks>
         public void CancelConnecting()
         {
-            if (!AllowPendingConnectionCancellation || !IsPendingConnection)
+            if (!AllowPendingConnectionCancellation)
             {
+                EndConnecting();
                 return;
             }
 
-            var args = new PendingConnectionEventArgs(DataContext)
+            if (IsPendingConnection)
             {
-                RoutedEvent = PendingConnectionCompletedEvent,
-                Anchor = Anchor,
-                Source = this,
-                Canceled = true
-            };
-            RaiseEvent(args);
+                var args = new PendingConnectionEventArgs(DataContext)
+                {
+                    RoutedEvent = PendingConnectionCompletedEvent,
+                    Anchor = Anchor,
+                    Source = this,
+                    Canceled = true
+                };
+                RaiseEvent(args);
 
-            IsPendingConnection = false;
+                IsPendingConnection = false;
+            }
         }
 
         /// <summary>

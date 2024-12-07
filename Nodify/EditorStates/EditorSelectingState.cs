@@ -7,6 +7,7 @@ namespace Nodify
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanBegin => Element.CanSelectMultipleItems && !Element.IsPanning;
+        protected override bool CanCancel => NodifyEditor.AllowSelectionCancellation;
 
         /// <summary>Constructs an instance of the <see cref="EditorSelectingState"/> state.</summary>
         /// <param name="editor">The owner of the state.</param>
