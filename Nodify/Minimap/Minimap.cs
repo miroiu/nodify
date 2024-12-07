@@ -98,6 +98,11 @@ namespace Nodify
         /// </summary>
         protected internal Panel ItemsHost { get; private set; } = default!;
 
+        /// <summary>
+        /// Whether the user is currently dragging the minimap.
+        /// </summary>
+        protected bool IsDragging { get; private set; }
+
         static Minimap()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(typeof(Minimap)));
@@ -111,19 +116,31 @@ namespace Nodify
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel ?? throw new InvalidOperationException($"{ElementItemsHost} is missing or is not of type {nameof(Panel)}.");
         }
 
-        protected bool IsDragging { get; private set; }
+        protected override DependencyObject GetContainerForItemOverride()
+            => new MinimapItem();
+
+        protected override bool IsItemItsOwnContainerOverride(object item)
+            => item is MinimapItem;
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => IsDragging = false;
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             var gestures = EditorGestures.Mappings.Minimap;
             if (!IsReadOnly && gestures.DragViewport.Matches(this, e))
             {
-                this.CaptureMouseSafe();
                 IsDragging = true;
 
                 SetViewportLocation(e.GetPosition(ItemsHost));
 
                 e.Handled = true;
+
+                if (Mouse.Captured == null || IsMouseCaptured)
+                {
+                    Focus();
+                    CaptureMouse();
+                }
             }
         }
 
@@ -132,6 +149,44 @@ namespace Nodify
             if (IsDragging)
             {
                 SetViewportLocation(e.GetPosition(ItemsHost));
+            }
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            var gestures = EditorGestures.Mappings.Minimap;
+            if (IsDragging && gestures.DragViewport.Matches(this, e))
+            {
+                IsDragging = false;
+                e.Handled = true;
+            }
+
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            {
+                ReleaseMouseCapture();
+            }
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+            {
+                if (!ResizeToViewport)
+                {
+                    SetViewportLocation(e.GetPosition(ItemsHost));
+                }
+
+                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+                var location = ViewportLocation + (Vector)ViewportSize / 2;
+
+                var args = new ZoomEventArgs(zoom, location)
+                {
+                    RoutedEvent = ZoomEvent,
+                    Source = this
+                };
+                RaiseEvent(args);
+
+                e.Handled = true;
             }
         }
 
@@ -150,43 +205,5 @@ namespace Nodify
 
             ViewportLocation = position;
         }
-
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
-            var gestures = EditorGestures.Mappings.Minimap;
-            if (IsDragging && gestures.DragViewport.Matches(this, e))
-            {
-                IsDragging = false;
-            }
-
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
-            {
-                ReleaseMouseCapture();
-            }
-        }
-
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
-            {
-                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-                var location = ViewportLocation + (Vector)ViewportSize / 2;
-
-                var args = new ZoomEventArgs(zoom, location)
-                {
-                    RoutedEvent = ZoomEvent,
-                    Source = this
-                };
-                RaiseEvent(args);
-
-                e.Handled = true;
-            }
-        }
-
-        protected override DependencyObject GetContainerForItemOverride()
-            => new MinimapItem();
-
-        protected override bool IsItemItsOwnContainerOverride(object item)
-            => item is MinimapItem;
     }
 }
