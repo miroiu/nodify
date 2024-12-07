@@ -88,7 +88,7 @@ namespace Nodify
                 => Stack.PopState();
         }
 
-        public abstract class ElementOperationState : InputElementState, IInputHandler
+        public abstract class DragState : InputElementState, IInputHandler
         {
             protected InputGesture ExitGesture { get; }
             protected InputGesture? CancelGesture { get; }
@@ -99,13 +99,13 @@ namespace Nodify
             private bool _canReceiveInput;
             private Point _initialPosition;
 
-            public ElementOperationState(InputElementStateStack<TElement> stack, InputGesture exitGesture) : base(stack)
+            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture) : base(stack)
             {
                 ExitGesture = exitGesture;
                 PositionElement = stack.Element;
             }
 
-            public ElementOperationState(InputElementStateStack<TElement> stack, InputGesture exitGesture, InputGesture cancelGesture)
+            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture, InputGesture cancelGesture)
                 : this(stack, exitGesture)
             {
                 CancelGesture = cancelGesture;
@@ -137,13 +137,13 @@ namespace Nodify
 
                 if (_canReceiveInput && IsInputEventReleased(e) && ExitGesture.Matches(e.Source, e))
                 {
-                    EndOperation(e);
+                    EndDrag(e);
                     return;
                 }
 
                 if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
                 {
-                    CancelOperation(e);
+                    CancelDrag(e);
                     return;
                 }
 
@@ -153,7 +153,7 @@ namespace Nodify
                 }
             }
 
-            private void CancelOperation(InputEventArgs e)
+            private void CancelDrag(InputEventArgs e)
             {
                 _canReceiveInput = false;
 
@@ -165,7 +165,7 @@ namespace Nodify
                 PopState();
             }
 
-            private void EndOperation(InputEventArgs e)
+            private void EndDrag(InputEventArgs e)
             {
                 _canReceiveInput = false;
 

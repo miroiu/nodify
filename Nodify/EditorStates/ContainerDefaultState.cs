@@ -8,18 +8,20 @@ namespace Nodify
     {
         public ContainerDefaultState(ItemContainer container) : base(container)
         {
-            PushState(new Implementation(this));
+            PushState(new SelectingState(this));
         }
 
-        private sealed class Implementation : InputElementState
+        private sealed class SelectingState : InputElementState
         {
             private Point _initialPosition;
             private SelectionType? _selectionType;
             private bool _isDragging;
 
+            private bool PreserveSelectionOnRightClick => Element.HasContextMenu || ItemContainer.PreserveSelectionOnRightClick;
+
             /// <summary>Creates a new instance of the <see cref="ContainerSelectingState"/>.</summary>
             /// <param name="container">The owner of the state.</param>
-            public Implementation(InputElementStateStack<ItemContainer> stack) : base(stack)
+            public SelectingState(InputElementStateStack<ItemContainer> stack) : base(stack)
             {
             }
 
@@ -41,22 +43,39 @@ namespace Nodify
                 EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
                 if (gestures.Drag.Matches(e.Source, e))
                 {
-                    _isDragging = Element.IsDraggable;
+                    _isDragging = Element.IsDraggable && CaptureMouseSafe();
                 }
 
                 if (gestures.Selection.Select.Matches(e.Source, e))
                 {
                     _selectionType = gestures.Selection.GetSelectionType(e);
                 }
+                // Replaces the current selection when right-clicking on an element that has a context menu and is not selected.
+                // Applies only when the select gesture is not right click.
+                else if (e.ChangedButton == MouseButton.Right && PreserveSelectionOnRightClick)
+                {
+                    _selectionType = Element.IsSelected ? SelectionType.Append : SelectionType.Replace;
+                }
 
                 _initialPosition = Element.Editor.MouseLocation;
 
-                // Capture the mouse only if we have an operation
                 if (_isDragging || _selectionType.HasValue)
                 {
                     Element.Focus();
-                    Element.CaptureMouse();
+                    e.Handled = true;
                 }
+            }
+
+            private bool CaptureMouseSafe()
+            {
+                // Avoid stealing mouse capture from other elements
+                if (Mouse.Captured == null || Element.IsMouseCaptured)
+                {
+                    Element.CaptureMouse();
+                    return true;
+                }
+
+                return false;
             }
 
             /// <inheritdoc />
@@ -87,9 +106,8 @@ namespace Nodify
                     // explicit context menu or is configured to preserve the selection on right-click, the selection 
                     // remains unchanged. This ensures that the context menu applies to the entire selection rather 
                     // than only the clicked item.
-                    bool hasContextMenu = Element.HasContextMenu || ItemContainer.PreserveSelectionOnRightClick;
-                    bool allowContextMenu = e.ChangedButton == MouseButton.Right && Element.IsSelected && hasContextMenu;
-                    if (!(_selectionType == SelectionType.Replace && allowContextMenu))
+                    bool allowContextMenu = e.ChangedButton == MouseButton.Right && Element.IsSelected && PreserveSelectionOnRightClick;
+                    if (!allowContextMenu)
                     {
                         Element.Select(_selectionType.Value);
                     }

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public class EditorPushingItemsState : ElementOperationState<NodifyEditor>
+    public class EditorPushingItemsState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
 

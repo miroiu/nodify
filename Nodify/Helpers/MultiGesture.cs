@@ -126,7 +126,7 @@ namespace Nodify
         /// <summary>
         /// Whether to ignore modifier keys when releasing the mouse button.
         /// </summary>
-        public bool IgnoreModifierKeysOnRelease { get; set; } = true;
+        public bool IgnoreModifierKeysOnRelease { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseGesture"/> class with the specified mouse action, modifier keys, and a specific key.
@@ -150,8 +150,21 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        public MouseGesture(MouseAction action, ModifierKeys modifiers) : base(action, modifiers)
+        public MouseGesture(MouseAction action, ModifierKeys modifiers) 
+            : base(action, modifiers)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MouseGesture"/> class with the specified mouse action and modifier keys.
+        /// </summary>
+        /// <param name="action">The action associated with this gesture.</param>
+        /// <param name="modifiers">The modifiers required to match the gesture.</param>
+        /// <param name="ignoreModifierKeysOnRelease">Whether to ignore modifiers when releasing the mouse button.</param>
+        public MouseGesture(MouseAction action, ModifierKeys modifiers, bool ignoreModifierKeysOnRelease) 
+            : base(action, modifiers)
+        {
+            IgnoreModifierKeysOnRelease = ignoreModifierKeysOnRelease;
         }
 
         /// <inheritdoc />

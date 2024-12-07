@@ -13,17 +13,27 @@ namespace Nodify
             /// <summary>Disable selection gestures.</summary>
             public static readonly SelectionGestures None = new SelectionGestures(MouseAction.None);
 
-            public SelectionGestures(MouseAction mouseAction)
+            public SelectionGestures(MouseAction mouseAction, bool ignoreModifierKeysOnRelease)
             {
                 Replace = new MouseGesture(mouseAction);
-                Remove = new MouseGesture(mouseAction, ModifierKeys.Alt);
-                Append = new MouseGesture(mouseAction, ModifierKeys.Shift);
-                Invert = new MouseGesture(mouseAction, ModifierKeys.Control);
+                Remove = new MouseGesture(mouseAction, ModifierKeys.Alt, ignoreModifierKeysOnRelease);
+                Append = new MouseGesture(mouseAction, ModifierKeys.Shift, ignoreModifierKeysOnRelease);
+                Invert = new MouseGesture(mouseAction, ModifierKeys.Control, ignoreModifierKeysOnRelease);
                 Select = new AnyGesture(Replace, Remove, Append, Invert);
                 Cancel = new KeyGesture(Key.Escape);
             }
 
-            public SelectionGestures() : this(MouseAction.LeftClick)
+            public SelectionGestures(MouseAction mouseAction)
+                : this(mouseAction, true)
+            {
+            }
+
+            public SelectionGestures(bool ignoreModifierKeysOnRelease)
+                : this(MouseAction.LeftClick, ignoreModifierKeysOnRelease)
+            {
+            }
+
+            public SelectionGestures() : this(true)
             {
             }
 
@@ -73,8 +83,7 @@ namespace Nodify
                     Selection.Replace,
                     Selection.Remove,
                     Selection.Append,
-                    Selection.Invert,
-                    new MouseGesture(MouseAction.RightClick));
+                    Selection.Invert);
 
                 Drag = new AnyGesture(Selection.Replace, Selection.Remove, Selection.Append, Selection.Invert);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
@@ -110,12 +119,12 @@ namespace Nodify
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
-                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
-                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift);
+                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
+                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift, true);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
-                ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
-                ZoomOut = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
+                ZoomIn = new AnyGesture(new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
+                ZoomOut = new AnyGesture(new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ResetViewportLocation = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));

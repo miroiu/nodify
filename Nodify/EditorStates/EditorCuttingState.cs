@@ -2,7 +2,7 @@
 
 namespace Nodify
 {
-    public class EditorCuttingState : ElementOperationState<NodifyEditor>
+    public class EditorCuttingState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
 

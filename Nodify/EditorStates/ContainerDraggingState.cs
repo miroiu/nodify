@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>Dragging state of the container.</summary>
-    public sealed class ContainerDraggingState : InputElementStateStack<ItemContainer>.ElementOperationState
+    internal sealed class ContainerDraggingState : InputElementStateStack<ItemContainer>.DragState
     {
         private Point _previousMousePosition;
 

@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public class ConnectorConnectingState : ElementOperationState<Connector>
+    public class ConnectorConnectingState : DragState<Connector>
     {
         public ConnectorConnectingState(Connector connector)
             : base(connector, EditorGestures.Mappings.Connector.Connect, EditorGestures.Mappings.Connector.CancelAction)

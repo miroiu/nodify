@@ -15,16 +15,29 @@ namespace Nodify
         public void RemoveHandlers<T>() where T : IInputHandler
             => _handlers.RemoveWhere(x => x.GetType() == typeof(T));
 
+        public void Clear()
+            => _handlers.Clear();
+
         public void Process(InputEventArgs e)
         {
-            foreach (var handler in _handlers)
+            if (ProcessHandledEvents)
             {
-                if (e.Handled && !ProcessHandledEvents)
+                foreach (var handler in _handlers)
                 {
-                    break;
+                    handler.HandleEvent(e);
                 }
+            }
+            else
+            {
+                foreach (var handler in _handlers)
+                {
+                    if (e.Handled)
+                    {
+                        break;
+                    }
 
-                handler.HandleEvent(e);
+                    handler.HandleEvent(e);
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>The panning state of the editor.</summary>
-    public class EditorPanningState : ElementOperationState<NodifyEditor>
+    public class EditorPanningState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanBegin => !Element.DisablePanning;
@@ -21,9 +21,7 @@ namespace Nodify
 
         protected override void OnBegin(InputEventArgs e)
         {
-            var initialMousePosition = Mouse.GetPosition(Element);
-            _prevPosition = initialMousePosition;
-
+            _prevPosition = Mouse.GetPosition(Element);
             Element.BeginPanning();
         }
 

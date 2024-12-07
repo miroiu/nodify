@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public abstract class ElementOperationState<TElement> : InputElementState<TElement>, IInputHandler
+    public abstract class DragState<TElement> : InputElementState<TElement>, IInputHandler
         where TElement : FrameworkElement
     {
         protected InputGesture? CancelGesture { get; }
@@ -19,13 +19,13 @@ namespace Nodify
 
         /// <summary>Constructs a new <see cref="EditorState"/>.</summary>
         /// <param name="element">The owner of the state.</param>
-        public ElementOperationState(TElement element, InputGesture beginGesture) : base(element)
+        public DragState(TElement element, InputGesture beginGesture) : base(element)
         {
             BeginGesture = beginGesture;
             PositionElement = element;
         }
 
-        public ElementOperationState(TElement element, InputGesture beginGesture, InputGesture cancelGesture)
+        public DragState(TElement element, InputGesture beginGesture, InputGesture cancelGesture)
             : this(element, beginGesture)
         {
             CancelGesture = cancelGesture;
@@ -35,19 +35,19 @@ namespace Nodify
         {
             if (!_canReceiveInput && IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e) && CanBegin)
             {
-                BeginOperation(e);
+                BeginDrag(e);
                 return;
             }
 
             if (_canReceiveInput && (IsToggle ? IsInputEventPressed(e) : IsInputEventReleased(e)) && BeginGesture.Matches(e.Source, e))
             {
-                EndOperation(e);
+                EndDrag(e);
                 return;
             }
 
             if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || (CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e))))
             {
-                CancelOperation(e);
+                CancelDrag(e);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace Nodify
             }
         }
 
-        private void CancelOperation(InputEventArgs e)
+        private void CancelDrag(InputEventArgs e)
         {
             _canReceiveInput = false;
             HandleEvent(e);
@@ -66,12 +66,13 @@ namespace Nodify
             e.Handled = true;
         }
 
-        private void BeginOperation(InputEventArgs e)
+        private void BeginDrag(InputEventArgs e)
         {
+            // Avoid stealing mouse capture from other elements
             if (Mouse.Captured == null || Element.IsMouseCaptured)
             {
                 _canReceiveInput = true;
-                HandleEvent(e); // handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
+                HandleEvent(e); // Handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
                 OnBegin(e);
 
                 e.Handled = true;
@@ -86,7 +87,7 @@ namespace Nodify
             }
         }
 
-        private void EndOperation(InputEventArgs e)
+        private void EndDrag(InputEventArgs e)
         {
             _canReceiveInput = false;
             HandleEvent(e);
@@ -114,7 +115,7 @@ namespace Nodify
             }
         }
 
-        private static bool IsInputEventReleased(InputEventArgs e)
+        protected virtual bool IsInputEventReleased(InputEventArgs e)
         {
             if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Released)
                 return true;
@@ -128,7 +129,7 @@ namespace Nodify
             return false;
         }
 
-        private static bool IsInputEventPressed(InputEventArgs e)
+        protected virtual bool IsInputEventPressed(InputEventArgs e)
         {
             if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Pressed)
                 return true;

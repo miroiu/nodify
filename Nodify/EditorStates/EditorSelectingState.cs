@@ -3,7 +3,7 @@
 namespace Nodify
 {
     /// <summary>The selecting state of the editor.</summary>
-    public class EditorSelectingState : ElementOperationState<NodifyEditor>
+    public class EditorSelectingState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanBegin => Element.CanSelectMultipleItems && !Element.IsPanning;
