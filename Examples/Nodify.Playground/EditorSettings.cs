@@ -220,6 +220,11 @@ namespace Nodify.Playground
                     val => Instance.MouseActionSuppressionThreshold = val,
                     "Context menu suppression threshold: ",
                     "Disable context menu after mouse moved this far"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.PreserveSelectionOnRightClick,
+                    val => Instance.PreserveSelectionOnRightClick = val,
+                    "Preserve selection on right click: ",
+                    "Whether right-click on the container should preserve the current selection."),
                 new ProxySettingViewModel<double>(
                     () => Instance.AutoPanningTickRate,
                     val => Instance.AutoPanningTickRate = val,
@@ -600,6 +605,12 @@ namespace Nodify.Playground
 
         #region Advanced settings
 
+        public bool PreserveSelectionOnRightClick
+        {
+            get => ItemContainer.PreserveSelectionOnRightClick;
+            set => ItemContainer.PreserveSelectionOnRightClick = value;
+        }
+
         public double MouseActionSuppressionThreshold
         {
             get => NodifyEditor.MouseActionSuppressionThreshold;
@@ -614,8 +625,8 @@ namespace Nodify.Playground
 
         public bool AllowCuttingCancellation
         {
-            get => CuttingLine.AllowCuttingCancellation;
-            set => CuttingLine.AllowCuttingCancellation = value;
+            get => NodifyEditor.AllowCuttingCancellation;
+            set => NodifyEditor.AllowCuttingCancellation = value;
         }
 
         public bool AllowPushItemsCancellation
@@ -638,8 +649,8 @@ namespace Nodify.Playground
 
         public bool AllowDraggingCancellation
         {
-            get => ItemContainer.AllowDraggingCancellation;
-            set => ItemContainer.AllowDraggingCancellation = value;
+            get => NodifyEditor.AllowDraggingCancellation;
+            set => NodifyEditor.AllowDraggingCancellation = value;
         }
 
         public bool AllowPendingConnectionCancellation

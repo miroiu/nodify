@@ -58,6 +58,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets whether push items cancellation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).
         /// </summary>
+        /// <remarks>Has no effect if <see cref="AllowDraggingCancellation"/> is false.</remarks>
         public static bool AllowPushItemsCancellation { get; set; } = true;
 
         private IPushStrategy? _pushStrategy;
@@ -70,7 +71,7 @@ namespace Nodify
         /// <param name="orientation">The orientation of the <see cref="PushedArea"/>.</param>
         public void BeginPushingItems(Point location, Orientation orientation)
         {
-            if(IsPushingItems)
+            if (IsPushingItems)
             {
                 return;
             }
@@ -114,17 +115,22 @@ namespace Nodify
 
         /// <summary>
         /// Cancels the current pushing operation and reverts the <see cref="PushedArea"/> to its initial state if <see cref="AllowPushItemsCancellation"/> is true.
+        /// Otherwise, it ends the pushing operation by calling <see cref="EndPushingItems"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no pushing operation in progress.</remarks>
         public void CancelPushingItems()
         {
-            if (!AllowPushItemsCancellation || !IsPushingItems)
+            if (!AllowPushItemsCancellation)
             {
+                EndPushingItems();
                 return;
             }
 
-            PushedArea = _pushStrategy!.Cancel();
-            IsPushingItems = false;
+            if (IsPushingItems)
+            {
+                PushedArea = _pushStrategy!.Cancel();
+                IsPushingItems = false;
+            }
         }
 
         private void UpdatePushedArea()

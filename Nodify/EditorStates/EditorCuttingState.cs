@@ -6,7 +6,7 @@ namespace Nodify
     public class EditorCuttingState : EditorState
     {
         private Point _initialPosition;
-        private bool Canceled { get; set; } = CuttingLine.AllowCuttingCancellation;
+        private bool Canceled { get; set; } = NodifyEditor.AllowCuttingCancellation;
 
         public EditorCuttingState(NodifyEditor editor) : base(editor)
         {
@@ -52,7 +52,7 @@ namespace Nodify
 
                 PopState();
             }
-            else if (CuttingLine.AllowCuttingCancellation && gestures.CancelAction.Matches(e.Source, e))
+            else if (NodifyEditor.AllowCuttingCancellation && gestures.CancelAction.Matches(e.Source, e))
             {
                 Canceled = true;
                 e.Handled = true;   // prevents opening context menu
@@ -69,7 +69,7 @@ namespace Nodify
         public override void HandleKeyUp(KeyEventArgs e)
         {
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (CuttingLine.AllowCuttingCancellation && gestures.CancelAction.Matches(e.Source, e))
+            if (NodifyEditor.AllowCuttingCancellation && gestures.CancelAction.Matches(e.Source, e))
             {
                 Canceled = true;
                 PopState();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -8,6 +7,8 @@ namespace Nodify
 {
     public partial class NodifyEditor
     {
+        #region Dependency properties
+
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
         public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
@@ -70,6 +71,8 @@ namespace Nodify
             private set => SetValue(IsPanningPropertyKey, value);
         }
 
+        #endregion
+
         /// <summary>
         /// Gets or sets whether panning cancellation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).
         /// </summary>
@@ -122,17 +125,22 @@ namespace Nodify
 
         /// <summary>
         /// Cancels the current panning operation and reverts the viewport to its initial location if <see cref="AllowPanningCancellation"/> is true.
+        /// Otherwise, it ends the panning operation by calling <see cref="EndPanning"/>.
         /// </summary>
         /// <remarks>This method has no effect if there's no panning operation in progress.</remarks>
         public void CancelPanning()
         {
-            if (!AllowPanningCancellation || !IsPanning)
+            if (!AllowPanningCancellation)
             {
+                EndPanning();
                 return;
             }
 
-            ViewportLocation = _initialPanningLocation;
-            IsPanning = false;
+            if (IsPanning)
+            {
+                ViewportLocation = _initialPanningLocation;
+                IsPanning = false;
+            }
         }
 
         /// <summary>
@@ -145,6 +153,11 @@ namespace Nodify
         }
 
         #region Auto panning
+
+        private readonly MouseEventArgs _autoPanningEventArgs = new MouseEventArgs(Mouse.PrimaryDevice, 0, Stylus.CurrentStylusDevice)
+        {
+            RoutedEvent = MouseMoveEvent
+        };
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
@@ -177,7 +190,9 @@ namespace Nodify
                 ViewportLocation = new Point(x, y);
                 MouseLocation = Mouse.GetPosition(ItemsHost);
 
-                State.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
+                _autoPanningEventArgs.Handled = false;
+                _autoPanningEventArgs.Source = this;
+                State.HandleAutoPanning(_autoPanningEventArgs);
             }
         }
 
