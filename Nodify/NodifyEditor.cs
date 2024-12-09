@@ -570,7 +570,12 @@ namespace Nodify
 
             SetValue(ViewportTransformPropertyKey, transform);
 
-            _states.Push(GetInitialState());
+            InputProcessor.AddHandler(new EditorPanningState(this));
+            InputProcessor.AddHandler(new EditorPanningWithMouseWheelState(this));
+            InputProcessor.AddHandler(new EditorSelectingState(this));
+            InputProcessor.AddHandler(new EditorZoomingState(this));
+            InputProcessor.AddHandler(new EditorPushingItemsState(this));
+            InputProcessor.AddHandler(new EditorCuttingState(this));
         }
 
         /// <inheritdoc />
@@ -582,8 +587,6 @@ namespace Nodify
             ConnectionsHost = GetTemplateChild(ElementConnectionsHost) as UIElement ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
-
-            State.Enter(null);
         }
 
         /// <inheritdoc />
@@ -790,73 +793,22 @@ namespace Nodify
 
         #endregion
 
-        #region State Handling
+        #region Gesture Handling
 
-        private readonly Stack<EditorState> _states = new Stack<EditorState>();
-
-        /// <summary>The current state of the editor.</summary>
-        public EditorState State => _states.Peek();
-
-        /// <summary>Creates the initial state of the editor.</summary>
-        /// <returns>The initial state.</returns>
-        protected virtual EditorState GetInitialState()
-            => new EditorDefaultState(this);
-
-        /// <summary>Pushes the given state to the stack.</summary>
-        /// <param name="state">The new state of the editor.</param>
-        /// <remarks>Calls <see cref="EditorState.Enter"/> on the new state.</remarks>
-        public void PushState(EditorState state)
-        {
-            var prev = State;
-            _states.Push(state);
-            state.Enter(prev);
-        }
-
-        /// <summary>Pops the current <see cref="State"/> from the stack.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)
-        /// <br />Calls <see cref="EditorState.Exit"/> on the current state.
-        /// <br />Calls <see cref="EditorState.ReEnter"/> on the previous state.
-        /// </remarks>
-        public void PopState()
-        {
-            // Never remove the default state
-            if (_states.Count > 1)
-            {
-                EditorState prev = _states.Pop();
-                prev.Exit();
-                State.ReEnter(prev);
-            }
-        }
-
-        /// <summary>Pops all states from the editor.</summary>
-        /// <remarks>It doesn't pop the initial state. (see <see cref="GetInitialState"/>)</remarks>
-        public void PopAllStates()
-        {
-            while (_states.Count > 1)
-            {
-                PopState();
-            }
-        }
+        protected InputProcessor InputProcessor { get; } = new InputProcessor();
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            // Needed to not steal mouse capture from children
-            if (Mouse.Captured == null || IsMouseCaptured)
-            {
-                Focus();
-                CaptureMouse();
-
-                MouseLocation = e.GetPosition(ItemsHost);
-                State.HandleMouseDown(e);
-            }
+            MouseLocation = e.GetPosition(ItemsHost);
+            InputProcessor.Process(e);
         }
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             MouseLocation = e.GetPosition(ItemsHost);
-            State.HandleMouseUp(e);
+            InputProcessor.Process(e);
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
@@ -869,25 +821,27 @@ namespace Nodify
         protected override void OnMouseMove(MouseEventArgs e)
         {
             MouseLocation = e.GetPosition(ItemsHost);
-            State.HandleMouseMove(e);
+            InputProcessor.Process(e);
         }
 
         /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             MouseLocation = e.GetPosition(ItemsHost);
-            State.HandleMouseWheel(e);
+            InputProcessor.Process(e);
         }
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => PopAllStates();
+            => InputProcessor.Process(e);
 
+        /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
-            => State.HandleKeyUp(e);
+            => InputProcessor.Process(e);
 
+        /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
-            => State.HandleKeyDown(e);
+            => InputProcessor.Process(e);
 
         #endregion
 
