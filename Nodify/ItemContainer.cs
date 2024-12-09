@@ -364,8 +364,7 @@ namespace Nodify
                     IsSelected = !IsSelected;
                     break;
                 case SelectionType.Replace:
-                    Editor.UnselectAll();
-                    IsSelected = true;
+                    Editor.Select(this);
                 break;
             }
         }
