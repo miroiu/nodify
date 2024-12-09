@@ -9,7 +9,6 @@ namespace Nodify.Shapes.Canvas
     {
         public ShapeViewModel(IActionsHistory history) : base(history)
         {
-            RecordProperty<ShapeViewModel>(x => x.IsSelected);
             RecordProperty<ShapeViewModel>(x => x.Color);
             RecordProperty<ShapeViewModel>(x => x.Text);
         }
@@ -63,13 +62,6 @@ namespace Nodify.Shapes.Canvas
         {
             get => _text;
             set => SetProperty(ref _text, value);
-        }
-
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
         }
 
         public ConnectorViewModel LeftConnector { get; } = new ConnectorViewModel(ConnectorPosition.Left);

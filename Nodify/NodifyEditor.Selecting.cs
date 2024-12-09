@@ -76,14 +76,14 @@ namespace Nodify
                 ItemsSelectStartedCommand.Execute(DataContext);
         }
 
-        /// <summary>Invoked when a selection operation is started.</summary>
+        /// <summary>Invoked when a selection operation is started (see <see cref="BeginSelecting(SelectionType)"/>).</summary>
         public ICommand? ItemsSelectStartedCommand
         {
             get => (ICommand?)GetValue(ItemsSelectStartedCommandProperty);
             set => SetValue(ItemsSelectStartedCommandProperty, value);
         }
 
-        /// <summary>Invoked when a selection operation is completed.</summary>
+        /// <summary>Invoked when a selection operation is completed (see <see cref="EndSelecting"/>).</summary>
         public ICommand? ItemsSelectCompletedCommand
         {
             get => (ICommand?)GetValue(ItemsSelectCompletedCommandProperty);
@@ -216,42 +216,6 @@ namespace Nodify
 
         #region Selection
 
-        internal void ApplyPreviewingSelection()
-        {
-            Debug.Assert(IsSelecting);
-
-            ItemCollection items = Items;
-            IList selected = base.SelectedItems;
-
-            BeginUpdateSelectedItems();
-            for (var i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                if (container.IsPreviewingSelection == true && container.IsSelectable)
-                {
-                    selected.Add(items[i]);
-                }
-                else if (container.IsPreviewingSelection == false)
-                {
-                    selected.Remove(items[i]);
-                }
-                container.IsPreviewingSelection = null;
-            }
-            EndUpdateSelectedItems();
-        }
-
-        internal void ClearPreviewingSelection()
-        {
-            Debug.Assert(IsSelecting);
-
-            ItemCollection items = Items;
-            for (var i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                container.IsPreviewingSelection = null;
-            }
-        }
-
         /// <summary>
         /// Inverts the <see cref="ItemContainer"/>s selection in the specified <paramref name="area"/>.
         /// </summary>
@@ -293,16 +257,16 @@ namespace Nodify
         /// <param name="fit">True to check if the <paramref name="area"/> contains the <see cref="ItemContainer"/>. <br />False to check if <paramref name="area"/> intersects the <see cref="ItemContainer"/>.</param>
         public void SelectArea(Rect area, bool append = false, bool fit = false)
         {
+            IsSelecting = true;
+            BeginUpdateSelectedItems();
+
+            IList selected = base.SelectedItems;
             if (!append)
             {
-                UnselectAll();
+                selected.Clear();
             }
 
             ItemCollection items = Items;
-            IList selected = base.SelectedItems;
-
-            IsSelecting = true;
-            BeginUpdateSelectedItems();
             for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
@@ -311,8 +275,22 @@ namespace Nodify
                     selected.Add(items[i]);
                 }
             }
+
             EndUpdateSelectedItems();
             IsSelecting = false;
+        }
+
+        /// <summary>
+        /// Clears the current selection and selects the specified <see cref="ItemContainer"/> within the same selection transaction.
+        /// </summary>
+        /// <param name="container"></param>
+        public void Select(ItemContainer container)
+        {
+            BeginUpdateSelectedItems();
+            var selected = base.SelectedItems;
+            selected.Clear();
+            selected.Add(container.DataContext);
+            EndUpdateSelectedItems();
         }
 
         /// <summary>
@@ -429,7 +407,7 @@ namespace Nodify
         /// <remarks>This method has no effect if there's no selection operation in progress.</remarks>
         public void CancelSelecting()
         {
-            if(!AllowSelectionCancellation)
+            if (!AllowSelectionCancellation)
             {
                 EndSelecting();
                 return;
@@ -439,6 +417,38 @@ namespace Nodify
             {
                 ClearPreviewingSelection();
                 IsSelecting = false;
+            }
+        }
+
+        private void ApplyPreviewingSelection()
+        {
+            ItemCollection items = Items;
+            IList selected = base.SelectedItems;
+
+            BeginUpdateSelectedItems();
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                if (container.IsPreviewingSelection == true && container.IsSelectable)
+                {
+                    selected.Add(items[i]);
+                }
+                else if (container.IsPreviewingSelection == false)
+                {
+                    selected.Remove(items[i]);
+                }
+                container.IsPreviewingSelection = null;
+            }
+            EndUpdateSelectedItems();
+        }
+
+        private void ClearPreviewingSelection()
+        {
+            ItemCollection items = Items;
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                container.IsPreviewingSelection = null;
             }
         }
 
