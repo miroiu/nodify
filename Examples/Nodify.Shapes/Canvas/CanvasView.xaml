@@ -44,9 +44,8 @@
                              ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
                              ItemsDragStartedCommand="{Binding MoveShapesStartedCommand}"
                              ItemsDragCompletedCommand="{Binding MoveShapesCompletedCommand}"
-                             ItemsSelectStartedCommand="{Binding SelectShapesStartedCommand}"
-                             ItemsSelectCompletedCommand="{Binding SelectShapesCompletedCommand}"
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
+                             SelectionChanged="Editor_SelectionChanged"
                              MouseDown="Editor_MouseDown"
                              MouseMove="Editor_MouseMove"
                              MouseUp="Editor_MouseUp"
@@ -248,8 +247,6 @@
                     </Style.Resources>
                     <Setter Property="Location"
                             Value="{Binding Location}" />
-                    <Setter Property="IsSelected"
-                            Value="{Binding IsSelected}" />
                     <Setter Property="SelectedBrush"
                             Value="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}" />
                     <Setter Property="SelectedBorderThickness"

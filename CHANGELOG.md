@@ -16,7 +16,7 @@
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor
->	- Added BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
+>	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
 >	- Added AlignSelection and AlignContainers methods to NodifyEditor
 >	- Added HasCustomContextMenu dependency property to NodifyEditor and ItemContainer
@@ -29,7 +29,8 @@
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the Home button caused the editor to fail to display items when contained within a ScrollViewer
 >	- Fixed an issue where connector optimization did not work when SelectedItems was not data-bound
->	- Fixed an issue where EditorCommands.Align caused multiple arrange invalidations, one for each aligned container
+>	- Fixed EditorCommands.Align to perform a single arrange invalidation instead of one for each aligned container
+>	- Fixed ItemContainer.Select and NodifyEditor.SelectArea to clear the existing selection and select the containers within the same transaction
 	
 #### **Version 6.6.0**
 

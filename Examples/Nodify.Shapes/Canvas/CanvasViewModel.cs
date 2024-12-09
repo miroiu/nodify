@@ -22,8 +22,6 @@ namespace Nodify.Shapes.Canvas
 
         public ICommand MoveShapesStartedCommand { get; }
         public ICommand MoveShapesCompletedCommand { get; }
-        public ICommand SelectShapesStartedCommand { get; }
-        public ICommand SelectShapesCompletedCommand { get; }
         public ICommand ResizeShapeStartedCommand { get; }
         public ICommand ResizeShapeCompletedCommand { get; }
         public ICommand CreateConnectionCommand { get; }
@@ -47,9 +45,6 @@ namespace Nodify.Shapes.Canvas
 
             MoveShapesStartedCommand = new DelegateCommand(MoveShapesStartedHandler);
             MoveShapesCompletedCommand = new DelegateCommand(MoveShapesCompletedHandler);
-
-            SelectShapesStartedCommand = new DelegateCommand(SelectShapesStartedHandler);
-            SelectShapesCompletedCommand = new DelegateCommand(SelectShapesCompletedHandler);
 
             ResizeShapeStartedCommand = new DelegateCommand(ResizeShapeStartedHandler);
             ResizeShapeCompletedCommand = new DelegateCommand(ResizeShapeCompletedHandler);
@@ -91,23 +86,6 @@ namespace Nodify.Shapes.Canvas
             }
 
             ShapeToolbar.Show();
-        }
-
-        // TODO: This does not fire for single selection (ItemContainer click), therefore I added IsSelected to ShapeViewModel.
-        private void SelectShapesStartedHandler()
-        {
-            // The workaround is to record all IsSelected changes into one history item using History.Pause and History.Resume
-            UndoRedo.Pause("Select shapes");
-            //UndoRedo.ExecuteAction(new SelectShapesAction(this));
-        }
-
-        private void SelectShapesCompletedHandler()
-        {
-            UndoRedo.Resume();
-            //if (UndoRedo.Current is SelectShapesAction selectShapes)
-            //{
-            //    selectShapes.SaveSelection();
-            //}
         }
 
         private void ResizeShapeStartedHandler()

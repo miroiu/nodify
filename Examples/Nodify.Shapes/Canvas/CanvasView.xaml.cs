@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Nodify.Shapes.Canvas.UndoRedo;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -102,6 +104,23 @@ namespace Nodify.Shapes.Canvas
         private void Minimap_Zoom(object sender, ZoomEventArgs e)
         {
             Editor.ZoomAtPosition(e.Zoom, e.Location);
+        }
+
+        private void Editor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var canvasVM = (CanvasViewModel)DataContext;
+            var selectedNodes = e.AddedItems.Cast<ShapeViewModel>().ToList();
+            var deselectedNodes = e.RemovedItems.Cast<ShapeViewModel>().ToList();
+
+            string batchLabel = selectedNodes.Count > 0 ? "Select shapes" : "Deselect shapes";
+            using (canvasVM.UndoRedo.Batch(batchLabel))
+            {
+                var selectNodes = new SelectShapesAction(selectedNodes, canvasVM);
+                var deselectNodes = new DeselectShapesAction(deselectedNodes, canvasVM);
+
+                canvasVM.UndoRedo.Record(deselectNodes);
+                canvasVM.UndoRedo.Record(selectNodes);
+            }
         }
     }
 }
