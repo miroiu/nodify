@@ -774,8 +774,6 @@ namespace Nodify
         {
             Focus();
 
-            this.CaptureMouseSafe();
-
             EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
             if (gestures.Split.Matches(e.Source, e))
             {
@@ -824,14 +822,6 @@ namespace Nodify
             if (!args.Handled && (DisconnectCommand?.CanExecute(null) ?? false))
             {
                 DisconnectCommand.Execute(null);
-            }
-        }
-
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
-            if (IsMouseCaptured)
-            {
-                ReleaseMouseCapture();
             }
         }
 

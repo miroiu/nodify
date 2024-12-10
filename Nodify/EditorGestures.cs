@@ -13,17 +13,52 @@ namespace Nodify
             /// <summary>Disable selection gestures.</summary>
             public static readonly SelectionGestures None = new SelectionGestures(MouseAction.None);
 
-            public SelectionGestures(MouseAction mouseAction)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with specified mouse action 
+            /// and a flag indicating whether modifier keys should be ignored when releasing the mouse button.
+            /// </summary>
+            /// <param name="mouseAction">The mouse action to trigger the gestures.</param>
+            /// <param name="ignoreModifierKeysOnRelease">
+            /// A value indicating whether modifier keys (Alt, Shift, Control) should be ignored when the mouse button is released.
+            /// </param>
+            public SelectionGestures(MouseAction mouseAction, bool ignoreModifierKeysOnRelease)
             {
                 Replace = new MouseGesture(mouseAction);
-                Remove = new MouseGesture(mouseAction, ModifierKeys.Alt);
-                Append = new MouseGesture(mouseAction, ModifierKeys.Shift);
-                Invert = new MouseGesture(mouseAction, ModifierKeys.Control);
+                Remove = new MouseGesture(mouseAction, ModifierKeys.Alt, ignoreModifierKeysOnRelease);
+                Append = new MouseGesture(mouseAction, ModifierKeys.Shift, ignoreModifierKeysOnRelease);
+                Invert = new MouseGesture(mouseAction, ModifierKeys.Control, ignoreModifierKeysOnRelease);
                 Select = new AnyGesture(Replace, Remove, Append, Invert);
                 Cancel = new KeyGesture(Key.Escape);
             }
 
-            public SelectionGestures() : this(MouseAction.LeftClick)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with a specified mouse action.
+            /// Modifier keys will be ignored when releasing the mouse button.
+            /// </summary>
+            /// <param name="mouseAction">The mouse action to trigger the gestures.</param>
+            public SelectionGestures(MouseAction mouseAction)
+                : this(mouseAction, true)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with a flag indicating 
+            /// whether modifier keys should be ignored when releasing the mouse button. 
+            /// The default mouse action is <see cref="MouseAction.LeftClick"/>.
+            /// </summary>
+            /// <param name="ignoreModifierKeysOnRelease">
+            /// A value indicating whether modifier keys (Alt, Shift, Control) should be ignored when the mouse button is released.
+            /// </param>
+            public SelectionGestures(bool ignoreModifierKeysOnRelease)
+                : this(MouseAction.LeftClick, ignoreModifierKeysOnRelease)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with default values:
+            /// the mouse action is <see cref="MouseAction.LeftClick"/>, and modifier keys are ignored when releasing the mouse button.
+            /// </summary>
+            public SelectionGestures() : this(true)
             {
             }
 
@@ -73,8 +108,7 @@ namespace Nodify
                     Selection.Replace,
                     Selection.Remove,
                     Selection.Append,
-                    Selection.Invert,
-                    new MouseGesture(MouseAction.RightClick));
+                    Selection.Invert);
 
                 Drag = new AnyGesture(Selection.Replace, Selection.Remove, Selection.Append, Selection.Invert);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
@@ -110,12 +144,12 @@ namespace Nodify
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
-                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift);
-                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift);
+                Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
+                PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift, true);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
                 ZoomModifierKey = ModifierKeys.None;
-                ZoomIn = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
-                ZoomOut = new MultiGesture(MultiGesture.Match.Any, new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
+                ZoomIn = new AnyGesture(new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
+                ZoomOut = new AnyGesture(new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ResetViewportLocation = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
@@ -180,6 +214,7 @@ namespace Nodify
             {
                 Selection.Apply(gestures.Selection);
                 Cutting.Value = gestures.Cutting.Value;
+                PushItems.Value = gestures.PushItems.Value;
                 Pan.Value = gestures.Pan.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
@@ -190,7 +225,6 @@ namespace Nodify
                 PanWithMouseWheel = gestures.PanWithMouseWheel;
                 PanHorizontalModifierKey = gestures.PanHorizontalModifierKey;
                 PanVerticalModifierKey = gestures.PanVerticalModifierKey;
-                PushItems.Value = gestures.PushItems.Value;
             }
         }
 

@@ -17,8 +17,16 @@ namespace Nodify.StateMachine
                 Conditions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>(BlackboardDescriptor.GetAvailableItems<IBlackboardCondition>())
             };
 
-            Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
-            .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
+            Transitions.WhenAdded(c =>
+            {
+                c.Source.Transitions.Add(c.Target);
+                c.Target.Transitions.Add(c.Source);
+            })
+            .WhenRemoved(c =>
+            {
+                c.Source.Transitions.Remove(c.Target);
+                c.Target.Transitions.Remove(c.Source);
+            })
             .WhenCleared(c => c.ForEach(i =>
             {
                 i.Source.Transitions.Clear();

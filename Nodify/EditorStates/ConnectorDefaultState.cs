@@ -2,30 +2,27 @@
 
 namespace Nodify
 {
-    public class ConnectorDefaultState : ConnectorState
+    /// <summary>
+    /// Represents the default input state for a <see cref="Connector"/>.
+    /// </summary>
+    public class ConnectorDefaultState : InputElementState<Connector>
     {
-        public ConnectorDefaultState(Connector connector) : base(connector) { }
-
-        public override void HandleMouseDown(MouseButtonEventArgs e)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectorDefaultState"/> class.
+        /// </summary>
+        /// <param name="connector">The <see cref="Connector"/> element associated with this state.</param>
+        public ConnectorDefaultState(Connector connector) : base(connector)
         {
-            EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
-            if (gestures.Disconnect.Matches(e.Source, e))
-            {
-                Connector.RemoveConnections();
-            }
-            else if (gestures.Connect.Matches(e.Source, e))
-            {
-                if (Connector.EnableStickyConnections)
-                {
-                    Connector.PushState(new ConnectorConnectingStickyState(Connector));
-                }
-                else
-                {
-                    Connector.PushState(new ConnectorConnectingState(Connector));
-                }
-            }
+        }
 
-            e.Handled = true;   // prevent interacting with the container
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            // Allow context menu to appear
+            if (e.ChangedButton == MouseButton.Right && Element.HasContextMenu)
+            {
+                Element.Focus();
+                e.Handled = true;   // prevents the editor capturing the mouse
+            }
         }
     }
 }

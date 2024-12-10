@@ -1,103 +1,77 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify
 {
-    /// <summary>The panning state of the editor.</summary>
-    public class EditorPanningState : EditorState
+    /// <summary>
+    /// Represents the panning state of the <see cref="NodifyEditor"/>, allowing the user to pan the viewport by clicking and dragging.
+    /// </summary>
+    public class EditorPanningState : DragState<NodifyEditor>
     {
-        private Point _initialMousePosition;
-        private Point _previousMousePosition;
-        private Point _currentMousePosition;
+        protected override bool HasContextMenu => Element.HasContextMenu;
+        protected override bool CanBegin => !Element.DisablePanning;
+        protected override bool CanCancel => NodifyEditor.AllowPanningCancellation;
 
-        private bool Canceled { get; set; } = NodifyEditor.AllowPanningCancellation;
+        private Point _prevPosition;
 
-        /// <summary>Constructs an instance of the <see cref="EditorPanningState"/> state.</summary>
-        /// <param name="editor">The owner of the state.</param>
-        public EditorPanningState(NodifyEditor editor) : base(editor)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPanningState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
+        public EditorPanningState(NodifyEditor editor)
+            : base(editor, EditorGestures.Mappings.Editor.Pan, EditorGestures.Mappings.Editor.CancelAction)
         {
         }
 
-        /// <inheritdoc />
-        public override void Exit()
+        protected override void OnBegin(InputEventArgs e)
         {
-            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
-            if (Canceled)
-            {
-                Editor.CancelPanning();
-            }
-            else
-            {
-                Editor.EndPanning();
-            }
+            _prevPosition = Mouse.GetPosition(Element);
+            Element.BeginPanning();
         }
 
-        /// <inheritdoc />
-        public override void Enter(EditorState? from)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            Canceled = false;
-
-            _initialMousePosition = Mouse.GetPosition(Editor);
-            _previousMousePosition = _initialMousePosition;
-            _currentMousePosition = _initialMousePosition;
-
-            Editor.BeginPanning();
+            var currentMousePosition = e.GetPosition(Element);
+            Element.UpdatePanning((currentMousePosition - _prevPosition) / Element.ViewportZoom);
+            _prevPosition = currentMousePosition;
         }
 
-        /// <inheritdoc />
-        public override void HandleMouseMove(MouseEventArgs e)
+        protected override void OnEnd(InputEventArgs e)
+            => Element.EndPanning();
+
+        protected override void OnCancel(InputEventArgs e)
+            => Element.CancelPanning();
+    }
+
+    /// <summary>
+    /// Represents the panning state of the <see cref="NodifyEditor"/> using the mouse wheel.
+    /// Allows the user to pan horizontally or vertically by holding modifier keys while scrolling the mouse wheel.
+    /// </summary>
+    public class EditorPanningWithMouseWheelState : InputElementState<NodifyEditor>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPanningWithMouseWheelState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
+        public EditorPanningWithMouseWheelState(NodifyEditor editor) : base(editor)
         {
-            _currentMousePosition = e.GetPosition(Editor);
-            Editor.UpdatePanning((_currentMousePosition - _previousMousePosition) / Editor.ViewportZoom);
-            _previousMousePosition = _currentMousePosition;
         }
 
-        /// <inheritdoc />
-        public override void HandleMouseUp(MouseButtonEventArgs e)
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (gestures.Pan.Matches(e.Source, e))
+            if (gestures.PanWithMouseWheel && Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
             {
-                // Suppress the context menu if the mouse moved beyond the defined drag threshold or the editor is selecting
-                if (e.ChangedButton == MouseButton.Right && Editor.HasContextMenu)
-                {
-                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
-                    double dragDistance = (_currentMousePosition - _initialMousePosition).LengthSquared;
-
-                    if (dragDistance > dragThreshold || Editor.IsSelecting)
-                    {
-                        e.Handled = true;
-                    }
-                }
-
-                PopState();
+                double offset = Math.Sign(e.Delta) * Mouse.MouseWheelDeltaForOneLine / 2 / Element.ViewportZoom;
+                Element.UpdatePanning(new Vector(offset, 0d));
+                e.Handled = true;
             }
-            else if (gestures.Selection.Select.Matches(e.Source, e) && Editor.IsSelecting)
+            else if (gestures.PanWithMouseWheel && Keyboard.Modifiers == gestures.PanVerticalModifierKey)
             {
-                PopState();
-                // Cancel selection and continue panning
-                if (Editor.State is EditorSelectingState && !Editor.DisablePanning)
-                {
-                    PopState();
-                    PushState(new EditorPanningState(Editor));
-                }
-            }
-            else if (NodifyEditor.AllowPanningCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                e.Handled = true;   // prevents opening context menu
-
-                PopState();
-            }
-        }
-
-        public override void HandleKeyUp(KeyEventArgs e)
-        {
-            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (NodifyEditor.AllowPanningCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                PopState();
+                double offset = Math.Sign(e.Delta) * Mouse.MouseWheelDeltaForOneLine / 2 / Element.ViewportZoom;
+                Element.UpdatePanning(new Vector(0d, offset));
+                e.Handled = true;
             }
         }
     }

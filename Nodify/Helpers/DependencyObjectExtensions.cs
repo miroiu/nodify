@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -83,16 +82,6 @@ namespace Nodify
             }, new PointHitTestParameters(position));
 
             return result;
-        }
-
-        public static bool CaptureMouseSafe(this UIElement elem)
-        {
-            if (Mouse.Captured == null || elem.IsMouseCaptured)
-            {
-                return elem.CaptureMouse();
-            }
-
-            return false;
         }
 
         public static List<FrameworkElement> GetIntersectingElements(this UIElement container, Geometry geometry, IReadOnlyCollection<Type> supportedTypes)

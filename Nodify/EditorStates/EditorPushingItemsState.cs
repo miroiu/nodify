@@ -5,94 +5,52 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public class EditorPushingItemsState : EditorState
+    /// <summary>
+    /// Represents the state of the <see cref="NodifyEditor"/> during a "push items" operation, allowing users to move items within the editor by dragging.
+    /// </summary>
+    public class EditorPushingItemsState : DragState<NodifyEditor>
     {
+        protected override bool HasContextMenu => Element.HasContextMenu;
+        protected override bool CanCancel => NodifyEditor.AllowPushItemsCancellation;
+
         private Point _prevPosition;
-        private Point _initialPosition;
 
-        private bool Canceled { get; set; } = NodifyEditor.AllowPushItemsCancellation;
-
-        public EditorPushingItemsState(NodifyEditor editor) : base(editor)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPushingItemsState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
+        public EditorPushingItemsState(NodifyEditor editor)
+            : base(editor, EditorGestures.Mappings.Editor.PushItems, EditorGestures.Mappings.Editor.CancelAction)
         {
         }
 
-        public override void Enter(EditorState? from)
-        {
-            Canceled = false;
+        protected override void OnBegin(InputEventArgs e) 
+            => _prevPosition = Element.MouseLocation;
 
-            _initialPosition = Editor.MouseLocation;
-            _prevPosition = _initialPosition;
-        }
-
-        public override void Exit()
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            // TODO: This is not canceled on LostMouseCapture (add OnLostMouseCapture/OnCancel callback?)
-            if (Canceled)
+            if (Element.IsPushingItems)
             {
-                Editor.CancelPushingItems();
+                Element.UpdatePushedArea(Element.MouseLocation - _prevPosition);
+                _prevPosition = Element.MouseLocation;
             }
             else
             {
-                Editor.EndPushingItems();
-            }
-        }
-
-        public override void HandleMouseMove(MouseEventArgs e)
-        {
-            if (Editor.IsPushingItems)
-            {
-                Editor.UpdatePushedArea(Editor.MouseLocation - _prevPosition);
-                _prevPosition = Editor.MouseLocation;
-            }
-            else
-            {
-                if (Math.Abs(Editor.MouseLocation.X - _prevPosition.X) >= NodifyEditor.MouseActionSuppressionThreshold)
+                if (Math.Abs(Element.MouseLocation.X - _prevPosition.X) >= NodifyEditor.MouseActionSuppressionThreshold)
                 {
-                    Editor.BeginPushingItems(_prevPosition, Orientation.Horizontal);
+                    Element.BeginPushingItems(_prevPosition, Orientation.Horizontal);
                 }
-                else if (Math.Abs(Editor.MouseLocation.Y - _prevPosition.Y) >= NodifyEditor.MouseActionSuppressionThreshold)
+                else if (Math.Abs(Element.MouseLocation.Y - _prevPosition.Y) >= NodifyEditor.MouseActionSuppressionThreshold)
                 {
-                    Editor.BeginPushingItems(_prevPosition, Orientation.Vertical);
+                    Element.BeginPushingItems(_prevPosition, Orientation.Vertical);
                 }
             }
         }
 
-        public override void HandleMouseUp(MouseButtonEventArgs e)
-        {
-            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (gestures.PushItems.Matches(e.Source, e))
-            {
-                // Suppress the context menu if the mouse moved beyond the defined drag threshold
-                if (e.ChangedButton == MouseButton.Right && Editor.HasContextMenu)
-                {
-                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
-                    double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
+        protected override void OnEnd(InputEventArgs e) 
+            => Element.EndPushingItems();
 
-                    if (dragDistance > dragThreshold)
-                    {
-                        e.Handled = true;
-                    }
-                }
-
-                PopState();
-            }
-            else if (NodifyEditor.AllowPushItemsCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                e.Handled = true;   // prevents opening context menu
-
-                PopState();
-            }
-        }
-
-        public override void HandleKeyUp(KeyEventArgs e)
-        {
-            EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-            if (NodifyEditor.AllowPushItemsCancellation && gestures.CancelAction.Matches(e.Source, e))
-            {
-                Canceled = true;
-                PopState();
-            }
-        }
+        protected override void OnCancel(InputEventArgs e)
+            => Element.CancelPushingItems();
     }
 }
