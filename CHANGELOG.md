@@ -21,13 +21,13 @@
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
 >	- Added AlignSelection and AlignContainers methods to NodifyEditor
->	- Added HasCustomContextMenu dependency property to NodifyEditor and ItemContainer
+>	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer and Connector
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
 >	- Added a custom MouseGesture with support for key combinations
 >	- Added InputProcessor to NodifyEditor, ItemContainer and Connector, enabling the extension of controls with custom states
->	- Added ElementOperationState to simplify the creation of complex control states
+>	- Added DragState to simplify creating click-and-drag operations, with support for initiating and completing them using the keyboard
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
@@ -38,6 +38,7 @@
 >	- Fixed an issue where controls would capture the mouse unnecessarily; they now capture it only in response to a defined gesture
 >	- Fixed an issue where the minimap could update the viewport without having the mouse captured
 >	- Fixed ItemContainer.Select and NodifyEditor.SelectArea to clear the existing selection and select the containers within the same transaction
+>	- Fixed an issue where editor operations failed to cancel upon losing mouse capture.
 	
 #### **Version 6.6.0**
 

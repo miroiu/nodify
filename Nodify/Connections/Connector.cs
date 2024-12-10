@@ -376,7 +376,15 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
-            => InputProcessor.Process(e);
+        {
+            InputProcessor.Process(e);
+
+            // Release the mouse capture if all the mouse buttons are released and there's no sticky connection pending
+            if (!IsPendingConnection && IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            {
+                ReleaseMouseCapture();
+            }
+        }
 
         #endregion
 

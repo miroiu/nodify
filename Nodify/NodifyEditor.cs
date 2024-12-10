@@ -837,7 +837,15 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
-            => InputProcessor.Process(e);
+        {
+            InputProcessor.Process(e);
+
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            {
+                ReleaseMouseCapture();
+            }
+        }
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
