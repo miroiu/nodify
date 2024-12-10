@@ -9,6 +9,7 @@ namespace Nodify
     /// </summary>
     public class ConnectorConnectingState : DragState<Connector>
     {
+        protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanCancel => Connector.AllowPendingConnectionCancellation;
 
         /// <summary>

@@ -60,6 +60,7 @@ namespace Nodify
         public static readonly DependencyProperty DisconnectCommandProperty = DependencyProperty.Register(nameof(DisconnectCommand), typeof(ICommand), typeof(Connector));
         private static readonly DependencyPropertyKey IsPendingConnectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsPendingConnection), typeof(bool), typeof(Connector), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsPendingConnectionProperty = IsPendingConnectionPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty HasCustomContextMenuProperty = NodifyEditor.HasCustomContextMenuProperty.AddOwner(typeof(Connector));
 
         /// <summary>
         /// Gets the location in graph space coordinates where <see cref="Connection"/>s can be attached to. 
@@ -99,19 +100,22 @@ namespace Nodify
             set => SetValue(DisconnectCommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the connector uses a custom context menu.
+        /// </summary>
+        /// <remarks>When set to true, the connector handles the right-click event for specific operations.</remarks>
+        public bool HasCustomContextMenu
+        {
+            get => (bool)GetValue(HasCustomContextMenuProperty);
+            set => SetValue(HasCustomContextMenuProperty, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the connector has a context menu.
+        /// </summary>
+        public bool HasContextMenu => ContextMenu != null || HasCustomContextMenu;
+
         #endregion
-
-        static Connector()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
-            FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
-        }
-
-        public Connector()
-        {
-            InputProcessor.AddHandler(new ConnectorDisconnectState(this));
-            InputProcessor.AddHandler(new ConnectorConnectingState(this));
-        }
 
         #region Fields
 
@@ -161,6 +165,19 @@ namespace Nodify
         private bool _isHooked;
 
         #endregion
+
+        static Connector()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
+            FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
+        }
+
+        public Connector()
+        {
+            InputProcessor.AddHandler(new ConnectorDisconnectState(this));
+            InputProcessor.AddHandler(new ConnectorConnectingState(this));
+            InputProcessor.AddHandler(new ConnectorDefaultState(this));
+        }
 
         /// <inheritdoc />
         public override void OnApplyTemplate()
@@ -316,7 +333,7 @@ namespace Nodify
 
         #region Gesture Handling
 
-        protected InputProcessor InputProcessor { get; } = new InputProcessor();
+        protected InputProcessor InputProcessor { get; } = new InputProcessor { ProcessHandledEvents = true };
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -351,7 +368,7 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            if(!IsPendingConnection && IsMouseCaptured)
+            if (!IsPendingConnection && IsMouseCaptured)
             {
                 ReleaseMouseCapture();
             }
