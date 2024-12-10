@@ -2,8 +2,15 @@
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents a state in which a connector can be disconnected from its connections based on specific gestures.
+    /// </summary>
     public class ConnectorDisconnectState : InputElementState<Connector>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectorDisconnectState"/> class.
+        /// </summary>
+        /// <param name="connector">The <see cref="Connector"/> element associated with this state.</param>
         public ConnectorDisconnectState(Connector connector) : base(connector)
         {
         }

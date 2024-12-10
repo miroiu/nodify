@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>The default state of the <see cref="ItemContainer"/>.</summary>
-    public class ContainerDefaultState : InputElementStateStack<ItemContainer>
+    public sealed class ContainerDefaultState : InputElementStateStack<ItemContainer>
     {
         public ContainerDefaultState(ItemContainer container) : base(container)
         {

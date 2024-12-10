@@ -3,17 +3,34 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Defines a contract for handling input events within an element or system.
+    /// </summary>
     public interface IInputHandler
     {
+        /// <summary>
+        /// Handles a given input event, such as a mouse or keyboard interaction.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
         void HandleEvent(InputEventArgs e);
     }
 
+    /// <summary>
+    /// Represents a base class for handling input events in a specific state for a framework element.
+    /// </summary>
+    /// <typeparam name="TElement">The type of the framework element that owns this state.</typeparam>
     public abstract class InputElementState<TElement> : IInputHandler
         where TElement : FrameworkElement
     {
-        /// <summary>The owner of the state.</summary>
+        /// <summary>
+        /// Gets the owner of the state.
+        /// </summary>
         protected TElement Element { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputElementState{TElement}"/> class.
+        /// </summary>
+        /// <param name="element">The framework element that owns this state.</param>
         protected InputElementState(TElement element)
         {
             Element = element;
@@ -40,8 +57,16 @@ namespace Nodify
         /// <inheritdoc cref="UIElement.OnLostMouseCapture(MouseEventArgs)"/>
         protected virtual void OnLostMouseCapture(MouseEventArgs e) { }
 
+        /// <summary>
+        /// Called for any input event that is not explicitly handled by other methods.
+        /// </summary>
+        /// <param name="e">The input event arguments.</param>
         protected virtual void OnEvent(InputEventArgs e) { }
 
+        /// <summary>
+        /// Processes the input event by invoking the appropriate handler method based on the routed event.
+        /// </summary>
+        /// <param name="e">The input event arguments.</param>
         public void HandleEvent(InputEventArgs e)
         {
             if (e.RoutedEvent == UIElement.MouseMoveEvent)

@@ -3,10 +3,18 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents the state for handling a connector's connecting operation in the editor, 
+    /// enabling drag-based creation of connections between connectors.
+    /// </summary>
     public class ConnectorConnectingState : DragState<Connector>
     {
         protected override bool CanCancel => Connector.AllowPendingConnectionCancellation;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectorConnectingState"/> class.
+        /// </summary>
+        /// <param name="connector">The connector associated with this state.</param>
         public ConnectorConnectingState(Connector connector)
             : base(connector, EditorGestures.Mappings.Connector.Connect, EditorGestures.Mappings.Connector.CancelAction)
         {

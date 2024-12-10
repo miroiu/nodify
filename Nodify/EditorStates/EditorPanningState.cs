@@ -4,7 +4,9 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    /// <summary>The panning state of the editor.</summary>
+    /// <summary>
+    /// Represents the panning state of the <see cref="NodifyEditor"/>, allowing the user to pan the viewport by clicking and dragging.
+    /// </summary>
     public class EditorPanningState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
@@ -13,8 +15,10 @@ namespace Nodify
 
         private Point _prevPosition;
 
-        /// <summary>Constructs an instance of the <see cref="EditorPanningState"/> state.</summary>
-        /// <param name="editor">The owner of the state.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPanningState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
         public EditorPanningState(NodifyEditor editor)
             : base(editor, EditorGestures.Mappings.Editor.Pan, EditorGestures.Mappings.Editor.CancelAction)
         {
@@ -26,7 +30,6 @@ namespace Nodify
             Element.BeginPanning();
         }
 
-        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             var currentMousePosition = e.GetPosition(Element);
@@ -41,10 +44,16 @@ namespace Nodify
             => Element.CancelPanning();
     }
 
+    /// <summary>
+    /// Represents the panning state of the <see cref="NodifyEditor"/> using the mouse wheel.
+    /// Allows the user to pan horizontally or vertically by holding modifier keys while scrolling the mouse wheel.
+    /// </summary>
     public class EditorPanningWithMouseWheelState : InputElementState<NodifyEditor>
     {
-        /// <summary>Constructs an instance of the <see cref="EditorPanningWithMouseWheelState"/> state.</summary>
-        /// <param name="editor">The owner of the state.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPanningWithMouseWheelState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
         public EditorPanningWithMouseWheelState(NodifyEditor editor) : base(editor)
         {
         }

@@ -2,16 +2,20 @@
 
 namespace Nodify
 {
-    /// <summary>The selecting state of the editor.</summary>
+    /// <summary>
+    /// Represents the selecting state of the <see cref="NodifyEditor"/>.
+    /// This state is responsible for handling item selection within the editor.
+    /// </summary>
     public class EditorSelectingState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
         protected override bool CanBegin => Element.CanSelectMultipleItems && !Element.IsPanning;
         protected override bool CanCancel => NodifyEditor.AllowSelectionCancellation;
 
-        /// <summary>Constructs an instance of the <see cref="EditorSelectingState"/> state.</summary>
-        /// <param name="editor">The owner of the state.</param>
-        /// <param name="type">The selection strategy.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorSelectingState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
         public EditorSelectingState(NodifyEditor editor)
             : base(editor, EditorGestures.Mappings.Editor.Selection.Select, EditorGestures.Mappings.Editor.Selection.Cancel)
         {
@@ -23,7 +27,6 @@ namespace Nodify
             Element.BeginSelecting(selectionType);
         }
 
-        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
             => Element.UpdateSelection(Element.MouseLocation);
 

@@ -3,29 +3,70 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents an abstract base class for managing drag operations within a UI element.
+    /// Provides a framework for handling input gestures such as starting, canceling, and completing drag operations.
+    /// </summary>
+    /// <typeparam name="TElement">The type of <see cref="FrameworkElement"/> that owns the state.</typeparam>
     public abstract class DragState<TElement> : InputElementState<TElement>, IInputHandler
         where TElement : FrameworkElement
     {
+        /// <summary>
+        /// Gets the gesture used to cancel the drag operation, if defined.
+        /// </summary>
         protected InputGesture? CancelGesture { get; }
+
+        /// <summary>
+        /// Gets the gesture used to begin the drag operation.
+        /// </summary>
         protected InputGesture BeginGesture { get; }
 
+        /// <summary>
+        /// Indicates whether the element has a context menu associated with it.
+        /// </summary>
+        /// <remarks>This property is used to suppress the context menu when a drag operation is performed using the right mouse button.</remarks>
         protected virtual bool HasContextMenu => Element.ContextMenu != null;
+
+        /// <summary>
+        /// Determines if the drag operation can begin (see <see cref="OnBegin(InputEventArgs)"/>).
+        /// </summary>
         protected virtual bool CanBegin { get; } = true;
+
+        /// <summary>
+        /// Determines if the drag operation can be canceled (see <see cref="OnCancel(InputEventArgs)"/>).
+        /// </summary>
         protected virtual bool CanCancel { get; } = true;
+
+        /// <summary>
+        /// Indicates if the drag gesture is a toggle, meaning the same gesture can be used to both start and stop the operation.
+        /// </summary>
         protected virtual bool IsToggle { get; }
+
+        /// <summary>
+        /// Gets or sets the UI element used to calculate the mouse position during the drag operation.
+        /// </summary>
         protected IInputElement PositionElement { get; set; }
 
         private bool _canReceiveInput;
         private Point _initialPosition;
 
-        /// <summary>Constructs a new <see cref="EditorState"/>.</summary>
-        /// <param name="element">The owner of the state.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragState{TElement}"/> class with a begin gesture.
+        /// </summary>
+        /// <param name="element">The element associated with this state.</param>
+        /// <param name="beginGesture">The gesture used to start the drag operation.</param>
         public DragState(TElement element, InputGesture beginGesture) : base(element)
         {
             BeginGesture = beginGesture;
             PositionElement = element;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragState{TElement}"/> class with begin and cancel gestures.
+        /// </summary>
+        /// <param name="element">The element associated with this state.</param>
+        /// <param name="beginGesture">The gesture used to start the drag operation.</param>
+        /// <param name="cancelGesture">The gesture used to cancel the drag operation.</param>
         public DragState(TElement element, InputGesture beginGesture, InputGesture cancelGesture)
             : this(element, beginGesture)
         {
@@ -116,6 +157,11 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Determines if the given input event represents the release of an input gesture.
+        /// </summary>
+        /// <param name="e">The input event to evaluate.</param>
+        /// <returns>True if the event represents the release of a gesture; otherwise, false.</returns>
         protected virtual bool IsInputEventReleased(InputEventArgs e)
         {
             if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Released)
@@ -130,6 +176,11 @@ namespace Nodify
             return false;
         }
 
+        /// <summary>
+        /// Determines if the given input event represents the press of an input gesture.
+        /// </summary>
+        /// <param name="e">The input event to evaluate.</param>
+        /// <returns>True if the event represents the press of a gesture; otherwise, false.</returns>
         protected virtual bool IsInputEventPressed(InputEventArgs e)
         {
             if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Pressed)
@@ -144,14 +195,26 @@ namespace Nodify
             return false;
         }
 
+        /// <summary>
+        /// Called when the drag operation begins. Override to provide custom behavior.
+        /// </summary>
+        /// <param name="e">The input event that started the operation.</param>
         protected virtual void OnBegin(InputEventArgs e)
         {
         }
 
+        /// <summary>
+        /// Called when the drag operation ends. Override to provide custom behavior.
+        /// </summary>
+        /// <param name="e">The input event that ended the operation.</param>
         protected virtual void OnEnd(InputEventArgs e)
         {
         }
 
+        /// <summary>
+        /// Called when the drag operation is canceled. Override to provide custom behavior.
+        /// </summary>
+        /// <param name="e">The input event that canceled the operation.</param>
         protected virtual void OnCancel(InputEventArgs e)
         {
         }

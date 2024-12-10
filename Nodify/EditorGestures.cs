@@ -13,6 +13,14 @@ namespace Nodify
             /// <summary>Disable selection gestures.</summary>
             public static readonly SelectionGestures None = new SelectionGestures(MouseAction.None);
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with specified mouse action 
+            /// and a flag indicating whether modifier keys should be ignored when releasing the mouse button.
+            /// </summary>
+            /// <param name="mouseAction">The mouse action to trigger the gestures.</param>
+            /// <param name="ignoreModifierKeysOnRelease">
+            /// A value indicating whether modifier keys (Alt, Shift, Control) should be ignored when the mouse button is released.
+            /// </param>
             public SelectionGestures(MouseAction mouseAction, bool ignoreModifierKeysOnRelease)
             {
                 Replace = new MouseGesture(mouseAction);
@@ -23,16 +31,33 @@ namespace Nodify
                 Cancel = new KeyGesture(Key.Escape);
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with a specified mouse action.
+            /// Modifier keys will be ignored when releasing the mouse button.
+            /// </summary>
+            /// <param name="mouseAction">The mouse action to trigger the gestures.</param>
             public SelectionGestures(MouseAction mouseAction)
                 : this(mouseAction, true)
             {
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with a flag indicating 
+            /// whether modifier keys should be ignored when releasing the mouse button. 
+            /// The default mouse action is <see cref="MouseAction.LeftClick"/>.
+            /// </summary>
+            /// <param name="ignoreModifierKeysOnRelease">
+            /// A value indicating whether modifier keys (Alt, Shift, Control) should be ignored when the mouse button is released.
+            /// </param>
             public SelectionGestures(bool ignoreModifierKeysOnRelease)
                 : this(MouseAction.LeftClick, ignoreModifierKeysOnRelease)
             {
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SelectionGestures"/> class with default values:
+            /// the mouse action is <see cref="MouseAction.LeftClick"/>, and modifier keys are ignored when releasing the mouse button.
+            /// </summary>
             public SelectionGestures() : this(true)
             {
             }

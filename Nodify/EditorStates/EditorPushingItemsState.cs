@@ -5,6 +5,9 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents the state of the <see cref="NodifyEditor"/> during a "push items" operation, allowing users to move items within the editor by dragging.
+    /// </summary>
     public class EditorPushingItemsState : DragState<NodifyEditor>
     {
         protected override bool HasContextMenu => Element.HasContextMenu;
@@ -12,6 +15,10 @@ namespace Nodify
 
         private Point _prevPosition;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorPushingItemsState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
         public EditorPushingItemsState(NodifyEditor editor)
             : base(editor, EditorGestures.Mappings.Editor.PushItems, EditorGestures.Mappings.Editor.CancelAction)
         {
@@ -20,7 +27,6 @@ namespace Nodify
         protected override void OnBegin(InputEventArgs e) 
             => _prevPosition = Element.MouseLocation;
 
-        /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (Element.IsPushingItems)

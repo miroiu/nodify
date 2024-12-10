@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -365,7 +364,7 @@ namespace Nodify
 
         #region Gesture Handling
 
-        protected InputProcessor InputProcessor { get; } = new InputProcessor { ProcessHandledEvents = true };
+        protected InputProcessor InputProcessor { get; } = new InputProcessor();
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)

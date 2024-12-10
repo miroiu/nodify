@@ -3,10 +3,16 @@ using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Represents the zooming state of the <see cref="NodifyEditor"/>.
+    /// This state handles zooming operations using the mouse wheel with an optional modifier key.
+    /// </summary>
     public class EditorZoomingState : InputElementState<NodifyEditor>
     {
-        /// <summary>Constructs an instance of the <see cref="EditorZoomingState"/> state.</summary>
-        /// <param name="editor">The owner of the state.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorZoomingState"/> class.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
         public EditorZoomingState(NodifyEditor editor) : base(editor)
         {
         }
