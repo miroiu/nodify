@@ -37,6 +37,7 @@
                         <Button Content="{Binding Title}"
                                 Command="{Binding DataContext.CreateOperationCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 CommandParameter="{Binding}"
+                                ClickMode="Press"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 Foreground="{DynamicResource ForegroundBrush}"

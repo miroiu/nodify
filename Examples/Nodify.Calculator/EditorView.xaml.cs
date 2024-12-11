@@ -10,25 +10,25 @@ namespace Nodify.Calculator
         {
             InitializeComponent();
 
-            EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseLeftButtonDownEvent, new MouseButtonEventHandler(CloseOperationsMenu));
+            EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseLeftButtonDownEvent, new MouseButtonEventHandler(CloseOperationsMenu), true);
             EventManager.RegisterClassHandler(typeof(NodifyEditor), MouseRightButtonUpEvent, new MouseButtonEventHandler(OpenOperationsMenu));
         }
 
         private void OpenOperationsMenu(object sender, MouseButtonEventArgs e)
         {
-            if (!e.Handled && e.OriginalSource is NodifyEditor editor && editor.DataContext is CalculatorViewModel calculator)
+            if (e.OriginalSource is NodifyEditor editor && editor.DataContext is CalculatorViewModel calculator)
             {
                 e.Handled = true;
                 calculator.OperationsMenu.OpenAt(editor.MouseLocation);
             }
         }
 
-        private void CloseOperationsMenu(object sender, RoutedEventArgs e)
+        private void CloseOperationsMenu(object sender, MouseButtonEventArgs e)
         {
             ItemContainer? itemContainer = sender as ItemContainer;
             NodifyEditor? editor = sender as NodifyEditor ?? itemContainer?.Editor;
 
-            if (!e.Handled && editor?.DataContext is CalculatorViewModel calculator)
+            if (editor?.DataContext is CalculatorViewModel calculator)
             {
                 calculator.OperationsMenu.Close();
             }

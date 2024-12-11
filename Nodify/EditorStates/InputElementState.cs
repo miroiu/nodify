@@ -3,33 +3,102 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    public abstract class InputElementState<TState>
-        where TState : InputElementState<TState>
+    /// <summary>
+    /// Defines a contract for handling input events within an element or system.
+    /// </summary>
+    public interface IInputHandler
     {
+        /// <summary>
+        /// Handles a given input event, such as a mouse or keyboard interaction.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
+        void HandleEvent(InputEventArgs e);
+    }
+
+    /// <summary>
+    /// Represents a base class for handling input events in a specific state for a framework element.
+    /// </summary>
+    /// <typeparam name="TElement">The type of the framework element that owns this state.</typeparam>
+    public abstract class InputElementState<TElement> : IInputHandler
+        where TElement : FrameworkElement
+    {
+        /// <summary>
+        /// Gets the owner of the state.
+        /// </summary>
+        protected TElement Element { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputElementState{TElement}"/> class.
+        /// </summary>
+        /// <param name="element">The framework element that owns this state.</param>
+        protected InputElementState(TElement element)
+        {
+            Element = element;
+        }
+
         /// <inheritdoc cref="UIElement.OnMouseDown(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
+        protected virtual void OnMouseDown(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseUp(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
+        protected virtual void OnMouseUp(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseMove(MouseEventArgs)"/>
-        public virtual void HandleMouseMove(MouseEventArgs e) { }
+        protected virtual void OnMouseMove(MouseEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnMouseWheel(MouseWheelEventArgs)"/>
-        public virtual void HandleMouseWheel(MouseWheelEventArgs e) { }
+        protected virtual void OnMouseWheel(MouseWheelEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnKeyUp(KeyEventArgs)"/>
-        public virtual void HandleKeyUp(KeyEventArgs e) { }
+        protected virtual void OnKeyUp(KeyEventArgs e) { }
 
         /// <inheritdoc cref="UIElement.OnKeyDown(KeyEventArgs)"/>
-        public virtual void HandleKeyDown(KeyEventArgs e) { }
+        protected virtual void OnKeyDown(KeyEventArgs e) { }
 
-        /// <param name="from">The state we enter from (is null for root state).</param>
-        public virtual void Enter(TState? from) { }
+        /// <inheritdoc cref="UIElement.OnLostMouseCapture(MouseEventArgs)"/>
+        protected virtual void OnLostMouseCapture(MouseEventArgs e) { }
 
-        public virtual void Exit() { }
+        /// <summary>
+        /// Called for any input event that is not explicitly handled by other methods.
+        /// </summary>
+        /// <param name="e">The input event arguments.</param>
+        protected virtual void OnEvent(InputEventArgs e) { }
 
-        /// <param name="from">The state we re-enter from.</param>
-        public virtual void ReEnter(TState from) { }
+        /// <summary>
+        /// Processes the input event by invoking the appropriate handler method based on the routed event.
+        /// </summary>
+        /// <param name="e">The input event arguments.</param>
+        public void HandleEvent(InputEventArgs e)
+        {
+            if (e.RoutedEvent == UIElement.MouseMoveEvent)
+            {
+                OnMouseMove((MouseEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseDownEvent)
+            {
+                OnMouseDown((MouseButtonEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseUpEvent)
+            {
+                OnMouseUp((MouseButtonEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.MouseWheelEvent)
+            {
+                OnMouseWheel((MouseWheelEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.LostMouseCaptureEvent)
+            {
+                OnLostMouseCapture((MouseEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.KeyDownEvent)
+            {
+                OnKeyDown((KeyEventArgs)e);
+            }
+            else if (e.RoutedEvent == UIElement.KeyUpEvent)
+            {
+                OnKeyUp((KeyEventArgs)e);
+            }
+
+            OnEvent(e);
+        }
     }
 }

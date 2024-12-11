@@ -4,89 +4,141 @@ using System.Windows.Input;
 namespace Nodify
 {
     /// <summary>The default state of the <see cref="ItemContainer"/>.</summary>
-    public class ContainerDefaultState : ContainerState
+    public sealed class ContainerDefaultState : InputElementStateStack<ItemContainer>
     {
-        private Point _initialPosition;
-        private SelectionType? _selectionType;
-        private bool _isDragging;
-
-        /// <summary>Creates a new instance of the <see cref="ContainerDefaultState"/>.</summary>
-        /// <param name="container">The owner of the state.</param>
         public ContainerDefaultState(ItemContainer container) : base(container)
         {
+            PushState(new SelectingState(this));
         }
 
-        /// <inheritdoc />
-        public override void ReEnter(ContainerState from)
+        private sealed class SelectingState : InputElementState
         {
-            _isDragging = false;
-            _selectionType = null;
-            _initialPosition = Editor.MouseLocation;
-        }
+            private Point _initialPosition;
+            private SelectionType? _selectionType;
+            private bool _isDragging;
 
-        /// <inheritdoc />
-        public override void HandleMouseDown(MouseButtonEventArgs e)
-        {
-            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
-            if (gestures.Drag.Matches(e.Source, e))
+            private bool PreserveSelectionOnRightClick => Element.HasContextMenu || ItemContainer.PreserveSelectionOnRightClick;
+
+            /// <summary>Creates a new instance of the <see cref="ContainerSelectingState"/>.</summary>
+            /// <param name="container">The owner of the state.</param>
+            public SelectingState(InputElementStateStack<ItemContainer> stack) : base(stack)
             {
-                _isDragging = Container.IsDraggable;
             }
 
-            if (gestures.Selection.Select.Matches(e.Source, e))
+            /// <inheritdoc />
+            public override void Enter(IInputElementState? from)
             {
-                _selectionType = gestures.Selection.GetSelectionType(e);
+                _isDragging = false;
+                _selectionType = null;
+                _initialPosition = Element.Editor.MouseLocation;
             }
 
-            _initialPosition = Editor.MouseLocation;
-        }
-
-        /// <inheritdoc />
-        public override void HandleMouseMove(MouseEventArgs e)
-        {
-            double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
-            double dragDistance = (Editor.MouseLocation - _initialPosition).LengthSquared;
-
-            if (_isDragging && (dragDistance > dragThreshold))
+            protected override void OnMouseDown(MouseButtonEventArgs e)
             {
-                if (!Container.IsSelected)
+                if (!IsSelectable(e))
                 {
-                    var selectionType = GetSelectionTypeForDragging(_selectionType);
-                    Container.Select(selectionType);
+                    return;
                 }
 
-                PushState(new ContainerDraggingState(Container));
-            }
-        }
-
-        /// <inheritdoc />
-        public override void HandleMouseUp(MouseButtonEventArgs e)
-        {
-            if (_selectionType.HasValue)
-            {
-                // Determine whether the current selection should remain intact or be replaced by the clicked item. 
-                // If the right mouse button is pressed on an already selected item, and the item either has an 
-                // explicit context menu or is configured to preserve the selection on right-click, the selection 
-                // remains unchanged. This ensures that the context menu applies to the entire selection rather 
-                // than only the clicked item.
-                bool hasContextMenu = Container.HasContextMenu || ItemContainer.PreserveSelectionOnRightClick;
-                bool allowContextMenu = e.ChangedButton == MouseButton.Right && Container.IsSelected && hasContextMenu;
-                if (!(_selectionType == SelectionType.Replace && allowContextMenu))
+                EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+                if (gestures.Drag.Matches(e.Source, e))
                 {
-                    Container.Select(_selectionType.Value);
+                    _isDragging = Element.IsDraggable && CaptureMouseSafe();
+                }
+
+                if (gestures.Selection.Select.Matches(e.Source, e))
+                {
+                    _selectionType = gestures.Selection.GetSelectionType(e);
+                }
+                // Replaces the current selection when right-clicking on an element that has a context menu and is not selected.
+                // Applies only when the select gesture is not right click.
+                else if (e.ChangedButton == MouseButton.Right && PreserveSelectionOnRightClick)
+                {
+                    _selectionType = Element.IsSelected ? SelectionType.Append : SelectionType.Replace;
+                }
+
+                _initialPosition = Element.Editor.MouseLocation;
+
+                if (_isDragging || _selectionType.HasValue)
+                {
+                    Element.Focus();
+                    e.Handled = true;
                 }
             }
 
-            _isDragging = false;
-            _selectionType = null;
-        }
+            private bool CaptureMouseSafe()
+            {
+                // Avoid stealing mouse capture from other elements
+                if (Mouse.Captured == null || Element.IsMouseCaptured)
+                {
+                    Element.CaptureMouse();
+                    return true;
+                }
 
-        private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
-        {
-            // Always select the container when dragging
-            return selectionType == SelectionType.Remove
-                ? SelectionType.Replace
-                : selectionType.GetValueOrDefault(SelectionType.Replace);
+                return false;
+            }
+
+            /// <inheritdoc />
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
+                double dragDistance = (Element.Editor.MouseLocation - _initialPosition).LengthSquared;
+
+                if (_isDragging && (dragDistance > dragThreshold))
+                {
+                    if (!Element.IsSelected)
+                    {
+                        var selectionType = GetSelectionTypeForDragging(_selectionType);
+                        Element.Select(selectionType);
+                    }
+
+                    PushState(new ContainerDraggingState(Stack));
+                }
+            }
+
+            /// <inheritdoc />
+            protected override void OnMouseUp(MouseButtonEventArgs e)
+            {
+                if (_selectionType.HasValue)
+                {
+                    // Determine whether the current selection should remain intact or be replaced by the clicked item. 
+                    // If the right mouse button is pressed on an already selected item, and the item either has an 
+                    // explicit context menu or is configured to preserve the selection on right-click, the selection 
+                    // remains unchanged. This ensures that the context menu applies to the entire selection rather 
+                    // than only the clicked item.
+                    bool allowContextMenu = e.ChangedButton == MouseButton.Right && Element.IsSelected && PreserveSelectionOnRightClick;
+                    if (!allowContextMenu)
+                    {
+                        Element.Select(_selectionType.Value);
+                    }
+                }
+
+                _isDragging = false;
+                _selectionType = null;
+            }
+
+            private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
+            {
+                // Always select the container when dragging
+                return selectionType == SelectionType.Remove
+                    ? SelectionType.Replace
+                    : selectionType.GetValueOrDefault(SelectionType.Replace);
+            }
+
+            private bool IsSelectable(MouseButtonEventArgs e)
+            {
+                if (!Element.IsSelectableLocation(e.GetPosition(Element)))
+                {
+                    return false;
+                }
+
+                if (Mouse.Captured != null && !Element.IsMouseCaptured)
+                {
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }
