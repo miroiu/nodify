@@ -26,7 +26,7 @@ namespace Nodify
             }
 
             /// <inheritdoc />
-            public override void Enter(InputElementState? from)
+            public override void Enter(IInputElementState? from)
             {
                 _isDragging = false;
                 _selectionType = null;

@@ -18,7 +18,7 @@ namespace Nodify
             PositionElement = Element.Editor;
         }
 
-        protected override void OnBegin(InputElementStateStack<ItemContainer>.InputElementState? from)
+        protected override void OnBegin(InputElementStateStack<ItemContainer>.IInputElementState? from)
         {
             _previousMousePosition = Element.Editor.MouseLocation;
             Element.BeginDragging();
