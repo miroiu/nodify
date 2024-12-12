@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Nodify.Interactivity;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Shapes
@@ -13,7 +14,7 @@ namespace Nodify.Shapes
             NodifyEditor.EnableDraggingContainersOptimizations = false;
             NodifyEditor.EnableCuttingLinePreview = true;
 
-            EditorGestures.Mappings.Connection.Disconnect.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new MouseGesture(MouseAction.RightClick));
+            EditorGestures.Mappings.Connection.Disconnect.Value = new AnyGesture(new Interactivity.MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new Interactivity.MouseGesture(MouseAction.RightClick));
         }
     }
 }
