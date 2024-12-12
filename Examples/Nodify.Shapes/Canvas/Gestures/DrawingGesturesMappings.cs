@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using Nodify.Interactivity;
+using System.Windows.Input;
 
 namespace Nodify.Shapes.Canvas
 {
@@ -12,7 +13,7 @@ namespace Nodify.Shapes.Canvas
         {
             Apply(UnboundGestureMappings.Instance);
 
-            Draw = new MouseGesture(MouseAction.LeftClick);
+            Draw = new Interactivity.MouseGesture(MouseAction.LeftClick);
         }
     }
 }

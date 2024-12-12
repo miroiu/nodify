@@ -1,4 +1,6 @@
-﻿namespace Nodify.Shapes.Canvas
+﻿using Nodify.Interactivity;
+
+namespace Nodify.Shapes.Canvas
 {
     public class UnboundGestureMappings : EditorGestures
     {

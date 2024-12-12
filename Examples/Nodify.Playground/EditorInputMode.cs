@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using Nodify.Interactivity;
+using System.Windows.Input;
 
 namespace Nodify.Playground
 {
@@ -38,7 +39,7 @@ namespace Nodify.Playground
                     mappings.Connector.Connect.Value = MultiGesture.None;
                     break;
                 case EditorInputMode.CutOnly:
-                    mappings.Editor.Cutting.Value = new MouseGesture(MouseAction.LeftClick);
+                    mappings.Editor.Cutting.Value = new Interactivity.MouseGesture(MouseAction.LeftClick);
                     mappings.Editor.Selection.Apply(EditorGestures.SelectionGestures.None);
                     mappings.Editor.Pan.Value = MultiGesture.None;
                     mappings.ItemContainer.Selection.Apply(EditorGestures.SelectionGestures.None);
@@ -70,7 +71,7 @@ namespace Nodify.Playground
     {
         public CustomGesturesMappings()
         {
-            Editor.Pan.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new MouseGesture(MouseAction.MiddleClick));
+            Editor.Pan.Value = new AnyGesture(new Interactivity.MouseGesture(MouseAction.LeftClick), new Interactivity.MouseGesture(MouseAction.MiddleClick));
             Editor.ZoomModifierKey = ModifierKeys.Control;
             Editor.Selection.Apply(new SelectionGestures(MouseAction.RightClick));
             // comment to drag with right click - we copy the default gestures of the item container which uses left click for selection

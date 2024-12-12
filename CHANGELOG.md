@@ -15,6 +15,7 @@
 >	- Replaced EditorState and ContainerState with InputElementState
 >	- Moved AllowCuttingCancellation from CuttingLine to NodifyEditor
 >	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
+>	- Moved EditorGestures under the Nodify.Interactivity namespace
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
 >	- Added UpdateCuttingLine to NodifyEditor

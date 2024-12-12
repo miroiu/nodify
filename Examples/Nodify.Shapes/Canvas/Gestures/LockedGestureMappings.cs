@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using Nodify.Interactivity;
+using System.Windows.Input;
 
 namespace Nodify.Shapes.Canvas
 {
@@ -10,7 +11,7 @@ namespace Nodify.Shapes.Canvas
         {
             Apply(UnboundGestureMappings.Instance);
 
-            Editor.Pan.Value = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
+            Editor.Pan.Value = new AnyGesture(new Interactivity.MouseGesture(MouseAction.LeftClick), new Interactivity.MouseGesture(MouseAction.RightClick), new Interactivity.MouseGesture(MouseAction.MiddleClick));
         }
     }
 }
