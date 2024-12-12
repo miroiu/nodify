@@ -2,7 +2,7 @@
 
 namespace Nodify.Interactivity
 {
-    public partial class EditorState
+    public static partial class EditorState
     {
         /// <summary>
         /// Represents the selecting state of the <see cref="NodifyEditor"/>.

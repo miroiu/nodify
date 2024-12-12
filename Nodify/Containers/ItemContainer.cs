@@ -273,6 +273,8 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(typeof(ItemContainer)));
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+
+            ContainerState.RegisterDefaultHandlers();
         }
 
         /// <summary>
@@ -283,7 +285,7 @@ namespace Nodify
         {
             Editor = editor;
 
-            InputProcessor.AddHandler(new ContainerState.Default(this));
+            InputProcessor.AddHandler(new InputProcessor.Shared<ItemContainer>(this));
         }
 
         /// <inheritdoc />
@@ -359,7 +361,7 @@ namespace Nodify
                     break;
                 case SelectionType.Replace:
                     Editor.Select(this);
-                break;
+                    break;
             }
         }
 

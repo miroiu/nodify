@@ -2,7 +2,7 @@
 
 namespace Nodify.Interactivity
 {
-    public partial class EditorState
+    public static partial class EditorState
     {
         /// <summary>
         /// Represents the cutting state in the <see cref="NodifyEditor"/>, allowing users to cut connections between elements using a drag gesture.

@@ -172,13 +172,13 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
             FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
+
+            ConnectorState.RegisterDefaultHandlers();
         }
 
         public Connector()
         {
-            InputProcessor.AddHandler(new ConnectorState.Disconnect(this));
-            InputProcessor.AddHandler(new ConnectorState.Connecting(this));
-            InputProcessor.AddHandler(new ConnectorState.Default(this));
+            InputProcessor.AddHandler(new InputProcessor.Shared<Connector>(this));
         }
 
         /// <inheritdoc />

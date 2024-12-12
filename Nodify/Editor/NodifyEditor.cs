@@ -552,7 +552,8 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
-            EditorCommands.Register(typeof(NodifyEditor));
+            EditorCommands.RegisterCommandBindings<NodifyEditor>();
+            EditorState.RegisterDefaultHandlers();
         }
 
         /// <summary>
@@ -572,12 +573,7 @@ namespace Nodify
 
             SetValue(ViewportTransformPropertyKey, transform);
 
-            InputProcessor.AddHandler(new EditorState.Panning(this));
-            InputProcessor.AddHandler(new EditorState.PanningWithMouseWheel(this));
-            InputProcessor.AddHandler(new EditorState.Selecting(this));
-            InputProcessor.AddHandler(new EditorState.Zooming(this));
-            InputProcessor.AddHandler(new EditorState.PushingItems(this));
-            InputProcessor.AddHandler(new EditorState.Cutting(this));
+            InputProcessor.AddHandler(new InputProcessor.Shared<NodifyEditor>(this));
         }
 
         /// <inheritdoc />

@@ -51,14 +51,14 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand Align { get; } = new RoutedUICommand("Align", nameof(Align), typeof(EditorCommands));
 
-        internal static void Register(Type type)
+        internal static void RegisterCommandBindings<T>()
         {
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(FitToScreen, OnFitToScreen, OnQueryFitToScreenStatus));
-            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(ZoomOut, OnZoomOut, OnQueryStatusZoomOut));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(SelectAll, OnSelectAll, OnQuerySelectAllStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(FitToScreen, OnFitToScreen, OnQueryFitToScreenStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
         }
 
         private static void OnQueryAlignStatus(object sender, CanExecuteRoutedEventArgs e)

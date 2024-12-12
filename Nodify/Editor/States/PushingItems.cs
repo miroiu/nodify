@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
-    public partial class EditorState
+    public static partial class EditorState
     {
         /// <summary>
         /// Represents the state of the <see cref="NodifyEditor"/> during a "push items" operation, allowing users to move items within the editor by dragging.
