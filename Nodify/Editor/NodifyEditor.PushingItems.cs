@@ -9,6 +9,8 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(PushedAreaStyle), StyleTargetType = typeof(Rectangle))]
     public partial class NodifyEditor
     {
+        #region Dependency properties
+
         public static readonly DependencyProperty PushedAreaStyleProperty = DependencyProperty.Register(nameof(PushedAreaStyle), typeof(Style), typeof(NodifyEditor));
 
         protected static readonly DependencyPropertyKey PushedAreaPropertyKey = DependencyProperty.RegisterReadOnly(nameof(PushedArea), typeof(Rect), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Rect));
@@ -55,6 +57,8 @@ namespace Nodify
             get => (Style)GetValue(PushedAreaStyleProperty);
             set => SetValue(PushedAreaStyleProperty, value);
         }
+
+        #endregion
 
         /// <summary>
         /// Gets or sets whether push items cancellation is allowed (see <see cref="EditorGestures.NodifyEditorGestures.CancelAction"/>).

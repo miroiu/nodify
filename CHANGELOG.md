@@ -35,6 +35,8 @@
 >	- Added InputProcessor.Shared to enable the addition of global input handlers
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
 >	- Added SplitAtLocation and Remove methods to BaseConnection
+>	- Added AllowPanningWhileSelecting, AllowPanningWhileCutting and AllowPanningWhilePushingItems to EditorState
+>	- Added AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the ItemContainer could open its context menu even when it was not selected

@@ -6,18 +6,16 @@ using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
-    public sealed partial class InputProcessor
+    public partial class InputProcessor
     {
         /// <summary>
         /// A shared input processor that allows registering and managing global input handlers for a specific type of UI element.
         /// </summary>
         /// <typeparam name="TElement">The type of the UI element that the input handlers will be associated with.</typeparam>
-        public sealed class Shared<TElement> : IInputHandler
+        public sealed class Shared<TElement> : InputProcessor, IInputHandler
             where TElement : FrameworkElement
         {
             private static readonly List<KeyValuePair<Type, Func<TElement, IInputHandler>>> _handlerFactories = new List<KeyValuePair<Type, Func<TElement, IInputHandler>>>();
-
-            private readonly List<IInputHandler> _handlers = new List<IInputHandler>();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Shared{TElement}"/> class for the specified UI element.
@@ -27,7 +25,7 @@ namespace Nodify.Interactivity
             {
                 foreach (var kvp in _handlerFactories)
                 {
-                    _handlers.Add(kvp.Value(element));
+                    AddHandler(kvp.Value(element));
                 }
             }
 
@@ -53,19 +51,14 @@ namespace Nodify.Interactivity
                 {
                     MinimapState.RegisterDefaultHandlers();
                 }
-                else if(typeof(TElement) == typeof(BaseConnection))
+                else if (typeof(TElement) == typeof(BaseConnection))
                 {
                     ConnectionState.RegisterDefaultHandlers();
                 }
             }
 
             public void HandleEvent(InputEventArgs e)
-            {
-                foreach (var handler in _handlers)
-                {
-                    handler.HandleEvent(e);
-                }
-            }
+                => Process(e);
 
             /// <summary>
             /// Registers a factory method for creating an input handler of the specified type.
@@ -115,7 +108,10 @@ namespace Nodify.Interactivity
         public static void AddSharedHandlers<TElement>(this InputProcessor inputProcessor, TElement instance)
             where TElement : FrameworkElement
         {
-            inputProcessor.AddHandler(new InputProcessor.Shared<TElement>(instance));
+            inputProcessor.AddHandler(new InputProcessor.Shared<TElement>(instance)
+            {
+                ProcessHandledEvents = inputProcessor.ProcessHandledEvents
+            });
         }
     }
 }
