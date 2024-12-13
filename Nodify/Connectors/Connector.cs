@@ -176,9 +176,7 @@ namespace Nodify
 
         public Connector()
         {
-            InputProcessor.AddHandler(new ConnectorState.Disconnect(this));
-            InputProcessor.AddHandler(new ConnectorState.Connecting(this));
-            InputProcessor.AddHandler(new ConnectorState.Default(this));
+            InputProcessor.AddSharedHandlers(this);
         }
 
         /// <inheritdoc />

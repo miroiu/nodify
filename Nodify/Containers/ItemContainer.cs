@@ -283,7 +283,7 @@ namespace Nodify
         {
             Editor = editor;
 
-            InputProcessor.AddHandler(new ContainerState.Default(this));
+            InputProcessor.AddSharedHandlers(this);
         }
 
         /// <inheritdoc />
@@ -359,7 +359,7 @@ namespace Nodify
                     break;
                 case SelectionType.Replace:
                     Editor.Select(this);
-                break;
+                    break;
             }
         }
 

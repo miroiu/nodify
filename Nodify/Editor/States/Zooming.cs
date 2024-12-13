@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
-    public partial class EditorState
+    public static partial class EditorState
     {
         /// <summary>
         /// Represents the zooming state of the <see cref="NodifyEditor"/>.
