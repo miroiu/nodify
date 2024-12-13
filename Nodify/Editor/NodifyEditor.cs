@@ -572,7 +572,7 @@ namespace Nodify
 
             SetValue(ViewportTransformPropertyKey, transform);
 
-            InputProcessor.AddHandler(new InputProcessor.Shared<NodifyEditor>(this));
+            InputProcessor.AddSharedHandlers(this);
         }
 
         /// <inheritdoc />

@@ -92,4 +92,22 @@ namespace Nodify.Interactivity
                 => _handlerFactories.Clear();
         }
     }
+
+    /// <summary>
+    /// Provides extension methods for the <see cref="InputProcessor"/> class.
+    /// </summary>
+    public static class InputProcessorExtensions
+    {
+        /// <summary>
+        /// Adds shared input handlers for the specified UI element instance to the input processor.
+        /// </summary>
+        /// <typeparam name="TElement">The type of the UI element for which shared input handlers are being added.</typeparam>
+        /// <param name="inputProcessor">The input processor to which the shared handlers will be added.</param>
+        /// <param name="instance">The UI element instance associated with the shared handlers.</param>
+        public static void AddSharedHandlers<TElement>(this InputProcessor inputProcessor, TElement instance)
+            where TElement : FrameworkElement
+        {
+            inputProcessor.AddHandler(new InputProcessor.Shared<TElement>(instance));
+        }
+    }
 }

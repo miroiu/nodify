@@ -283,7 +283,7 @@ namespace Nodify
         {
             Editor = editor;
 
-            InputProcessor.AddHandler(new InputProcessor.Shared<ItemContainer>(this));
+            InputProcessor.AddSharedHandlers(this);
         }
 
         /// <inheritdoc />
