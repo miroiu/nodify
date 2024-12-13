@@ -234,7 +234,7 @@ namespace Nodify
             {
                 if (connection is BaseConnection bc)
                 {
-                    bc.OnDisconnect();
+                    bc.Remove();
                 }
             }
         }

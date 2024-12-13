@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Nodify
 {
-    internal class UnscaleTransformConverter : IValueConverter
+    internal sealed class UnscaleTransformConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,7 +20,7 @@ namespace Nodify
         }
     }
 
-    internal class ScaleDoubleConverter : IMultiValueConverter
+    internal sealed class ScaleDoubleConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -34,7 +34,7 @@ namespace Nodify
         }
     }
 
-    internal class ScalePointConverter : IMultiValueConverter
+    internal sealed class ScalePointConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
