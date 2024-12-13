@@ -553,7 +553,6 @@ namespace Nodify
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
             EditorCommands.RegisterCommandBindings<NodifyEditor>();
-            EditorState.RegisterDefaultHandlers();
         }
 
         /// <summary>

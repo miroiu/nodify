@@ -172,8 +172,6 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
             FocusableProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(BoxValue.True));
-
-            ConnectorState.RegisterDefaultHandlers();
         }
 
         public Connector()

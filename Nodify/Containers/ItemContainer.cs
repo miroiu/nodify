@@ -273,8 +273,6 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(typeof(ItemContainer)));
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
-
-            ContainerState.RegisterDefaultHandlers();
         }
 
         /// <summary>

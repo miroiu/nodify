@@ -31,6 +31,26 @@ namespace Nodify.Interactivity
                 }
             }
 
+            /// <summary>
+            /// Initializes static members of the <see cref="Shared{TElement}"/> class.
+            /// Ensures default handlers are registered before methods on this class can be used.
+            /// </summary>
+            static Shared()
+            {
+                if (typeof(TElement) == typeof(NodifyEditor))
+                {
+                    EditorState.RegisterDefaultHandlers();
+                }
+                else if (typeof(TElement) == typeof(ItemContainer))
+                {
+                    ContainerState.RegisterDefaultHandlers();
+                }
+                else if (typeof(TElement) == typeof(Connector))
+                {
+                    ConnectorState.RegisterDefaultHandlers();
+                }
+            }
+
             public void HandleEvent(InputEventArgs e)
             {
                 foreach (var handler in _handlers)
@@ -68,7 +88,7 @@ namespace Nodify.Interactivity
             /// <summary>
             /// Clears all registered handler factories, effectively removing all shared input handlers.
             /// </summary>
-            public static void ClearHandlerFactory()
+            public static void ClearHandlerFactories()
                 => _handlerFactories.Clear();
         }
     }
