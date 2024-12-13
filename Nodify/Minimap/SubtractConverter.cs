@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Nodify
 {
-    internal class SubtractConverter : IMultiValueConverter
+    internal sealed class SubtractConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
