@@ -53,6 +53,10 @@ namespace Nodify.Interactivity
                 {
                     MinimapState.RegisterDefaultHandlers();
                 }
+                else if(typeof(TElement) == typeof(BaseConnection))
+                {
+                    ConnectionState.RegisterDefaultHandlers();
+                }
             }
 
             public void HandleEvent(InputEventArgs e)

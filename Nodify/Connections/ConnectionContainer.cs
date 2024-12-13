@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    internal class ConnectionContainer : ContentPresenter
+    internal sealed class ConnectionContainer : ContentPresenter
     {
         #region Dependency properties
 
@@ -83,7 +83,7 @@ namespace Nodify
         /// Called when the <see cref="IsSelected"/> value is changed.
         /// </summary>
         /// <param name="newValue">True if selected, false otherwise.</param>
-        protected void OnSelectedChanged(bool newValue)
+        private void OnSelectedChanged(bool newValue)
         {
             BaseConnection.SetIsSelected(Connection, newValue);
 

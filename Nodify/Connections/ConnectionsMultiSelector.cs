@@ -6,7 +6,7 @@ using System.Windows.Controls.Primitives;
 
 namespace Nodify
 {
-    internal class ConnectionsMultiSelector : MultiSelector
+    internal sealed class ConnectionsMultiSelector : MultiSelector
     {
         public static readonly DependencyProperty SelectedItemsProperty = NodifyEditor.SelectedItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty CanSelectMultipleItemsProperty = NodifyEditor.CanSelectMultipleItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));

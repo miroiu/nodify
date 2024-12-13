@@ -29,11 +29,12 @@
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
 >	- Added a custom MouseGesture with support for key combinations
->	- Added InputProcessor to NodifyEditor, ItemContainer, Connector and Minimap, enabling the extension of controls with custom states
+>	- Added InputProcessor to NodifyEditor, ItemContainer, Connector, BaseConnection and Minimap, enabling the extension of controls with custom states
 >	- Added DragState to simplify creating click-and-drag operations, with support for initiating and completing them using the keyboard
 >	- Added InputElementStateStack to manage transitions between states in UI elements
 >	- Added InputProcessor.Shared to enable the addition of global input handlers
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
+>	- Added SplitAtLocation and Remove methods to BaseConnection
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the ItemContainer could open its context menu even when it was not selected

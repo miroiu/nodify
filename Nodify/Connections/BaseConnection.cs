@@ -525,6 +525,13 @@ namespace Nodify
             }
         }
 
+        protected BaseConnection()
+        {
+            InputProcessor.AddSharedHandlers(this);
+        }
+
+        #region Drawing
+
         protected abstract ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target);
 
         protected virtual void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target) { }
@@ -758,6 +765,8 @@ namespace Nodify
             return new Point((p0.X + p1.X - text.Width) / 2, (p0.Y + p1.Y - text.Height) / 2);
         }
 
+        #endregion
+
         /// <summary>Starts animating the directional arrows.</summary>
         /// <param name="duration">The duration for moving an arrowhead from <see cref="Source"/> to <see cref="Target"/>.</param>
         public void StartAnimation(double duration = 1.5d)
@@ -772,27 +781,65 @@ namespace Nodify
             this.CancelAnimation(DirectionalArrowsOffsetProperty);
         }
 
+        #region Gesture Handling
+
+        private InputProcessor InputProcessor { get; } = new InputProcessor();
+
+        /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
+            => InputProcessor.Process(e);
+
+        /// <inheritdoc />
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            Focus();
+            InputProcessor.Process(e);
 
-            EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
-            if (gestures.Split.Matches(e.Source, e))
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
-                Point splitLocation = e.GetPosition(this);
-                OnSplit(splitLocation);
-
-                e.Handled = true;
-            }
-            else if (gestures.Disconnect.Matches(e.Source, e))
-            {
-                OnDisconnect();
-
-                e.Handled = true;
+                ReleaseMouseCapture();
             }
         }
 
-        protected internal void OnSplit(Point splitLocation)
+        /// <inheritdoc />
+        protected override void OnMouseMove(MouseEventArgs e)
+            => InputProcessor.Process(e);
+
+        /// <inheritdoc />
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+            => InputProcessor.Process(e);
+
+        /// <inheritdoc />
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => InputProcessor.Process(e);
+
+        /// <inheritdoc />
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            InputProcessor.Process(e);
+
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            {
+                ReleaseMouseCapture();
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnKeyDown(KeyEventArgs e)
+            => InputProcessor.Process(e);
+
+        #endregion
+
+        /// <summary>
+        /// Splits the connection at the specified location.
+        /// </summary>
+        /// <param name="splitLocation">The <see cref="Point"/> where the connection should be split.</param>
+        /// <remarks>
+        /// This method raises the <see cref="SplitEvent"/> to notify listeners. If the event is not handled,
+        /// it checks whether the <see cref="SplitCommand"/> can execute with the provided location and executes it if possible.
+        /// </remarks>
+        public void SplitAtLocation(Point splitLocation)
         {
             var args = new ConnectionEventArgs(DataContext)
             {
@@ -810,7 +857,14 @@ namespace Nodify
             }
         }
 
-        protected internal void OnDisconnect()
+        /// <summary>
+        /// Removes the connection.
+        /// </summary>
+        /// <remarks>
+        /// This method raises the <see cref="DisconnectEvent"/> to notify listeners. If the event is not handled,
+        /// it checks whether the <see cref="DisconnectCommand"/> can execute and executes it if possible.
+        /// </remarks>
+        public void Remove()
         {
             var args = new ConnectionEventArgs(DataContext)
             {
