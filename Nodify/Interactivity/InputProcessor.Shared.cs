@@ -79,10 +79,10 @@ namespace Nodify.Interactivity
             }
 
             /// <summary>
-            /// Removes all registered factory methods for creating input handlers of the specified type.
+            /// Removes the registered factory method for creating input handlers of the specified type.
             /// </summary>
             /// <typeparam name="THandler">The type of the input handler to remove.</typeparam>
-            public static void RemoveHandlerFactories<THandler>()
+            public static void RemoveHandlerFactory<THandler>()
                 => _handlerFactories.RemoveAll(x => x.Key == typeof(THandler));
 
             /// <summary>
