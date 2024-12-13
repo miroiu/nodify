@@ -5,6 +5,7 @@
 > - Breaking Changes:
 >	- Made the setter of NodifyEditor.IsPanning private
 >	- Made SelectionHelper internal
+>	- Made Minimap sealed
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
@@ -17,7 +18,8 @@
 >	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
 >	- Moved EditorGestures under the Nodify.Interactivity namespace
 > - Features:
->	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor
+>	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor and Minimap
+>	- Added AllowPanningCancellation, MouseLocation, ZoomAtPosition and GetLocationInsideMinimap to Minimap
 >	- Added UpdateCuttingLine to NodifyEditor
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
@@ -27,7 +29,7 @@
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
 >	- Added a custom MouseGesture with support for key combinations
->	- Added InputProcessor to NodifyEditor, ItemContainer and Connector, enabling the extension of controls with custom states
+>	- Added InputProcessor to NodifyEditor, ItemContainer, Connector and Minimap, enabling the extension of controls with custom states
 >	- Added DragState to simplify creating click-and-drag operations, with support for initiating and completing them using the keyboard
 >	- Added InputElementStateStack to manage transitions between states in UI elements
 >	- Added InputProcessor.Shared to enable the addition of global input handlers

@@ -1,5 +1,6 @@
 ﻿using Nodify.Interactivity;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -14,9 +15,9 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(ViewportStyle), StyleTargetType = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(MinimapItem))]
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
-    public class Minimap : ItemsControl
+    public sealed class Minimap : ItemsControl
     {
-        protected const string ElementItemsHost = "PART_ItemsHost";
+        private const string ElementItemsHost = "PART_ItemsHost";
 
         public static readonly DependencyProperty ViewportLocationProperty = NodifyEditor.ViewportLocationProperty.AddOwner(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty ViewportSizeProperty = NodifyEditor.ViewportSizeProperty.AddOwner(typeof(Minimap));
@@ -97,17 +98,34 @@ namespace Nodify
         /// <summary>
         /// Gets the panel that holds all the <see cref="MinimapItem"/>s.
         /// </summary>
-        protected internal Panel ItemsHost { get; private set; } = default!;
+        private Panel ItemsHost { get; set; } = default!;
 
         /// <summary>
-        /// Whether the user is currently dragging the minimap.
+        /// Whether the user is currently panning the minimap.
         /// </summary>
-        protected bool IsDragging { get; private set; }
+        private bool IsPanning { get; set; }
+
+        /// <summary>
+        /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
+        /// </summary>
+        public Point MouseLocation { get; private set; }
+
+        /// <summary>
+        /// Gets or sets whether panning cancellation is allowed (see <see cref="EditorGestures.MinimapGestures.CancelAction"/>).
+        /// </summary>
+        public static bool AllowPanningCancellation { get; set; } = true;
+
+        private Point _initialViewportLocation;
 
         static Minimap()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(typeof(Minimap)));
             ClipToBoundsProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.True));
+        }
+
+        public Minimap()
+        {
+            InputProcessor.AddSharedHandlers(this);
         }
 
         public override void OnApplyTemplate()
@@ -123,72 +141,158 @@ namespace Nodify
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is MinimapItem;
 
-        protected override void OnLostMouseCapture(MouseEventArgs e)
-            => IsDragging = false;
+        #region Gesture Handling
 
+        private InputProcessor InputProcessor { get; } = new InputProcessor();
+
+        /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            var gestures = EditorGestures.Mappings.Minimap;
-            if (!IsReadOnly && gestures.DragViewport.Matches(this, e))
-            {
-                IsDragging = true;
-
-                SetViewportLocation(e.GetPosition(ItemsHost));
-
-                e.Handled = true;
-
-                if (Mouse.Captured == null || IsMouseCaptured)
-                {
-                    Focus();
-                    CaptureMouse();
-                }
-            }
+            MouseLocation = e.GetPosition(ItemsHost);
+            InputProcessor.Process(e);
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (IsDragging)
-            {
-                SetViewportLocation(e.GetPosition(ItemsHost));
-            }
-        }
-
+        /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            var gestures = EditorGestures.Mappings.Minimap;
-            if (IsDragging && gestures.DragViewport.Matches(this, e))
-            {
-                IsDragging = false;
-                e.Handled = true;
-            }
+            MouseLocation = e.GetPosition(ItemsHost);
+            InputProcessor.Process(e);
 
+            // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
         }
 
+        /// <inheritdoc />
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            MouseLocation = e.GetPosition(ItemsHost);
+            InputProcessor.Process(e);
+        }
+
+        /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            if (!IsReadOnly && !e.Handled && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+            MouseLocation = e.GetPosition(ItemsHost);
+            InputProcessor.Process(e);
+        }
+
+        /// <inheritdoc />
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => InputProcessor.Process(e);
+
+        /// <inheritdoc />
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            InputProcessor.Process(e);
+
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
             {
-                if (!ResizeToViewport)
-                {
-                    SetViewportLocation(e.GetPosition(ItemsHost));
-                }
-
-                double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-                var location = ViewportLocation + (Vector)ViewportSize / 2;
-
-                var args = new ZoomEventArgs(zoom, location)
-                {
-                    RoutedEvent = ZoomEvent,
-                    Source = this
-                };
-                RaiseEvent(args);
-
-                e.Handled = true;
+                ReleaseMouseCapture();
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnKeyDown(KeyEventArgs e)
+            => InputProcessor.Process(e);
+
+        #endregion
+
+        #region Panning
+
+        /// <summary>
+        /// Starts the panning operation from the current <see cref="MouseLocation" />.
+        /// </summary>
+        /// <remarks>This method has no effect if a panning operation is already in progress.</remarks>
+        public void BeginPanning()
+            => BeginPanning(MouseLocation);
+
+        /// <summary>
+        /// Starts the panning operation from the specified location. Call <see cref="EndPanning"/> to end the panning operation.
+        /// </summary>
+        /// <remarks>This method has no effect if a panning operation is already in progress.</remarks>
+        /// <param name="location">The initial location where panning starts, in graph space coordinates.</param>
+        public void BeginPanning(Point location)
+        {
+            if (IsPanning)
+            {
+                return;
+            }
+
+            IsPanning = true;
+            _initialViewportLocation = location;
+            SetViewportLocation(location);
+        }
+
+        /// <summary>
+        /// Sets the viewport location to the specified location.
+        /// </summary>
+        /// <param name="location">The location to pan the viewport to.</param>
+        public void UpdatePanning(Point location)
+        {
+            Debug.Assert(IsPanning);
+            SetViewportLocation(location);
+        }
+
+        /// <summary>
+        /// Ends the current panning operation, retaining the current <see cref="ViewportLocation"/>.
+        /// </summary>
+        /// <remarks>This method has no effect if there's no panning operation in progress.</remarks>
+        public void EndPanning()
+        {
+            if (!IsPanning)
+            {
+                return;
+            }
+
+            _initialViewportLocation = MouseLocation;
+            IsPanning = false;
+        }
+
+        /// <summary>
+        /// Cancels the current panning operation and reverts the viewport to its initial location if <see cref="AllowPanningCancellation"/> is true.
+        /// Otherwise, it ends the panning operation by calling <see cref="EndPanning"/>.
+        /// </summary>
+        /// <remarks>This method has no effect if there's no panning operation in progress.</remarks>
+        public void CancelPanning()
+        {
+            if (!AllowPanningCancellation)
+            {
+                EndPanning();
+                return;
+            }
+
+            if (IsPanning)
+            {
+                SetViewportLocation(_initialViewportLocation);
+                IsPanning = false;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Zoom at the specified location in graph space coordinates.
+        /// </summary>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="location">The location to focus when zooming.</param>
+        public void ZoomAtPosition(double zoom, Point location)
+        {
+            if (!ResizeToViewport)
+            {
+                SetViewportLocation(location);
+            }
+
+            var viewportLocation = ViewportLocation + (Vector)ViewportSize / 2;
+            var args = new ZoomEventArgs(zoom, viewportLocation)
+            {
+                RoutedEvent = ZoomEvent,
+                Source = this
+            };
+            RaiseEvent(args);
         }
 
         private void SetViewportLocation(Point location)
@@ -206,5 +310,13 @@ namespace Nodify
 
             ViewportLocation = position;
         }
+
+        /// <summary>
+        /// Translates the event location to graph space coordinates (relative to the <see cref="ItemsHost" />).
+        /// </summary>
+        /// <param name="args">The mouse event.</param>
+        /// <returns>A location inside the minimap</returns>
+        public Point GetLocationInsideMinimap(MouseEventArgs args)
+            => args.GetPosition(ItemsHost);
     }
 }

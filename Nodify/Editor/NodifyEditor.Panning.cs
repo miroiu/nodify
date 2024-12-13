@@ -125,6 +125,15 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Ends the current panning operation, retaining the current <see cref="ViewportLocation"/>.
+        /// </summary>
+        /// <remarks>This method has no effect if there's no panning operation in progress.</remarks>
+        public void EndPanning()
+        {
+            IsPanning = false;
+        }
+
+        /// <summary>
         /// Cancels the current panning operation and reverts the viewport to its initial location if <see cref="AllowPanningCancellation"/> is true.
         /// Otherwise, it ends the panning operation by calling <see cref="EndPanning"/>.
         /// </summary>
@@ -142,15 +151,6 @@ namespace Nodify
                 ViewportLocation = _initialPanningLocation;
                 IsPanning = false;
             }
-        }
-
-        /// <summary>
-        /// Ends the current panning operation, retaining the current <see cref="ViewportLocation"/>.
-        /// </summary>
-        /// <remarks>This method has no effect if there's no panning operation in progress.</remarks>
-        public void EndPanning()
-        {
-            IsPanning = false;
         }
 
         #region Auto panning

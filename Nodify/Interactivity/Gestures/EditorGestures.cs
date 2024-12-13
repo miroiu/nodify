@@ -314,11 +314,16 @@ namespace Nodify.Interactivity
             public MinimapGestures()
             {
                 DragViewport = new MouseGesture(MouseAction.LeftClick);
+                CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
                 ZoomModifierKey = ModifierKeys.None;
             }
 
             /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
             public InputGestureRef DragViewport { get; }
+
+            /// <summary>Gesture to cancel the panning operation.</summary>
+            /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="Key.Escape"/>.</remarks>
+            public InputGestureRef CancelAction { get; }
 
             /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
@@ -329,6 +334,7 @@ namespace Nodify.Interactivity
             public void Apply(MinimapGestures gestures)
             {
                 DragViewport.Value = gestures.DragViewport.Value;
+                CancelAction.Value = gestures.CancelAction.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
             }
         }
