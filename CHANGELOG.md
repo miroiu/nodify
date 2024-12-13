@@ -19,7 +19,7 @@
 >	- Moved EditorGestures under the Nodify.Interactivity namespace
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor and Minimap
->	- Added AllowPanningCancellation, MouseLocation, ZoomAtPosition and GetLocationInsideMinimap to Minimap
+>	- Added MouseLocation, ZoomAtPosition and GetLocationInsideMinimap to Minimap
 >	- Added UpdateCuttingLine to NodifyEditor
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
