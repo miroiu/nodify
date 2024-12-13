@@ -2,7 +2,7 @@
 {
     public static partial class EditorState
     {
-        public static void RegisterDefaultHandlers()
+        internal static void RegisterDefaultHandlers()
         {
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new Panning(elem));
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new PanningWithMouseWheel(elem));

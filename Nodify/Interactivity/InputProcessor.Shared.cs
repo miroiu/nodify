@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,7 +15,7 @@ namespace Nodify.Interactivity
         public sealed class Shared<TElement> : IInputHandler
             where TElement : FrameworkElement
         {
-            private static readonly Dictionary<Type, Func<TElement, IInputHandler>> _handlerFactories = new Dictionary<Type, Func<TElement, IInputHandler>>();
+            private static readonly List<KeyValuePair<Type, Func<TElement, IInputHandler>>> _handlerFactories = new List<KeyValuePair<Type, Func<TElement, IInputHandler>>>();
 
             private readonly List<IInputHandler> _handlers = new List<IInputHandler>();
 
@@ -24,9 +25,9 @@ namespace Nodify.Interactivity
             /// <param name="element">The UI element that the shared input handlers will be associated with.</param>
             public Shared(TElement element)
             {
-                foreach (var factory in _handlerFactories.Values)
+                foreach (var kvp in _handlerFactories)
                 {
-                    _handlers.Add(factory(element));
+                    _handlers.Add(kvp.Value(element));
                 }
             }
 
@@ -49,20 +50,20 @@ namespace Nodify.Interactivity
             public static void RegisterHandlerFactory<THandler>(Func<TElement, THandler> factory)
                 where THandler : IInputHandler
             {
-                if (_handlerFactories.ContainsKey(typeof(THandler)))
+                if (_handlerFactories.Any(x => x.Key == typeof(THandler)))
                 {
                     throw new InvalidOperationException($"An input handler of type '{typeof(THandler)}' has already been registered.");
                 }
 
-                _handlerFactories[typeof(THandler)] = elem => factory(elem);
+                _handlerFactories.Add(new KeyValuePair<Type, Func<TElement, IInputHandler>>(typeof(THandler), elem => factory(elem)));
             }
 
             /// <summary>
-            /// Removes the registered factory method for creating input handlers of the specified type.
+            /// Removes all registered factory methods for creating input handlers of the specified type.
             /// </summary>
             /// <typeparam name="THandler">The type of the input handler to remove.</typeparam>
-            public static void RemoveHandlerFactory<THandler>()
-                => _handlerFactories.Remove(typeof(THandler));
+            public static void RemoveHandlerFactories<THandler>()
+                => _handlerFactories.RemoveAll(x => x.Key == typeof(THandler));
 
             /// <summary>
             /// Clears all registered handler factories, effectively removing all shared input handlers.

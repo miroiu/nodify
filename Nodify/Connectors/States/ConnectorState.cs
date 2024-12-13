@@ -2,7 +2,7 @@
 {
     public static partial class ConnectorState
     {
-        public static void RegisterDefaultHandlers()
+        internal static void RegisterDefaultHandlers()
         {
             InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new Disconnect(elem));
             InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new Connecting(elem));

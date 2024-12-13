@@ -2,7 +2,7 @@
 {
     public static partial class ContainerState
     {
-        public static void RegisterDefaultHandlers()
+        internal static void RegisterDefaultHandlers()
         {
             InputProcessor.Shared<ItemContainer>.RegisterHandlerFactory(elem => new Default(elem));
         }
