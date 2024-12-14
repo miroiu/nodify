@@ -339,7 +339,7 @@ namespace Nodify.Playground
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableMinimapToggledPanning,
                     val => Instance.EnableMinimapToggledPanning = val,
-                    "Enable toggled panning mode for the minimap: ",
+                    "Enable minimap toggled panning mode: ",
                     "The interaction will be completed in two steps using the same gesture to start and end."),
             };
 
