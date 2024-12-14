@@ -11,6 +11,7 @@ namespace Nodify.Interactivity
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
             protected override bool CanCancel => NodifyEditor.AllowCuttingCancellation;
+            protected override bool IsToggle => EnableToggledCuttingMode;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Cutting"/> class.

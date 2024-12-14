@@ -157,11 +157,6 @@ namespace Nodify
         /// </summary>
         public static bool AllowPendingConnectionCancellation { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets whether the connection should be completed in two steps.
-        /// </summary>
-        public static bool EnableStickyConnections { get; set; }
-
         private Point _lastUpdatedContainerPosition;
         private Point _pendingConnectionEndPosition;
         private bool _isHooked;
@@ -344,8 +339,8 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released and there's no sticky connection pending
-            if (!IsPendingConnection && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -368,22 +363,23 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            if (!IsPendingConnection && IsMouseCaptured)
+            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
             {
                 ReleaseMouseCapture();
             }
         }
 
         /// <inheritdoc />
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            InputProcessor.Process(e);
+        protected override void OnKeyDown(KeyEventArgs e) 
+            => InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released and there's no sticky connection pending
-            if (!IsPendingConnection && IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
-            {
-                ReleaseMouseCapture();
-            }
+        /// <summary>
+        /// Determines whether any toggled operation is currently in progress.
+        /// </summary>
+        protected virtual bool IsToggledOperationInProgress()
+        {
+            return ConnectorState.EnableToggledConnectingMode && IsPendingConnection;
         }
 
         #endregion

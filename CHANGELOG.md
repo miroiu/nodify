@@ -8,6 +8,7 @@
 >	- Made Minimap sealed
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
+>	- Renamed Connector.EnableStickyConnections to ConnectorState.EnabledToggledConnecting
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
@@ -36,7 +37,8 @@
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
 >	- Added SplitAtLocation and Remove methods to BaseConnection
 >	- Added AllowPanningWhileSelecting, AllowPanningWhileCutting and AllowPanningWhilePushingItems to EditorState
->	- Added AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
+>	- Added AllowZoomingWhilePanning, AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
+>	- Added EnableToggledSelectingMode, EnableToggledPanningMode, EnableToggledPushingItemsMode and EnableToggledCuttingMode to EditorState
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the ItemContainer could open its context menu even when it was not selected

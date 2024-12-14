@@ -24,7 +24,7 @@ namespace Nodify.Interactivity
                 PositionElement = Element.Editor ?? (IInputElement)Element;
             }
 
-            protected override bool IsToggle => Connector.EnableStickyConnections;
+            protected override bool IsToggle => EnableToggledConnectingMode;
 
             protected override void OnBegin(InputEventArgs e)
                 => Element.BeginConnecting();

@@ -35,7 +35,8 @@ namespace Nodify.Interactivity
                 return !Element.DisableZooming
                     && (AllowZoomingWhileSelecting || !Element.IsSelecting)
                     && (AllowZoomingWhileCutting || !Element.IsCutting)
-                    && (AllowZoomingWhilePushingItems || !Element.IsPushingItems);
+                    && (AllowZoomingWhilePushingItems || !Element.IsPushingItems)
+                    && (AllowZoomingWhilePanning || !Element.IsPanning);
             }
         }
     }

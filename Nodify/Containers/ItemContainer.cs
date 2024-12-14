@@ -375,9 +375,9 @@ namespace Nodify
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             InputProcessor.Process(e);
-
-            // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            
+            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -400,8 +400,8 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -410,6 +410,11 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
             => InputProcessor.Process(e);
+
+        /// <summary>
+        /// Determines whether any toggled operation is currently in progress.
+        /// </summary>
+        protected virtual bool IsToggledOperationInProgress() => false;
 
         #endregion
     }

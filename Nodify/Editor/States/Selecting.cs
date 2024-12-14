@@ -11,8 +11,9 @@ namespace Nodify.Interactivity
         public class Selecting : DragState<NodifyEditor>
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
-            protected override bool CanBegin => Element.CanSelectMultipleItems && !Element.IsPanning;
+            protected override bool CanBegin => Element.CanSelectMultipleItems && !Element.IsPanning && !Element.IsCutting && !Element.IsPushingItems;
             protected override bool CanCancel => NodifyEditor.AllowSelectionCancellation;
+            protected override bool IsToggle => EnableToggledSelectingMode;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Selecting"/> class.

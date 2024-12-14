@@ -13,6 +13,7 @@ namespace Nodify.Interactivity
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
             protected override bool CanBegin => IsPanningAllowed();
+            protected override bool IsToggle => EnableToggledPanningMode;
 
             protected override bool CanCancel => NodifyEditor.AllowPanningCancellation;
 
