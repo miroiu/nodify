@@ -5,7 +5,6 @@
 > - Breaking Changes:
 >	- Made the setter of NodifyEditor.IsPanning private
 >	- Made SelectionHelper internal
->	- Made Minimap sealed
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
 >	- Renamed Connector.EnableStickyConnections to ConnectorState.EnabledToggledConnecting
@@ -39,6 +38,7 @@
 >	- Added AllowPanningWhileSelecting, AllowPanningWhileCutting and AllowPanningWhilePushingItems to EditorState
 >	- Added AllowZoomingWhilePanning, AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
 >	- Added EnableToggledSelectingMode, EnableToggledPanningMode, EnableToggledPushingItemsMode and EnableToggledCuttingMode to EditorState
+>	- Added MinimapState.EnableToggledPanningMode
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the ItemContainer could open its context menu even when it was not selected

@@ -6,7 +6,7 @@ namespace Nodify.Interactivity
     public partial class InputElementStateStack<TElement> where TElement : FrameworkElement
     {
         /// <summary>
-        /// Represents a specialized state for handling drag operations.
+        /// Represents a specialized state for handling drag interactions.
         /// </summary>
         public abstract class DragState : InputElementState, IInputHandler
         {
@@ -26,7 +26,7 @@ namespace Nodify.Interactivity
             protected virtual bool HasContextMenu => Element.ContextMenu != null;
 
             /// <summary>
-            /// Gets or sets whether the drag operation can be canceled.
+            /// Gets or sets whether the drag interaction can be canceled.
             /// </summary>
             protected virtual bool CanCancel { get; } = true;
 
@@ -166,25 +166,25 @@ namespace Nodify.Interactivity
             }
 
             /// <summary>
-            /// Called when the drag operation begins. Override to provide custom behavior.
+            /// Called when the drag interaction begins. Override to provide custom behavior.
             /// </summary>
-            /// <param name="e">The input event that started the operation.</param>
+            /// <param name="e">The input event that started the interaction.</param>
             protected virtual void OnBegin(IInputElementState? from)
             {
             }
 
             /// <summary>
-            /// Called when the drag operation ends. Override to provide custom behavior.
+            /// Called when the drag interaction ends. Override to provide custom behavior.
             /// </summary>
-            /// <param name="e">The input event that ended the operation.</param>
+            /// <param name="e">The input event that ended the interaction.</param>
             protected virtual void OnEnd(InputEventArgs e)
             {
             }
 
             /// <summary>
-            /// Called when the drag operation is canceled. Override to provide custom behavior.
+            /// Called when the drag interaction is canceled. Override to provide custom behavior.
             /// </summary>
-            /// <param name="e">The input event that canceled the operation.</param>
+            /// <param name="e">The input event that canceled the interaction.</param>
             protected virtual void OnCancel(InputEventArgs e)
             {
             }

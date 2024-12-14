@@ -15,7 +15,7 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(ViewportStyle), StyleTargetType = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(MinimapItem))]
     [TemplatePart(Name = ElementItemsHost, Type = typeof(Panel))]
-    public sealed class Minimap : ItemsControl
+    public class Minimap : ItemsControl
     {
         private const string ElementItemsHost = "PART_ItemsHost";
 
@@ -98,12 +98,12 @@ namespace Nodify
         /// <summary>
         /// Gets the panel that holds all the <see cref="MinimapItem"/>s.
         /// </summary>
-        private Panel ItemsHost { get; set; } = default!;
+        protected Panel ItemsHost { get; private set; } = default!;
 
         /// <summary>
         /// Whether the user is currently panning the minimap.
         /// </summary>
-        private bool IsPanning { get; set; }
+        protected bool IsPanning { get; private set; }
 
         /// <summary>
         /// Gets the current mouse location in graph space coordinates (relative to the <see cref="ItemsHost" />).
@@ -143,7 +143,7 @@ namespace Nodify
 
         #region Gesture Handling
 
-        private InputProcessor InputProcessor { get; } = new InputProcessor();
+        protected InputProcessor InputProcessor { get; } = new InputProcessor();
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -158,8 +158,8 @@ namespace Nodify
             MouseLocation = e.GetPosition(ItemsHost);
             InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -188,8 +188,8 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -198,6 +198,14 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
             => InputProcessor.Process(e);
+
+        /// <summary>
+        /// Determines whether any toggled interaction is currently in progress.
+        /// </summary>
+        protected virtual bool IsToggledInteractionInProgress()
+        {
+            return MinimapState.EnableToggledPanningMode && IsPanning;
+        }
 
         #endregion
 
@@ -295,7 +303,7 @@ namespace Nodify
             RaiseEvent(args);
         }
 
-        private void SetViewportLocation(Point location)
+        protected void SetViewportLocation(Point location)
         {
             var position = location - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
 

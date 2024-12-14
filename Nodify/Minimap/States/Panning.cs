@@ -9,8 +9,9 @@ namespace Nodify.Interactivity
         /// </summary>
         public class Panning : DragState<Minimap>
         {
-            protected override bool CanCancel => Minimap.AllowPanningCancellation;
             protected override bool CanBegin => !Element.IsReadOnly;
+            protected override bool CanCancel => Minimap.AllowPanningCancellation;
+            protected override bool IsToggle => EnableToggledPanningMode;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Panning"/> class.

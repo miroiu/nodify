@@ -150,7 +150,7 @@ namespace Nodify
         /// <summary>
         /// Gets or sets a value indicating whether the container uses a custom context menu.
         /// </summary>
-        /// <remarks>When set to true, the container handles the right-click event for specific operations.</remarks>
+        /// <remarks>When set to true, the container handles the right-click event for specific interactions.</remarks>
         public bool HasCustomContextMenu
         {
             get => (bool)GetValue(HasCustomContextMenuProperty);
@@ -376,8 +376,8 @@ namespace Nodify
         {
             InputProcessor.Process(e);
             
-            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
+            // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -400,8 +400,8 @@ namespace Nodify
         {
             InputProcessor.Process(e);
 
-            // Release the mouse capture if all the mouse buttons are released and there's no operation in progress
-            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledOperationInProgress())
+            // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
+            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
             {
                 ReleaseMouseCapture();
             }
@@ -412,9 +412,9 @@ namespace Nodify
             => InputProcessor.Process(e);
 
         /// <summary>
-        /// Determines whether any toggled operation is currently in progress.
+        /// Determines whether any toggled interaction is currently in progress.
         /// </summary>
-        protected virtual bool IsToggledOperationInProgress() => false;
+        protected virtual bool IsToggledInteractionInProgress() => false;
 
         #endregion
     }

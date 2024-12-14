@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Nodify.Interactivity;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Nodify.Playground
@@ -231,6 +232,11 @@ namespace Nodify.Playground
                     "Auto panning tick rate: ",
                     "How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.AllowMinimapPanningCancellation,
+                    val => Instance.AllowMinimapPanningCancellation = val,
+                    "Allow minimap panning cancellation: ",
+                    "Right click or escape to cancel panning."),
+                new ProxySettingViewModel<bool>(
                     () => Instance.AllowCuttingCancellation,
                     val => Instance.AllowCuttingCancellation = val,
                     "Allow cutting cancellation: ",
@@ -310,6 +316,31 @@ namespace Nodify.Playground
                     val => Instance.FitToScreenExtentMargin = val,
                     "Fit to screen extent margin: ",
                     "Adds some margin to the nodes extent when fit to screen"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledCutting,
+                    val => Instance.EnableToggledCutting = val,
+                    "Enable toggled cutting mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledPushingItems,
+                    val => Instance.EnableToggledPushingItems = val,
+                    "Enable toggled pushing items mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledPanning,
+                    val => Instance.EnableToggledPanning = val,
+                    "Enable toggled panning mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledSelecting,
+                    val => Instance.EnableToggledSelecting = val,
+                    "Enable toggled selecting mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableMinimapToggledPanning,
+                    val => Instance.EnableMinimapToggledPanning = val,
+                    "Enable toggled panning mode for the minimap: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
             };
 
             EnableCuttingLinePreview = true;
@@ -623,6 +654,12 @@ namespace Nodify.Playground
             set => NodifyEditor.AutoPanningTickRate = value;
         }
 
+        public bool AllowMinimapPanningCancellation
+        {
+            get => Minimap.AllowPanningCancellation;
+            set => Minimap.AllowPanningCancellation = value;
+        }
+
         public bool AllowCuttingCancellation
         {
             get => NodifyEditor.AllowCuttingCancellation;
@@ -721,8 +758,38 @@ namespace Nodify.Playground
 
         public bool EnableStickyConnectors
         {
-            get => Connector.EnableStickyConnections;
-            set => Connector.EnableStickyConnections = value;
+            get => ConnectorState.EnableToggledConnectingMode;
+            set => ConnectorState.EnableToggledConnectingMode = value;
+        }
+
+        public bool EnableToggledPanning
+        {
+            get => EditorState.EnableToggledPanningMode;
+            set => EditorState.EnableToggledPanningMode = value;
+        }
+
+        public bool EnableToggledCutting
+        {
+            get => EditorState.EnableToggledCuttingMode;
+            set => EditorState.EnableToggledCuttingMode = value;
+        }
+
+        public bool EnableToggledPushingItems
+        {
+            get => EditorState.EnableToggledPushingItemsMode;
+            set => EditorState.EnableToggledPushingItemsMode = value;
+        }
+
+        public bool EnableToggledSelecting
+        {
+            get => EditorState.EnableToggledSelectingMode;
+            set => EditorState.EnableToggledSelectingMode = value;
+        }
+
+        public bool EnableMinimapToggledPanning
+        {
+            get => MinimapState.EnableToggledPanningMode;
+            set => MinimapState.EnableToggledPanningMode = value;
         }
 
         #endregion
