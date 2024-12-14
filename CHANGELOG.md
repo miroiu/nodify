@@ -7,7 +7,7 @@
 >	- Made SelectionHelper internal
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
->	- Renamed Connector.EnableStickyConnections to ConnectorState.EnabledToggledConnecting
+>	- Renamed Connector.EnableStickyConnections to ConnectorState.EnabledToggledConnectingMode
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
@@ -24,7 +24,7 @@
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
 >	- Added AlignSelection and AlignContainers methods to NodifyEditor
->	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer and Connector
+>	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer, Connector and BaseConnection
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector

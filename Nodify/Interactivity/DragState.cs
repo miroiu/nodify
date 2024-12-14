@@ -11,6 +11,24 @@ namespace Nodify.Interactivity
     public abstract class DragState<TElement> : InputElementState<TElement>, IInputHandler
         where TElement : FrameworkElement
     {
+        private enum InteractionState
+        {
+            /// <summary>
+            /// Indicates that no drag interaction is active. This is the initial state or the state after a drag interaction has been canceled or completed.
+            /// </summary>
+            Ready,
+
+            /// <summary>
+            /// Indicates that a drag interaction is currently active and handling input events. This state is entered when a drag begins.
+            /// </summary>
+            InProgress,
+
+            /// <summary>
+            /// Indicates that a drag interaction is in the process of ending. This state is used to handle toggled interactions (see <see cref="IsToggle"/>).
+            /// </summary>
+            Ending
+        }
+
         /// <summary>
         /// Gets the gesture used to cancel the drag interaction, if defined.
         /// </summary>
@@ -47,7 +65,7 @@ namespace Nodify.Interactivity
         /// </summary>
         protected IInputElement PositionElement { get; set; }
 
-        private bool _canReceiveInput;
+        private InteractionState _interactionState;
         private Point _initialPosition;
 
         /// <summary>
@@ -75,37 +93,55 @@ namespace Nodify.Interactivity
 
         void IInputHandler.HandleEvent(InputEventArgs e)
         {
-            if (!_canReceiveInput && IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            // Begin the interaction on gesture press
+            if (_interactionState == InteractionState.Ready && IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
             {
                 BeginDrag(e);
                 return;
             }
 
-            if (_canReceiveInput && (IsToggle ? IsInputEventPressed(e) : IsInputEventReleased(e)) && BeginGesture.Matches(e.Source, e))
+            // End the toggled interaction on gesture release
+            if (_interactionState == InteractionState.Ending && IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
             {
                 EndDrag(e);
                 return;
             }
 
-            if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || CanCancel && CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e)))
+            if (_interactionState == InteractionState.InProgress)
             {
-                CancelDrag(e);
-                return;
+                // End default interaction
+                if (!IsToggle && IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
+                {
+                    EndDrag(e);
+                    return;
+                }
+
+                // Delay ending toggle interaction until the gesture is released
+                if (IsToggle && IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e))
+                {
+                    _interactionState = InteractionState.Ending;
+                    HandleEvent(e);
+                    return;
+                }
+
+                // Cancel the interaction
+                if (e.RoutedEvent == UIElement.LostMouseCaptureEvent || CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
+                {
+                    CancelDrag(e);
+                    return;
+                }
+
+                // Suppress the context menu if a toggle interaction is in progress
+                if (IsToggle && e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right)
+                {
+                    e.Handled = true;
+                }
             }
 
-            if (_canReceiveInput)
+            if (_interactionState == InteractionState.InProgress || _interactionState == InteractionState.Ending)
             {
                 HandleEvent(e);
             }
-        }
-
-        private void CancelDrag(InputEventArgs e)
-        {
-            _canReceiveInput = false;
-            HandleEvent(e);
-            OnCancel(e);
-
-            e.Handled = true;
         }
 
         private void BeginDrag(InputEventArgs e)
@@ -113,7 +149,7 @@ namespace Nodify.Interactivity
             // Avoid stealing mouse capture from other elements
             if (Mouse.Captured == null || Element.IsMouseCaptured)
             {
-                _canReceiveInput = true;
+                _interactionState = InteractionState.InProgress;
                 HandleEvent(e); // Handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
                 OnBegin(e);
 
@@ -131,11 +167,11 @@ namespace Nodify.Interactivity
 
         private void EndDrag(InputEventArgs e)
         {
-            _canReceiveInput = false;
+            _interactionState = InteractionState.Ready;
             HandleEvent(e);
 
             // Suppress the context menu if the mouse moved beyond the defined drag threshold
-            if (e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right && HasContextMenu)
+            if (HasContextMenu && e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right)
             {
                 double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
                 double dragDistance = (mbe.GetPosition(PositionElement) - _initialPosition).LengthSquared;
@@ -155,6 +191,15 @@ namespace Nodify.Interactivity
                 OnEnd(e);
                 e.Handled = true;
             }
+        }
+
+        private void CancelDrag(InputEventArgs e)
+        {
+            _interactionState = InteractionState.Ready;
+            HandleEvent(e);
+            OnCancel(e);
+
+            e.Handled = true;
         }
 
         /// <summary>
