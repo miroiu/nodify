@@ -93,51 +93,103 @@ namespace Nodify.Interactivity
 
         void IInputHandler.HandleEvent(InputEventArgs e)
         {
-            // Begin the interaction on gesture press
-            if (_interactionState == InteractionState.Ready && IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            if (_interactionState == InteractionState.Ready && TryBeginDragging(e))
             {
-                BeginDrag(e);
                 return;
             }
 
-            // End the toggled interaction on gesture release
-            if (_interactionState == InteractionState.Ending && IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
+            if (_interactionState == InteractionState.Ending && TryEndDragging(e))
             {
-                EndDrag(e);
                 return;
             }
 
             if (_interactionState == InteractionState.InProgress)
             {
-                // End default interaction
-                if (!IsToggle && IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
+                if (TryEndDragging(e) || TryCancelDragging(e) || TrySuppressContextMenu(e))
                 {
-                    EndDrag(e);
                     return;
-                }
-
-                // Delay ending toggle interaction until the gesture is released
-                if (IsToggle && IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e))
-                {
-                    _interactionState = InteractionState.Ending;
-                    HandleEvent(e);
-                    return;
-                }
-
-                // Cancel the interaction
-                if (e.RoutedEvent == UIElement.LostMouseCaptureEvent || CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
-                {
-                    CancelDrag(e);
-                    return;
-                }
-
-                // Suppress the context menu if a toggle interaction is in progress
-                if (IsToggle && e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right)
-                {
-                    e.Handled = true;
                 }
             }
 
+            TryHandleEvent(e);
+        }
+
+        #region Interaction logic
+
+        private bool TryEndDragging(InputEventArgs e)
+        {
+            if (IsToggle && _interactionState == InteractionState.InProgress)
+            {
+                return TryDeferToggleInteractionEnd(e);
+            }
+
+            return TryEndInteraction(e);
+        }
+
+        // Delay ending toggle interaction until the gesture is released
+        private bool TryDeferToggleInteractionEnd(InputEventArgs e)
+        {
+            if (IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e))
+            {
+                _interactionState = InteractionState.Ending;
+                HandleEvent(e);
+                return true;
+            }
+
+            return false;
+        }
+
+        // Begin the interaction on gesture press
+        private bool TryBeginDragging(InputEventArgs e)
+        {
+            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            {
+                BeginDrag(e);
+                return true;
+            }
+
+            return false;
+        }
+
+        // End the interaction on gesture release
+        private bool TryEndInteraction(InputEventArgs e)
+        {
+            if (IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
+            {
+                EndDrag(e);
+                return true;
+            }
+
+            return false;
+        }
+
+        // Cancel the interaction
+        private bool TryCancelDragging(InputEventArgs e)
+        {
+            if (IsInputCaptureLost(e) || CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
+            {
+                CancelDrag(e);
+                return true;
+            }
+
+            return false;
+        }
+
+        // Suppress the context menu if a toggle interaction is in progress
+        private bool TrySuppressContextMenu(InputEventArgs e)
+        {
+            if (IsToggle && e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right)
+            {
+                e.Handled = true;
+                HandleEvent(e);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void TryHandleEvent(InputEventArgs e)
+        {
             if (_interactionState == InteractionState.InProgress || _interactionState == InteractionState.Ending)
             {
                 HandleEvent(e);
@@ -200,6 +252,13 @@ namespace Nodify.Interactivity
             OnCancel(e);
 
             e.Handled = true;
+        }
+
+        #endregion
+
+        protected virtual bool IsInputCaptureLost(InputEventArgs e)
+        {
+            return e.RoutedEvent == UIElement.LostMouseCaptureEvent;
         }
 
         /// <summary>
