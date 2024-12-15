@@ -341,6 +341,41 @@ namespace Nodify.Playground
                     val => Instance.EnableMinimapToggledPanning = val,
                     "Enable minimap toggled panning mode: ",
                     "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhileSelecting,
+                    val => Instance.AllowPanningWhileSelecting = val,
+                    "Allow panning while selecting: ",
+                    "Whether panning is allowed while selecting items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhileCutting,
+                    val => Instance.AllowPanningWhileCutting = val,
+                    "Allow panning while cutting: ",
+                    "Whether panning is allowed while cutting connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhilePushingItems,
+                    val => Instance.AllowPanningWhilePushingItems = val,
+                    "Allow panning while pushing items: ",
+                    "Whether panning is allowed while pushing items items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhileSelecting,
+                    val => Instance.AllowZoomingWhileSelecting = val,
+                    "Allow zooming while selecting: ",
+                    "Whether zooming is allowed while selecting items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhileCutting,
+                    val => Instance.AllowZoomingWhileCutting = val,
+                    "Allow zooming while cutting: ",
+                    "Whether zooming is allowed while cutting connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhilePushingItems,
+                    val => Instance.AllowZoomingWhilePushingItems = val,
+                    "Allow zooming while pushing items: ",
+                    "Whether zooming is allowed while pushing items connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhilePanning,
+                    val => Instance.AllowZoomingWhilePanning = val,
+                    "Allow zooming while panning: ",
+                    "Whether zooming is allowed while panning connections in the editor."),
             };
 
             EnableCuttingLinePreview = true;
@@ -790,6 +825,48 @@ namespace Nodify.Playground
         {
             get => MinimapState.EnableToggledPanningMode;
             set => MinimapState.EnableToggledPanningMode = value;
+        }
+
+        public bool AllowPanningWhileSelecting
+        {
+            get => EditorState.AllowPanningWhileSelecting;
+            set => EditorState.AllowPanningWhileSelecting = value;
+        }
+
+        public bool AllowPanningWhileCutting
+        {
+            get => EditorState.AllowPanningWhileCutting;
+            set => EditorState.AllowPanningWhileCutting = value;
+        }
+
+        public bool AllowPanningWhilePushingItems
+        {
+            get => EditorState.AllowPanningWhilePushingItems;
+            set => EditorState.AllowPanningWhilePushingItems = value;
+        }
+
+        public bool AllowZoomingWhileSelecting
+        {
+            get => EditorState.AllowZoomingWhileSelecting;
+            set => EditorState.AllowZoomingWhileSelecting = value;
+        }
+
+        public bool AllowZoomingWhileCutting
+        {
+            get => EditorState.AllowZoomingWhileCutting;
+            set => EditorState.AllowZoomingWhileCutting = value;
+        }
+
+        public bool AllowZoomingWhilePushingItems
+        {
+            get => EditorState.AllowZoomingWhilePushingItems;
+            set => EditorState.AllowZoomingWhilePushingItems = value;
+        }
+
+        public bool AllowZoomingWhilePanning
+        {
+            get => EditorState.AllowZoomingWhilePanning;
+            set => EditorState.AllowZoomingWhilePanning = value;
         }
 
         #endregion

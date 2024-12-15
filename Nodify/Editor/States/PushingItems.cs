@@ -13,6 +13,7 @@ namespace Nodify.Interactivity
         public class PushingItems : DragState<NodifyEditor>
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
+            protected override bool CanBegin => !Element.IsSelecting && !Element.IsPanning && !Element.IsCutting;
             protected override bool CanCancel => NodifyEditor.AllowPushItemsCancellation;
             protected override bool IsToggle => EnableToggledPushingItemsMode;
 
