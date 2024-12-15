@@ -12,8 +12,10 @@ namespace Nodify.Interactivity
         public class Panning : DragState<NodifyEditor>
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
-            protected override bool CanBegin => !Element.DisablePanning;
+            protected override bool CanBegin => IsPanningAllowed();
             protected override bool CanCancel => NodifyEditor.AllowPanningCancellation;
+            protected override bool IsToggle => EnableToggledPanningMode;
+
 
             private Point _prevPosition;
 
@@ -44,6 +46,14 @@ namespace Nodify.Interactivity
 
             protected override void OnCancel(InputEventArgs e)
                 => Element.CancelPanning();
+
+            private bool IsPanningAllowed()
+            {
+                return !Element.DisablePanning
+                    && (AllowPanningWhileSelecting || !Element.IsSelecting)
+                    && (AllowPanningWhileCutting || !Element.IsCutting)
+                    && (AllowPanningWhilePushingItems || !Element.IsPushingItems);
+            }
         }
 
         /// <summary>

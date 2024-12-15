@@ -13,6 +13,7 @@ namespace Nodify.Interactivity
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
             protected override bool CanCancel => Connector.AllowPendingConnectionCancellation;
+            protected override bool IsToggle => EnableToggledConnectingMode;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Connecting"/> class.
@@ -23,8 +24,6 @@ namespace Nodify.Interactivity
             {
                 PositionElement = Element.Editor ?? (IInputElement)Element;
             }
-
-            protected override bool IsToggle => Connector.EnableStickyConnections;
 
             protected override void OnBegin(InputEventArgs e)
                 => Element.BeginConnecting();

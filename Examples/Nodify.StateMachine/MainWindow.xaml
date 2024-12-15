@@ -74,10 +74,13 @@
                                                Spacing="0"
                                                SourceOffsetMode="Edge"
                                                TargetOffsetMode="Edge"
+                                               OutlineThickness="5"
                                                Tag="{Binding}">
                             <nodify:LineConnection.Style>
                                 <Style TargetType="{x:Type nodify:LineConnection}"
                                        BasedOn="{StaticResource {x:Type nodify:LineConnection}}">
+                                    <Setter Property="OutlineBrush"
+                                            Value="Transparent" />
                                     <Setter Property="StrokeThickness"
                                             Value="3" />
                                     <Style.Triggers>
@@ -88,6 +91,15 @@
                                             <Setter Property="StrokeThickness"
                                                     Value="6" />
                                         </DataTrigger>
+                                        <Trigger Property="IsMouseOver"
+                                                 Value="True">
+                                            <Setter Property="OutlineBrush">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{StaticResource LineConnection.StrokeColor}"
+                                                                     Opacity="0.15" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </nodify:LineConnection.Style>

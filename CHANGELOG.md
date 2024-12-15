@@ -5,9 +5,9 @@
 > - Breaking Changes:
 >	- Made the setter of NodifyEditor.IsPanning private
 >	- Made SelectionHelper internal
->	- Made Minimap sealed
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
 >	- Renamed StartCutting to BeginCutting in NodifyEditor
+>	- Renamed Connector.EnableStickyConnections to ConnectorState.EnabledToggledConnectingMode
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
@@ -24,7 +24,7 @@
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
 >	- Added AlignSelection and AlignContainers methods to NodifyEditor
->	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer and Connector
+>	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer, Connector and BaseConnection
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer
 >	- Added BeginConnecting, UpdatePendingConnection, EndConnecting, CancelConnecting and RemoveConnections methods to Connector
@@ -35,6 +35,10 @@
 >	- Added InputProcessor.Shared to enable the addition of global input handlers
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
 >	- Added SplitAtLocation and Remove methods to BaseConnection
+>	- Added AllowPanningWhileSelecting, AllowPanningWhileCutting and AllowPanningWhilePushingItems to EditorState
+>	- Added AllowZoomingWhilePanning, AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
+>	- Added EnableToggledSelectingMode, EnableToggledPanningMode, EnableToggledPushingItemsMode and EnableToggledCuttingMode to EditorState
+>	- Added MinimapState.EnableToggledPanningMode
 > - Bugfixes:
 >	- Fixed an issue where the ItemContainer was selected by releasing the mouse button on it, even when the mouse was not captured
 >	- Fixed an issue where the ItemContainer could open its context menu even when it was not selected

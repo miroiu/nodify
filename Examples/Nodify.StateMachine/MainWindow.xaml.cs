@@ -11,7 +11,7 @@ namespace Nodify.StateMachine
         {
             InitializeComponent();
 
-            Connector.EnableStickyConnections = true;
+            ConnectorState.EnableToggledConnectingMode = true;
             NodifyEditor.EnableCuttingLinePreview = true;
 
             EditorGestures.Mappings.Connection.Disconnect.Value = MultiGesture.None;

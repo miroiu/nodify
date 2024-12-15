@@ -144,6 +144,7 @@ namespace Nodify
 
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.RegisterAttached("IsSelectable", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.RegisterAttached("IsSelected", typeof(bool), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.False, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+        public static readonly DependencyProperty HasCustomContextMenuProperty = NodifyEditor.HasCustomContextMenuProperty.AddOwner(typeof(BaseConnection));
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -437,6 +438,21 @@ namespace Nodify
             get => (FontStretch)GetValue(FontStretchProperty);
             set => SetValue(FontStretchProperty, value);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the connection uses a custom context menu.
+        /// </summary>
+        /// <remarks>When set to true, the connection handles the right-click event for specific interactions.</remarks>
+        public bool HasCustomContextMenu
+        {
+            get => (bool)GetValue(HasCustomContextMenuProperty);
+            set => SetValue(HasCustomContextMenuProperty, value);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the connection has a context menu.
+        /// </summary>
+        public bool HasContextMenu => ContextMenu != null || HasCustomContextMenu;
 
         #endregion
 

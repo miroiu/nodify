@@ -68,18 +68,6 @@ namespace Nodify.Interactivity
                     }
                 }
 
-                private bool CaptureMouseSafe()
-                {
-                    // Avoid stealing mouse capture from other elements
-                    if (Mouse.Captured == null || Element.IsMouseCaptured)
-                    {
-                        Element.CaptureMouse();
-                        return true;
-                    }
-
-                    return false;
-                }
-
                 /// <inheritdoc />
                 protected override void OnMouseMove(MouseEventArgs e)
                 {
@@ -119,14 +107,6 @@ namespace Nodify.Interactivity
                     _selectionType = null;
                 }
 
-                private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
-                {
-                    // Always select the container when dragging
-                    return selectionType == SelectionType.Remove
-                        ? SelectionType.Replace
-                        : selectionType.GetValueOrDefault(SelectionType.Replace);
-                }
-
                 private bool IsSelectable(MouseButtonEventArgs e)
                 {
                     if (!Element.IsSelectableLocation(e.GetPosition(Element)))
@@ -140,6 +120,26 @@ namespace Nodify.Interactivity
                     }
 
                     return true;
+                }
+
+                private bool CaptureMouseSafe()
+                {
+                    // Avoid stealing mouse capture from other elements
+                    if (Mouse.Captured == null || Element.IsMouseCaptured)
+                    {
+                        Element.CaptureMouse();
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
+                {
+                    // Always select the container when dragging
+                    return selectionType == SelectionType.Remove
+                        ? SelectionType.Replace
+                        : selectionType.GetValueOrDefault(SelectionType.Replace);
                 }
             }
         }

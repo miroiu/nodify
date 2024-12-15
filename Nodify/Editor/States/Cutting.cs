@@ -10,7 +10,9 @@ namespace Nodify.Interactivity
         public class Cutting : DragState<NodifyEditor>
         {
             protected override bool HasContextMenu => Element.HasContextMenu;
+            protected override bool CanBegin => !Element.IsSelecting && !Element.IsPanning && !Element.IsPushingItems;
             protected override bool CanCancel => NodifyEditor.AllowCuttingCancellation;
+            protected override bool IsToggle => EnableToggledCuttingMode;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Cutting"/> class.

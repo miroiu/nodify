@@ -6,7 +6,7 @@ namespace Nodify.Interactivity
     /// <summary>
     /// Processes input events and delegates them to registered handlers.
     /// </summary>
-    public sealed partial class InputProcessor
+    public partial class InputProcessor
     {
         private readonly HashSet<IInputHandler> _handlers = new HashSet<IInputHandler>();
 

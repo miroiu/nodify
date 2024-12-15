@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Nodify.Interactivity;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Nodify.Playground
@@ -231,6 +232,11 @@ namespace Nodify.Playground
                     "Auto panning tick rate: ",
                     "How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.AllowMinimapPanningCancellation,
+                    val => Instance.AllowMinimapPanningCancellation = val,
+                    "Allow minimap panning cancellation: ",
+                    "Right click or escape to cancel panning."),
+                new ProxySettingViewModel<bool>(
                     () => Instance.AllowCuttingCancellation,
                     val => Instance.AllowCuttingCancellation = val,
                     "Allow cutting cancellation: ",
@@ -310,6 +316,66 @@ namespace Nodify.Playground
                     val => Instance.FitToScreenExtentMargin = val,
                     "Fit to screen extent margin: ",
                     "Adds some margin to the nodes extent when fit to screen"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledCutting,
+                    val => Instance.EnableToggledCutting = val,
+                    "Enable toggled cutting mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledPushingItems,
+                    val => Instance.EnableToggledPushingItems = val,
+                    "Enable toggled pushing items mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledPanning,
+                    val => Instance.EnableToggledPanning = val,
+                    "Enable toggled panning mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledSelecting,
+                    val => Instance.EnableToggledSelecting = val,
+                    "Enable toggled selecting mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnableMinimapToggledPanning,
+                    val => Instance.EnableMinimapToggledPanning = val,
+                    "Enable minimap toggled panning mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhileSelecting,
+                    val => Instance.AllowPanningWhileSelecting = val,
+                    "Allow panning while selecting: ",
+                    "Whether panning is allowed while selecting items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhileCutting,
+                    val => Instance.AllowPanningWhileCutting = val,
+                    "Allow panning while cutting: ",
+                    "Whether panning is allowed while cutting connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningWhilePushingItems,
+                    val => Instance.AllowPanningWhilePushingItems = val,
+                    "Allow panning while pushing items: ",
+                    "Whether panning is allowed while pushing items items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhileSelecting,
+                    val => Instance.AllowZoomingWhileSelecting = val,
+                    "Allow zooming while selecting: ",
+                    "Whether zooming is allowed while selecting items in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhileCutting,
+                    val => Instance.AllowZoomingWhileCutting = val,
+                    "Allow zooming while cutting: ",
+                    "Whether zooming is allowed while cutting connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhilePushingItems,
+                    val => Instance.AllowZoomingWhilePushingItems = val,
+                    "Allow zooming while pushing items: ",
+                    "Whether zooming is allowed while pushing items connections in the editor."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowZoomingWhilePanning,
+                    val => Instance.AllowZoomingWhilePanning = val,
+                    "Allow zooming while panning: ",
+                    "Whether zooming is allowed while panning connections in the editor."),
             };
 
             EnableCuttingLinePreview = true;
@@ -623,6 +689,12 @@ namespace Nodify.Playground
             set => NodifyEditor.AutoPanningTickRate = value;
         }
 
+        public bool AllowMinimapPanningCancellation
+        {
+            get => Minimap.AllowPanningCancellation;
+            set => Minimap.AllowPanningCancellation = value;
+        }
+
         public bool AllowCuttingCancellation
         {
             get => NodifyEditor.AllowCuttingCancellation;
@@ -721,8 +793,80 @@ namespace Nodify.Playground
 
         public bool EnableStickyConnectors
         {
-            get => Connector.EnableStickyConnections;
-            set => Connector.EnableStickyConnections = value;
+            get => ConnectorState.EnableToggledConnectingMode;
+            set => ConnectorState.EnableToggledConnectingMode = value;
+        }
+
+        public bool EnableToggledPanning
+        {
+            get => EditorState.EnableToggledPanningMode;
+            set => EditorState.EnableToggledPanningMode = value;
+        }
+
+        public bool EnableToggledCutting
+        {
+            get => EditorState.EnableToggledCuttingMode;
+            set => EditorState.EnableToggledCuttingMode = value;
+        }
+
+        public bool EnableToggledPushingItems
+        {
+            get => EditorState.EnableToggledPushingItemsMode;
+            set => EditorState.EnableToggledPushingItemsMode = value;
+        }
+
+        public bool EnableToggledSelecting
+        {
+            get => EditorState.EnableToggledSelectingMode;
+            set => EditorState.EnableToggledSelectingMode = value;
+        }
+
+        public bool EnableMinimapToggledPanning
+        {
+            get => MinimapState.EnableToggledPanningMode;
+            set => MinimapState.EnableToggledPanningMode = value;
+        }
+
+        public bool AllowPanningWhileSelecting
+        {
+            get => EditorState.AllowPanningWhileSelecting;
+            set => EditorState.AllowPanningWhileSelecting = value;
+        }
+
+        public bool AllowPanningWhileCutting
+        {
+            get => EditorState.AllowPanningWhileCutting;
+            set => EditorState.AllowPanningWhileCutting = value;
+        }
+
+        public bool AllowPanningWhilePushingItems
+        {
+            get => EditorState.AllowPanningWhilePushingItems;
+            set => EditorState.AllowPanningWhilePushingItems = value;
+        }
+
+        public bool AllowZoomingWhileSelecting
+        {
+            get => EditorState.AllowZoomingWhileSelecting;
+            set => EditorState.AllowZoomingWhileSelecting = value;
+        }
+
+        public bool AllowZoomingWhileCutting
+        {
+            get => EditorState.AllowZoomingWhileCutting;
+            set => EditorState.AllowZoomingWhileCutting = value;
+        }
+
+        public bool AllowZoomingWhilePushingItems
+        {
+            get => EditorState.AllowZoomingWhilePushingItems;
+            set => EditorState.AllowZoomingWhilePushingItems = value;
+        }
+
+        public bool AllowZoomingWhilePanning
+        {
+            get => EditorState.AllowZoomingWhilePanning;
+            set => EditorState.AllowZoomingWhilePanning = value;
         }
 
         #endregion

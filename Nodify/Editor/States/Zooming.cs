@@ -22,12 +22,21 @@ namespace Nodify.Interactivity
             protected override void OnMouseWheel(MouseWheelEventArgs e)
             {
                 EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
-                if (gestures.ZoomModifierKey == Keyboard.Modifiers)
+                if (gestures.ZoomModifierKey == Keyboard.Modifiers && IsZoomingAllowed())
                 {
                     double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                     Element.ZoomAtPosition(zoom, Element.MouseLocation);
                     e.Handled = true;
                 }
+            }
+
+            private bool IsZoomingAllowed()
+            {
+                return !Element.DisableZooming
+                    && (AllowZoomingWhileSelecting || !Element.IsSelecting)
+                    && (AllowZoomingWhileCutting || !Element.IsCutting)
+                    && (AllowZoomingWhilePushingItems || !Element.IsPushingItems)
+                    && (AllowZoomingWhilePanning || !Element.IsPanning);
             }
         }
     }
