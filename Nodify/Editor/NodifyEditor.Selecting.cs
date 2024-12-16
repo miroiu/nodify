@@ -520,7 +520,6 @@ namespace Nodify
             }
         }
 
-        /// <inheritdoc />
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);

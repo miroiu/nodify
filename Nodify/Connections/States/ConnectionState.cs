@@ -6,7 +6,6 @@
         {
             InputProcessor.Shared<BaseConnection>.RegisterHandlerFactory(elem => new Disconnect(elem));
             InputProcessor.Shared<BaseConnection>.RegisterHandlerFactory(elem => new Split(elem));
-            InputProcessor.Shared<BaseConnection>.RegisterHandlerFactory(elem => new Default(elem));
         }
     }
 }

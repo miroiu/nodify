@@ -108,11 +108,18 @@ namespace Nodify.Shapes.Canvas
 
         private void Editor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var canvasVM = (CanvasViewModel)DataContext;
-            var selectedNodes = e.AddedItems.Cast<ShapeViewModel>().ToList();
-            var deselectedNodes = e.RemovedItems.Cast<ShapeViewModel>().ToList();
+            var selectedNodes = e.AddedItems.OfType<ShapeViewModel>().ToList();
+            var deselectedNodes = e.RemovedItems.OfType<ShapeViewModel>().ToList();
+
+            if (selectedNodes.Count == 0 && deselectedNodes.Count == 0)
+            {
+                // The selection event most likely contains the selected connections
+                return;
+            }
 
             string batchLabel = selectedNodes.Count > 0 ? "Select shapes" : "Deselect shapes";
+            var canvasVM = (CanvasViewModel)DataContext;
+
             using (canvasVM.UndoRedo.Batch(batchLabel))
             {
                 var selectNodes = new SelectShapesAction(selectedNodes, canvasVM);

@@ -68,10 +68,12 @@ namespace Nodify
 
         private ConnectionsMultiSelector Selector { get; }
 
-        private UIElement? _connection;
-        private UIElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
-            ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<UIElement>()
-            : this.GetChildOfType<UIElement>();
+        private FrameworkElement? _connection;
+        private FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
+            ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<FrameworkElement>()
+            : this.GetChildOfType<FrameworkElement>();
+
+        private SelectionType? _selectionType;
 
         internal ConnectionContainer(ConnectionsMultiSelector selector)
         {
@@ -92,23 +94,40 @@ namespace Nodify
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (IsSelectable && EditorGestures.Mappings.Connection.Selection.Select.Matches(e.Source, e))
+            EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
+            if (IsSelectable && gestures.Selection.Select.Matches(e.Source, e))
             {
+                _selectionType = gestures.Selection.GetSelectionType(e);
+            }
+            // Replaces the current selection when right-clicking on an element that has a context menu and is not selected.
+            // Applies only when the select gesture is not right click.
+            else if (e.ChangedButton == MouseButton.Right && Connection?.ContextMenu != null)
+            {
+                _selectionType = IsSelected ? SelectionType.Append : SelectionType.Replace;
+            }
+
+            if (_selectionType.HasValue)
+            {
+                Focus();
                 e.Handled = true;
             }
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
-            if (gestures.Selection.Select.Matches(e.Source, e))
+            if (_selectionType.HasValue)
             {
-                var selectionType = gestures.Selection.GetSelectionType(e);
-                bool allowContextMenu = e.ChangedButton == MouseButton.Right && IsSelected;
-                if (!(selectionType == SelectionType.Replace && allowContextMenu))
+                // Determine whether the current selection should remain intact or be replaced by the clicked item. 
+                // If the right mouse button is pressed on an already selected item, and the item either has an 
+                // explicit context menu, the selection remains unchanged.
+                // This ensures that the context menu applies to the entire selection rather than only the clicked item.
+                bool allowContextMenu = e.ChangedButton == MouseButton.Right && IsSelected && Connection?.ContextMenu != null;
+                if (!allowContextMenu)
                 {
-                    Select(selectionType);
+                    Select(_selectionType.Value);
                 }
+
+                _selectionType = null;
             }
         }
 
@@ -130,8 +149,7 @@ namespace Nodify
                     IsSelected = !IsSelected;
                     break;
                 case SelectionType.Replace:
-                    Selector.UnselectAll();
-                    IsSelected = true;
+                    Selector.Select(this);
                     break;
             }
         }
