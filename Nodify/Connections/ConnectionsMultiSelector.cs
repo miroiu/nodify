@@ -45,12 +45,30 @@ namespace Nodify
         }
 
         protected override DependencyObject GetContainerForItemOverride()
-        {
-            return new ConnectionContainer(this);
-        }
+            => new ConnectionContainer(this);
 
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ConnectionContainer;
+
+        public void Select(ConnectionContainer container)
+        {
+            BeginUpdateSelectedItems();
+            var selected = base.SelectedItems;
+            selected.Clear();
+            selected.Add(container.DataContext);
+
+#if NETCOREAPP3_0_OR_GREATER
+            // For some reason the ConnectionContainer.IsSelected property change is not triggered, which prevents the visual update of the child connection.
+            // To address this, we manually set the IsSelected property before it is automatically set to true by EndUpdateSelectedItems.
+            // Note: This approach will cause bindings to update out of order.
+            // It is recommended to handle undo/redo operations using the SelectionChanged event in this case.
+            container.IsSelected = true;
+#endif
+
+            EndUpdateSelectedItems();
+        }
+
+        #region Selection Handlers
 
         private void OnSelectedItemsSourceChanged(IList oldValue, IList newValue)
         {
@@ -139,5 +157,7 @@ namespace Nodify
                 }
             }
         }
+
+        #endregion
     }
 }
