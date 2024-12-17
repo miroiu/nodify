@@ -803,12 +803,12 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            InputProcessor.Process(e);
+            InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
@@ -819,20 +819,20 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            InputProcessor.Process(e);
+            InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
@@ -843,7 +843,7 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         #endregion
 

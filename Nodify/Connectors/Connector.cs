@@ -332,12 +332,12 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            InputProcessor.Process(e);
+            InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
@@ -348,20 +348,20 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnMouseMove(MouseEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnMouseWheel(MouseWheelEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <inheritdoc />
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            InputProcessor.Process(e);
+            InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
             if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
@@ -372,7 +372,7 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e) 
-            => InputProcessor.Process(e);
+            => InputProcessor.ProcessEvent(e);
 
         /// <summary>
         /// Determines whether any toggled interaction is currently in progress.

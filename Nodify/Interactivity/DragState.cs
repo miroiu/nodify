@@ -199,7 +199,7 @@ namespace Nodify.Interactivity
         private void BeginDrag(InputEventArgs e)
         {
             // Avoid stealing mouse capture from other elements
-            if (Mouse.Captured == null || Element.IsMouseCaptured)
+            if (IsInputCaptured(e))
             {
                 _interactionState = InteractionState.InProgress;
                 HandleEvent(e); // Handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
@@ -213,7 +213,7 @@ namespace Nodify.Interactivity
                 }
 
                 Element.Focus();
-                Element.CaptureMouse();
+                CaptureInput(e);
             }
         }
 
@@ -255,6 +255,12 @@ namespace Nodify.Interactivity
         }
 
         #endregion
+
+        protected virtual bool IsInputCaptured(InputEventArgs e)
+            => Mouse.Captured == null || Element.IsMouseCaptured;
+
+        protected virtual void CaptureInput(InputEventArgs e)
+            => Element.CaptureMouse();
 
         protected virtual bool IsInputCaptureLost(InputEventArgs e)
         {

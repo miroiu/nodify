@@ -58,7 +58,7 @@ namespace Nodify.Interactivity
             }
 
             public void HandleEvent(InputEventArgs e)
-                => Process(e);
+                => ProcessEvent(e);
 
             /// <summary>
             /// Registers a factory method for creating an input handler of the specified type.

@@ -12,6 +12,9 @@ namespace Nodify
     /// </summary>
     [TemplatePart(Name = ElementInputItemsControl, Type = typeof(ItemsControl))]
     [TemplatePart(Name = ElementOutputItemsControl, Type = typeof(ItemsControl))]
+    [StyleTypedProperty(Property = nameof(ContentContainerStyle), StyleTargetType = typeof(Border))]
+    [StyleTypedProperty(Property = nameof(HeaderContainerStyle), StyleTargetType = typeof(Border))]
+    [StyleTypedProperty(Property = nameof(FooterContainerStyle), StyleTargetType = typeof(Border))]
     public class Node : HeaderedContentControl
     {
         protected const string ElementInputItemsControl = "PART_Input";

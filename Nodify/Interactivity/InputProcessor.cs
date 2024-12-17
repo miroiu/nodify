@@ -39,7 +39,7 @@ namespace Nodify.Interactivity
         /// Processes an input event and delegates it to the registered handlers.
         /// </summary>
         /// <param name="e">The input event arguments to process.</param>
-        public void Process(InputEventArgs e)
+        public void ProcessEvent(InputEventArgs e)
         {
             if (ProcessHandledEvents)
             {
