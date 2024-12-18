@@ -6,6 +6,8 @@ namespace Nodify
 {
     internal interface IDraggingStrategy
     {
+        IReadOnlyCollection<ItemContainer> Containers { get; }
+        Vector Offset { get; }
         void Update(Vector change);
         void End();
         void Abort();
@@ -15,8 +17,10 @@ namespace Nodify
     {
         private readonly uint _gridCellSize;
         private readonly List<ItemContainer> _selectedContainers;
-        private Vector _dragOffset = new Vector(0, 0);
         private Vector _dragAccumulator = new Vector(0, 0);
+
+        public Vector Offset { get; private set; }
+        public IReadOnlyCollection<ItemContainer> Containers => _selectedContainers;
 
         public DraggingSimple(IEnumerable<ItemContainer> containers, uint gridCellSize)
         {
@@ -29,7 +33,7 @@ namespace Nodify
             for (var i = 0; i < _selectedContainers.Count; i++)
             {
                 ItemContainer container = _selectedContainers[i];
-                container.Location -= _dragOffset;
+                container.Location -= Offset;
             }
 
             _selectedContainers.Clear();
@@ -63,7 +67,7 @@ namespace Nodify
 
             if (delta.X != 0 || delta.Y != 0)
             {
-                _dragOffset += delta;
+                Offset += delta;
 
                 for (var i = 0; i < _selectedContainers.Count; i++)
                 {

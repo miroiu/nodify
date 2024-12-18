@@ -614,8 +614,8 @@ namespace Nodify
         /// <summary>
         /// Zoom at the specified location in graph space coordinates.
         /// </summary>
-        /// <param name="zoom">The zoom factor.</param>
-        /// <param name="location">The location to focus when zooming.</param>
+        /// <param name="zoom">The zoom factor to apply. A value greater than 1 zooms in, while a value between 0 and 1 zooms out.</param>
+        /// <param name="location">The point in graph space coordinates where the zoom should be centered. </param>
         public void ZoomAtPosition(double zoom, Point location)
         {
             if (!DisableZooming)
@@ -627,12 +627,13 @@ namespace Nodify
                 {
                     // get the actual zoom value because Zoom might have been coerced
                     zoom = ViewportZoom / prevZoom;
-                    Vector position = (Vector)location;
 
-                    var dist = position - (Vector)ViewportLocation;
-                    var zoomedDist = dist * zoom;
-                    var diff = zoomedDist - dist;
-                    ViewportLocation += diff / zoom;
+                    var offsetToLocation = (Vector)location - (Vector)ViewportLocation;
+                    var scaledOffset = offsetToLocation * zoom;
+                    var viewportAdjustment = scaledOffset - offsetToLocation;
+
+                    // needs to be divided by zoom to negate the scaling of the translate transform on OnViewportLocationChanged
+                    ViewportLocation += viewportAdjustment / zoom;
                 }
             }
         }
