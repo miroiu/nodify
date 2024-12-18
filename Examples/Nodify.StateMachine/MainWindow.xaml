@@ -171,6 +171,12 @@
                                     <MenuItem Header="_Rename"
                                               Icon="{StaticResource RenameIcon}"
                                               Command="{Binding RenameStateCommand}" />
+                                    <MenuItem Header="_Lock"
+                                              Icon="{StaticResource LockIcon}"
+                                              Command="{x:Static nodify:EditorCommands.LockSelection}" />
+                                    <MenuItem Header="_Unlock"
+                                              Icon="{StaticResource UnlockIcon}"
+                                              Command="{x:Static nodify:EditorCommands.UnlockSelection}" />
                                     <MenuItem Header="_Alignment"
                                               Icon="{StaticResource AlignTopIcon}">
                                         <MenuItem Header="_Top"

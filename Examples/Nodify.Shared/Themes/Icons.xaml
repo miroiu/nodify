@@ -714,11 +714,60 @@
         </Rectangle.Fill>
     </Rectangle>
 
+    <Rectangle x:Key="LockIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="M16,16H0V0H16Z" />
+                            <GeometryDrawing Brush="#0A212121"
+                                             Geometry="M2.5,14.5h10v-8H2.5Z" />
+                            <GeometryDrawing Brush="#FF212121"
+                                             Geometry="M8,12H7V9H8Z" />
+                            <GeometryDrawing Brush="#FF212121"
+                                             Geometry="M12.5,6H11V4.536a3.5,3.5,0,0,0-7,0V6H2.5L2,6.5v8l.5.5h10l.5-.5v-8ZM5,4.536a2.5,2.5,0,0,1,5,0V6H5ZM12,14H3V7h9Z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
+    <Rectangle x:Key="UnlockIcon"
+               x:Shared="False"
+               Width="16"
+               Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush>
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="#00FFFFFF"
+                                             Geometry="M16,16H0V0H16Z" />
+                            <GeometryDrawing Brush="#0A212121"
+                                             Geometry="M1.5,14.5h10v-8H1.5Z" />
+                            <GeometryDrawing Brush="#FF212121"
+                                             Geometry="M7,12H6V9H7Z" />
+                            <GeometryDrawing Brush="#FF212121"
+                                             Geometry="M12.5,1.036A3.5,3.5,0,0,0,9,4.536V6H1.5L1,6.5v8l.5.5h10l.5-.5v-8L11.5,6H10V4.536a2.5,2.5,0,0,1,5,0V5h1V4.536A3.5,3.5,0,0,0,12.5,1.036ZM11,7v7H2V7Z" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+
     <PathGeometry x:Key="CloseGeometry"
                   x:Shared="False"
-                  Figures="M9.15625 6.3125L6.3125 9.15625L22.15625 25L6.21875 40.96875L9.03125 43.78125L25 27.84375L40.9375 43.78125L43.78125 40.9375L27.84375 25L43.6875 9.15625L40.84375 6.3125L25 22.15625Z"/>
-    
+                  Figures="M9.15625 6.3125L6.3125 9.15625L22.15625 25L6.21875 40.96875L9.03125 43.78125L25 27.84375L40.9375 43.78125L43.78125 40.9375L27.84375 25L43.6875 9.15625L40.84375 6.3125L25 22.15625Z" />
+
     <PathGeometry x:Key="AddGeometry"
                   x:Shared="False"
-                  Figures="M15 5L15 15L5 15L5 17L15 17L15 27L17 27L17 17L27 17L27 15L17 15L17 5Z"/>
+                  Figures="M15 5L15 15L5 15L5 17L15 17L15 27L17 27L17 17L27 17L27 15L17 15L17 5Z" />
+
 </ResourceDictionary>

@@ -739,6 +739,28 @@ namespace Nodify
             IsDragging = false;
         }
 
+        /// <summary>
+        /// Locks the position of the <see cref="SelectedContainers"/>.
+        /// </summary>
+        public void LockSelection()
+        {
+            foreach (var container in SelectedContainers)
+            {
+                container.IsDraggable = false;
+            }
+        }
+
+        /// <summary>
+        /// Unlocks the position of the <see cref="SelectedContainers"/>.
+        /// </summary>
+        public void UnlockSelection()
+        {
+            foreach (var container in SelectedContainers)
+            {
+                container.IsDraggable = true;
+            }
+        }
+
         #endregion
 
         #region Connector handling
