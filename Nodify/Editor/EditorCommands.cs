@@ -1,10 +1,14 @@
 ﻿using Nodify.Interactivity;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Provides common commands for the <see cref="NodifyEditor"/>.
+    /// </summary>
     public static class EditorCommands
     {
         /// <summary>
@@ -51,6 +55,16 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand Align { get; } = new RoutedUICommand("Align", nameof(Align), typeof(EditorCommands));
 
+        /// <summary>
+        /// Locks the position of the <see cref="NodifyEditor.SelectedContainers"/>.
+        /// </summary>
+        public static RoutedUICommand LockSelection { get; } = new RoutedUICommand("Lock selection", nameof(LockSelection), typeof(EditorCommands));
+
+        /// <summary>
+        /// Unlocks the position of the <see cref="NodifyEditor.SelectedContainers"/>.
+        /// </summary>
+        public static RoutedUICommand UnlockSelection { get; } = new RoutedUICommand("Unlock selection", nameof(UnlockSelection), typeof(EditorCommands));
+
         internal static void RegisterCommandBindings<T>()
         {
             CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(ZoomIn, OnZoomIn, OnQueryStatusZoomIn));
@@ -59,6 +73,40 @@ namespace Nodify
             CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(BringIntoView, OnBringIntoView, OnQueryBringIntoViewStatus));
             CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(FitToScreen, OnFitToScreen, OnQueryFitToScreenStatus));
             CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(Align, OnAlign, OnQueryAlignStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(LockSelection, OnLock, OnQueryLockStatus));
+            CommandManager.RegisterClassCommandBinding(typeof(T), new CommandBinding(UnlockSelection, OnUnlock, OnQueryUnlockStatus));
+        }
+
+        private static void OnQueryLockStatus(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                e.CanExecute = editor.SelectedContainers.Any(x => x.IsDraggable);
+            }
+        }
+
+        private static void OnLock(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                editor.LockSelection();
+            }
+        }
+
+        private static void OnQueryUnlockStatus(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                e.CanExecute = editor.SelectedContainers.Any(x => !x.IsDraggable);
+            }
+        }
+
+        private static void OnUnlock(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is NodifyEditor editor)
+            {
+                editor.UnlockSelection();
+            }
         }
 
         private static void OnQueryAlignStatus(object sender, CanExecuteRoutedEventArgs e)
