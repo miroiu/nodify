@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Nodify.Events;
+using System.Windows.Controls;
 
 namespace Nodify.Playground
 {
