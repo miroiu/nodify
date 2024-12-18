@@ -46,6 +46,7 @@
                              ItemsDragCompletedCommand="{Binding MoveShapesCompletedCommand}"
                              RemoveConnectionCommand="{Binding RemoveConnectionCommand}"
                              SelectionChanged="Editor_SelectionChanged"
+                             ItemsMoved="Editor_ItemsMoved"
                              MouseDown="Editor_MouseDown"
                              MouseMove="Editor_MouseMove"
                              MouseUp="Editor_MouseUp"

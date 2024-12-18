@@ -17,6 +17,7 @@
 >	- Moved AllowCuttingCancellation from CuttingLine to NodifyEditor
 >	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
 >	- Moved EditorGestures under the Nodify.Interactivity namespace
+>	- Moved Editor events under the Nodify.Events namespace
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor and Minimap
 >	- Added MouseLocation, ZoomAtPosition and GetLocationInsideMinimap to Minimap
@@ -24,6 +25,7 @@
 >	- Added Select, BeginSelecting, UpdateSelection, EndSelecting, CancelSelecting and AllowSelectionCancellation to NodifyEditor
 >	- Added IsDragging, BeginDragging, UpdateDragging, EndDragging and CancelDragging to NodifyEditor
 >	- Added AlignSelection and AlignContainers methods to NodifyEditor
+>	- Added ItemsMoved routed event to NodifyEditor
 >	- Added HasCustomContextMenu dependency property to NodifyEditor, ItemContainer, Connector and BaseConnection
 >	- Added Select, BeginDragging, UpdateDragging, EndDragging and CancelDragging to ItemContainer
 >	- Added PreserveSelectionOnRightClick configuration field to ItemContainer

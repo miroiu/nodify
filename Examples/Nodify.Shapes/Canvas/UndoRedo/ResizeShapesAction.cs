@@ -10,23 +10,21 @@ namespace Nodify.Shapes.Canvas.UndoRedo
         private readonly IReadOnlyCollection<ShapeViewModel> _resizedShapes;
         private readonly Dictionary<ShapeViewModel, Size> _initialSizes;
         private Dictionary<ShapeViewModel, Size>? _finalSizes;
-
-        // Resizing could also move the shape
-        private readonly MoveShapesAction _moveShapesAction;
+        private readonly Dictionary<ShapeViewModel, Point> _initialLocations;
+        private Dictionary<ShapeViewModel, Point>? _finalLocations;
 
         public ResizeShapesAction(CanvasViewModel canvas)
         {
             _resizedShapes = canvas.SelectedShapes;
             _initialSizes = _resizedShapes.ToDictionary(x => x, x => new Size(x.Width, x.Height));
-
-            _moveShapesAction = new MoveShapesAction(canvas);
+            _initialLocations = _resizedShapes.ToDictionary(x => x, x => x.Location);
         }
 
         public string? Label => "Resize shapes";
 
         public void Execute()
         {
-            _moveShapesAction.Execute();
+            _finalLocations?.ForEach(x => x.Key.Location = x.Value);
 
             _finalSizes?.ForEach(x =>
             {
@@ -43,13 +41,12 @@ namespace Nodify.Shapes.Canvas.UndoRedo
                 x.Key.Height = x.Value.Height;
             });
 
-            _moveShapesAction.Undo();
+            _initialLocations.ForEach(x => x.Key.Location = x.Value);
         }
 
         public void SaveSizes()
         {
-            _moveShapesAction.SaveLocations();
-
+            _finalLocations = _resizedShapes.ToDictionary(x => x, x => x.Location);
             _finalSizes = _resizedShapes.ToDictionary(x => x, x => new Size(x.Width, x.Height));
         }
     }

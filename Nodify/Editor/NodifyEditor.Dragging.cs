@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Nodify.Events;
+using System.Linq;
 
 namespace Nodify
 {
@@ -70,6 +72,21 @@ namespace Nodify
 
         #endregion
 
+        #region Routed events
+
+        public static readonly RoutedEvent ItemsMovedEvent = EventManager.RegisterRoutedEvent(nameof(ItemsMoved), RoutingStrategy.Bubble, typeof(ItemsMovedEventHandler), typeof(NodifyEditor));
+
+        /// <summary>
+        /// Occurs when items are moved within the editor (see <see cref="BeginDragging()"/>, <see cref="BeginPushingItems(Point, System.Windows.Controls.Orientation)"/>).
+        /// </summary>
+        public event ItemsMovedEventHandler ItemsMoved
+        {
+            add => AddHandler(ItemsMovedEvent, value);
+            remove => RemoveHandler(ItemsMovedEvent, value);
+        }
+
+        #endregion
+
         /// <summary>
         /// Gets or sets whether cancelling a dragging operation is allowed.
         /// </summary>
@@ -90,7 +107,7 @@ namespace Nodify
             => BeginDragging(SelectedContainers);
 
         /// <summary>
-        /// Initiates the dragging operation for the specified <see cref="ItemContainer" />s.
+        /// Initiates the dragging operation for the specified <see cref="ItemContainer" />s. Call <see cref="EndDragging"/> to complete the operation or <see cref="CancelDragging"/> to abort it.
         /// </summary>
         /// <param name="containers">The collection of item containers to be dragged.</param>
         /// <remarks>This method has no effect if a dragging operation is already in progress.</remarks>
@@ -119,7 +136,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Completes the dragging operation, finalizing the position of the dragged items.
+        /// Completes the dragging operation, finalizing the position of the dragged items. Raises the <see cref="ItemsMoved"/> event.
         /// </summary>
         /// <remarks>This method has no effect if there's no dragging operation in progress.</remarks>
         public void EndDragging()
@@ -129,8 +146,14 @@ namespace Nodify
                 return;
             }
 
+            var movedEvent = new ItemsMovedEventArgs(_draggingStrategy!.Containers.Select(x => x.DataContext).ToList(), _draggingStrategy.Offset)
+            {
+                RoutedEvent = ItemsMovedEvent,
+                Source = this
+            };
+
             IsBulkUpdatingItems = true;
-            _draggingStrategy!.End();
+            _draggingStrategy.End();
             IsBulkUpdatingItems = false;
 
             // Draw the containers at the new position.
@@ -138,6 +161,8 @@ namespace Nodify
 
             _draggingStrategy = null;
             IsDragging = false;
+
+            RaiseEvent(movedEvent);
         }
 
         /// <summary>

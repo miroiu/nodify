@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Nodify
+namespace Nodify.Events
 {
     /// <summary>
     /// Represents the method that will handle <see cref="Minimap.Zoom"/> routed event.

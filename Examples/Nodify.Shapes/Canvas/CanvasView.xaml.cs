@@ -1,4 +1,5 @@
-﻿using Nodify.Shapes.Canvas.UndoRedo;
+﻿using Nodify.Events;
+using Nodify.Shapes.Canvas.UndoRedo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +128,18 @@ namespace Nodify.Shapes.Canvas
 
                 canvasVM.UndoRedo.Record(deselectNodes);
                 canvasVM.UndoRedo.Record(selectNodes);
+            }
+        }
+
+        private void Editor_ItemsMoved(object sender, ItemsMovedEventArgs e)
+        {
+            var shapes = e.Items.Cast<ShapeViewModel>().ToList();
+
+            var canvasVM = (CanvasViewModel)DataContext;
+            using (canvasVM.UndoRedo.Batch("Move shapes"))
+            {
+                var moveShapes = new MoveShapesAction(shapes, e.Offset);
+                canvasVM.UndoRedo.Record(moveShapes);
             }
         }
     }

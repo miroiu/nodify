@@ -14,6 +14,9 @@ namespace Nodify
         private readonly List<ItemContainer> _selectedContainers;
         private Vector _dragAccumulator = new Vector(0, 0);
 
+        public Vector Offset { get; private set; }
+        public IReadOnlyCollection<ItemContainer> Containers => _selectedContainers;
+
         public DraggingOptimized(IEnumerable<ItemContainer> containers, uint gridCellSize)
         {
             _gridCellSize = gridCellSize;
@@ -69,6 +72,8 @@ namespace Nodify
 
             if (delta.X != 0 || delta.Y != 0)
             {
+                Offset += delta;
+
                 for (var i = 0; i < _selectedContainers.Count; i++)
                 {
                     ItemContainer container = _selectedContainers[i];

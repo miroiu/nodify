@@ -74,17 +74,11 @@ namespace Nodify.Shapes.Canvas
 
         private void MoveShapesStartedHandler()
         {
-            UndoRedo.ExecuteAction(new MoveShapesAction(this));
             ShapeToolbar.Hide();
         }
 
         private void MoveShapesCompletedHandler()
         {
-            if (UndoRedo.Current is MoveShapesAction movesShapes)
-            {
-                movesShapes.SaveLocations();
-            }
-
             ShapeToolbar.Show();
         }
 
