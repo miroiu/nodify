@@ -96,6 +96,12 @@ namespace Nodify.Interactivity
                 Select.Value = gestures.Select.Value;
                 Cancel.Value = gestures.Cancel.Value;
             }
+
+            /// <summary>
+            /// Unbinds the all the gestures used for selection.
+            /// </summary>
+            public void Unbind()
+                => Apply(None);
         }
 
         /// <summary>Gestures for the item containers.</summary>

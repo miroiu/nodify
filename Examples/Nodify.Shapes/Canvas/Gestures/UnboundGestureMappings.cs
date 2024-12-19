@@ -8,10 +8,10 @@ namespace Nodify.Shapes.Canvas
 
         public UnboundGestureMappings()
         {
-            Editor.Selection.Apply(SelectionGestures.None);
-            ItemContainer.Selection.Apply(SelectionGestures.None);
-            Connection.Disconnect.Value = MultiGesture.None;
-            Connector.Connect.Value = MultiGesture.None;
+            Editor.Selection.Unbind();
+            ItemContainer.Selection.Unbind();
+            Connection.Disconnect.Unbind();
+            Connector.Connect.Unbind();
         }
     }
 }
