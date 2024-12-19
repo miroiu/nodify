@@ -74,6 +74,7 @@ namespace Nodify
         /// <summary>
         /// <see cref="PreviewTarget"/> will be updated with a potential <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/> if this is true.
         /// </summary>
+        /// <remarks>Requires <see cref="EnableHitTesting"/> to be true.</remarks>
         public bool EnablePreview
         {
             get => (bool)GetValue(EnablePreviewProperty);
@@ -81,7 +82,7 @@ namespace Nodify
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="Connector"/> or the <see cref="ItemContainer"/> (if <see cref="AllowOnlyConnectors"/> is false) that we're previewing.
+        /// Gets or sets the <see cref="Connector"/> or the <see cref="ItemContainer"/> (if <see cref="AllowOnlyConnectors"/> is false) that we're previewing. See <see cref="EnablePreview"/>.
         /// </summary>
         public object? PreviewTarget
         {
@@ -92,6 +93,7 @@ namespace Nodify
         /// <summary>
         /// Enables snapping the <see cref="TargetAnchor"/> to a possible <see cref="Target"/> connector.
         /// </summary>
+        /// <remarks>Requires <see cref="EnableHitTesting"/> to be true.</remarks>
         public bool EnableSnapping
         {
             get => (bool)GetValue(EnableSnappingProperty);
@@ -218,11 +220,21 @@ namespace Nodify
         #region Fields
 
         /// <summary>
+        /// Gets or sets whether hit testing is enabled for pending connections.
+        /// </summary>
+        /// <remarks>
+        /// - When enabled, the <see cref="IsOverElementProperty"/> is updated on connectors during the drag operation. <br />
+        /// - When disabled, the <see cref="EnablePreview"/> and <see cref="EnableSnapping"/> properties will have no effect. <br />
+        /// - Disable hit testing to improve performance.
+        /// </remarks>
+        public static bool EnableHitTesting { get; set; } = true;
+
+        /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="PendingConnection"/>.
         /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 
-        private FrameworkElement? _previousConnector;
+        private FrameworkElement? _connectionTarget;
 
         #endregion
 
@@ -281,40 +293,27 @@ namespace Nodify
                 e.Handled = true;
                 TargetAnchor = new Point(e.Anchor.X + e.OffsetX, e.Anchor.Y + e.OffsetY);
 
-                if (Editor != null && (EnablePreview || EnableSnapping))
+                if (!EnableHitTesting)
                 {
-                    // Look for a potential connector
-                    FrameworkElement? connector = GetPotentialConnector(Editor, TargetAnchor, AllowOnlyConnectors);
+                    return;
+                }
 
-                    // Update the connector's anchor and snap to it if snapping is enabled
-                    if (EnableSnapping && connector is Connector target)
-                    {
-                        target.UpdateAnchor();
-                        TargetAnchor = target.Anchor;
-                    }
+                // Look for a potential connector
+                FrameworkElement? target = FindConnectionTarget(TargetAnchor);
 
-                    // If it's not the same connector
-                    if (connector != _previousConnector)
-                    {
-                        if (_previousConnector != null)
-                        {
-                            SetIsOverElement(_previousConnector, false);
-                        }
+                // Update the connector's anchor and snap to it, if snapping is enabled
+                if (EnableSnapping && target is Connector connector)
+                {
+                    connector.UpdateAnchor();
+                    TargetAnchor = connector.Anchor;
+                }
 
-                        // And we have a connector
-                        if (connector != null)
-                        {
-                            SetIsOverElement(connector, true);
-                        }
+                SetConnectionTarget(target);
 
-                        // Update the preview target if enabled
-                        if (EnablePreview)
-                        {
-                            PreviewTarget = connector?.DataContext;
-                        }
-
-                        _previousConnector = connector;
-                    }
+                // Update the preview target if enabled
+                if (EnablePreview)
+                {
+                    PreviewTarget = target?.DataContext;
                 }
             }
         }
@@ -326,11 +325,7 @@ namespace Nodify
                 e.Handled = true;
                 IsVisible = false;
 
-                if (_previousConnector != null)
-                {
-                    SetIsOverElement(_previousConnector, false);
-                    _previousConnector = null;
-                }
+                SetConnectionTarget(null);
 
                 if (!e.Canceled)
                 {
@@ -350,15 +345,61 @@ namespace Nodify
             }
         }
 
+        /// <summary>
+        /// Sets the connection target and updates the visual state of the target element.
+        /// </summary>
+        private void SetConnectionTarget(FrameworkElement? target)
+        {
+            if (target == _connectionTarget)
+            {
+                return;
+            }
+
+            if (_connectionTarget != null)
+            {
+                SetIsOverElement(_connectionTarget, false);
+            }
+
+            if (target != null)
+            {
+                SetIsOverElement(target, true);
+            }
+
+            _connectionTarget = target;
+        }
+
+        /// <summary>
+        /// Searches for a potential <see cref="Connector"/> or <see cref="ItemContainer"/> at the specified position within the editor.
+        /// </summary>
+        public FrameworkElement? FindConnectionTarget(Point position)
+        {
+            if (Editor != null)
+            {
+                return GetPotentialConnector(Editor, position, AllowOnlyConnectors);
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Helpers
 
-        /// <summary>Searches for a potential connector prioritizing <see cref="Connector"/>s</summary>
-        /// <param name="editor">The editor to scan for connectors or item containers.</param>
-        /// <param name="allowOnlyConnectors">Will also look for <see cref="ItemContainer"/>s if false.</param>
-        /// <param name="position">A position in the editor to verify intersections.</param>
-        /// <returns>A connector, an item container, the editor or null.</returns>
+        /// <summary>
+        /// Searches for a potential <see cref="Connector"/> or <see cref="ItemContainer"/> at the specified position within the editor.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> to scan for connectors or item containers.</param>
+        /// <param name="position">The position in the editor to check for intersections.</param>
+        /// <param name="allowOnlyConnectors">
+        /// If true, only <see cref="Connector"/>s are considered; otherwise, the method will also check for <see cref="ItemContainer"/>s.
+        /// </param>
+        /// <returns>
+        /// Returns one of the following, depending on what is found at the specified position:
+        /// <br /> - A <see cref="Connector"/> if one is present.
+        /// <br /> - An <see cref="ItemContainer"/> if <paramref name="allowOnlyConnectors"/> is false and a <see cref="Connector"/> is not found.
+        /// <br /> - The provided <see cref="NodifyEditor"/> itself if neither a <see cref="Connector"/> nor an <see cref="ItemContainer" /> is found, and <paramref name="allowOnlyConnectors"/> is true.
+        /// <br /> - Null if no valid element is identified at the specified position.
+        /// </returns>
         internal static FrameworkElement? GetPotentialConnector(NodifyEditor editor, Point position, bool allowOnlyConnectors)
         {
             Connector? connector = editor.ItemsHost.GetElementAtPosition<Connector>(position);
@@ -374,6 +415,18 @@ namespace Nodify
 
             return editor;
         }
+
+        /// <summary>
+        /// Searches for a potential <see cref="Connector"/> or <see cref="ItemContainer"/> at the specified position,
+        /// automatically determining whether to prioritize connectors based on editor settings.
+        /// </summary>
+        /// <param name="editor">The <see cref="NodifyEditor"/> to scan.</param>
+        /// <param name="position">The position in the editor to check for intersections.</param>
+        /// <returns>
+        /// Returns a <see cref="Connector"/>, an <see cref="ItemContainer"/>, the <see cref="NodifyEditor"/>, or null.
+        /// </returns>
+        internal static FrameworkElement? GetPotentialConnector(NodifyEditor editor, Point position)
+            => GetPotentialConnector(editor, position, GetAllowOnlyConnectorsAttached(editor));
 
         #endregion
     }

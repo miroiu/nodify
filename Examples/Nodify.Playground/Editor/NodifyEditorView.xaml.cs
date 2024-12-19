@@ -1,4 +1,5 @@
 ﻿using Nodify.Events;
+using Nodify.Interactivity;
 using System.Windows.Controls;
 
 namespace Nodify.Playground
@@ -10,6 +11,11 @@ namespace Nodify.Playground
         public NodifyEditorView()
         {
             InitializeComponent();
+        }
+
+        static NodifyEditorView()
+        {
+            InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new ReconnectingConnectors(elem));
         }
 
         private void Minimap_Zoom(object sender, ZoomEventArgs e)

@@ -109,5 +109,25 @@ namespace Nodify.Playground
 
             nodes[0].Graph.Nodes.Add(comment);
         }
+
+        /// <summary>
+        /// Rewires all connections from the source connector to the target connector if possible.
+        /// </summary>
+        /// <remarks>The source must be an input connector.</remarks>
+        public void Rewire(ConnectorViewModel source, ConnectorViewModel target)
+        {
+            if (source == target || source.Flow != ConnectorFlow.Input)
+                return;
+
+            var connectionsToRewire = source.Connections.ToList();
+            foreach (var connection in connectionsToRewire)
+            {
+                if (CanAddConnection(connection.Output, target))
+                {
+                    source.Node.Graph.Connections.Remove(connection);
+                    AddConnection(connection.Output, target);
+                }
+            }
+        }
     }
 }
