@@ -36,9 +36,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseMove(MouseEventArgs e)
             {
-                Vector thumbOffset = e.GetPosition(Element.Thumb) - new Point(Element.Thumb.ActualWidth / 2, Element.Thumb.ActualHeight / 2);
-                Point editorPosition = Element.Anchor + thumbOffset;
-
+                Point editorPosition = Element.GetLocationInsideEditor(e);  // could also use Element.Editor.MouseLocation
                 Element.UpdatePendingConnection(editorPosition);
             }
         }

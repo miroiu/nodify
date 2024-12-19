@@ -232,41 +232,6 @@ namespace Nodify.Playground
                     "Auto panning tick rate: ",
                     "How often is the new position calculated in milliseconds. Disable and enable auto panning for this to have effect."),
                 new ProxySettingViewModel<bool>(
-                    () => Instance.AllowMinimapPanningCancellation,
-                    val => Instance.AllowMinimapPanningCancellation = val,
-                    "Allow minimap panning cancellation: ",
-                    "Right click or escape to cancel panning."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowCuttingCancellation,
-                    val => Instance.AllowCuttingCancellation = val,
-                    "Allow cutting cancellation: ",
-                    "Right click to cancel cutting."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowPushItemsCancellation,
-                    val => Instance.AllowPushItemsCancellation = val,
-                    "Allow push nodes cancellation: ",
-                    "Right click to cancel pushing nodes."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowPanningCancellation,
-                    val => Instance.AllowPanningCancellation= val,
-                    "Allow panning cancellation: ",
-                    "Press Escape to cancel panning."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowSelectionCancellation,
-                    val => Instance.AllowSelectionCancellation = val,
-                    "Allow selection cancellation: ",
-                    "Press Escape to cancel selecting."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowDraggingCancellation,
-                    val => Instance.AllowDraggingCancellation = val,
-                    "Allow dragging cancellation: ",
-                    "Right click to cancel dragging."),
-                new ProxySettingViewModel<bool>(
-                    () => Instance.AllowPendingConnectionCancellation,
-                    val => Instance.AllowPendingConnectionCancellation = val,
-                    "Allow pending connection cancellation: ",
-                    "Right click to cancel pending connection."),
-                new ProxySettingViewModel<bool>(
                     () => Instance.EnableSnappingCorrection,
                     val => Instance.EnableSnappingCorrection = val,
                     "Enable snapping correction: ",
@@ -276,6 +241,11 @@ namespace Nodify.Playground
                     val => Instance.EnableCuttingLinePreview = val,
                     "Enable cutting line preview: ",
                     "Applies custom connection style on intersection (hurts performance due to hit testing)."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.EnablePendingConnectionHitTesting,
+                    val => Instance.EnablePendingConnectionHitTesting = val,
+                    "Enable pending connection hit testing: ",
+                    "Disable to improve performance."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableConnectorOptimizations,
                     val => Instance.EnableConnectorOptimizations = val,
@@ -316,6 +286,41 @@ namespace Nodify.Playground
                     val => Instance.FitToScreenExtentMargin = val,
                     "Fit to screen extent margin: ",
                     "Adds some margin to the nodes extent when fit to screen"),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowMinimapPanningCancellation,
+                    val => Instance.AllowMinimapPanningCancellation = val,
+                    "Allow minimap panning cancellation: ",
+                    "Right click or escape to cancel panning."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowCuttingCancellation,
+                    val => Instance.AllowCuttingCancellation = val,
+                    "Allow cutting cancellation: ",
+                    "Right click to cancel cutting."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPushItemsCancellation,
+                    val => Instance.AllowPushItemsCancellation = val,
+                    "Allow push nodes cancellation: ",
+                    "Right click to cancel pushing nodes."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPanningCancellation,
+                    val => Instance.AllowPanningCancellation= val,
+                    "Allow panning cancellation: ",
+                    "Press Escape to cancel panning."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowSelectionCancellation,
+                    val => Instance.AllowSelectionCancellation = val,
+                    "Allow selection cancellation: ",
+                    "Press Escape to cancel selecting."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowDraggingCancellation,
+                    val => Instance.AllowDraggingCancellation = val,
+                    "Allow dragging cancellation: ",
+                    "Right click to cancel dragging."),
+                new ProxySettingViewModel<bool>(
+                    () => Instance.AllowPendingConnectionCancellation,
+                    val => Instance.AllowPendingConnectionCancellation = val,
+                    "Allow pending connection cancellation: ",
+                    "Right click to cancel pending connection."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableToggledCutting,
                     val => Instance.EnableToggledCutting = val,
@@ -741,6 +746,12 @@ namespace Nodify.Playground
         {
             get => NodifyEditor.EnableCuttingLinePreview;
             set => NodifyEditor.EnableCuttingLinePreview = value;
+        }
+
+        public bool EnablePendingConnectionHitTesting
+        {
+            get => PendingConnection.EnableHitTesting;
+            set => PendingConnection.EnableHitTesting = value;
         }
 
         public bool EnableConnectorOptimizations

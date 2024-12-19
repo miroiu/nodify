@@ -130,12 +130,12 @@ namespace Nodify
         /// <summary>
         /// Gets the <see cref="ItemContainer"/> that contains this <see cref="Connector"/>.
         /// </summary>
-        protected ItemContainer? Container { get; private set; }
+        public ItemContainer? Container { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
         /// </summary>
-        protected internal NodifyEditor? Editor { get; private set; }
+        public NodifyEditor? Editor { get; private set; }
 
         /// <summary>
         /// Gets or sets the safe zone outside the editor's viewport that will not trigger optimizations.
@@ -371,7 +371,7 @@ namespace Nodify
         }
 
         /// <inheritdoc />
-        protected override void OnKeyDown(KeyEventArgs e) 
+        protected override void OnKeyDown(KeyEventArgs e)
             => InputProcessor.ProcessEvent(e);
 
         /// <summary>
@@ -490,8 +490,8 @@ namespace Nodify
                 return;
             }
 
-            FrameworkElement? elem = Editor != null ? PendingConnection.GetPotentialConnector(Editor, _pendingConnectionEndPosition, PendingConnection.GetAllowOnlyConnectorsAttached(Editor)) : null;
-            EndConnecting(elem);
+            FrameworkElement? elem = FindConnectionTarget(_pendingConnectionEndPosition);
+            EndConnecting(elem?.DataContext);
         }
 
         /// <summary>
@@ -500,9 +500,9 @@ namespace Nodify
         /// <param name="connector">The connector to use as the connection target.</param>
         /// <remarks>This method has no effect if there's no pending connection.</remarks>
         public void EndConnecting(Connector connector)
-            => EndConnecting((FrameworkElement)connector);
+            => EndConnecting(connector.DataContext);
 
-        private void EndConnecting(FrameworkElement? elem)
+        private void EndConnecting(object? targetDataContext)
         {
             if (!IsPendingConnection)
             {
@@ -511,7 +511,7 @@ namespace Nodify
 
             var args = new PendingConnectionEventArgs(DataContext)
             {
-                TargetConnector = elem?.DataContext,
+                TargetConnector = targetDataContext,
                 RoutedEvent = PendingConnectionCompletedEvent,
                 Anchor = Anchor,
                 Source = this
@@ -548,6 +548,47 @@ namespace Nodify
             {
                 DisconnectCommand.Execute(connector);
             }
+        }
+
+        /// <summary>
+        /// Translates the event location to graph space coordinates (relative to the <see cref="NodifyEditor.ItemsHost" />).
+        /// </summary>
+        /// <param name="e">The mouse event.</param>
+        /// <remarks>
+        /// Call <see cref="UpdateAnchor()"/> before calling this method if the <see cref="Anchor"/> is not up-to-date.
+        /// </remarks>
+        internal Point GetLocationInsideEditor(MouseEventArgs e)
+        {
+            Vector thumbOffset = e.GetPosition(Thumb) - new Point(Thumb.ActualWidth / 2, Thumb.ActualHeight / 2);
+            return Anchor + thumbOffset;
+        }
+
+        /// <summary>
+        /// Searches for a <see cref="Connector"/> at the specified position.
+        /// </summary>
+        /// <param name="position">The position in the editor to check for a connector.</param>
+        public Connector? FindTargetConnector(Point position)
+        {
+            if (Editor != null)
+            {
+                return (Connector?)PendingConnection.GetPotentialConnector(Editor, position, true);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for a potential <see cref="Connector"/> or <see cref="ItemContainer"/> at the specified position within the editor.
+        /// </summary>
+        /// <param name="position">The position in the editor to check for a potential connection target.</param>
+        public FrameworkElement? FindConnectionTarget(Point position)
+        {
+            if (Editor != null)
+            {
+                return PendingConnection.GetPotentialConnector(Editor, position);
+            }
+
+            return null;
         }
 
         #endregion
