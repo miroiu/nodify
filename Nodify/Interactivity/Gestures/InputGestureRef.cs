@@ -29,5 +29,11 @@ namespace Nodify.Interactivity
 
         public static implicit operator InputGestureRef(MultiGesture gesture)
             => new InputGestureRef { Value = gesture };
+
+        /// <summary>
+        /// Unbinds the current gesture.
+        /// </summary>
+        public void Unbind()
+            => Value = MultiGesture.None;
     }
 }

@@ -9,7 +9,7 @@ namespace Nodify.Calculator
         {
             InitializeComponent();
 
-            EditorGestures.Mappings.Editor.Cutting.Value = MultiGesture.None;
+            EditorGestures.Mappings.Editor.Cutting.Unbind();
         }
     }
 }

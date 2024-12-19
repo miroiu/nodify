@@ -26,25 +26,25 @@ namespace Nodify.Playground
             switch (inputMode)
             {
                 case EditorInputMode.PanOnly:
-                    mappings.Editor.Selection.Apply(EditorGestures.SelectionGestures.None);
-                    mappings.Editor.Cutting.Value = MultiGesture.None;
-                    mappings.ItemContainer.Selection.Apply(EditorGestures.SelectionGestures.None);
-                    mappings.ItemContainer.Drag.Value = MultiGesture.None;
-                    mappings.Connector.Connect.Value = MultiGesture.None;
+                    mappings.Editor.Selection.Unbind();
+                    mappings.Editor.Cutting.Unbind();
+                    mappings.ItemContainer.Selection.Unbind();
+                    mappings.ItemContainer.Drag.Unbind();
+                    mappings.Connector.Connect.Unbind();
                     break;
                 case EditorInputMode.SelectOnly:
-                    mappings.Editor.Pan.Value = MultiGesture.None;
-                    mappings.Editor.Cutting.Value = MultiGesture.None;
-                    mappings.ItemContainer.Drag.Value = MultiGesture.None;
-                    mappings.Connector.Connect.Value = MultiGesture.None;
+                    mappings.Editor.Pan.Unbind();
+                    mappings.Editor.Cutting.Unbind();
+                    mappings.ItemContainer.Drag.Unbind();
+                    mappings.Connector.Connect.Unbind();
                     break;
                 case EditorInputMode.CutOnly:
                     mappings.Editor.Cutting.Value = new Interactivity.MouseGesture(MouseAction.LeftClick);
-                    mappings.Editor.Selection.Apply(EditorGestures.SelectionGestures.None);
-                    mappings.Editor.Pan.Value = MultiGesture.None;
-                    mappings.ItemContainer.Selection.Apply(EditorGestures.SelectionGestures.None);
-                    mappings.ItemContainer.Drag.Value = MultiGesture.None;
-                    mappings.Connector.Connect.Value = MultiGesture.None;
+                    mappings.Editor.Selection.Unbind();
+                    mappings.Editor.Pan.Unbind();
+                    mappings.ItemContainer.Selection.Unbind();
+                    mappings.ItemContainer.Drag.Unbind();
+                    mappings.Connector.Connect.Unbind();
                     break;
                 case EditorInputMode.Default:
                     break;

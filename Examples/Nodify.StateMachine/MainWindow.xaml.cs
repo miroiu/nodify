@@ -14,7 +14,7 @@ namespace Nodify.StateMachine
             ConnectorState.EnableToggledConnectingMode = true;
             NodifyEditor.EnableCuttingLinePreview = true;
 
-            EditorGestures.Mappings.Connection.Disconnect.Value = MultiGesture.None;
+            EditorGestures.Mappings.Connection.Disconnect.Unbind();
             EditorGestures.Mappings.Editor.ZoomModifierKey = ModifierKeys.Control;
             EditorGestures.Mappings.Editor.PanWithMouseWheel = true;
         }
