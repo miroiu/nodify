@@ -60,6 +60,8 @@ namespace Nodify.Interactivity
         /// </summary>
         protected virtual bool IsToggle { get; }
 
+        public override bool RequiresInputCapture => _interactionState != InteractionState.Ready && IsToggle;
+
         /// <summary>
         /// Gets or sets the UI element used to calculate the mouse position during the drag interaction.
         /// </summary>
@@ -116,6 +118,18 @@ namespace Nodify.Interactivity
 
         #region Interaction logic
 
+        // Begin the interaction on gesture press
+        private bool TryBeginDragging(InputEventArgs e)
+        {
+            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            {
+                BeginDrag(e);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryEndDragging(InputEventArgs e)
         {
             if (IsToggle && _interactionState == InteractionState.InProgress)
@@ -133,18 +147,6 @@ namespace Nodify.Interactivity
             {
                 _interactionState = InteractionState.Ending;
                 HandleEvent(e);
-                return true;
-            }
-
-            return false;
-        }
-
-        // Begin the interaction on gesture press
-        private bool TryBeginDragging(InputEventArgs e)
-        {
-            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
-            {
-                BeginDrag(e);
                 return true;
             }
 
@@ -196,21 +198,18 @@ namespace Nodify.Interactivity
             }
         }
 
-        private void BeginDrag(InputEventArgs e)
+        internal void BeginDrag(InputEventArgs e)
         {
             // Avoid stealing mouse capture from other elements
-            if (IsInputCaptured(e))
+            if (CanCaptureInput(e))
             {
                 _interactionState = InteractionState.InProgress;
+                _initialPosition = GetInitialPosition(e);
+
                 HandleEvent(e); // Handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
                 OnBegin(e);
 
                 e.Handled = true;
-
-                if (e is MouseEventArgs me)
-                {
-                    _initialPosition = me.GetPosition(PositionElement);
-                }
 
                 Element.Focus();
                 CaptureInput(e);
@@ -256,7 +255,17 @@ namespace Nodify.Interactivity
 
         #endregion
 
-        protected virtual bool IsInputCaptured(InputEventArgs e)
+        protected virtual Point GetInitialPosition(InputEventArgs e)
+        {
+            if (e is MouseEventArgs me)
+            {
+                return me.GetPosition(PositionElement);
+            }
+
+            return default;
+        }
+
+        protected virtual bool CanCaptureInput(InputEventArgs e)
             => Mouse.Captured == null || Element.IsMouseCaptured;
 
         protected virtual void CaptureInput(InputEventArgs e)

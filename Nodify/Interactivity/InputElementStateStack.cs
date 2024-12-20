@@ -18,6 +18,8 @@ namespace Nodify.Interactivity
         /// </summary>
         protected TElement Element { get; }
 
+        public bool RequiresInputCapture => State.RequiresInputCapture;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InputElementStateStack{TElement}"/> class.
         /// </summary>

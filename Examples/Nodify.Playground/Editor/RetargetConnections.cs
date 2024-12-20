@@ -6,13 +6,34 @@ using System.Windows.Input;
 namespace Nodify.Playground
 {
     /// <summary>
+    /// Connecting state that prevents connecting when <see cref="RetargetConnections"/> is in progress.
+    /// </summary>
+    public class CustomConnecting : ConnectorState.Connecting
+    {
+        protected override bool CanBegin => !RetargetConnections.InProgress;
+
+        public CustomConnecting(Connector connector) : base(connector)
+        {
+        }
+    }
+
+    /// <summary>
     /// Hold CTRL+LeftClick on a connector to start reconnecting it.
     /// </summary>
     public class RetargetConnections : DragState<Connector>
     {
-        public static InputGestureRef Reconnect { get; } = new Interactivity.MouseGesture(MouseAction.LeftClick, ModifierKeys.Control);
+        public static InputGestureRef Reconnect { get; } = new Interactivity.MouseGesture(MouseAction.LeftClick, ModifierKeys.Control)
+        {
+            IgnoreModifierKeysOnRelease = true
+        };
+
+        /// <summary>
+        /// Used to prevent connecting when <see cref="EditorSettings.EnableStickyConnectors"/> is enabled.
+        /// </summary>
+        public static bool InProgress { get; private set; }
 
         protected override bool CanBegin => ViewModel.IsConnected && ViewModel.Flow == ConnectorFlow.Input;
+        protected override bool IsToggle => EditorSettings.Instance.EnableStickyConnectors;
 
         private ConnectorViewModel ViewModel => (ConnectorViewModel)Element.DataContext;
         private Vector _connectorOffset;
@@ -20,6 +41,7 @@ namespace Nodify.Playground
 
         public RetargetConnections(Connector element) : base(element, Reconnect, EditorGestures.Mappings.Connector.CancelAction)
         {
+            PositionElement = Element.Editor ?? (IInputElement)Element;
         }
 
         protected override void OnBegin(InputEventArgs e)
@@ -27,6 +49,8 @@ namespace Nodify.Playground
             _connectorOffset = ViewModel.Node.Orientation == Orientation.Horizontal
                 ? (Vector)EditorSettings.Instance.ConnectionTargetOffset.Value
                 : new Vector(EditorSettings.Instance.ConnectionTargetOffset.Value.Y, EditorSettings.Instance.ConnectionTargetOffset.Value.X);
+
+            InProgress = true;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -70,6 +94,7 @@ namespace Nodify.Playground
 
             // Reset the position of connections that were not rewired
             Element.UpdateAnchor();
+            InProgress = false;
         }
 
         protected override void OnCancel(InputEventArgs e)
@@ -78,6 +103,7 @@ namespace Nodify.Playground
 
             // Reset the position of connections that were not rewired
             Element.UpdateAnchor();
+            InProgress = false;
         }
 
         /// <summary>

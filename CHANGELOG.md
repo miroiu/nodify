@@ -11,13 +11,13 @@
 >	- Renamed PushItems to UpdatePushedArea and StartPushingItems to BeginPushingItems in NodifyEditor
 >	- Renamed UnselectAllConnection to UnselectAllConnections in NodifyEditor
 >	- Removed DragStarted, DragDelta and DragCompleted routed events from ItemContainer
->	- Replaced the System.Windows.Input.MouseGesture with Nodify.MouseGesture
+>	- Replaced the System.Windows.Input.MouseGesture with Nodify.Interactivity.MouseGesture for default EditorGesture mappings
 >	- Removed State, GetInitialState, PushState, PopState and PopAllStates from NodifyEditor and ItemContainer
 >	- Replaced EditorState and ContainerState with InputElementState
 >	- Moved AllowCuttingCancellation from CuttingLine to NodifyEditor
 >	- Moved AllowDraggingCancellation from ItemContainer to NodifyEditor
 >	- Moved EditorGestures under the Nodify.Interactivity namespace
->	- Moved Editor events under the Nodify.Events namespace
+>	- Moved editor events under the Nodify.Events namespace
 > - Features:
 >	- Added BeginPanning, UpdatePanning, EndPanning, CancelPanning and AllowPanningCancellation to NodifyEditor and Minimap
 >	- Added MouseLocation, ZoomAtPosition and GetLocationInsideMinimap to Minimap
@@ -34,8 +34,8 @@
 >	- Added FindTargetConnector and FindConnectionTarget methods to Connector
 >	- Added a custom MouseGesture with support for key combinations
 >	- Added InputProcessor to NodifyEditor, ItemContainer, Connector, BaseConnection and Minimap, enabling the extension of controls with custom states
->	- Added DragState to simplify creating click-and-drag operations, with support for initiating and completing them using the keyboard
->	- Added InputElementStateStack to manage transitions between states in UI elements
+>	- Added DragState to simplify creating click-and-drag interactions, with support for initiating and completing them using the keyboard
+>	- Added InputElementStateStack, InputElementStateStack.DragState and InputElementStateStack.InputElementState to manage transitions between states in UI elements
 >	- Added InputProcessor.Shared to enable the addition of global input handlers
 >	- Move the viewport to the mouse position when zooming on the Minimap if ResizeToViewport is false
 >	- Added SplitAtLocation and Remove methods to BaseConnection
@@ -43,6 +43,7 @@
 >	- Added AllowZoomingWhilePanning, AllowZoomingWhileSelecting, AllowZoomingWhileCutting and AllowZoomingWhilePushingItems to EditorState
 >	- Added EnableToggledSelectingMode, EnableToggledPanningMode, EnableToggledPushingItemsMode and EnableToggledCuttingMode to EditorState
 >	- Added MinimapState.EnableToggledPanningMode
+>	- Added ContainerState.EnableToggledDraggingMode
 >	- Added Unbind to InputGestureRef and EditorGestures.SelectionGestures
 >	- Added EnableHitTesting to PendingConnection
 > - Bugfixes:
@@ -54,7 +55,8 @@
 >	- Fixed an issue where controls would capture the mouse unnecessarily; they now capture it only in response to a defined gesture
 >	- Fixed an issue where the minimap could update the viewport without having the mouse captured
 >	- Fixed ItemContainer.Select and NodifyEditor.SelectArea to clear the existing selection and select the containers within the same transaction
->	- Fixed an issue where editor operations failed to cancel upon losing mouse capture
+>	- Fixed an issue where editor interactions failed to cancel upon losing mouse capture
+>	- Fixed an issue where selecting a new connection would not clear the previous selection within the same transaction
 	
 #### **Version 6.6.0**
 

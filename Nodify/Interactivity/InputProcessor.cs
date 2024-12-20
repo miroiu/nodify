@@ -16,6 +16,15 @@ namespace Nodify.Interactivity
         public bool ProcessHandledEvents { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether the processor has ongoing interactions that require input capture to remain active.
+        /// </summary>
+        /// <remarks>
+        /// This property can be used to determine whether it is safe to release mouse capture, especially during toggled interactions. <br />
+        /// Toggled interactions usually involve two steps, and it is important to keep the input capture active until the interaction is completed.
+        /// </remarks>
+        public bool RequiresInputCapture { get; private set; }
+
+        /// <summary>
         /// Adds an input handler to the processor.
         /// </summary>
         /// <param name="handler">The input handler to add.</param>
@@ -41,11 +50,14 @@ namespace Nodify.Interactivity
         /// <param name="e">The input event arguments to process.</param>
         public void ProcessEvent(InputEventArgs e)
         {
+            RequiresInputCapture = false;
+
             if (ProcessHandledEvents)
             {
                 foreach (var handler in _handlers)
                 {
                     handler.HandleEvent(e);
+                    RequiresInputCapture |= handler.RequiresInputCapture;
                 }
             }
             else
@@ -58,6 +70,7 @@ namespace Nodify.Interactivity
                     }
 
                     handler.HandleEvent(e);
+                    RequiresInputCapture |= handler.RequiresInputCapture;
                 }
             }
         }

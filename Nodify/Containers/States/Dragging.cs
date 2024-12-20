@@ -9,6 +9,7 @@ namespace Nodify.Interactivity
         internal sealed class Dragging : InputElementStateStack<ItemContainer>.DragState
         {
             protected override bool CanCancel => NodifyEditor.AllowDraggingCancellation;
+            protected override bool IsToggle => EnableToggledDraggingMode;
 
             private Point _previousMousePosition;
 
@@ -20,13 +21,12 @@ namespace Nodify.Interactivity
                 PositionElement = Element.Editor;
             }
 
-            protected override void OnBegin(InputElementStateStack<ItemContainer>.IInputElementState? from)
+            protected override void OnBegin(InputEventArgs e)
             {
                 _previousMousePosition = Element.Editor.MouseLocation;
                 Element.BeginDragging();
             }
 
-            /// <inheritdoc />
             protected override void OnMouseMove(MouseEventArgs e)
             {
                 Element.UpdateDragging(Element.Editor.MouseLocation - _previousMousePosition);

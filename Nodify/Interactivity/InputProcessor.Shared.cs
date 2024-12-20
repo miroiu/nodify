@@ -87,6 +87,17 @@ namespace Nodify.Interactivity
                 => _handlerFactories.RemoveAll(x => x.Key == typeof(THandler));
 
             /// <summary>
+            /// Replaces the registered factory method with another one of the same type.
+            /// </summary>
+            /// <typeparam name="THandler">The type of the input handler to replace.</typeparam>
+            public static void ReplaceHandlerFactory<THandler>(Func<TElement, THandler> factory)
+                where THandler : IInputHandler
+            {
+                int index = _handlerFactories.FindIndex(x => x.Key == typeof(THandler));
+                _handlerFactories[index] = new KeyValuePair<Type, Func<TElement, IInputHandler>>(typeof(THandler), elem => factory(elem));
+            }
+
+            /// <summary>
             /// Clears all registered handler factories, effectively removing all shared input handlers.
             /// </summary>
             public static void ClearHandlerFactories()

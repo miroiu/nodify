@@ -342,6 +342,11 @@ namespace Nodify.Playground
                     "Enable toggled selecting mode: ",
                     "The interaction will be completed in two steps using the same gesture to start and end."),
                 new ProxySettingViewModel<bool>(
+                    () => Instance.EnableToggledDragging,
+                    val => Instance.EnableToggledDragging = val,
+                    "Enable toggled dragging mode: ",
+                    "The interaction will be completed in two steps using the same gesture to start and end."),
+                new ProxySettingViewModel<bool>(
                     () => Instance.EnableMinimapToggledPanning,
                     val => Instance.EnableMinimapToggledPanning = val,
                     "Enable minimap toggled panning mode: ",
@@ -830,6 +835,12 @@ namespace Nodify.Playground
         {
             get => EditorState.EnableToggledSelectingMode;
             set => EditorState.EnableToggledSelectingMode = value;
+        }
+
+        public bool EnableToggledDragging
+        {
+            get => ContainerState.EnableToggledDraggingMode;
+            set => ContainerState.EnableToggledDraggingMode = value;
         }
 
         public bool EnableMinimapToggledPanning
