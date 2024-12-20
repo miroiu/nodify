@@ -255,6 +255,15 @@ namespace Nodify.Interactivity
 
         #endregion
 
+        /// <summary>
+        /// Retrieves the initial position of the input event relative to the <see cref="PositionElement"/>.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
+        /// <remarks>
+        /// This position is used to calculate the drag distance, to determine whether 
+        /// the context menu can appear or if the action is considered a drag operation. The behavior is influenced 
+        /// by the <see cref="NodifyEditor.MouseActionSuppressionThreshold"/>.
+        /// </remarks>
         protected virtual Point GetInitialPosition(InputEventArgs e)
         {
             if (e is MouseEventArgs me)
@@ -265,16 +274,27 @@ namespace Nodify.Interactivity
             return default;
         }
 
+        /// <summary>
+        /// Determines whether input capture can be acquired for the <see cref="InputElementState{TElement}.Element" />.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
+        /// <remarks>Must return true if the input is already captured by the current element.</remarks>
         protected virtual bool CanCaptureInput(InputEventArgs e)
             => Mouse.Captured == null || Element.IsMouseCaptured;
 
+        /// <summary>
+        /// Captures input for the element.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
         protected virtual void CaptureInput(InputEventArgs e)
             => Element.CaptureMouse();
 
+        /// <summary>
+        /// Determines whether input capture has been lost.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
         protected virtual bool IsInputCaptureLost(InputEventArgs e)
-        {
-            return e.RoutedEvent == UIElement.LostMouseCaptureEvent;
-        }
+            => e.RoutedEvent == UIElement.LostMouseCaptureEvent;
 
         /// <summary>
         /// Determines if the given input event represents the release of an input gesture.
