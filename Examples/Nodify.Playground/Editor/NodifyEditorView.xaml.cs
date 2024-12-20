@@ -15,7 +15,7 @@ namespace Nodify.Playground
 
         static NodifyEditorView()
         {
-            InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new ReconnectingConnectors(elem));
+            InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new RetargetConnections(elem));
         }
 
         private void Minimap_Zoom(object sender, ZoomEventArgs e)

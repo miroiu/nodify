@@ -8,7 +8,7 @@ namespace Nodify.Playground
     /// <summary>
     /// Hold CTRL+LeftClick on a connector to start reconnecting it.
     /// </summary>
-    public class ReconnectingConnectors : DragState<Connector>
+    public class RetargetConnections : DragState<Connector>
     {
         public static InputGestureRef Reconnect { get; } = new Interactivity.MouseGesture(MouseAction.LeftClick, ModifierKeys.Control);
 
@@ -18,7 +18,7 @@ namespace Nodify.Playground
         private Vector _connectorOffset;
         private Connector? _targetConnector;
 
-        public ReconnectingConnectors(Connector element) : base(element, Reconnect, EditorGestures.Mappings.Connector.CancelAction)
+        public RetargetConnections(Connector element) : base(element, Reconnect, EditorGestures.Mappings.Connector.CancelAction)
         {
         }
 
