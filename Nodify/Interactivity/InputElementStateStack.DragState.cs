@@ -8,45 +8,29 @@ namespace Nodify.Interactivity
         /// <summary>
         /// Represents a specialized state for handling drag interactions.
         /// </summary>
-        public abstract class DragState : InputElementState, IInputHandler
+        public abstract class DragState : DragState<TElement>, IInputElementState, IInputHandler
         {
             /// <summary>
-            /// The gesture used to exit the drag state.
+            /// Gets the state stack managing this state.
             /// </summary>
-            protected InputGesture ExitGesture { get; }
+            public InputElementStateStack<TElement> Stack { get; }
 
-            /// <summary>
-            /// The gesture used to cancel the drag state, if supported.
-            /// </summary>
-            protected InputGesture? CancelGesture { get; }
-
-            /// <summary>
-            /// Gets or sets whether the element has a context menu.
-            /// </summary>
-            protected virtual bool HasContextMenu => Element.ContextMenu != null;
-
-            /// <summary>
-            /// Gets or sets whether the drag interaction can be canceled.
-            /// </summary>
-            protected virtual bool CanCancel { get; } = true;
-
-            /// <summary>
-            /// Gets or sets the element used for position calculations.
-            /// </summary>
-            protected IInputElement PositionElement { get; set; }
-
-            private bool _canReceiveInput;
-            private Point _initialPosition;
+            private readonly InputEventArgs _mouseEventArgs = new MouseEventArgs(Mouse.PrimaryDevice, 0, Stylus.CurrentStylusDevice)
+            {
+                RoutedEvent = NodifyEditor.ViewportUpdatedEvent  // dummy event
+            };
 
             /// <summary>
             /// Initializes a new instance of the <see cref="DragState"/> class.
             /// </summary>
             /// <param name="stack">The state stack managing this state.</param>
             /// <param name="exitGesture">The gesture used to exit the drag state.</param>
-            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture) : base(stack)
+            /// <param name="cancelGesture">The gesture used to cancel the drag state.</param>
+            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture, InputGesture cancelGesture)
+                : base(stack.Element, exitGesture, cancelGesture)
             {
-                ExitGesture = exitGesture;
                 PositionElement = stack.Element;
+                Stack = stack;
             }
 
             /// <summary>
@@ -54,140 +38,38 @@ namespace Nodify.Interactivity
             /// </summary>
             /// <param name="stack">The state stack managing this state.</param>
             /// <param name="exitGesture">The gesture used to exit the drag state.</param>
-            /// <param name="cancelGesture">The gesture used to cancel the drag state.</param>
-            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture, InputGesture cancelGesture)
-                : this(stack, exitGesture)
+            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture)
+                : base(stack.Element, exitGesture)
             {
-                CancelGesture = cancelGesture;
+                PositionElement = stack.Element;
+                Stack = stack;
             }
 
-            public sealed override void Enter(IInputElementState? from)
-            {
-                if (Mouse.Captured == null || Element.IsMouseCaptured)
-                {
-                    _initialPosition = new Point();
-                    _canReceiveInput = true;
-                    OnBegin(from);
+            public void Enter(IInputElementState? from)
+                => BeginDrag(_mouseEventArgs);
 
-                    Element.Focus();
-                    Element.CaptureMouse();
-                }
-            }
-
-            public sealed override void Exit()
-            {
-            }
-
-            void IInputHandler.HandleEvent(InputEventArgs e)
-            {
-                if (e is MouseEventArgs me && _initialPosition == new Point())
-                {
-                    _initialPosition = me.GetPosition(PositionElement);
-                }
-
-                if (_canReceiveInput && IsInputEventReleased(e) && ExitGesture.Matches(e.Source, e))
-                {
-                    EndDrag(e);
-                    return;
-                }
-
-                if (_canReceiveInput && (e.RoutedEvent == UIElement.LostMouseCaptureEvent || CanCancel && CancelGesture?.Matches(e.Source, e) is true && IsInputEventReleased(e)))
-                {
-                    CancelDrag(e);
-                    return;
-                }
-
-                if (_canReceiveInput)
-                {
-                    HandleEvent(e);
-                }
-            }
-
-            private void CancelDrag(InputEventArgs e)
-            {
-                _canReceiveInput = false;
-
-                HandleEvent(e);
-                OnCancel(e);
-
-                e.Handled = true;
-
-                PopState();
-            }
-
-            private void EndDrag(InputEventArgs e)
-            {
-                _canReceiveInput = false;
-
-                HandleEvent(e);
-
-                // Suppress the context menu if the mouse moved beyond the defined drag threshold
-                if (e is MouseButtonEventArgs mbe && mbe.ChangedButton == MouseButton.Right && HasContextMenu)
-                {
-                    double dragThreshold = NodifyEditor.MouseActionSuppressionThreshold * NodifyEditor.MouseActionSuppressionThreshold;
-                    double dragDistance = (mbe.GetPosition(PositionElement) - _initialPosition).LengthSquared;
-
-                    if (dragDistance > dragThreshold)
-                    {
-                        OnEnd(e);
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        OnCancel(e);
-                    }
-                }
-                else
-                {
-                    OnEnd(e);
-                    e.Handled = true;
-                }
-
-                PopState();
-            }
-
-            /// <summary>
-            /// Determines if the given input event represents the release of an input gesture.
-            /// </summary>
-            /// <param name="e">The input event to evaluate.</param>
-            /// <returns>True if the event represents the release of a gesture; otherwise, false.</returns>
-            protected virtual bool IsInputEventReleased(InputEventArgs e)
-            {
-                if (e is MouseButtonEventArgs mbe && mbe.ButtonState == MouseButtonState.Released)
-                    return true;
-
-                if (e is KeyEventArgs ke && ke.IsUp)
-                    return true;
-
-                if (e is MouseWheelEventArgs mwe && mwe.MiddleButton == MouseButtonState.Released)
-                    return true;
-
-                return false;
-            }
-
-            /// <summary>
-            /// Called when the drag interaction begins. Override to provide custom behavior.
-            /// </summary>
-            /// <param name="e">The input event that started the interaction.</param>
-            protected virtual void OnBegin(IInputElementState? from)
+            public void Exit()
             {
             }
 
             /// <summary>
-            /// Called when the drag interaction ends. Override to provide custom behavior.
+            /// Pushes a new state onto the stack.
             /// </summary>
-            /// <param name="e">The input event that ended the interaction.</param>
-            protected virtual void OnEnd(InputEventArgs e)
-            {
-            }
+            /// <param name="newState">The new state to push.</param>
+            public void PushState(IInputElementState newState)
+                => Stack.PushState(newState);
 
             /// <summary>
-            /// Called when the drag interaction is canceled. Override to provide custom behavior.
+            /// Pops the current state from the stack.
             /// </summary>
-            /// <param name="e">The input event that canceled the interaction.</param>
-            protected virtual void OnCancel(InputEventArgs e)
-            {
-            }
+            public void PopState()
+                => Stack.PopState();
+
+            protected override void OnCancel(InputEventArgs e)
+                => PopState();
+
+            protected override void OnEnd(InputEventArgs e)
+                => PopState();
         }
     }
 }

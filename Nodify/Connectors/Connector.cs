@@ -328,7 +328,7 @@ namespace Nodify
 
         #region Gesture Handling
 
-        protected InputProcessor InputProcessor { get; } = new InputProcessor { ProcessHandledEvents = true };
+        protected InputProcessor InputProcessor { get; } = new InputProcessor();
 
         /// <inheritdoc />
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -340,7 +340,7 @@ namespace Nodify
             InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
+            if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
@@ -364,7 +364,7 @@ namespace Nodify
             InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
-            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released && !IsToggledInteractionInProgress())
+            if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
@@ -373,14 +373,6 @@ namespace Nodify
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
             => InputProcessor.ProcessEvent(e);
-
-        /// <summary>
-        /// Determines whether any toggled interaction is currently in progress.
-        /// </summary>
-        protected virtual bool IsToggledInteractionInProgress()
-        {
-            return ConnectorState.EnableToggledConnectingMode && IsPendingConnection;
-        }
 
         #endregion
 

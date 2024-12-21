@@ -15,6 +15,7 @@ namespace Nodify.Playground
 
         static NodifyEditorView()
         {
+            InputProcessor.Shared<Connector>.ReplaceHandlerFactory<ConnectorState.Connecting>(elem => new CustomConnecting(elem));
             InputProcessor.Shared<Connector>.RegisterHandlerFactory(elem => new RetargetConnections(elem));
         }
 

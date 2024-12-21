@@ -116,8 +116,26 @@ namespace Nodify.Interactivity
 
         #region Interaction logic
 
+        // Begin the interaction on gesture press
+        private bool TryBeginDragging(InputEventArgs e)
+        {
+            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            {
+                BeginDrag(e);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryEndDragging(InputEventArgs e)
         {
+            if (IsInputCaptureLost(e))
+            {
+                EndDrag(e);
+                return true;
+            }
+
             if (IsToggle && _interactionState == InteractionState.InProgress)
             {
                 return TryDeferToggleInteractionEnd(e);
@@ -139,18 +157,6 @@ namespace Nodify.Interactivity
             return false;
         }
 
-        // Begin the interaction on gesture press
-        private bool TryBeginDragging(InputEventArgs e)
-        {
-            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
-            {
-                BeginDrag(e);
-                return true;
-            }
-
-            return false;
-        }
-
         // End the interaction on gesture release
         private bool TryEndInteraction(InputEventArgs e)
         {
@@ -166,7 +172,7 @@ namespace Nodify.Interactivity
         // Cancel the interaction
         private bool TryCancelDragging(InputEventArgs e)
         {
-            if (IsInputCaptureLost(e) || CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
+            if (CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
             {
                 CancelDrag(e);
                 return true;
@@ -196,21 +202,20 @@ namespace Nodify.Interactivity
             }
         }
 
-        private void BeginDrag(InputEventArgs e)
+        internal void BeginDrag(InputEventArgs e)
         {
             // Avoid stealing mouse capture from other elements
-            if (IsInputCaptured(e))
+            if (CanCaptureInput(e))
             {
+                RequiresInputCapture = IsToggle;
+
                 _interactionState = InteractionState.InProgress;
+                _initialPosition = GetInitialPosition(e);
+
                 HandleEvent(e); // Handle the event, otherwise CaptureMouse will send a MouseMove event and the current event will be handled out of order
                 OnBegin(e);
 
                 e.Handled = true;
-
-                if (e is MouseEventArgs me)
-                {
-                    _initialPosition = me.GetPosition(PositionElement);
-                }
 
                 Element.Focus();
                 CaptureInput(e);
@@ -243,6 +248,8 @@ namespace Nodify.Interactivity
                 OnEnd(e);
                 e.Handled = true;
             }
+
+            RequiresInputCapture = false;
         }
 
         private void CancelDrag(InputEventArgs e)
@@ -252,20 +259,51 @@ namespace Nodify.Interactivity
             OnCancel(e);
 
             e.Handled = true;
+            RequiresInputCapture = false;
         }
 
         #endregion
 
-        protected virtual bool IsInputCaptured(InputEventArgs e)
+        /// <summary>
+        /// Retrieves the initial position of the input event relative to the <see cref="PositionElement"/>.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
+        /// <remarks>
+        /// This position is used to calculate the drag distance, to determine whether 
+        /// the context menu can appear or if the action is considered a drag operation. The behavior is influenced 
+        /// by the <see cref="NodifyEditor.MouseActionSuppressionThreshold"/>.
+        /// </remarks>
+        protected virtual Point GetInitialPosition(InputEventArgs e)
+        {
+            if (e is MouseEventArgs me)
+            {
+                return me.GetPosition(PositionElement);
+            }
+
+            return default;
+        }
+
+        /// <summary>
+        /// Determines whether input capture can be acquired for the <see cref="InputElementState{TElement}.Element" />.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
+        /// <remarks>Must return true if the input is already captured by the current element.</remarks>
+        protected virtual bool CanCaptureInput(InputEventArgs e)
             => Mouse.Captured == null || Element.IsMouseCaptured;
 
+        /// <summary>
+        /// Captures input for the element.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
         protected virtual void CaptureInput(InputEventArgs e)
             => Element.CaptureMouse();
 
+        /// <summary>
+        /// Determines whether input capture has been lost.
+        /// </summary>
+        /// <param name="e">The <see cref="InputEventArgs"/> representing the input event.</param>
         protected virtual bool IsInputCaptureLost(InputEventArgs e)
-        {
-            return e.RoutedEvent == UIElement.LostMouseCaptureEvent;
-        }
+            => e.RoutedEvent == UIElement.LostMouseCaptureEvent;
 
         /// <summary>
         /// Determines if the given input event represents the release of an input gesture.

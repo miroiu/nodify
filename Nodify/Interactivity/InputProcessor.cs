@@ -8,12 +8,21 @@ namespace Nodify.Interactivity
     /// </summary>
     public partial class InputProcessor
     {
-        private readonly HashSet<IInputHandler> _handlers = new HashSet<IInputHandler>();
+        private readonly List<IInputHandler> _handlers = new List<IInputHandler>();
 
         /// <summary>
         /// Gets or sets a value indicating whether events that have been handled should be processed.
         /// </summary>
         public bool ProcessHandledEvents { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the processor has ongoing interactions that require input capture to remain active.
+        /// </summary>
+        /// <remarks>
+        /// This property can be used to determine whether it is safe to release mouse capture, especially during toggled interactions. <br />
+        /// Toggled interactions usually involve two steps, and it is important to keep the input capture active until the interaction is completed.
+        /// </remarks>
+        public bool RequiresInputCapture { get; private set; }
 
         /// <summary>
         /// Adds an input handler to the processor.
@@ -27,7 +36,7 @@ namespace Nodify.Interactivity
         /// </summary>
         /// <typeparam name="T">The type of the handler to remove.</typeparam>
         public void RemoveHandlers<T>() where T : IInputHandler
-            => _handlers.RemoveWhere(x => x.GetType() == typeof(T));
+            => _handlers.RemoveAll(x => x.GetType() == typeof(T));
 
         /// <summary>
         /// Clears all registered handlers.
@@ -41,23 +50,28 @@ namespace Nodify.Interactivity
         /// <param name="e">The input event arguments to process.</param>
         public void ProcessEvent(InputEventArgs e)
         {
-            if (ProcessHandledEvents)
+            RequiresInputCapture = false;
+
+            if (!ProcessHandledEvents)
             {
-                foreach (var handler in _handlers)
+                for (int i = 0; i < _handlers.Count; i++)
                 {
-                    handler.HandleEvent(e);
+                    IInputHandler handler = _handlers[i];
+                    if (!e.Handled)
+                    {
+                        handler.HandleEvent(e);
+                    }
+
+                    RequiresInputCapture |= handler.RequiresInputCapture;
                 }
             }
             else
             {
-                foreach (var handler in _handlers)
+                for (int i = 0; i < _handlers.Count; i++)
                 {
-                    if (e.Handled)
-                    {
-                        break;
-                    }
-
+                    IInputHandler handler = _handlers[i];
                     handler.HandleEvent(e);
+                    RequiresInputCapture |= handler.RequiresInputCapture;
                 }
             }
         }

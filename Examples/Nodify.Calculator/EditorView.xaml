@@ -209,7 +209,8 @@
                             </DataTemplate>
                         </nodify:GroupingNode.HeaderTemplate>
                         <Grid>
-                            <ScrollViewer CanContentScroll="True">
+                            <ScrollViewer CanContentScroll="True"
+                                          Visibility="{Binding IsExpanded, Converter={shared:BooleanToVisibilityConverter}}">
                                 <nodify:NodifyEditor Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}"
                                                      DataContext="{Binding InnerCalculator}"
                                                      ItemsSource="{Binding Operations}"
@@ -242,7 +243,7 @@
                                     </CompositeCollection>
                                 </nodify:NodifyEditor>
                             </ScrollViewer>
-                            
+
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />

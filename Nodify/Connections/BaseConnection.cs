@@ -811,7 +811,7 @@ namespace Nodify
             InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
+            if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
@@ -835,7 +835,7 @@ namespace Nodify
             InputProcessor.ProcessEvent(e);
 
             // Release the mouse capture if all the mouse buttons are released
-            if (IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
+            if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && Mouse.RightButton == MouseButtonState.Released && Mouse.LeftButton == MouseButtonState.Released && Mouse.MiddleButton == MouseButtonState.Released)
             {
                 ReleaseMouseCapture();
             }
