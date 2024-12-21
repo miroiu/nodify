@@ -15,7 +15,7 @@ namespace Nodify.Interactivity
         /// </summary>
         protected TElement Element { get; }
 
-        public virtual bool RequiresInputCapture => false;
+        public bool RequiresInputCapture { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputElementState{TElement}"/> class.

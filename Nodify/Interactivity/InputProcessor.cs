@@ -8,7 +8,7 @@ namespace Nodify.Interactivity
     /// </summary>
     public partial class InputProcessor
     {
-        private readonly HashSet<IInputHandler> _handlers = new HashSet<IInputHandler>();
+        private readonly List<IInputHandler> _handlers = new List<IInputHandler>();
 
         /// <summary>
         /// Gets or sets a value indicating whether events that have been handled should be processed.
@@ -36,7 +36,7 @@ namespace Nodify.Interactivity
         /// </summary>
         /// <typeparam name="T">The type of the handler to remove.</typeparam>
         public void RemoveHandlers<T>() where T : IInputHandler
-            => _handlers.RemoveWhere(x => x.GetType() == typeof(T));
+            => _handlers.RemoveAll(x => x.GetType() == typeof(T));
 
         /// <summary>
         /// Clears all registered handlers.
@@ -52,23 +52,24 @@ namespace Nodify.Interactivity
         {
             RequiresInputCapture = false;
 
-            if (ProcessHandledEvents)
+            if (!ProcessHandledEvents)
             {
-                foreach (var handler in _handlers)
+                for (int i = 0; i < _handlers.Count; i++)
                 {
-                    handler.HandleEvent(e);
+                    IInputHandler handler = _handlers[i];
+                    if (!e.Handled)
+                    {
+                        handler.HandleEvent(e);
+                    }
+
                     RequiresInputCapture |= handler.RequiresInputCapture;
                 }
             }
             else
             {
-                foreach (var handler in _handlers)
+                for (int i = 0; i < _handlers.Count; i++)
                 {
-                    if (e.Handled)
-                    {
-                        break;
-                    }
-
+                    IInputHandler handler = _handlers[i];
                     handler.HandleEvent(e);
                     RequiresInputCapture |= handler.RequiresInputCapture;
                 }

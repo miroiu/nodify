@@ -60,8 +60,6 @@ namespace Nodify.Interactivity
         /// </summary>
         protected virtual bool IsToggle { get; }
 
-        public override bool RequiresInputCapture => _interactionState != InteractionState.Ready && IsToggle;
-
         /// <summary>
         /// Gets or sets the UI element used to calculate the mouse position during the drag interaction.
         /// </summary>
@@ -132,6 +130,12 @@ namespace Nodify.Interactivity
 
         private bool TryEndDragging(InputEventArgs e)
         {
+            if (IsInputCaptureLost(e))
+            {
+                EndDrag(e);
+                return true;
+            }
+
             if (IsToggle && _interactionState == InteractionState.InProgress)
             {
                 return TryDeferToggleInteractionEnd(e);
@@ -168,7 +172,7 @@ namespace Nodify.Interactivity
         // Cancel the interaction
         private bool TryCancelDragging(InputEventArgs e)
         {
-            if (IsInputCaptureLost(e) || CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
+            if (CanCancel && IsInputEventReleased(e) && CancelGesture?.Matches(e.Source, e) is true)
             {
                 CancelDrag(e);
                 return true;
@@ -203,6 +207,8 @@ namespace Nodify.Interactivity
             // Avoid stealing mouse capture from other elements
             if (CanCaptureInput(e))
             {
+                RequiresInputCapture = IsToggle;
+
                 _interactionState = InteractionState.InProgress;
                 _initialPosition = GetInitialPosition(e);
 
@@ -242,6 +248,8 @@ namespace Nodify.Interactivity
                 OnEnd(e);
                 e.Handled = true;
             }
+
+            RequiresInputCapture = false;
         }
 
         private void CancelDrag(InputEventArgs e)
@@ -251,6 +259,7 @@ namespace Nodify.Interactivity
             OnCancel(e);
 
             e.Handled = true;
+            RequiresInputCapture = false;
         }
 
         #endregion
