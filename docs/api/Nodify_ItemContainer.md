@@ -67,7 +67,7 @@ public Size? DesiredSizeForSelection { get; set; }
   
 **Property Value**  
   
-[Size?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable)  
+[Size?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1)  
   
 ### Editor  
   
@@ -161,7 +161,7 @@ public Boolean? IsPreviewingSelection { get; set; }
   
 **Property Value**  
   
-[Boolean?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable)  
+[Boolean?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1)  
   
 ### IsSelectable  
   

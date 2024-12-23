@@ -26,7 +26,7 @@ public ItemsMovedEventArgs(IReadOnlyCollection<Object> items, Vector offset);
   
 **Parameters**  
   
-`items` [IReadOnlyCollection\<Object\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyCollection): The collection of items that were moved.  
+`items` [IReadOnlyCollection\<Object\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyCollection-1): The collection of items that were moved.  
   
 `offset` [Vector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Vector): The vector representing the distance the items were moved.  
   
@@ -42,7 +42,7 @@ public IReadOnlyCollection<Object> Items { get; set; }
   
 **Property Value**  
   
-[IReadOnlyCollection\<Object\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyCollection)  
+[IReadOnlyCollection\<Object\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyCollection-1)  
   
 ### Offset  
   

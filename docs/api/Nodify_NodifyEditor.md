@@ -38,7 +38,7 @@ public static HashSet<Type> CuttingConnectionTypes;
   
 **Field Value**  
   
-[HashSet\<Type\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet)  
+[HashSet\<Type\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.HashSet-1)  
   
 ### CuttingLineEndPropertyKey  
   
@@ -1105,7 +1105,7 @@ public void AlignContainers(IEnumerable<ItemContainer> containers, Alignment ali
   
 **Parameters**  
   
-`containers` [IEnumerable\<ItemContainer\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable): The collection of item containers to align.  
+`containers` [IEnumerable\<ItemContainer\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1): The collection of item containers to align.  
   
 `alignment` [Alignment](Nodify_Alignment): The alignment type to apply to the containers.  
   
@@ -1159,7 +1159,7 @@ public void BeginDragging(IEnumerable<ItemContainer> containers);
   
 **Parameters**  
   
-`containers` [IEnumerable\<ItemContainer\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable)  
+`containers` [IEnumerable\<ItemContainer\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1)  
   
 ### BeginPanning(Point)  
   
@@ -1342,7 +1342,7 @@ public void FitToScreen(Rect? area = null);
   
 **Parameters**  
   
-`area` [Rect?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable)  
+`area` [Rect?](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1)  
   
 ### GetContainerForItemOverride()  
   

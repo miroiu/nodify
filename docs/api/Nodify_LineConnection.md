@@ -106,7 +106,7 @@ protected override ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>
   
 **Returns**  
   
-[ValueTuple\<ValueTuple\<Point, Point\>, ValueTuple\<Point, Point\>\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
+[ValueTuple\<ValueTuple\<Point, Point\>, ValueTuple\<Point, Point\>\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple-2)  
   
 ### InterpolateLine(Point, Point, Point, Point, Double)  
   
@@ -128,7 +128,7 @@ protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Poi
   
 **Returns**  
   
-[ValueTuple\<ValueTuple\<Point, Point\>, Point\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
+[ValueTuple\<ValueTuple\<Point, Point\>, Point\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple-2)  
   
 ### InterpolateLine(Point, Point, Point, Double)  
   
@@ -148,7 +148,7 @@ protected static ValueTuple<ValueTuple<Point, Point>, Point> InterpolateLine(Poi
   
 **Returns**  
   
-[ValueTuple\<ValueTuple\<Point, Point\>, Point\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
+[ValueTuple\<ValueTuple\<Point, Point\>, Point\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple-2)  
   
 ### InterpolateLineSegment(Point, Point, Double)  
   

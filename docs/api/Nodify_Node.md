@@ -196,7 +196,7 @@ public ObservableCollection<GroupStyle> InputGroupStyle { get; set; }
   
 **Property Value**  
   
-[ObservableCollection\<GroupStyle\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+[ObservableCollection\<GroupStyle\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection-1)  
   
 ### InputItemsControl  
   
@@ -240,7 +240,7 @@ public ObservableCollection<GroupStyle> OutputGroupStyle { get; set; }
   
 **Property Value**  
   
-[ObservableCollection\<GroupStyle\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection)  
+[ObservableCollection\<GroupStyle\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.ObjectModel.ObservableCollection-1)  
   
 ### OutputItemsControl  
   

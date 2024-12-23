@@ -50,7 +50,7 @@ public static void RegisterHandlerFactory<THandler>(Func<TElement, THandler> fac
   
 **Parameters**  
   
-`factory` [Func\<TElement, THandler\>](https://docs.microsoft.com/en-us/dotnet/api/System.Func)  
+`factory` [Func\<TElement, THandler\>](https://docs.microsoft.com/en-us/dotnet/api/System.Func-2)  
   
 ### RemoveHandlerFactory()  
   
@@ -66,5 +66,5 @@ public static void ReplaceHandlerFactory<THandler>(Func<TElement, THandler> fact
   
 **Parameters**  
   
-`factory` [Func\<TElement, THandler\>](https://docs.microsoft.com/en-us/dotnet/api/System.Func)  
+`factory` [Func\<TElement, THandler\>](https://docs.microsoft.com/en-us/dotnet/api/System.Func-2)  
   

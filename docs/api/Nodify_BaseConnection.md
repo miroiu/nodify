@@ -517,7 +517,7 @@ protected virtual ValueTuple<ValueTuple<Point, Point>, ValueTuple<Point, Point>>
   
 **Returns**  
   
-[ValueTuple\<ValueTuple\<Point, Point\>, ValueTuple\<Point, Point\>\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
+[ValueTuple\<ValueTuple\<Point, Point\>, ValueTuple\<Point, Point\>\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple-2)  
   
 ### DrawRectangleArrowhead(StreamGeometryContext, Point, Point, ConnectionDirection, Orientation)  
   
@@ -575,7 +575,7 @@ protected virtual ValueTuple<Vector, Vector> GetOffset();
   
 **Returns**  
   
-[ValueTuple\<Vector, Vector\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple)  
+[ValueTuple\<Vector, Vector\>](https://docs.microsoft.com/en-us/dotnet/api/System.ValueTuple-2)  
   
 ### GetTextPosition(FormattedText, Point, Point)  
   
