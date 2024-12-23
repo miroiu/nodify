@@ -3,6 +3,12 @@
 #### **In development**
 
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 7.0.0**
+
+> - Breaking Changes:
 >	- Made the setter of NodifyEditor.IsPanning private
 >	- Made SelectionHelper internal
 >	- Renamed HandleRightClickAfterPanningThreshold to MouseActionSuppressionThreshold in NodifyEditor
