@@ -61,6 +61,6 @@
 - [Zooming](Minimap-Overview#zooming)
 - [Customization](Minimap-Overview#customization)
 
-[API Reference](API-Reference)
+[API Reference](api/TOC)
 
 [(FAQ) Frequently asked questions](FAQ)
