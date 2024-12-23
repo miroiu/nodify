@@ -1,4 +1,4 @@
-| [English](https://github.com/WYihei/nodify/wiki/Home) | [简体中文](https://github.com/WYihei/nodify/wiki/主页) |
+| [English](https://github.com/miroiu/nodify/wiki/Home) | [简体中文](https://github.com/miroiu/nodify/wiki/主页) |
 | ----------------------------------------------------- | ------------------------------------------------------ |
 
 ---
@@ -61,6 +61,6 @@
 - [Zooming](Minimap-Overview#zooming)
 - [Customization](Minimap-Overview#customization)
 
-[API Reference](api/TOC)
+[API Reference](API-Reference)
 
 [(FAQ) Frequently asked questions](FAQ)
