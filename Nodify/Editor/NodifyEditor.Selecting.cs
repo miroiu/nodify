@@ -292,6 +292,8 @@ namespace Nodify
             selected.Clear();
             selected.Add(container.DataContext);
             EndUpdateSelectedItems();
+
+            UnselectAllConnections();
         }
 
         /// <summary>

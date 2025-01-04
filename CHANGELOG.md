@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Resolved an issue where selecting a node did not deselect connections and vice versa
 
 #### **Version 7.0.0**
 
