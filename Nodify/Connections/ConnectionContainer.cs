@@ -75,6 +75,11 @@ namespace Nodify
 
         private SelectionType? _selectionType;
 
+        static ConnectionContainer()
+        {
+            FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
+        }
+
         internal ConnectionContainer(ConnectionsMultiSelector selector)
         {
             Selector = selector;
