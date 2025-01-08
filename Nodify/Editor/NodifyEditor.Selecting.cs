@@ -362,7 +362,6 @@ namespace Nodify
                 return;
             }
 
-            UnselectAllConnections();
             SelectedArea = _selection.Start(ItemContainers, location, type, EnableRealtimeSelection);
             IsSelecting = true;
         }
@@ -398,6 +397,11 @@ namespace Nodify
                 return;
             }
 
+            if (_selection.Type == SelectionType.Replace)
+            {
+                UnselectAllConnections();
+            }
+
             SelectedArea = _selection.End();
             ApplyPreviewingSelection();
             IsSelecting = false;
@@ -418,7 +422,7 @@ namespace Nodify
 
             if (IsSelecting)
             {
-                ClearPreviewingSelection();
+                _selection.Cancel();
                 IsSelecting = false;
             }
         }
@@ -443,16 +447,6 @@ namespace Nodify
                 container.IsPreviewingSelection = null;
             }
             EndUpdateSelectedItems();
-        }
-
-        private void ClearPreviewingSelection()
-        {
-            ItemCollection items = Items;
-            for (var i = 0; i < items.Count; i++)
-            {
-                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                container.IsPreviewingSelection = null;
-            }
         }
 
         #endregion

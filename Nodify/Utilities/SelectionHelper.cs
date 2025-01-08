@@ -14,11 +14,12 @@ namespace Nodify
     {
         private Point _startLocation;
         private Point _endLocation;
-        private SelectionType _selectionType;
         private bool _isRealtime;
-        private IReadOnlyCollection<ItemContainer> _items = Array.Empty<ItemContainer>();
+        private IReadOnlyList<ItemContainer> _items = Array.Empty<ItemContainer>();
         private IReadOnlyList<ItemContainer> _initialSelection = Array.Empty<ItemContainer>();
         private Rect _selectedArea;
+
+        public SelectionType Type { get; private set; }
 
         /// <summary>Attempts to start a new selection.</summary>
         /// <param name="containers">The containers that can be part of the selection.</param>
@@ -30,7 +31,7 @@ namespace Nodify
             _items = containers.Where(x => x.IsSelectable).ToList();
             _initialSelection = containers.Where(x => x.IsSelected).ToList();
 
-            _selectionType = selectionType;
+            Type = selectionType;
 
             _isRealtime = realtime;
             _startLocation = location;
@@ -79,9 +80,18 @@ namespace Nodify
             return _selectedArea;
         }
 
+        public void Cancel()
+        {
+            ClearPreviewingSelection();
+            _items = Array.Empty<ItemContainer>();
+            _initialSelection = Array.Empty<ItemContainer>();
+        }
+
+        #region Selection preview
+
         private void PreviewSelection(Rect area)
         {
-            switch (_selectionType)
+            switch (Type)
             {
                 case SelectionType.Replace:
                     PreviewSelectArea(area);
@@ -114,9 +124,9 @@ namespace Nodify
 
         private void PreviewUnselectAll()
         {
-            foreach (var container in _items)
+            for (int i = 0; i < _items.Count; i++)
             {
-                container.IsPreviewingSelection = false;
+                _items[i].IsPreviewingSelection = false;
             }
         }
 
@@ -129,8 +139,9 @@ namespace Nodify
 
             if (area.X != 0 || area.Y != 0 || area.Width > 0 || area.Height > 0)
             {
-                foreach (var container in _items)
+                for (int i = 0; i < _items.Count; i++)
                 {
+                    ItemContainer? container = _items[i];
                     if (container.IsSelectableInArea(area, fit))
                     {
                         container.IsPreviewingSelection = true;
@@ -141,8 +152,9 @@ namespace Nodify
 
         private void PreviewUnselectArea(Rect area, bool fit = false)
         {
-            foreach (var container in _items)
+            for (int i = 0; i < _items.Count; i++)
             {
+                ItemContainer? container = _items[i];
                 if (container.IsSelectableInArea(area, fit))
                 {
                     container.IsPreviewingSelection = false;
@@ -152,7 +164,7 @@ namespace Nodify
 
         private static void PreviewSelectContainers(IReadOnlyList<ItemContainer> containers)
         {
-            for (var i = 0; i < containers.Count; i++)
+            for (int i = 0; i < containers.Count; i++)
             {
                 containers[i].IsPreviewingSelection = true;
             }
@@ -160,14 +172,25 @@ namespace Nodify
 
         private void PreviewInvertSelection(Rect area, bool fit = false)
         {
-            foreach (var container in _items)
+            for (int i = 0; i < _items.Count; i++)
             {
+                ItemContainer? container = _items[i];
                 if (container.IsSelectableInArea(area, fit))
                 {
                     container.IsPreviewingSelection = !container.IsPreviewingSelection;
                 }
             }
         }
+
+        private void ClearPreviewingSelection()
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                _items[i].IsPreviewingSelection = null;
+            }
+        }
+
+        #endregion
     }
 
     internal static class SelectionGesturesExtensions
