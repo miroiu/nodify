@@ -6,6 +6,7 @@
 > - Features:
 > - Bugfixes:
 >	- Fixed an issue where connections would not gain focus when selected, which could prevent editor keybindings from functioning in certain scenarios
+>	- Resolved an issue where selecting a node did not deselect connections and vice versa
 
 #### **Version 7.0.0**
 
