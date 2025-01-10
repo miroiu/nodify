@@ -683,6 +683,52 @@ namespace Nodify
             => BringIntoView(new Point(area.X + area.Width / 2, area.Y + area.Height / 2));
 
         /// <summary>
+        /// Ensures the specified item container is fully visible within the viewport, optionally with padding around the edges.
+        /// </summary>
+        /// <param name="container">The item container to bring into view.</param>
+        /// <param name="offsetFromEdge">The padding to apply around the container</param>
+        public void BringIntoView(ItemContainer container, double offsetFromEdge = 32d)
+        {
+            var viewport = new Rect(ViewportLocation, ViewportSize);
+            var containerBounds = new Rect(container.Location, container.RenderSize);
+
+            containerBounds.Inflate(offsetFromEdge, offsetFromEdge);
+
+            if (!viewport.Contains(containerBounds))
+            {
+                if (viewport.IntersectsWith(containerBounds))
+                {
+                    double newX = viewport.X;
+                    double newY = viewport.Y;
+
+                    if (containerBounds.Left < viewport.Left)
+                    {
+                        newX = containerBounds.Left;
+                    }
+                    else if (containerBounds.Right > viewport.Right)
+                    {
+                        newX = containerBounds.Right - viewport.Width;
+                    }
+
+                    if (containerBounds.Top < viewport.Top)
+                    {
+                        newY = containerBounds.Top;
+                    }
+                    else if (containerBounds.Bottom > viewport.Bottom)
+                    {
+                        newY = containerBounds.Bottom - viewport.Height;
+                    }
+
+                    BringIntoView(new Point(newX, newY) + new Vector(viewport.Width / 2, viewport.Height / 2));
+                }
+                else
+                {
+                    BringIntoView(containerBounds);
+                }
+            }
+        }
+
+        /// <summary>
         /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.
         /// </summary>
         /// <remarks>Does nothing if <paramref name="area"/> is null and there's no items.</remarks>

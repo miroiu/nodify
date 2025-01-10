@@ -4,6 +4,9 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Introduced a new BringIntoView method overload in NodifyEditor that accepts an ItemContainer
+>	- Improved tab and directional navigation, ensuring that focused containers are automatically brought into view
+>	- Added BringIntoViewEdgeOffset to ItemContainer to control the viewport edge offset when bringing the container into view
 > - Bugfixes:
 >	- Fixed an issue where connections would not gain focus when selected, which could prevent editor keybindings from functioning in certain scenarios
 >	- Resolved an issue where selecting a node did not deselect connections and vice versa
