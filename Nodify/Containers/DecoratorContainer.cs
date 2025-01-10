@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Nodify
 {
@@ -65,6 +66,8 @@ namespace Nodify
         static DecoratorContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(typeof(DecoratorContainer)));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Contained));
         }
 
         /// <inheritdoc />

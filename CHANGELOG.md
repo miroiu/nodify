@@ -4,6 +4,9 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Introduced a new BringIntoView method overload in NodifyEditor that accepts an ItemContainer
+>	- Improved tab and directional navigation, ensuring that focused containers are automatically brought into view
+>	- Added BringIntoViewEdgeOffset to ItemContainer to control the viewport edge offset when bringing the container into view
 > - Bugfixes:
 
 #### **Version 7.0.0**

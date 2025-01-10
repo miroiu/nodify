@@ -73,6 +73,8 @@
                         <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True"
+                                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                                KeyboardNavigation.TabNavigation="Cycle"
                                                 Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
                             <local:ConnectionsMultiSelector  x:Name="PART_ConnectionsHost"

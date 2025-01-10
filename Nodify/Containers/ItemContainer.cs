@@ -234,6 +234,11 @@ namespace Nodify
         public static bool PreserveSelectionOnRightClick { get; set; }
 
         /// <summary>
+        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
+        /// </summary>
+        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
+
+        /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public NodifyEditor Editor { get; }
@@ -268,6 +273,8 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(typeof(ItemContainer)));
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Contained));
         }
 
         /// <summary>
@@ -358,6 +365,15 @@ namespace Nodify
             }
         }
 
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            // Only bring the item into view when navigated using the keyboard.
+            if (InputManager.Current.MostRecentInputDevice is KeyboardDevice)
+            {
+                Editor.BringIntoView(this, BringIntoViewEdgeOffset);
+            }
+        }
+
         #region Gesture Handling
 
         protected InputProcessor InputProcessor { get; } = new InputProcessor();
@@ -370,7 +386,7 @@ namespace Nodify
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             InputProcessor.ProcessEvent(e);
-            
+
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
             if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
