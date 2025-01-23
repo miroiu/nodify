@@ -7,7 +7,8 @@
 > - Bugfixes:
 >	- Fixed an issue where connections would not gain focus when selected, which could prevent editor keybindings from functioning in certain scenarios
 >	- Resolved an issue where selecting a node did not deselect connections and vice versa
->	- Fixed a bug preventing ItemContainers from being dragged when the mouse could not be captured
+>	- Fixed a bug preventing ItemContainers from being selected when the mouse could not be captured
+>	- Fixed an issue with key detection in Japanese IME environments, causing issues with the MouseGesture
 
 #### **Version 7.0.0**
 

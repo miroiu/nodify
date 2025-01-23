@@ -45,7 +45,8 @@ namespace Nodify.Interactivity
                     EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
                     if (gestures.Drag.Matches(e.Source, e))
                     {
-                        _isDragging = Element.IsDraggable;
+                        // Dragging requires mouse capture
+                        _isDragging = Element.IsDraggable && CanCaptureMouse();
                     }
 
                     if (gestures.Selection.Select.Matches(e.Source, e))
@@ -110,12 +111,15 @@ namespace Nodify.Interactivity
                 private void CaptureMouseSafe()
                 {
                     // Avoid stealing mouse capture from other elements
-                    if (Mouse.Captured == null || Element.IsMouseCaptured)
+                    if (CanCaptureMouse())
                     {
                         Element.Focus();
                         Element.CaptureMouse();
                     }
                 }
+
+                private bool CanCaptureMouse()
+                    => Mouse.Captured == null || Element.IsMouseCaptured;
 
                 private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
                 {
