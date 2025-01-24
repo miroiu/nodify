@@ -7,6 +7,8 @@
              xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
              mc:Ignorable="d"
              MinWidth="250"
+             KeyboardNavigation.DirectionalNavigation="Contained"
+             KeyboardNavigation.TabNavigation="Once"
              d:DesignHeight="400"
              d:DesignWidth="250"
              d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}">
@@ -31,6 +33,7 @@
             </Grid.RowDefinitions>
 
             <ItemsControl Grid.Row="1"
+                          IsTabStop="False"
                           ItemsSource="{Binding AvailableOperations}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:OperationInfoViewModel}">

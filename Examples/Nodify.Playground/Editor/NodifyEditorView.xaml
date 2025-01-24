@@ -531,7 +531,8 @@
                         </nodify:Node.ContentTemplate>
                         <nodify:Node.HeaderTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              IsTabStop="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeInput Orientation="Vertical" />
@@ -548,7 +549,8 @@
                         </nodify:Node.HeaderTemplate>
                         <nodify:Node.FooterTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              IsTabStop="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeOutput Orientation="Vertical" />
@@ -588,6 +590,11 @@
                             Value="{Binding Location}" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Panel.ZIndex"
+                                    Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin"
                                  Value="True">
                             <Setter Property="Panel.ZIndex"
                                     Value="1" />

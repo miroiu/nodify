@@ -17,6 +17,8 @@
                 Value="#D6D3D6" />
         <Setter Property="CornerRadius"
                 Value="3" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:StateNode}">
