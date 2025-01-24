@@ -5,6 +5,10 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+
+#### **Version 7.0.1**
+
+> - Bugfixes:
 >	- Fixed an issue where connections would not gain focus when selected, which could prevent editor keybindings from functioning in certain scenarios
 >	- Resolved an issue where selecting a node did not deselect connections and vice versa
 >	- Fixed a bug preventing ItemContainers from being selected when the mouse could not be captured
