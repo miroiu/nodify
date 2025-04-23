@@ -9,6 +9,7 @@ namespace Nodify.Shapes.Canvas
         public UnboundGestureMappings()
         {
             Editor.Selection.Unbind();
+            Editor.SelectAll.Unbind();
             ItemContainer.Selection.Unbind();
             Connection.Disconnect.Unbind();
             Connector.Connect.Unbind();
