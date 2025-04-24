@@ -58,3 +58,16 @@ A: https://github.com/miroiu/nodify/issues/81
 #### Q: How can I create a custom connection?
 
 A: https://github.com/miroiu/nodify/issues/121
+
+***
+
+#### Q: How can I make the editor read-only?
+
+A: https://github.com/miroiu/nodify/issues/206
+
+***
+
+#### Q: Is there an option for auto layout?
+
+A:  https://github.com/miroiu/nodify/issues/73
+
