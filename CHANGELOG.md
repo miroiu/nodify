@@ -4,6 +4,12 @@
 
 > - Breaking Changes:
 > - Features:
+> - Bugfixes:
+
+#### **Version 7.0.2**
+
+> - Breaking Changes:
+> - Features:
 >	- Added EditorGestures.Editor.SelectAll 
 > - Bugfixes:
 >	- Fixed an issue where the EditorCommands.SelectAll gesture could not be customized
