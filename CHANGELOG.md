@@ -5,10 +5,10 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed an issue where the SelectedEvent and UnselectedEvent events on the ItemContainer were not raised when the selection was completed
 
 #### **Version 7.0.2**
 
-> - Breaking Changes:
 > - Features:
 >	- Added EditorGestures.Editor.SelectAll 
 > - Bugfixes:

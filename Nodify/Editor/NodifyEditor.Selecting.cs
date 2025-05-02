@@ -403,8 +403,8 @@ namespace Nodify
             }
 
             SelectedArea = _selection.End();
-            ApplyPreviewingSelection();
             IsSelecting = false;
+            ApplyPreviewingSelection();
         }
 
         /// <summary>
