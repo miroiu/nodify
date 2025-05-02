@@ -16,12 +16,10 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node network node-editor graph controls</PackageTags>
-    <Version>7.0.2</Version>
+    <Version>7.0.3</Version>
     <PackageReleaseNotes>
-      > - Features:
-      >	  - Added EditorGestures.Editor.SelectAll
       > - Bugfixes:
-      >	  - Fixed an issue where the EditorCommands.SelectAll gesture could not be customized
+      >	  - Fixed an issue where the SelectedEvent and UnselectedEvent events on the ItemContainer were not raised when the selection was completed
     </PackageReleaseNotes>
     <AssemblyOriginatorKeyFile>..\build\Nodify.snk</AssemblyOriginatorKeyFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
