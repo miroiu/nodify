@@ -18,6 +18,8 @@
                 Value="15 5" />
         <Setter Property="Cursor"
                 Value="SizeAll" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="ContentTemplate"
                 Value="{StaticResource DefaultConnectorTemplate}" />
         <Setter Property="Template">

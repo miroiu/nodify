@@ -27,6 +27,8 @@
                 Value="30" />
         <Setter Property="MinWidth"
                 Value="150" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:GroupingNode}">
