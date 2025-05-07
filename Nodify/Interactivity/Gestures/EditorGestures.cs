@@ -150,7 +150,7 @@ namespace Nodify.Interactivity
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
-                SelectAll = (KeyGesture)ApplicationCommands.SelectAll.InputGestures[0];
+                SelectAll = ApplicationCommands.SelectAll.InputGestures[0].AsRef();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
                 PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift, true);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
