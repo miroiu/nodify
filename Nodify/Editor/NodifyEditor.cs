@@ -929,11 +929,5 @@ namespace Nodify
         }
 
         #endregion
-
-
-        ~NodifyEditor()
-        {
-
-        }
     }
 }
