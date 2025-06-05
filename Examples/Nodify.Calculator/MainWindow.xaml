@@ -51,6 +51,8 @@
                             Value="{Binding DataContext.CloseEditorCommand ,Source={StaticResource Proxy}}"/>
                     <Setter Property="CloseTabCommandParameter" 
                             Value="{Binding Id}"/>
+                    <Setter Property="ToolTip"
+                            Value="Double click to edit" />
                 </Style>
             </shared:TabControlEx.ItemContainerStyle>
         </shared:TabControlEx>

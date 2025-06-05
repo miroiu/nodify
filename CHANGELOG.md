@@ -3,6 +3,7 @@
 #### **In development**
 
 > - Breaking Changes:
+>	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
 > - Features:
 >	- Added AsRef extension method to InputGesture to convert it to an InputGestureRef
 > - Bugfixes:

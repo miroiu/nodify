@@ -11,11 +11,6 @@ namespace Nodify.Interactivity
         private readonly List<IInputHandler> _handlers = new List<IInputHandler>();
 
         /// <summary>
-        /// Gets or sets a value indicating whether events that have been handled should be processed.
-        /// </summary>
-        public bool ProcessHandledEvents { get; set; }
-
-        /// <summary>
         /// Gets a value indicating whether the processor has ongoing interactions that require input capture to remain active.
         /// </summary>
         /// <remarks>
@@ -52,24 +47,11 @@ namespace Nodify.Interactivity
         {
             RequiresInputCapture = false;
 
-            if (!ProcessHandledEvents)
+            for (int i = 0; i < _handlers.Count; i++)
             {
-                for (int i = 0; i < _handlers.Count; i++)
+                IInputHandler handler = _handlers[i];
+                if (!e.Handled || handler.ProcessHandledEvents)
                 {
-                    IInputHandler handler = _handlers[i];
-                    if (!e.Handled)
-                    {
-                        handler.HandleEvent(e);
-                    }
-
-                    RequiresInputCapture |= handler.RequiresInputCapture;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < _handlers.Count; i++)
-                {
-                    IInputHandler handler = _handlers[i];
                     handler.HandleEvent(e);
                     RequiresInputCapture |= handler.RequiresInputCapture;
                 }

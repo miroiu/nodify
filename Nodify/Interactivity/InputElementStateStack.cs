@@ -20,6 +20,8 @@ namespace Nodify.Interactivity
 
         public bool RequiresInputCapture => State.RequiresInputCapture;
 
+        public bool ProcessHandledEvents => State.ProcessHandledEvents;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InputElementStateStack{TElement}"/> class.
         /// </summary>
