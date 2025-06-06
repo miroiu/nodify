@@ -68,7 +68,7 @@ namespace Nodify
             }
             else
             {
-                base.DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
+                DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Nodify
                 double t = (spacing * i + DirectionalArrowsOffset).WrapToRange(0d, 1d);
                 var to = InterpolateLineSegment(p0, p1, t);
 
-                base.DrawDirectionalArrowheadGeometry(context, direction, to);
+                DrawDirectionalArrowheadGeometry(context, direction, to);
             }
         }
 
