@@ -248,6 +248,13 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
+            if(Editor != null)
+            {
+                Editor.RemoveHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
+                Editor.RemoveHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
+                Editor.RemoveHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
+            }
+
             Editor = this.GetParentOfType<NodifyEditor>();
 
             if (Editor != null)

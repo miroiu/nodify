@@ -203,19 +203,25 @@ namespace Nodify
         /// <param name="shouldDisable">Whether to enable or disable auto panning.</param>
         private void OnDisableAutoPanningChanged(bool shouldDisable)
         {
-            if (shouldDisable)
+            ClearTimer();
+            if (!shouldDisable)
             {
-                _autoPanningTimer?.Stop();
-            }
-            else if (_autoPanningTimer == null)
-            {
-                _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate),
-                    DispatcherPriority.Background, HandleAutoPanning, Dispatcher);
-            }
-            else
-            {
-                _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
+                _autoPanningTimer = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
+                {
+                    Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate)
+                };
+                _autoPanningTimer.Tick += HandleAutoPanning;
                 _autoPanningTimer.Start();
+            }
+
+            void ClearTimer()
+            {
+                if (_autoPanningTimer != null)
+                {
+                    _autoPanningTimer.Stop();
+                    _autoPanningTimer.Tick -= HandleAutoPanning;
+                    _autoPanningTimer = null;
+                }
             }
         }
 

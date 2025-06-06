@@ -99,31 +99,40 @@ namespace Nodify.Interactivity
                 return !IsAnyKeyPressed();
             }
 
-            return Keyboard.GetKeyStates(Key).HasFlag(KeyStates.Down);
+            return Keyboard.IsKeyDown(Key);
         }
 
-        private static readonly Key[] _allKeys = GetValidKeys();
-
-        private static Key[] GetValidKeys()
+        private static readonly Key[] _allKeys = new[]
         {
-            var excludedKeys = new[]
-            {
-                Key.LeftCtrl, Key.RightCtrl,
-                Key.LeftShift, Key.RightShift,
-                Key.LeftAlt, Key.RightAlt,
-                Key.LWin, Key.RWin,
-                Key.None
-            };
+            // Alphanumeric
+            Key.A, Key.B, Key.C, Key.D, Key.E, Key.F, Key.G, Key.H, Key.I, Key.J,
+            Key.K, Key.L, Key.M, Key.N, Key.O, Key.P, Key.Q, Key.R, Key.S, Key.T,
+            Key.U, Key.V, Key.W, Key.X, Key.Y, Key.Z,
+            Key.D0, Key.D1, Key.D2, Key.D3, Key.D4, Key.D5, Key.D6, Key.D7, Key.D8, Key.D9,
 
-#if NET5_0_OR_GREATER
-            return Enum.GetValues<Key>()
-#else
-            return Enum.GetValues(typeof(Key))
-                .Cast<Key>()
-#endif
-                .Where(key => !excludedKeys.Contains(key))
-                .ToArray();
-        }
+            // Punctuation and symbols
+            Key.Oem3, Key.OemMinus, Key.OemPlus, Key.OemOpenBrackets, Key.OemCloseBrackets,
+            Key.Oem5, Key.Oem1, Key.OemQuotes, Key.OemComma, Key.OemPeriod, Key.Oem2,
+
+            // Function keys
+            Key.F1, Key.F2, Key.F3, Key.F4, Key.F5, Key.F6, Key.F7, Key.F8,
+            Key.F9, Key.F10, Key.F11, Key.F12,
+
+            // Navigation
+            Key.Left, Key.Right, Key.Up, Key.Down,
+            Key.PageUp, Key.PageDown, Key.Home, Key.End,
+
+            // Editing
+            Key.Back, Key.Delete, Key.Insert,
+
+            // Special
+            Key.Space, Key.Return, Key.Escape, Key.Tab,
+
+            // Numeric keypad
+            Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4,
+            Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9,
+            Key.Multiply, Key.Add, Key.Subtract, Key.Divide, Key.Decimal
+        };
 
         /// <summary>
         /// Determines whether any key (excluding modifiers) is currently pressed.

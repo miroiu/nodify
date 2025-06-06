@@ -30,7 +30,10 @@ namespace Nodify
         /// <summary>
         /// Select all <see cref="ItemContainer"/>s in the <see cref="NodifyEditor"/>.
         /// </summary>
-        public static RoutedUICommand SelectAll { get; } = ApplicationCommands.SelectAll;
+        public static RoutedUICommand SelectAll { get; } = new RoutedUICommand(ApplicationCommands.SelectAll.Text, nameof(SelectAll), typeof(EditorCommands), new InputGestureCollection
+        {
+            EditorGestures.Mappings.Editor.SelectAll
+        });
 
         /// <summary>
         /// Moves the <see cref="NodifyEditor.ViewportLocation"/> to the specified location.

@@ -44,6 +44,11 @@ namespace Nodify
             set => base.CanSelectMultipleItems = value;
         }
 
+        /// <summary>
+        /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="ConnectionsMultiSelector"/>.
+        /// </summary>
+        public NodifyEditor? Editor { get; private set; }
+
         protected override DependencyObject GetContainerForItemOverride()
             => new ConnectionContainer(this);
 
@@ -66,6 +71,15 @@ namespace Nodify
 #endif
 
             EndUpdateSelectedItems();
+
+            Editor?.UnselectAll();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            Editor = this.GetParentOfType<NodifyEditor>();
         }
 
         #region Selection Handlers

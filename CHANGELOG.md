@@ -6,6 +6,35 @@
 > - Features:
 > - Bugfixes:
 
+#### **Version 7.0.4**
+
+> - Features:
+>	- Added AsRef extension method to InputGesture to convert it to an InputGestureRef
+> - Bugfixes:
+>	- Fixed an issue where the gesture used for EditorGestures.Editor.SelectAll extracted from the ApplicationCommands was assumed to be a KeyGesture
+>	- Fixed overrides of DrawDirectionalArrowheadGeometry virtual method not working in subclasses of the built in connections
+>	- Fixed a memory leak caused by the auto panning timer
+
+#### **Version 7.0.3**
+
+> - Bugfixes:
+>	- Fixed an issue where the SelectedEvent and UnselectedEvent events on the ItemContainer were not raised when the selection was completed
+
+#### **Version 7.0.2**
+
+> - Features:
+>	- Added EditorGestures.Editor.SelectAll 
+> - Bugfixes:
+>	- Fixed an issue where the EditorCommands.SelectAll gesture could not be customized
+
+#### **Version 7.0.1**
+
+> - Bugfixes:
+>	- Fixed an issue where connections would not gain focus when selected, which could prevent editor keybindings from functioning in certain scenarios
+>	- Resolved an issue where selecting a node did not deselect connections and vice versa
+>	- Fixed a bug preventing ItemContainers from being selected when the mouse could not be captured
+>	- Fixed an issue with key detection in Japanese IME environments, causing issues with the MouseGesture
+
 #### **Version 7.0.0**
 
 > - Breaking Changes:

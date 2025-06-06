@@ -163,7 +163,7 @@ namespace Nodify
                 var (segment, to) = InterpolateLine(p0, p1, p2, p3, t);
 
                 var direction = segment.SegmentStart - segment.SegmentEnd;
-                base.DrawDirectionalArrowheadGeometry(context, direction, to);
+                DrawDirectionalArrowheadGeometry(context, direction, to);
             }
         }
 

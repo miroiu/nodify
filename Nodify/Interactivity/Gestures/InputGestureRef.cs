@@ -13,6 +13,11 @@ namespace Nodify.Interactivity
 
         private InputGestureRef() { }
 
+        internal InputGestureRef(InputGesture gesture)
+        {
+            Value = gesture;
+        }
+
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
         {
             return Value.Matches(targetElement, inputEventArgs);
@@ -35,5 +40,19 @@ namespace Nodify.Interactivity
         /// </summary>
         public void Unbind()
             => Value = MultiGesture.None;
+    }
+
+    /// <summary>
+    /// Extension methods for the <see cref="InputGestureRef"/> class.
+    /// </summary>
+    public static class InputGestureRefExtensions
+    {
+        /// <summary>
+        /// Creates a new <see cref="InputGestureRef"/> from the specified gesture.
+        /// </summary>
+        public static InputGestureRef AsRef(this InputGesture gesture)
+        {
+            return new InputGestureRef(gesture);
+        }
     }
 }

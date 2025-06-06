@@ -1,4 +1,4 @@
-| [English](https://github.com/nodify/nodify/wiki/Home) | [简体中文](https://github.com/nodify/nodify/wiki/主页) |
+| [English](https://github.com/miroiu/nodify/wiki/Home) | [简体中文](https://github.com/miroiu/nodify/wiki/主页) |
 | ----------------------------------------------------- | ------------------------------------------------------ |
 
 ---

@@ -37,7 +37,7 @@ namespace Nodify.Interactivity
 
                 protected override void OnMouseDown(MouseButtonEventArgs e)
                 {
-                    if (!IsSelectable(e))
+                    if (!Element.IsSelectableLocation(e.GetPosition(Element)))
                     {
                         return;
                     }
@@ -45,7 +45,8 @@ namespace Nodify.Interactivity
                     EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
                     if (gestures.Drag.Matches(e.Source, e))
                     {
-                        _isDragging = Element.IsDraggable && CaptureMouseSafe();
+                        // Dragging requires mouse capture
+                        _isDragging = Element.IsDraggable && CanCaptureMouse();
                     }
 
                     if (gestures.Selection.Select.Matches(e.Source, e))
@@ -63,8 +64,8 @@ namespace Nodify.Interactivity
 
                     if (_isDragging || _selectionType.HasValue)
                     {
-                        Element.Focus();
                         e.Handled = true;
+                        CaptureMouseSafe();
                     }
                 }
 
@@ -107,32 +108,18 @@ namespace Nodify.Interactivity
                     _selectionType = null;
                 }
 
-                private bool IsSelectable(MouseButtonEventArgs e)
-                {
-                    if (!Element.IsSelectableLocation(e.GetPosition(Element)))
-                    {
-                        return false;
-                    }
-
-                    if (Mouse.Captured != null && !Element.IsMouseCaptured)
-                    {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                private bool CaptureMouseSafe()
+                private void CaptureMouseSafe()
                 {
                     // Avoid stealing mouse capture from other elements
-                    if (Mouse.Captured == null || Element.IsMouseCaptured)
+                    if (CanCaptureMouse())
                     {
+                        Element.Focus();
                         Element.CaptureMouse();
-                        return true;
                     }
-
-                    return false;
                 }
+
+                private bool CanCaptureMouse()
+                    => Mouse.Captured == null || Element.IsMouseCaptured;
 
                 private static SelectionType GetSelectionTypeForDragging(SelectionType? selectionType)
                 {

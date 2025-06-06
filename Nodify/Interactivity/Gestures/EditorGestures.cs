@@ -150,6 +150,7 @@ namespace Nodify.Interactivity
             public NodifyEditorGestures()
             {
                 Selection = new SelectionGestures();
+                SelectAll = ApplicationCommands.SelectAll.InputGestures[0].AsRef();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
                 PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift, true);
                 Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
@@ -166,6 +167,9 @@ namespace Nodify.Interactivity
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
             public SelectionGestures Selection { get; }
+
+            /// <summary>Gesture used to select all <see cref="Nodify.ItemContainer"/>s in the editor.</summary>
+            public InputGestureRef SelectAll { get; }
 
             /// <summary>Gesture used to start cutting connections.</summary>
             public InputGestureRef Cutting { get; }
@@ -219,6 +223,7 @@ namespace Nodify.Interactivity
             public void Apply(NodifyEditorGestures gestures)
             {
                 Selection.Apply(gestures.Selection);
+                SelectAll.Value = gestures.SelectAll.Value;
                 Cutting.Value = gestures.Cutting.Value;
                 PushItems.Value = gestures.PushItems.Value;
                 Pan.Value = gestures.Pan.Value;
