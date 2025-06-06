@@ -5,6 +5,11 @@
 > - Breaking Changes:
 >	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
 > - Features:
+> - Bugfixes:
+
+#### **Version 7.0.4**
+
+> - Features:
 >	- Added AsRef extension method to InputGesture to convert it to an InputGestureRef
 > - Bugfixes:
 >	- Fixed an issue where the gesture used for EditorGestures.Editor.SelectAll extracted from the ApplicationCommands was assumed to be a KeyGesture
