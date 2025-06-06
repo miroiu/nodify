@@ -53,6 +53,8 @@
                 Value="Center" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="InputConnectorTemplate"
                 Value="{StaticResource DefaultInputConnectorTemplate}" />
         <Setter Property="OutputConnectorTemplate"
@@ -99,7 +101,8 @@
                                                   ItemsSource="{TemplateBinding Input}"
                                                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                                   ItemTemplate="{TemplateBinding InputConnectorTemplate}"
-                                                  Focusable="False" />
+                                                  Focusable="False"
+                                                  IsTabStop="False" />
 
                                     <!--Content-->
                                     <Border Grid.Column="1"
@@ -116,7 +119,8 @@
                                                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                                   HorizontalContentAlignment="Right"
                                                   Grid.Column="2"
-                                                  Focusable="False" />
+                                                  Focusable="False"
+                                                  IsTabStop="False" />
                                 </Grid>
                             </Border>
 
