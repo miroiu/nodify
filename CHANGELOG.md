@@ -8,6 +8,7 @@
 >	- Added AsRef extension method to InputGesture to convert it to an InputGestureRef
 > - Bugfixes:
 >	- Fixed an issue where the gesture used for EditorGestures.Editor.SelectAll extracted from the ApplicationCommands was assumed to be a KeyGesture
+>	- Fixed overrides of DrawDirectionalArrowheadGeometry virtual method not working in subclasses of the built in connections
 >	- Fixed a memory leak caused by the auto panning timer
 
 #### **Version 7.0.3**
