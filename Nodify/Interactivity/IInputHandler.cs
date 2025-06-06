@@ -25,5 +25,10 @@ namespace Nodify.Interactivity
         /// Toggled interactions usually involve two steps, and it is important to keep the input capture active until the interaction is completed.
         /// </remarks>
         bool RequiresInputCapture { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether events that have been handled should be processed too.
+        /// </summary>
+        bool ProcessHandledEvents { get; }
     }
 }
