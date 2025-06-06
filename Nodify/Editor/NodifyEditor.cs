@@ -573,6 +573,8 @@ namespace Nodify
             SetValue(ViewportTransformPropertyKey, transform);
 
             InputProcessor.AddSharedHandlers(this);
+
+            Unloaded += OnEditorUnloaded;
         }
 
         /// <inheritdoc />
@@ -584,8 +586,6 @@ namespace Nodify
             ConnectionsHost = GetTemplateChild(ElementConnectionsHost) as UIElement ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
-
-            Unloaded += OnEditorUnloaded;
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)
