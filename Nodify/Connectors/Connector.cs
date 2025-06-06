@@ -172,6 +172,9 @@ namespace Nodify
         public Connector()
         {
             InputProcessor.AddSharedHandlers(this);
+
+            Loaded += OnConnectorLoaded;
+            Unloaded += OnConnectorUnloaded;
         }
 
         /// <inheritdoc />
@@ -181,9 +184,6 @@ namespace Nodify
 
             Container = this.GetParentOfType<ItemContainer>();
             Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
-
-            Loaded += OnConnectorLoaded;
-            Unloaded += OnConnectorUnloaded;
         }
 
         #region Update Anchor

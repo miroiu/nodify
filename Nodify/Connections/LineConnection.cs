@@ -68,7 +68,7 @@ namespace Nodify
             }
             else
             {
-                DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
+                base.DrawDefaultArrowhead(context, source, target, arrowDirection, orientation);
             }
         }
 
