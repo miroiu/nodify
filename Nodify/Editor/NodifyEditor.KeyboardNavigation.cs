@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace Nodify
 {
-    public partial class NodifyEditor : IKeyboardNavigationLayer, INavigationLayerGroup
+    public partial class NodifyEditor : IKeyboardNavigationLayer, IKeyboardNavigationLayerGroup
     {
         private readonly List<IKeyboardNavigationLayer> _focusScopes = new List<IKeyboardNavigationLayer>();
         private IKeyboardNavigationLayer _activeFocusScope;
@@ -141,17 +141,21 @@ namespace Nodify
         public new bool MoveFocus(TraversalRequest request)
             => ActiveLayer.TryMoveFocus(request);
 
-        void INavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
+        void IKeyboardNavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
         {
             _focusScopes.Add(layer);
+            if (ActiveLayer is null)
+            {
+                _activeFocusScope = layer;
+            }
         }
 
-        void INavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
+        void IKeyboardNavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
         {
             _focusScopes.Remove(_focusScopes.FirstOrDefault(layer => layer.Id == layerId)!);
         }
 
-        void INavigationLayerGroup.MoveToNextLayer()
+        void IKeyboardNavigationLayerGroup.MoveToNextLayer()
         {
             int currentIndex = _focusScopes.IndexOf(ActiveLayer);
             if (currentIndex >= 0 && currentIndex < _focusScopes.Count - 1)
@@ -162,7 +166,7 @@ namespace Nodify
             }
         }
 
-        void INavigationLayerGroup.MoveToPrevLayer()
+        void IKeyboardNavigationLayerGroup.MoveToPrevLayer()
         {
             throw new NotImplementedException();
         }

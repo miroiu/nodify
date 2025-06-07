@@ -9,7 +9,7 @@ namespace Nodify.Interactivity
         public static readonly KeyboardNavigationLayerId Connections = new KeyboardNavigationLayerId();
     }
 
-    public interface INavigationLayerGroup : IReadOnlyCollection<IKeyboardNavigationLayer>
+    public interface IKeyboardNavigationLayerGroup : IReadOnlyCollection<IKeyboardNavigationLayer>
     {
         IKeyboardNavigationLayer ActiveLayer { get; }
 

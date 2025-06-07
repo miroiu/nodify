@@ -62,12 +62,12 @@ namespace Nodify.Interactivity
                     }
                     else if (gestures.NextNavigationLayer.Matches(e.Source, e))
                     {
-                        ((INavigationLayerGroup)Element).MoveToNextLayer();
+                        ((IKeyboardNavigationLayerGroup)Element).MoveToNextLayer();
                         e.Handled = true;
                     }
                     else if (gestures.PrevNavigationLayer.Matches(e.Source, e))
                     {
-                        ((INavigationLayerGroup)Element).MoveToPrevLayer();
+                        ((IKeyboardNavigationLayerGroup)Element).MoveToPrevLayer();
                         e.Handled = true;
                     }
                 }

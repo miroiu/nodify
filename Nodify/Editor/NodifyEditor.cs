@@ -581,8 +581,7 @@ namespace Nodify
 
             Unloaded += OnEditorUnloaded;
 
-            _focusScopes.Add(this);
-            _activeFocusScope = this;
+            ((IKeyboardNavigationLayerGroup)this).RegisterLayer(this);
         }
 
         /// <inheritdoc />
