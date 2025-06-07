@@ -234,6 +234,11 @@ namespace Nodify
         public static bool PreserveSelectionOnRightClick { get; set; }
 
         /// <summary>
+        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
+        /// </summary>
+        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
+
+        /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public NodifyEditor Editor { get; }
@@ -246,6 +251,11 @@ namespace Nodify
             BorderThickness.Top - SelectedBorderThickness.Top,
             BorderThickness.Right - SelectedBorderThickness.Right,
             BorderThickness.Bottom - SelectedBorderThickness.Bottom);
+
+        /// <summary>
+        /// Gets the bounds of the selection area for this <see cref="ItemContainer"/> based on its <see cref="Location"/> and <see cref="DesiredSizeForSelection"/>.
+        /// </summary>
+        public Rect Bounds => new Rect(Location, DesiredSizeForSelection ?? RenderSize);
 
         #endregion
 
@@ -268,6 +278,11 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(typeof(ItemContainer)));
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+
+            //KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Local));
+            //KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Contained));
+            //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+
         }
 
         /// <summary>
@@ -295,7 +310,7 @@ namespace Nodify
         /// <returns>True if <paramref name="position"/> is selectable.</returns>
         protected internal virtual bool IsSelectableLocation(Point position)
         {
-            Size size = DesiredSizeForSelection ?? RenderSize;
+            Size size = Bounds.Size;
             return position.X >= 0 && position.Y >= 0 && position.X <= size.Width && position.Y <= size.Height;
         }
 
@@ -307,7 +322,7 @@ namespace Nodify
         /// <returns>True if <paramref name="area"/> contains or intersects this <see cref="ItemContainer"/>.</returns>
         public virtual bool IsSelectableInArea(Rect area, bool isContained)
         {
-            var bounds = new Rect(Location, DesiredSizeForSelection ?? RenderSize);
+            var bounds = Bounds;
             return isContained ? area.Contains(bounds) : area.IntersectsWith(bounds);
         }
 
@@ -370,7 +385,7 @@ namespace Nodify
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             InputProcessor.ProcessEvent(e);
-            
+
             // Release the mouse capture if all the mouse buttons are released and there's no interaction in progress
             if (!InputProcessor.RequiresInputCapture && IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {

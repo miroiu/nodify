@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Nodify
@@ -169,6 +170,10 @@ namespace Nodify
         static Node()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(typeof(Node)));
+            FocusableProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.True));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
         public Node()

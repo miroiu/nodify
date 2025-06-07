@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -552,6 +553,10 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+
             EditorCommands.RegisterCommandBindings<NodifyEditor>();
         }
 
@@ -575,6 +580,9 @@ namespace Nodify
             InputProcessor.AddSharedHandlers(this);
 
             Unloaded += OnEditorUnloaded;
+
+            _focusScopes.Add(this);
+            _activeFocusScope = this;
         }
 
         /// <inheritdoc />
@@ -688,6 +696,52 @@ namespace Nodify
         /// <param name="area">The location in graph space coordinates.</param>
         public new void BringIntoView(Rect area)
             => BringIntoView(new Point(area.X + area.Width / 2, area.Y + area.Height / 2));
+
+        /// <summary>
+        /// Ensures the specified item container is fully visible within the viewport, optionally with padding around the edges.
+        /// </summary>
+        /// <param name="container">The item container to bring into view.</param>
+        /// <param name="offsetFromEdge">The padding to apply around the container</param>
+        public void BringIntoView(ItemContainer container, double offsetFromEdge = 32d)
+        {
+            var viewport = new Rect(ViewportLocation, ViewportSize);
+            var containerBounds = new Rect(container.Location, container.RenderSize);
+
+            containerBounds.Inflate(offsetFromEdge, offsetFromEdge);
+
+            if (!viewport.Contains(containerBounds))
+            {
+                if (viewport.IntersectsWith(containerBounds))
+                {
+                    double newX = viewport.X;
+                    double newY = viewport.Y;
+
+                    if (containerBounds.Left < viewport.Left)
+                    {
+                        newX = containerBounds.Left;
+                    }
+                    else if (containerBounds.Right > viewport.Right)
+                    {
+                        newX = containerBounds.Right - viewport.Width;
+                    }
+
+                    if (containerBounds.Top < viewport.Top)
+                    {
+                        newY = containerBounds.Top;
+                    }
+                    else if (containerBounds.Bottom > viewport.Bottom)
+                    {
+                        newY = containerBounds.Bottom - viewport.Height;
+                    }
+
+                    BringIntoView(new Point(newX, newY) + new Vector(viewport.Width / 2, viewport.Height / 2));
+                }
+                else
+                {
+                    BringIntoView(containerBounds);
+                }
+            }
+        }
 
         /// <summary>
         /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.
@@ -876,6 +930,12 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
+            => InputProcessor.ProcessEvent(e);
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+            => InputProcessor.ProcessEvent(e);
+
+        protected override void OnPreviewKeyUp(KeyEventArgs e)
             => InputProcessor.ProcessEvent(e);
 
         #endregion

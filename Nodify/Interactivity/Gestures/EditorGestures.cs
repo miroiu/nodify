@@ -142,13 +142,112 @@ namespace Nodify.Interactivity
                 Drag.Value = gestures.Drag.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
             }
+
+            // TODO: Comment
+            public void Unbind()
+            {
+                Selection.Unbind();
+                Drag.Unbind();
+                CancelAction.Unbind();
+            }
+        }
+
+        // TODO: Comments
+        public class DirectionalNavigationGestures
+        {
+            public DirectionalNavigationGestures(ModifierKeys modifierKeys = ModifierKeys.None)
+            {
+                Up = new KeyGesture(Key.Up, modifierKeys);
+                Left = new KeyGesture(Key.Left, modifierKeys);
+                Down = new KeyGesture(Key.Down, modifierKeys);
+                Right = new KeyGesture(Key.Right, modifierKeys);
+            }
+
+            public DirectionalNavigationGestures(Key triggerKey, ModifierKeys modifierKeys = ModifierKeys.None, bool repeated = false)
+            {
+                Up = new KeyComboGesture(triggerKey, Key.Up, modifierKeys) { AllowRepeatingComboKey = repeated };
+                Left = new KeyComboGesture(triggerKey, Key.Left, modifierKeys) { AllowRepeatingComboKey = repeated };
+                Down = new KeyComboGesture(triggerKey, Key.Down, modifierKeys) { AllowRepeatingComboKey = repeated };
+                Right = new KeyComboGesture(triggerKey, Key.Right, modifierKeys) { AllowRepeatingComboKey = repeated };
+            }
+
+            public InputGestureRef Up { get; }
+            public InputGestureRef Left { get; }
+            public InputGestureRef Down { get; }
+            public InputGestureRef Right { get; }
+
+            /// <summary>Copies from the specified gestures.</summary>
+            /// <param name="gestures">The gestures to copy.</param>
+            public void Apply(DirectionalNavigationGestures gestures)
+            {
+                Up.Value = gestures.Up.Value;
+                Left.Value = gestures.Left.Value;
+                Down.Value = gestures.Down.Value;
+                Right.Value = gestures.Right.Value;
+            }
+
+            public void Unbind()
+            {
+                Up.Unbind();
+                Left.Unbind();
+                Down.Unbind();
+                Right.Unbind();
+            }
         }
 
         /// <summary>Gestures for the editor.</summary>
         public class NodifyEditorGestures
         {
+            // TODO: Comments
+            public class KeyboardNavigation
+            {
+                public KeyboardNavigation()
+                {
+                    Pan = new DirectionalNavigationGestures(Key.Space, repeated: true);
+                    MoveSelection = new DirectionalNavigationGestures(ModifierKeys.Control);
+                    NavigateSelection = new DirectionalNavigationGestures(ModifierKeys.None);
+                    NextNavigationLayer = new KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control);
+                    PrevNavigationLayer = new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control);
+                }
+
+                // TODO: Pan large step gesture?
+                public DirectionalNavigationGestures Pan { get; }
+
+                public DirectionalNavigationGestures MoveSelection { get; }
+
+                public DirectionalNavigationGestures NavigateSelection { get; }
+
+                public InputGestureRef NextNavigationLayer { get; }
+                public InputGestureRef PrevNavigationLayer { get; }
+
+                public void Apply(KeyboardNavigation gestures)
+                {
+                    Pan.Apply(gestures.Pan);
+                    NextNavigationLayer.Value = gestures.NextNavigationLayer.Value;
+                    PrevNavigationLayer.Value = gestures.PrevNavigationLayer.Value;
+                }
+
+                public void Unbind()
+                {
+                    Pan.Unbind();
+                    NextNavigationLayer.Unbind();
+                    PrevNavigationLayer.Unbind();
+                }
+            }
+            // TODO:
+            // Pan editor: Space+Arrow keys
+            // 
+            // Navigate connections = Arrow keys
+            // Navigate nodes = Arrow keys
+            // Navigate connectors inside panel = Arrow keys
+            // Toggle selection = CTRL+Space or Enter
+            // Move nodes:  - CTRL + Arrow Keys – nudge selected node(s) by 1 unit
+            //              - Shift + CTRL + Arrow Keys – nudge by 10 units
+            // Deselect all = Escape
+
             public NodifyEditorGestures()
             {
+                Keyboard = new KeyboardNavigation();
                 Selection = new SelectionGestures();
                 SelectAll = ApplicationCommands.SelectAll.InputGestures[0].AsRef();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
@@ -164,6 +263,9 @@ namespace Nodify.Interactivity
                 PanHorizontalModifierKey = ModifierKeys.Shift;
                 PanVerticalModifierKey = ModifierKeys.None;
             }
+
+            // TODO: Comment and rename to Navigation?
+            public KeyboardNavigation Keyboard { get; }
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
             public SelectionGestures Selection { get; }
@@ -222,6 +324,7 @@ namespace Nodify.Interactivity
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(NodifyEditorGestures gestures)
             {
+                Keyboard.Apply(gestures.Keyboard);
                 Selection.Apply(gestures.Selection);
                 SelectAll.Value = gestures.SelectAll.Value;
                 Cutting.Value = gestures.Cutting.Value;
@@ -236,6 +339,22 @@ namespace Nodify.Interactivity
                 PanWithMouseWheel = gestures.PanWithMouseWheel;
                 PanHorizontalModifierKey = gestures.PanHorizontalModifierKey;
                 PanVerticalModifierKey = gestures.PanVerticalModifierKey;
+            }
+
+            // TODO: Comment
+            public void Unbind()
+            {
+                Keyboard.Unbind();
+                Selection.Unbind();
+                SelectAll.Unbind();
+                Cutting.Unbind();
+                Pan.Unbind();
+                PushItems.Unbind();
+                ZoomIn.Unbind();
+                ZoomOut.Unbind();
+                ResetViewportLocation.Unbind();
+                FitToScreen.Unbind();
+                CancelAction.Unbind();
             }
         }
 
@@ -269,6 +388,14 @@ namespace Nodify.Interactivity
                 Connect.Value = gestures.Connect.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
             }
+
+            // TODO: Comment
+            public void Unbind()
+            {
+                Disconnect.Unbind();
+                Connect.Unbind();
+                CancelAction.Unbind();
+            }
         }
 
         /// <summary>Gestures used by the <see cref="BaseConnection"/>.</summary>
@@ -299,6 +426,13 @@ namespace Nodify.Interactivity
                 Split.Value = gestures.Split.Value;
                 Disconnect.Value = gestures.Disconnect.Value;
                 Selection.Apply(gestures.Selection);
+            }
+
+            public void Unbind()
+            {
+                Split.Unbind();
+                Selection.Unbind();
+                Disconnect.Unbind();
             }
         }
 
@@ -348,6 +482,13 @@ namespace Nodify.Interactivity
                 CancelAction.Value = gestures.CancelAction.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
             }
+
+            // TODO: Comment
+            public void Unbind()
+            {
+                DragViewport.Unbind();
+                CancelAction.Unbind();
+            }
         }
 
         /// <summary>Gestures for the editor.</summary>
@@ -378,6 +519,16 @@ namespace Nodify.Interactivity
             Connection.Apply(gestures.Connection);
             GroupingNode.Apply(gestures.GroupingNode);
             Minimap.Apply(gestures.Minimap);
+        }
+
+        // TODO: Comment
+        public void Unbind()
+        {
+            Editor.Unbind();
+            ItemContainer.Unbind();
+            Connector.Unbind();
+            Connection.Unbind();
+            Minimap.Unbind();
         }
     }
 }
