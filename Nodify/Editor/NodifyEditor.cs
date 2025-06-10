@@ -552,7 +552,7 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
             FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 

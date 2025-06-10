@@ -1,11 +1,12 @@
 ﻿using Nodify.Interactivity;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Nodify
 {
-    internal sealed class ConnectionContainer : ContentPresenter
+    public class ConnectionContainer : ContentPresenter, IKeyboardFocusTarget<ConnectionContainer>
     {
         #region Dependency properties
 
@@ -66,6 +67,13 @@ namespace Nodify
 
         #endregion
 
+        Rect IKeyboardFocusTarget<ConnectionContainer>.Bounds => ConnectionFocusTarget.Bounds;
+        ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
+
+        // TODO:
+        private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
+            ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
+
         private ConnectionsMultiSelector Selector { get; }
 
         private FrameworkElement? _connection;
@@ -78,11 +86,21 @@ namespace Nodify
         static ConnectionContainer()
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
+
+            // TODO:
+            FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(null));
         }
 
         internal ConnectionContainer(ConnectionsMultiSelector selector)
         {
             Selector = selector;
+        }
+
+        protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)
+        {
+            // TODO: Custom property on BaseConnection
+            BaseConnection.SetIsSelected(Connection, (bool)e.NewValue);
+            //Connection?.SetValue(IsKeyboardFocusedProperty, e.NewValue);
         }
 
         /// <summary>

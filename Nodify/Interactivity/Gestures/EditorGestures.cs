@@ -246,15 +246,9 @@ namespace Nodify.Interactivity
                 }
             }
             // TODO:
-            // Pan editor: Space+Arrow keys
-            // 
             // Navigate connections = Arrow keys
-            // Navigate nodes = Arrow keys
             // Navigate connectors inside panel = Arrow keys
-            // Toggle selection = CTRL+Space or Enter
-            // Move nodes:  - CTRL + Arrow Keys – nudge selected node(s) by 1 unit
-            //              - Shift + CTRL + Arrow Keys – nudge by 10 units
-            // Deselect all = Escape
+            // Move nodes:  - Shift + CTRL + Arrow Keys – nudge by 10 units
 
             public NodifyEditorGestures()
             {

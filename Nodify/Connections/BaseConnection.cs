@@ -109,7 +109,7 @@ namespace Nodify
     /// <summary>
     /// Represents the base class for shapes that are drawn from a <see cref="Source"/> point to a <see cref="Target"/> point.
     /// </summary>
-    public abstract class BaseConnection : Shape
+    public abstract class BaseConnection : Shape, IKeyboardFocusTarget<FrameworkElement>
     {
         #region Dependency Properties
 
@@ -490,6 +490,9 @@ namespace Nodify
         /// Gets a vector that has its coordinates set to 0.
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
+
+        Rect IKeyboardFocusTarget<FrameworkElement>.Bounds => new Rect(Source, Target);
+        FrameworkElement IKeyboardFocusTarget<FrameworkElement>.Element => this;
 
         private Pen? _outlinePen;
 

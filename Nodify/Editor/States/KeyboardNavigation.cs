@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace Nodify.Interactivity
 {
@@ -98,7 +97,7 @@ namespace Nodify.Interactivity
             // TODO: Allow for extensibility because connections can be custom
             private static bool IsEditorControl(object originalSource)
             {
-                return originalSource is NodifyEditor || originalSource is ItemContainer || originalSource is Connector || originalSource is BaseConnection;
+                return originalSource is NodifyEditor || originalSource is ItemContainer || originalSource is Connector || originalSource is ConnectionContainer;
             }
         }
     }

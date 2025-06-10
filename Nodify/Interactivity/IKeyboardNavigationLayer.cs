@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
+
     public class KeyboardNavigationLayerId
     {
         public static readonly KeyboardNavigationLayerId Nodes = new KeyboardNavigationLayerId();

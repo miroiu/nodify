@@ -43,10 +43,10 @@ namespace Nodify
                     {
                         _previousFocusedContainer.SetTarget(prevContainer);
                     }
+
                     BringIntoView(previousContainer, ItemContainer.BringIntoViewEdgeOffset);
                     return true;
                 }
-
             }
             else if (TryGetContainerToFocus(out var containerToFocus, request) && containerToFocus!.Focus())
             {
@@ -55,6 +55,7 @@ namespace Nodify
                 {
                     _previousFocusedContainer.SetTarget(prevContainer);
                 }
+
                 BringIntoView(containerToFocus, ItemContainer.BringIntoViewEdgeOffset);
                 return true;
             }
@@ -86,86 +87,10 @@ namespace Nodify
 
         protected virtual ItemContainer? FindNextFocusTarget(ItemContainer currentContainer, TraversalRequest request)
         {
-            var currentContainerBounds = new Rect(currentContainer.Location, currentContainer.DesiredSizeForSelection ?? currentContainer.RenderSize);
-            var currentContainerCenter = new Point(currentContainerBounds.X + currentContainerBounds.Width / 2, currentContainerBounds.Y + currentContainerBounds.Height / 2);
+            var focusNavigator = new DirectionalFocusNavigator<ItemContainer>(ItemContainers);
+            var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
-            //IEnumerable<ItemContainer> candidates = request.FocusNavigationDirection switch
-            //{
-            //    FocusNavigationDirection.Left => ItemContainers.Where(c =>
-            //    {
-            //        var center = new Point(c.Bounds.X + c.Bounds.Width / 2, c.Bounds.Y + c.Bounds.Height / 2);
-            //        return center.X < currentContainerCenter.X;
-            //    }),
-            //    FocusNavigationDirection.Right => ItemContainers.Where(c =>
-            //    {
-            //        var center = new Point(c.Bounds.X + c.Bounds.Width / 2, c.Bounds.Y + c.Bounds.Height / 2);
-            //        return center.X > currentContainerCenter.X;
-            //    }),
-            //    FocusNavigationDirection.Up => ItemContainers.Where(c =>
-            //    {
-            //        var center = new Point(c.Bounds.X + c.Bounds.Width / 2, c.Bounds.Y + c.Bounds.Height / 2);
-            //        return center.Y < currentContainerCenter.Y;
-            //    }),
-            //    FocusNavigationDirection.Down => ItemContainers.Where(c =>
-            //    {
-            //        var center = new Point(c.Bounds.X + c.Bounds.Width / 2, c.Bounds.Y + c.Bounds.Height / 2);
-            //        return center.Y > currentContainerCenter.Y;
-            //    }),
-            //    _ => Enumerable.Empty<ItemContainer>()
-            //};
-
-            var itemContainers = ItemContainers;
-
-            IEnumerable<ItemContainer> candidates = request.FocusNavigationDirection switch
-            {
-                FocusNavigationDirection.Left => itemContainers.Where(c => c.Bounds.Right <= currentContainerBounds.Left),
-                FocusNavigationDirection.Right => itemContainers.Where(c => c.Location.X >= currentContainerBounds.Right),
-                FocusNavigationDirection.Up => itemContainers.Where(c => c.Bounds.Bottom <= currentContainerBounds.Top),
-                FocusNavigationDirection.Down => itemContainers.Where(c => c.Location.Y >= currentContainerBounds.Bottom),
-                _ => Enumerable.Empty<ItemContainer>()
-            };
-
-            // Wrap focus if no candidates found in the current direction  
-            if (!candidates.Any())
-            {
-                candidates = request.FocusNavigationDirection switch
-                {
-                    FocusNavigationDirection.Left => itemContainers.OrderByDescending(c => c.Location.X).Take(1),
-                    FocusNavigationDirection.Right => itemContainers.OrderBy(c => c.Location.X).Take(1),
-                    FocusNavigationDirection.Up => itemContainers.OrderByDescending(c => c.Location.Y).Take(1),
-                    FocusNavigationDirection.Down => itemContainers.OrderBy(c => c.Location.Y).Take(1),
-                    _ => Enumerable.Empty<ItemContainer>()
-                };
-
-                request.Wrapped = true;
-            }
-
-            ItemContainer? best = null;
-            double minDistanceSquared = double.MaxValue;
-
-            foreach (var candidate in candidates)
-            {
-                // TODO: If candidate is on screen, give it priority over candidates that are off-screen
-
-                //var bounds = new Rect(candidate.Location, candidate.DesiredSizeForSelection ?? candidate.RenderSize);
-                //var center = new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2);
-
-                //double distanceSquared = (center - currentContainerCenter).LengthSquared;
-                //if (distanceSquared < minDistanceSquared)
-                //{
-                //    minDistanceSquared = distanceSquared;
-                //    best = candidate;
-                //}
-
-                double distanceSquared = (candidate.Location - currentContainerBounds.TopLeft).LengthSquared;
-                if (distanceSquared < minDistanceSquared)
-                {
-                    minDistanceSquared = distanceSquared;
-                    best = candidate;
-                }
-            }
-
-            return best;
+            return result?.Element;
         }
 
         public bool MoveFocus(FocusNavigationDirection direction)

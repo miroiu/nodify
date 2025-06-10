@@ -1,5 +1,7 @@
 ﻿using Nodify.Interactivity;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows;
@@ -9,7 +11,7 @@ using System.Windows.Input;
 
 namespace Nodify
 {
-    internal sealed class ConnectionsMultiSelector : MultiSelector, IKeyboardNavigationLayer
+    public class ConnectionsMultiSelector : MultiSelector, IKeyboardNavigationLayer
     {
         #region Dependency Properties
 
@@ -56,18 +58,108 @@ namespace Nodify
         /// </summary>
         public NodifyEditor? Editor { get; private set; }
 
+        /// <summary>
+        /// Gets a list of all <see cref="ConnectionContainer"/>s.
+        /// </summary>
+        /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
+        protected internal IReadOnlyCollection<ConnectionContainer> ConnectionContainers
+        {
+            get
+            {
+                ItemCollection items = Items;
+                var containers = new List<ConnectionContainer>(items.Count);
+
+                for (var i = 0; i < items.Count; i++)
+                {
+                    containers.Add((ConnectionContainer)ItemContainerGenerator.ContainerFromIndex(i));
+                }
+
+                return containers;
+            }
+        }
+
+        static ConnectionsMultiSelector()
+        {
+            FocusableProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.False));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True));
+        }
+
         #region Keyboard Navigation
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
 
+        private readonly WeakReference<ConnectionContainer> _previousFocusedContainer = new WeakReference<ConnectionContainer>(null!);
+        private FocusNavigationDirection? _previousFocusNavigationDirection;
+
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            throw new System.NotImplementedException();
+            // TODO: throw exception if request.FocusNavigationDirection is not directional (Left, Right, Up, Down) or handle other cases too
+            var prevContainer = Keyboard.FocusedElement as ConnectionContainer;
+
+            if (_previousFocusNavigationDirection.HasValue && request.FocusNavigationDirection.IsOppositeOf(_previousFocusNavigationDirection.Value))
+            {
+                // If the request is in the opposite direction of the last focus navigation, try to restore the previous focused container
+                if (_previousFocusedContainer.TryGetTarget(out var previousContainer) && previousContainer.Focus())
+                {
+                    _previousFocusNavigationDirection = request.FocusNavigationDirection;
+                    if (prevContainer != null)
+                    {
+                        _previousFocusedContainer.SetTarget(prevContainer);
+                    }
+
+                    // TODO: Bring into view?
+                    return true;
+                }
+            }
+            else if (TryGetContainerToFocus(out var containerToFocus, request) && containerToFocus!.Focus())
+            {
+                _previousFocusNavigationDirection = request.FocusNavigationDirection;
+                if (prevContainer != null)
+                {
+                    _previousFocusedContainer.SetTarget(prevContainer);
+                }
+
+                // TODO: Bring into view?
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryGetContainerToFocus(out ConnectionContainer? containerToFocus, TraversalRequest request)
+        {
+            containerToFocus = null;
+
+            if (Keyboard.FocusedElement is ConnectionContainer focusedContainer)
+            {
+                containerToFocus = FindNextFocusTarget(focusedContainer, request);
+            }
+            else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ConnectionContainer>() is ConnectionContainer parentContainer)
+            {
+                containerToFocus = parentContainer;
+            }
+
+            return containerToFocus != null;
+        }
+
+        protected virtual ConnectionContainer? FindNextFocusTarget(ConnectionContainer currentContainer, TraversalRequest request)
+        {
+            var focusNavigator = new LinearFocusNavigator<ConnectionContainer>(ConnectionContainers);
+            var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
+
+            return result?.Element;
         }
 
         void IKeyboardNavigationLayer.OnActivate()
         {
-            // TODO: Restore focus
+            if (Items.Count > 0)
+            {
+                var container = (ConnectionContainer)ItemContainerGenerator.ContainerFromIndex(0);
+                container.Focus();
+            }
         }
 
         void IKeyboardNavigationLayer.OnDeactivate()
