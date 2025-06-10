@@ -121,7 +121,7 @@ namespace Nodify.Interactivity
             }
 
             /// <summary>Gesture to select the container using a <see cref="SelectionGestures"/> strategy.</summary>
-            /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or any of the <see cref="SelectionGestures"/> gestures.</remarks>
+            /// <remarks>Defaults to <see cref="MouseAction.LeftClick"/> or any of the <see cref="SelectionGestures"/> gestures.</remarks>
             public SelectionGestures Selection { get; }
 
             /// <summary>Gesture to start and complete a dragging operation.</summary>
@@ -204,18 +204,21 @@ namespace Nodify.Interactivity
                 public KeyboardNavigation()
                 {
                     Pan = new DirectionalNavigationGestures(Key.Space, repeated: true);
-                    MoveSelection = new DirectionalNavigationGestures(ModifierKeys.Control);
+                    DragSelection = new DirectionalNavigationGestures(ModifierKeys.Control);
                     NavigateSelection = new DirectionalNavigationGestures(ModifierKeys.None);
+                    ToggleSelected = new AnyGesture(new KeyGesture(Key.Space), new KeyGesture(Key.Enter));
+                    DeselectAll = new KeyGesture(Key.Escape);
                     NextNavigationLayer = new KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control);
                     PrevNavigationLayer = new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control);
                 }
 
                 // TODO: Pan large step gesture?
                 public DirectionalNavigationGestures Pan { get; }
-
-                public DirectionalNavigationGestures MoveSelection { get; }
-
+                public DirectionalNavigationGestures DragSelection { get; }
                 public DirectionalNavigationGestures NavigateSelection { get; }
+
+                public InputGestureRef ToggleSelected { get; }
+                public InputGestureRef DeselectAll { get; }
 
                 public InputGestureRef NextNavigationLayer { get; }
                 public InputGestureRef PrevNavigationLayer { get; }
@@ -223,6 +226,10 @@ namespace Nodify.Interactivity
                 public void Apply(KeyboardNavigation gestures)
                 {
                     Pan.Apply(gestures.Pan);
+                    DragSelection.Apply(gestures.DragSelection);
+                    NavigateSelection.Apply(gestures.NavigateSelection);
+                    ToggleSelected.Value = gestures.ToggleSelected.Value;
+                    DeselectAll.Value = gestures.DeselectAll.Value;
                     NextNavigationLayer.Value = gestures.NextNavigationLayer.Value;
                     PrevNavigationLayer.Value = gestures.PrevNavigationLayer.Value;
                 }
@@ -230,6 +237,10 @@ namespace Nodify.Interactivity
                 public void Unbind()
                 {
                     Pan.Unbind();
+                    DragSelection.Unbind();
+                    NavigateSelection.Unbind();
+                    ToggleSelected.Unbind();
+                    DeselectAll.Unbind();
                     NextNavigationLayer.Unbind();
                     PrevNavigationLayer.Unbind();
                 }

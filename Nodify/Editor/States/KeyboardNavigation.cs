@@ -1,32 +1,17 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace Nodify.Interactivity
 {
     public static partial class EditorState
     {
-        // TODO: Move focus manually 
         public class KeyboardNavigation : InputElementState<NodifyEditor>
         {
+            private IKeyboardNavigationLayer? ActiveKeyboardNavigationLayer => ((IKeyboardNavigationLayerGroup)Element).ActiveLayer;
+
             public KeyboardNavigation(NodifyEditor element) : base(element)
             {
-                ProcessHandledEvents = true;
-            }
-
-            protected override void OnEvent(InputEventArgs e)
-            {
-                //if (e.RoutedEvent == UIElement.PreviewKeyDownEvent && e is KeyEventArgs args && IsDirectionalNavigationKey(args.Key))
-                //{
-                //    OnKeyDown(args);
-                //    e.Handled = true;
-                //}
-            }
-
-            private static bool IsDirectionalNavigationKey(Key key)
-            {
-                return key is Key.Left || key is Key.Right || key is Key.Up || key is Key.Down;
             }
 
             // TODO: If focus is within, do not allow escaping focus trap unless the escape gesture is performed. (some keys like Space or System Keys could try to escape)
@@ -37,14 +22,13 @@ namespace Nodify.Interactivity
 
                 if (Element.IsKeyboardFocusWithin && IsEditorControl(e.OriginalSource))
                 {
-                    // TODO: Check if the Editor.ActiveFocusScope (ActiveNavigationLayer) is the nodes layer
                     if (gestures.Pan.TryGetNavigationDirection(e, out var panDirection))
                     {
                         var panning = new Vector(-panDirection.X * cellSize, panDirection.Y * cellSize);
                         Element.UpdatePanning(panning);
                         e.Handled = true;
                     }
-                    else if (Element.SelectedContainersCount > 0 && gestures.MoveSelection.TryGetNavigationDirection(e, out var dragDirection))
+                    else if (CanDragSelection() && gestures.DragSelection.TryGetNavigationDirection(e, out var dragDirection))
                     {
                         var dragging = new Vector(dragDirection.X * cellSize, -dragDirection.Y * cellSize);
                         Element.BeginDragging();
@@ -60,17 +44,55 @@ namespace Nodify.Interactivity
                         Element.MoveFocus(direction);
                         e.Handled = true;
                     }
-                    else if (gestures.NextNavigationLayer.Matches(e.Source, e))
+                }
+            }
+
+            protected override void OnKeyUp(KeyEventArgs e)
+            {
+                var gestures = EditorGestures.Mappings.Editor.Keyboard;
+
+                if (gestures.ToggleSelected.Matches(e.Source, e))
+                {
+                    if (Keyboard.FocusedElement is ItemContainer itemContainer)
                     {
-                        ((IKeyboardNavigationLayerGroup)Element).MoveToNextLayer();
+                        itemContainer.Select(SelectionType.Invert);
+                    }
+                    else if (Keyboard.FocusedElement is ConnectionContainer connectionContainer)
+                    {
+                        connectionContainer.Select(SelectionType.Invert);
+                    }
+
+                    e.Handled = true;
+                }
+                else if (gestures.DeselectAll.Matches(e.Source, e))
+                {
+                    if (Element.SelectedContainersCount > 0 && ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes)
+                    {
+                        Element.UnselectAll();
                         e.Handled = true;
                     }
-                    else if (gestures.PrevNavigationLayer.Matches(e.Source, e))
+                    // TODO: How to get the selected connections count without a hard reference to the connections multi selector?
+                    else if (Element.SelectedConnections?.Count > 0 && ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Connections)
                     {
-                        ((IKeyboardNavigationLayerGroup)Element).MoveToPrevLayer();
+                        Element.UnselectAllConnections();
                         e.Handled = true;
                     }
                 }
+                else if (gestures.NextNavigationLayer.Matches(e.Source, e))
+                {
+                    ((IKeyboardNavigationLayerGroup)Element).MoveToNextLayer();
+                    e.Handled = true;
+                }
+                else if (gestures.PrevNavigationLayer.Matches(e.Source, e))
+                {
+                    ((IKeyboardNavigationLayerGroup)Element).MoveToPrevLayer();
+                    e.Handled = true;
+                }
+            }
+
+            private bool CanDragSelection()
+            {
+                return ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes && Element.SelectedContainersCount > 0;
             }
 
             // TODO: Allow for extensibility because connections can be custom

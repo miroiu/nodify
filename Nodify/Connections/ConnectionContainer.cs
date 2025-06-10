@@ -140,7 +140,7 @@ namespace Nodify
         /// Modifies the selection state of the current item based on the specified selection type.
         /// </summary>
         /// <param name="type">The type of selection to perform.</param>
-        private void Select(SelectionType type)
+        public void Select(SelectionType type)
         {
             switch (type)
             {

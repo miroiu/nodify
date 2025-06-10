@@ -14,7 +14,9 @@
                         <Setter Property="Control.Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <Rectangle StrokeThickness="2"
+                                    <Rectangle StrokeThickness="1"
+                                               StrokeDashArray="2"
+                                               Margin="-3"
                                                RadiusX="3"
                                                RadiusY="3"
                                                Stroke="{DynamicResource ItemContainer.SelectedBrush}" />

@@ -1,13 +1,18 @@
-﻿using System.Collections;
+﻿using Nodify.Interactivity;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace Nodify
 {
-    internal sealed class ConnectionsMultiSelector : MultiSelector
+    internal sealed class ConnectionsMultiSelector : MultiSelector, IKeyboardNavigationLayer
     {
+        #region Dependency Properties
+
         public static readonly DependencyProperty SelectedItemsProperty = NodifyEditor.SelectedItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty CanSelectMultipleItemsProperty = NodifyEditor.CanSelectMultipleItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));
 
@@ -44,10 +49,32 @@ namespace Nodify
             set => base.CanSelectMultipleItems = value;
         }
 
+        #endregion
+
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="ConnectionsMultiSelector"/>.
         /// </summary>
         public NodifyEditor? Editor { get; private set; }
+
+        #region Keyboard Navigation
+
+        KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
+
+        bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void IKeyboardNavigationLayer.OnActivate()
+        {
+            // TODO: Restore focus
+        }
+
+        void IKeyboardNavigationLayer.OnDeactivate()
+        {
+        }
+
+        #endregion
 
         protected override DependencyObject GetContainerForItemOverride()
             => new ConnectionContainer(this);
@@ -80,6 +107,11 @@ namespace Nodify
             base.OnApplyTemplate();
 
             Editor = this.GetParentOfType<NodifyEditor>();
+
+            if (Editor is IKeyboardNavigationLayerGroup group && group.RegisterLayer(this))
+            {
+                Debug.WriteLine($"Registered {GetType().Name} as a keyboard navigation layer in {group.GetType().Name}");
+            }
         }
 
         #region Selection Handlers

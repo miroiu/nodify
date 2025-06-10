@@ -7,19 +7,22 @@ namespace Nodify.Interactivity
     {
         public static readonly KeyboardNavigationLayerId Nodes = new KeyboardNavigationLayerId();
         public static readonly KeyboardNavigationLayerId Connections = new KeyboardNavigationLayerId();
+        public static readonly KeyboardNavigationLayerId Decorators = new KeyboardNavigationLayerId();
     }
 
     public interface IKeyboardNavigationLayerGroup : IReadOnlyCollection<IKeyboardNavigationLayer>
     {
-        IKeyboardNavigationLayer ActiveLayer { get; }
+        IKeyboardNavigationLayer? ActiveLayer { get; }
 
-        void MoveToNextLayer();
+        bool MoveToNextLayer();
 
-        void MoveToPrevLayer();
+        bool MoveToPrevLayer();
 
-        void RegisterLayer(IKeyboardNavigationLayer layer);
+        bool RegisterLayer(IKeyboardNavigationLayer layer);
 
-        void RemoveLayer(KeyboardNavigationLayerId layerId);
+        bool RemoveLayer(KeyboardNavigationLayerId layerId);
+
+        bool ActivateLayer(KeyboardNavigationLayerId layerId);
     }
 
     public interface IKeyboardNavigationLayer
@@ -28,6 +31,7 @@ namespace Nodify.Interactivity
 
         bool TryMoveFocus(TraversalRequest request);
 
-        bool IsActiveLayer { get; }
+        void OnActivate();
+        void OnDeactivate();
     }
 }

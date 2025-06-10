@@ -5,31 +5,56 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Nodify
 {
     public partial class NodifyEditor : IKeyboardNavigationLayer, IKeyboardNavigationLayerGroup
     {
-        private readonly List<IKeyboardNavigationLayer> _focusScopes = new List<IKeyboardNavigationLayer>();
-        private IKeyboardNavigationLayer _activeFocusScope;
+        private readonly List<IKeyboardNavigationLayer> _navigationLayers = new List<IKeyboardNavigationLayer>();
+        private IKeyboardNavigationLayer? _activeKeyboardNavigationLayer;
+        private IKeyboardNavigationLayer KeyboardNavigationLayer => this;
+        private IKeyboardNavigationLayerGroup KeyboardNavigationLayerGroup => this;
 
-        public IKeyboardNavigationLayer ActiveLayer => _activeFocusScope;
-
-        bool IKeyboardNavigationLayer.IsActiveLayer => ActiveLayer == this;
+        IKeyboardNavigationLayer? IKeyboardNavigationLayerGroup.ActiveLayer => _activeKeyboardNavigationLayer;
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id => KeyboardNavigationLayerId.Nodes;
 
-        int IReadOnlyCollection<IKeyboardNavigationLayer>.Count => _focusScopes.Count;
+        int IReadOnlyCollection<IKeyboardNavigationLayer>.Count => _navigationLayers.Count;
 
         // TODO: When do we clear these?
+        private readonly WeakReference<ItemContainer> _previousFocusedContainer = new WeakReference<ItemContainer>(null);
+        private FocusNavigationDirection? _previousFocusNavigationDirection;
 
         #region Focus Handling
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            if (TryGetContainerToFocus(out var containerToFocus, request))
+            // TODO: throw exception if request.FocusNavigationDirection is not directional (Left, Right, Up, Down) or handle other cases too
+            var prevContainer = Keyboard.FocusedElement as ItemContainer;
+
+            if (_previousFocusNavigationDirection.HasValue && request.FocusNavigationDirection.IsOppositeOf(_previousFocusNavigationDirection.Value))
             {
-                containerToFocus!.Focus();
+                // If the request is in the opposite direction of the last focus navigation, try to restore the previous focused container
+                if (_previousFocusedContainer.TryGetTarget(out var previousContainer) && previousContainer.Focus())
+                {
+                    _previousFocusNavigationDirection = request.FocusNavigationDirection;
+                    if (prevContainer != null)
+                    {
+                        _previousFocusedContainer.SetTarget(prevContainer);
+                    }
+                    BringIntoView(previousContainer, ItemContainer.BringIntoViewEdgeOffset);
+                    return true;
+                }
+
+            }
+            else if (TryGetContainerToFocus(out var containerToFocus, request) && containerToFocus!.Focus())
+            {
+                _previousFocusNavigationDirection = request.FocusNavigationDirection;
+                if (prevContainer != null)
+                {
+                    _previousFocusedContainer.SetTarget(prevContainer);
+                }
                 BringIntoView(containerToFocus, ItemContainer.BringIntoViewEdgeOffset);
                 return true;
             }
@@ -43,13 +68,13 @@ namespace Nodify
 
             if (Keyboard.FocusedElement is ItemContainer focusedContainer)
             {
-                containerToFocus = GetDirectionalFocusTarget(focusedContainer, request);
+                containerToFocus = FindNextFocusTarget(focusedContainer, request);
             }
             else if (Keyboard.FocusedElement is NodifyEditor editor && editor.ItemContainers.Count > 0)
             {
                 var viewport = new Rect(ViewportLocation, ViewportSize);
                 containerToFocus = ItemContainers.FirstOrDefault(container => container.IsSelectableInArea(viewport, isContained: false))
-                    ?? ItemContainers.FirstOrDefault(); // TODO: Find the left most one?
+                    ?? ItemContainers.First(); // TODO: Find the left most one?
             }
             else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ItemContainer>() is ItemContainer parentContainer)
             {
@@ -59,8 +84,7 @@ namespace Nodify
             return containerToFocus != null;
         }
 
-        // TODO: Customizable
-        protected virtual ItemContainer? GetDirectionalFocusTarget(ItemContainer currentContainer, TraversalRequest request)
+        protected virtual ItemContainer? FindNextFocusTarget(ItemContainer currentContainer, TraversalRequest request)
         {
             var currentContainerBounds = new Rect(currentContainer.Location, currentContainer.DesiredSizeForSelection ?? currentContainer.RenderSize);
             var currentContainerCenter = new Point(currentContainerBounds.X + currentContainerBounds.Width / 2, currentContainerBounds.Y + currentContainerBounds.Height / 2);
@@ -110,8 +134,8 @@ namespace Nodify
                     FocusNavigationDirection.Right => itemContainers.OrderBy(c => c.Location.X).Take(1),
                     FocusNavigationDirection.Up => itemContainers.OrderByDescending(c => c.Location.Y).Take(1),
                     FocusNavigationDirection.Down => itemContainers.OrderBy(c => c.Location.Y).Take(1),
-                _ => Enumerable.Empty<ItemContainer>()
-            };
+                    _ => Enumerable.Empty<ItemContainer>()
+                };
 
                 request.Wrapped = true;
             }
@@ -121,10 +145,19 @@ namespace Nodify
 
             foreach (var candidate in candidates)
             {
-                var bounds = new Rect(candidate.Location, candidate.DesiredSizeForSelection ?? candidate.RenderSize);
-                var center = new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2);
+                // TODO: If candidate is on screen, give it priority over candidates that are off-screen
 
-                double distanceSquared = (center - currentContainerCenter).LengthSquared;
+                //var bounds = new Rect(candidate.Location, candidate.DesiredSizeForSelection ?? candidate.RenderSize);
+                //var center = new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2);
+
+                //double distanceSquared = (center - currentContainerCenter).LengthSquared;
+                //if (distanceSquared < minDistanceSquared)
+                //{
+                //    minDistanceSquared = distanceSquared;
+                //    best = candidate;
+                //}
+
+                double distanceSquared = (candidate.Location - currentContainerBounds.TopLeft).LengthSquared;
                 if (distanceSquared < minDistanceSquared)
                 {
                     minDistanceSquared = distanceSquared;
@@ -139,45 +172,91 @@ namespace Nodify
             => MoveFocus(new TraversalRequest(direction));
 
         public new bool MoveFocus(TraversalRequest request)
-            => ActiveLayer.TryMoveFocus(request);
+            => KeyboardNavigationLayerGroup.ActiveLayer?.TryMoveFocus(request) ?? false;
 
-        void IKeyboardNavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
+        void IKeyboardNavigationLayer.OnActivate()
         {
-            _focusScopes.Add(layer);
-            if (ActiveLayer is null)
+            // TODO: Restore focus
+        }
+
+        void IKeyboardNavigationLayer.OnDeactivate()
+        {
+        }
+
+        #endregion
+
+        #region Layer Management
+
+        bool IKeyboardNavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
+        {
+            if (_navigationLayers.Any(l => l.Id == layer.Id))
             {
-                _activeFocusScope = layer;
+                return false;
             }
-        }
 
-        void IKeyboardNavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
-        {
-            _focusScopes.Remove(_focusScopes.FirstOrDefault(layer => layer.Id == layerId)!);
-        }
-
-        void IKeyboardNavigationLayerGroup.MoveToNextLayer()
-        {
-            int currentIndex = _focusScopes.IndexOf(ActiveLayer);
-            if (currentIndex >= 0 && currentIndex < _focusScopes.Count - 1)
+            _navigationLayers.Add(layer);
+            if (KeyboardNavigationLayerGroup.ActiveLayer is null)
             {
-                _activeFocusScope = _focusScopes[currentIndex + 1];
-                // TODO: Focus container or logical element?
-                _activeFocusScope.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
             }
+
+            return true;
         }
 
-        void IKeyboardNavigationLayerGroup.MoveToPrevLayer()
+        bool IKeyboardNavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
         {
-            throw new NotImplementedException();
+            return _navigationLayers.Remove(_navigationLayers.FirstOrDefault(layer => layer.Id == layerId)!);
+        }
+
+        bool IKeyboardNavigationLayerGroup.ActivateLayer(KeyboardNavigationLayerId layerId)
+        {
+            var layer = _navigationLayers.FirstOrDefault(x => x.Id == layerId);
+            if (layer != null)
+            {
+                _activeKeyboardNavigationLayer?.OnDeactivate();
+                _activeKeyboardNavigationLayer = layer;
+                _activeKeyboardNavigationLayer.OnActivate();
+                Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer.GetType().Name} as a keyboard navigation layer in {GetType().Name}");
+                return true;
+            }
+
+            return false;
+        }
+
+        bool IKeyboardNavigationLayerGroup.MoveToNextLayer()
+        {
+            Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+
+            int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+            if (currentIndex >= 0 && currentIndex < _navigationLayers.Count - 1)
+            {
+                var layer = _navigationLayers[currentIndex + 1];
+                return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
+            }
+
+            return false;
+        }
+
+        bool IKeyboardNavigationLayerGroup.MoveToPrevLayer()
+        {
+            Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+
+            int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+            if (currentIndex > 0)
+            {
+                var layer = _navigationLayers[currentIndex - 1];
+                return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
+            }
+
+            return false;
         }
 
         public IEnumerator<IKeyboardNavigationLayer> GetEnumerator()
-            => _focusScopes.GetEnumerator();
+            => _navigationLayers.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 
         #endregion
-
     }
 }

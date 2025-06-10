@@ -12,6 +12,12 @@ namespace Nodify.Interactivity
         private static readonly WeakReferenceCollection<KeyComboGesture> _allCombos = new WeakReferenceCollection<KeyComboGesture>(16);
 
         private bool _isTriggerDown;
+        private int _comboCounter;
+
+        /// <summary>
+        /// Gets a value indicating whether the combo gesture has been performed at least once.
+        /// </summary>
+        private bool HasBeenPerformedAtLeastOnce => _comboCounter > 0;
 
         /// <summary>
         /// Gets or sets the key that must be pressed first to activate this combo gesture.
@@ -27,7 +33,6 @@ namespace Nodify.Interactivity
         static KeyComboGesture()
         {
             EventManager.RegisterClassHandler(typeof(UIElement), UIElement.PreviewKeyUpEvent, new KeyEventHandler(HandleKeyUp), true);
-
             EventManager.RegisterClassHandler(typeof(UIElement), UIElement.LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(HandleFocusLost), true);
         }
 
@@ -68,7 +73,7 @@ namespace Nodify.Interactivity
         {
             foreach (var combo in _allCombos)
             {
-                combo._isTriggerDown = false;
+                combo.Reset();
             }
         }
 
@@ -76,11 +81,22 @@ namespace Nodify.Interactivity
         {
             foreach (var combo in _allCombos)
             {
-                if (combo._isTriggerDown && e.Key == combo.TriggerKey)
+                if (e.Key == combo.TriggerKey)
                 {
-                    combo._isTriggerDown = false;
+                    // We don't want to handle the event if only the trigger key was pressed.
+                    if (combo.HasBeenPerformedAtLeastOnce)
+                    {
+                        e.Handled = true;
+                    }
+                    combo.Reset();
                 }
             }
+        }
+
+        private void Reset()
+        {
+            _isTriggerDown = false;
+            _comboCounter = 0;
         }
 
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
@@ -94,7 +110,14 @@ namespace Nodify.Interactivity
 
                 // The combo key only triggers the combo on key down
                 bool matches = _isTriggerDown && base.Matches(targetElement, inputEventArgs);
-                if (matches && !AllowRepeatingComboKey)
+                if (!matches)
+                {
+                    return false;
+                }
+
+                _comboCounter++;
+
+                if (!AllowRepeatingComboKey)
                 {
                     _isTriggerDown = false;
                 }
