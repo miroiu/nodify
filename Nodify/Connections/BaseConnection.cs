@@ -491,7 +491,8 @@ namespace Nodify
         /// </summary>
         protected static readonly Vector ZeroVector = new Vector(0d, 0d);
 
-        Rect IKeyboardFocusTarget<FrameworkElement>.Bounds => new Rect(Source, Target);
+        // Use Source for both corners to ensure Top-Left aligns with intended keyboard focus point.
+        Rect IKeyboardFocusTarget<FrameworkElement>.Bounds => new Rect(Source, Source);
         FrameworkElement IKeyboardFocusTarget<FrameworkElement>.Element => this;
 
         private Pen? _outlinePen;

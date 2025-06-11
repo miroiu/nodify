@@ -74,10 +74,10 @@ namespace Nodify
         private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
             ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
 
-        private ConnectionsMultiSelector Selector { get; }
+        public ConnectionsMultiSelector Selector { get; }
 
         private FrameworkElement? _connection;
-        private FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
+        public FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
             ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<FrameworkElement>()
             : this.GetChildOfType<FrameworkElement>();
 
@@ -87,8 +87,7 @@ namespace Nodify
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
 
-            // TODO:
-            FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(null));
+            FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(new Style()));
         }
 
         internal ConnectionContainer(ConnectionsMultiSelector selector)

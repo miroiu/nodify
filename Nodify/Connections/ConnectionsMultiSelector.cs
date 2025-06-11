@@ -1,5 +1,4 @@
 ﻿using Nodify.Interactivity;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -91,45 +90,14 @@ namespace Nodify
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
 
-        private readonly WeakReference<ConnectionContainer> _previousFocusedContainer = new WeakReference<ConnectionContainer>(null!);
-        private FocusNavigationDirection? _previousFocusNavigationDirection;
+        private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>();
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            // TODO: throw exception if request.FocusNavigationDirection is not directional (Left, Right, Up, Down) or handle other cases too
-            var prevContainer = Keyboard.FocusedElement as ConnectionContainer;
-
-            if (_previousFocusNavigationDirection.HasValue && request.FocusNavigationDirection.IsOppositeOf(_previousFocusNavigationDirection.Value))
-            {
-                // If the request is in the opposite direction of the last focus navigation, try to restore the previous focused container
-                if (_previousFocusedContainer.TryGetTarget(out var previousContainer) && previousContainer.Focus())
-                {
-                    _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                    if (prevContainer != null)
-                    {
-                        _previousFocusedContainer.SetTarget(prevContainer);
-                    }
-
-                    // TODO: Bring into view?
-                    return true;
-                }
-            }
-            else if (TryGetContainerToFocus(out var containerToFocus, request) && containerToFocus!.Focus())
-            {
-                _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                if (prevContainer != null)
-                {
-                    _previousFocusedContainer.SetTarget(prevContainer);
-                }
-
-                // TODO: Bring into view?
-                return true;
-            }
-
-            return false;
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => Editor?.BringIntoView(target.Bounds));
         }
 
-        private bool TryGetContainerToFocus(out ConnectionContainer? containerToFocus, TraversalRequest request)
+        private bool TryFindContainerToFocus(TraversalRequest request, out ConnectionContainer? containerToFocus)
         {
             containerToFocus = null;
 
@@ -147,7 +115,7 @@ namespace Nodify
 
         protected virtual ConnectionContainer? FindNextFocusTarget(ConnectionContainer currentContainer, TraversalRequest request)
         {
-            var focusNavigator = new LinearFocusNavigator<ConnectionContainer>(ConnectionContainers);
+            var focusNavigator = new ConnectionFocusNavigator<ConnectionContainer>(ConnectionContainers);
             var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
             return result?.Element;

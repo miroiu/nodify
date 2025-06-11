@@ -4,7 +4,6 @@ using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
-
     public class KeyboardNavigationLayerId
     {
         public static readonly KeyboardNavigationLayerId Nodes = new KeyboardNavigationLayerId();
@@ -35,5 +34,12 @@ namespace Nodify.Interactivity
 
         void OnActivate();
         void OnDeactivate();
+    }
+
+    public interface IKeyboardFocusTarget<TElement>
+        where TElement : UIElement
+    {
+        Rect Bounds { get; }
+        TElement Element { get; }
     }
 }

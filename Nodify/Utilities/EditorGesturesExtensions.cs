@@ -64,13 +64,16 @@ namespace Nodify
             return x != 0 || y != 0;
         }
 
-        // TODO: Handle all cases?
         public static bool IsOppositeOf(this FocusNavigationDirection direction, FocusNavigationDirection other)
         {
-            return (direction == FocusNavigationDirection.Left && other == FocusNavigationDirection.Right) ||
-                   (direction == FocusNavigationDirection.Right && other == FocusNavigationDirection.Left) ||
-                   (direction == FocusNavigationDirection.Up && other == FocusNavigationDirection.Down) ||
-                   (direction == FocusNavigationDirection.Down && other == FocusNavigationDirection.Up);
+            return (direction == FocusNavigationDirection.Left && other == FocusNavigationDirection.Right)
+                || (direction == FocusNavigationDirection.Right && other == FocusNavigationDirection.Left)
+                || (direction == FocusNavigationDirection.Up && other == FocusNavigationDirection.Down)
+                || (direction == FocusNavigationDirection.Down && other == FocusNavigationDirection.Up)
+                || (direction == FocusNavigationDirection.Next && other == FocusNavigationDirection.Previous)
+                || (direction == FocusNavigationDirection.Previous && other == FocusNavigationDirection.Next)
+                || (direction == FocusNavigationDirection.First && other == FocusNavigationDirection.Last)
+                || (direction == FocusNavigationDirection.Last && other == FocusNavigationDirection.First);
         }
     }
 }

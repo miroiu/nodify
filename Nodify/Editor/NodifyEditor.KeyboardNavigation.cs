@@ -22,48 +22,16 @@ namespace Nodify
 
         int IReadOnlyCollection<IKeyboardNavigationLayer>.Count => _navigationLayers.Count;
 
-        // TODO: When do we clear these?
-        private readonly WeakReference<ItemContainer> _previousFocusedContainer = new WeakReference<ItemContainer>(null);
-        private FocusNavigationDirection? _previousFocusNavigationDirection;
-
         #region Focus Handling
+
+        private readonly StatefulFocusNavigator<ItemContainer> _focusNavigator = new StatefulFocusNavigator<ItemContainer>();
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            // TODO: throw exception if request.FocusNavigationDirection is not directional (Left, Right, Up, Down) or handle other cases too
-            var prevContainer = Keyboard.FocusedElement as ItemContainer;
-
-            if (_previousFocusNavigationDirection.HasValue && request.FocusNavigationDirection.IsOppositeOf(_previousFocusNavigationDirection.Value))
-            {
-                // If the request is in the opposite direction of the last focus navigation, try to restore the previous focused container
-                if (_previousFocusedContainer.TryGetTarget(out var previousContainer) && previousContainer.Focus())
-                {
-                    _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                    if (prevContainer != null)
-                    {
-                        _previousFocusedContainer.SetTarget(prevContainer);
-                    }
-
-                    BringIntoView(previousContainer, ItemContainer.BringIntoViewEdgeOffset);
-                    return true;
-                }
-            }
-            else if (TryGetContainerToFocus(out var containerToFocus, request) && containerToFocus!.Focus())
-            {
-                _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                if (prevContainer != null)
-                {
-                    _previousFocusedContainer.SetTarget(prevContainer);
-                }
-
-                BringIntoView(containerToFocus, ItemContainer.BringIntoViewEdgeOffset);
-                return true;
-            }
-
-            return false;
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => BringIntoView(target.Element, ItemContainer.BringIntoViewEdgeOffset));
         }
 
-        private bool TryGetContainerToFocus(out ItemContainer? containerToFocus, TraversalRequest request)
+        private bool TryFindContainerToFocus(TraversalRequest request, out ItemContainer? containerToFocus)
         {
             containerToFocus = null;
 
