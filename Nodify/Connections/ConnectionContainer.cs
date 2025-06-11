@@ -97,9 +97,7 @@ namespace Nodify
 
         protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)
         {
-            // TODO: Custom property on BaseConnection
-            BaseConnection.SetIsSelected(Connection, (bool)e.NewValue);
-            //Connection?.SetValue(IsKeyboardFocusedProperty, e.NewValue);
+            Connection?.InvalidateVisual();
         }
 
         /// <summary>

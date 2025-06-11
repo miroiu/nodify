@@ -175,6 +175,12 @@
                     Value="{Binding SelectableConnections, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="IsSelected"
                     Value="{Binding IsSelected}" />
+            <Setter Property="StrokeThickness"
+                    Value="{Binding ConnectionStrokeThickness, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="OutlineThickness"
+                    Value="{Binding ConnectionOutlineThickness, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="FocusVisualPadding"
+                    Value="{Binding ConnectionFocusVisualPadding, Source={x:Static local:EditorSettings.Instance}}" />
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">

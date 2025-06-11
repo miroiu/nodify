@@ -115,7 +115,7 @@ namespace Nodify
 
         protected virtual ConnectionContainer? FindNextFocusTarget(ConnectionContainer currentContainer, TraversalRequest request)
         {
-            var focusNavigator = new ConnectionFocusNavigator<ConnectionContainer>(ConnectionContainers);
+            var focusNavigator = new DirectionalFocusNavigator<ConnectionContainer>(ConnectionContainers);
             var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
             return result?.Element;

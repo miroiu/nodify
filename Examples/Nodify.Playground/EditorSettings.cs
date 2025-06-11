@@ -193,6 +193,18 @@ namespace Nodify.Playground
                     () => Instance.ConnectionTargetOffset,
                     val => Instance.ConnectionTargetOffset = val,
                     "Connection target offset: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionStrokeThickness,
+                    val => Instance.ConnectionStrokeThickness = val,
+                    "Connection stroke thickness: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionOutlineThickness,
+                    val => Instance.ConnectionOutlineThickness = val,
+                    "Connection outline thickness: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionFocusVisualPadding,
+                    val => Instance.ConnectionFocusVisualPadding = val,
+                    "Connection focus visual padding: "),
                 new ProxySettingViewModel<bool>(
                     () => Instance.DisplayConnectionsOnTop,
                     val => Instance.DisplayConnectionsOnTop = val,
@@ -612,6 +624,27 @@ namespace Nodify.Playground
         {
             get => _connectionTargetOffset;
             set => SetProperty(ref _connectionTargetOffset, value);
+        }
+
+        private double _connectionStrokeThickness = 3;
+        public double ConnectionStrokeThickness
+        {
+            get => _connectionStrokeThickness;
+            set => SetProperty(ref _connectionStrokeThickness, value);
+        }
+
+        private double _connectionOutlineThickness = 5;
+        public double ConnectionOutlineThickness
+        {
+            get => _connectionOutlineThickness;
+            set => SetProperty(ref _connectionOutlineThickness, value);
+        }
+
+        private double _connectionFocusVisualPadding = 1;
+        public double ConnectionFocusVisualPadding
+        {
+            get => _connectionFocusVisualPadding;
+            set => SetProperty(ref _connectionFocusVisualPadding, value);
         }
 
         private uint _directionalArrowsCount = 3;
