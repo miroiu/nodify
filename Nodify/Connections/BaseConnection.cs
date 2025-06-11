@@ -517,6 +517,11 @@ namespace Nodify
 
         FrameworkElement IKeyboardFocusTarget<FrameworkElement>.Element => this;
 
+        /// <summary>
+        /// The key used to retrieve the <see cref="FocusVisualPen"/> resource.
+        /// </summary>
+        public static ResourceKey FocusVisualPenKey { get; } = new ComponentResourceKey(typeof(BaseConnection), nameof(FocusVisualPen));
+
         private Pen? _outlinePen;
         private static Pen? _defaultFocusVisualPen;
 
@@ -953,10 +958,15 @@ namespace Nodify
                 drawingContext.DrawGeometry(OutlineBrush, GetOutlinePen(), DefiningGeometry);
             }
 
-            if (FocusVisualPen != null && Container is { IsKeyboardFocused: true })
+            if (Container is { IsKeyboardFocused: true })
             {
-                var widenPen = new Pen(null, StrokeThickness + FocusVisualPen.Thickness + FocusVisualPadding * 2d);
-                drawingContext.DrawGeometry(null, FocusVisualPen, DefiningGeometry.GetWidenedPathGeometry(widenPen));
+                // TODO: May want to cache the result of FindResource somewhere
+                var drawPen = (FocusVisualPen == DefaultFocusVisualPen
+                    ? TryFindResource(FocusVisualPenKey) as Pen
+                    : FocusVisualPen) ?? DefaultFocusVisualPen;
+
+                var widenPen = new Pen(null, StrokeThickness + drawPen.Thickness + FocusVisualPadding * 2d);
+                drawingContext.DrawGeometry(null, drawPen, DefiningGeometry.GetWidenedPathGeometry(widenPen));
             }
 
             base.OnRender(drawingContext);
