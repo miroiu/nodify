@@ -24,11 +24,13 @@ namespace Nodify
 
         #region Focus Handling
 
-        private readonly StatefulFocusNavigator<ItemContainer> _focusNavigator = new StatefulFocusNavigator<ItemContainer>();
+        private readonly StatefulFocusNavigator<ItemContainer> _focusNavigator;
+
+        public event Action<KeyboardNavigationLayerId>? ActiveLayerChanged;
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
         }
 
         private bool TryFindContainerToFocus(TraversalRequest request, out ItemContainer? containerToFocus)
@@ -39,15 +41,16 @@ namespace Nodify
             {
                 containerToFocus = FindNextFocusTarget(focusedContainer, request);
             }
-            else if (Keyboard.FocusedElement is NodifyEditor editor && editor.ItemContainers.Count > 0)
-            {
-                var viewport = new Rect(ViewportLocation, ViewportSize);
-                containerToFocus = ItemContainers.FirstOrDefault(container => container.IsSelectableInArea(viewport, isContained: false))
-                    ?? ItemContainers.First(); // TODO: Find the left most one?
-            }
             else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ItemContainer>() is ItemContainer parentContainer)
             {
                 containerToFocus = parentContainer;
+            }
+            else if (Items.Count > 0)
+            {
+                var viewport = new Rect(ViewportLocation, ViewportSize);
+                var containers = ItemContainers;
+                containerToFocus = containers.FirstOrDefault(container => container.IsSelectableInArea(viewport, isContained: false))
+                    ?? containers.First();
             }
 
             return containerToFocus != null;
@@ -69,7 +72,7 @@ namespace Nodify
 
         void IKeyboardNavigationLayer.OnActivate()
         {
-            // TODO: Restore focus
+            _focusNavigator.TryRestoreFocus();
         }
 
         void IKeyboardNavigationLayer.OnDeactivate()
@@ -98,7 +101,15 @@ namespace Nodify
 
         bool IKeyboardNavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
         {
-            return _navigationLayers.Remove(_navigationLayers.FirstOrDefault(layer => layer.Id == layerId)!);
+            var layerToRemove = _navigationLayers.FirstOrDefault(layer => layer.Id == layerId);
+            if (layerToRemove != null && _navigationLayers.Remove(layerToRemove))
+            {
+                KeyboardNavigationLayerGroup.MoveToPrevLayer();
+
+                return true;
+            }
+
+            return false;
         }
 
         bool IKeyboardNavigationLayerGroup.ActivateLayer(KeyboardNavigationLayerId layerId)
@@ -110,6 +121,7 @@ namespace Nodify
                 _activeKeyboardNavigationLayer = layer;
                 _activeKeyboardNavigationLayer.OnActivate();
                 Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer.GetType().Name} as a keyboard navigation layer in {GetType().Name}");
+                ActiveLayerChanged?.Invoke(layerId);
                 return true;
             }
 
@@ -118,12 +130,14 @@ namespace Nodify
 
         bool IKeyboardNavigationLayerGroup.MoveToNextLayer()
         {
-            Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
-
-            int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
-            if (currentIndex >= 0 && currentIndex < _navigationLayers.Count - 1)
+            if (_navigationLayers.Count > 0)
             {
-                var layer = _navigationLayers[currentIndex + 1];
+                Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+
+                int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+                int nextIndex = (currentIndex + 1) % _navigationLayers.Count;
+
+                var layer = _navigationLayers[nextIndex];
                 return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
             }
 
@@ -132,12 +146,13 @@ namespace Nodify
 
         bool IKeyboardNavigationLayerGroup.MoveToPrevLayer()
         {
-            Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
-
-            int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
-            if (currentIndex > 0)
+            if (_navigationLayers.Count > 0)
             {
-                var layer = _navigationLayers[currentIndex - 1];
+                Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+
+                int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+                int prevIndex = (currentIndex - 1 + _navigationLayers.Count) % _navigationLayers.Count;
+                var layer = _navigationLayers[prevIndex];
                 return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
             }
 

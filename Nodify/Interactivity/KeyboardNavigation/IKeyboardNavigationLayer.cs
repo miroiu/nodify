@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,6 +15,8 @@ namespace Nodify.Interactivity
     public interface IKeyboardNavigationLayerGroup : IReadOnlyCollection<IKeyboardNavigationLayer>
     {
         IKeyboardNavigationLayer? ActiveLayer { get; }
+
+        event Action<KeyboardNavigationLayerId>? ActiveLayerChanged;
 
         bool MoveToNextLayer();
 

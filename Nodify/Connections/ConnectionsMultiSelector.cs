@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -86,20 +87,27 @@ namespace Nodify
             FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
+        public ConnectionsMultiSelector()
+        {
+            _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>(target => Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset));
+        }
+
         #region Keyboard Navigation
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
 
-        private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>();
+        private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator;
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset));
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
         }
 
         private bool TryFindContainerToFocus(TraversalRequest request, out ConnectionContainer? containerToFocus)
         {
             containerToFocus = null;
+
+            Debug.Assert(Editor != null, "ConnectionsMultiSelector should not be used outside the NodifyEditor.");
 
             if (Keyboard.FocusedElement is ConnectionContainer focusedContainer)
             {
@@ -108,6 +116,13 @@ namespace Nodify
             else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ConnectionContainer>() is ConnectionContainer parentContainer)
             {
                 containerToFocus = parentContainer;
+            }
+            else if (Items.Count > 0 && Editor != null)
+            {
+                var viewport = new Rect(Editor.ViewportLocation, Editor.ViewportSize);
+                var containers = ConnectionContainers;
+                containerToFocus = containers.FirstOrDefault(container => viewport.IntersectsWith(((IKeyboardFocusTarget<ConnectionContainer>)container).Bounds))
+                    ?? containers.First();
             }
 
             return containerToFocus != null;
@@ -123,11 +138,7 @@ namespace Nodify
 
         void IKeyboardNavigationLayer.OnActivate()
         {
-            if (Items.Count > 0)
-            {
-                var container = (ConnectionContainer)ItemContainerGenerator.ContainerFromIndex(0);
-                container.Focus();
-            }
+            _focusNavigator.TryRestoreFocus();
         }
 
         void IKeyboardNavigationLayer.OnDeactivate()

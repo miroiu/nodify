@@ -11,9 +11,17 @@ namespace Nodify.Interactivity
 
         // TODO: When do we clear these?
         private readonly WeakReference<TElement?> _previousFocusedContainer = new WeakReference<TElement?>(null);
+        private readonly WeakReference<TElement?> _lastFocusedContainer = new WeakReference<TElement?>(null);
         private FocusNavigationDirection? _previousFocusNavigationDirection;
 
-        public bool TryMoveFocus(TraversalRequest request, FindNextFocusTargetDelegate findNext, Action<IKeyboardFocusTarget<TElement>> onFocus)
+        private readonly Action<IKeyboardFocusTarget<TElement>> _onFocus;
+
+        public StatefulFocusNavigator(Action<IKeyboardFocusTarget<TElement>> onFocus)
+        {
+            _onFocus = onFocus;
+        }
+
+        public bool TryMoveFocus(TraversalRequest request, FindNextFocusTargetDelegate findNext)
         {
             var currentTarget = Keyboard.FocusedElement as TElement;
 
@@ -25,17 +33,29 @@ namespace Nodify.Interactivity
             {
                 _previousFocusNavigationDirection = request.FocusNavigationDirection;
                 _previousFocusedContainer.SetTarget(currentTarget);
+                _lastFocusedContainer.SetTarget(prevTarget);
 
-                onFocus(prevTarget);
+                _onFocus(prevTarget);
                 return true;
             }
             else if (findNext(request, out var nextTarget) && nextTarget!.Element.Focus())
             {
                 _previousFocusNavigationDirection = request.FocusNavigationDirection;
                 _previousFocusedContainer.SetTarget(currentTarget);
+                _lastFocusedContainer.SetTarget(nextTarget);
 
-                onFocus(nextTarget);
+                _onFocus(nextTarget);
                 return true;
+            }
+
+            return false;
+        }
+
+        public bool TryRestoreFocus()
+        {
+            if (_lastFocusedContainer.TryGetTarget(out var lastTarget) && lastTarget!.Focus())
+            {
+                _onFocus.Invoke(lastTarget);
             }
 
             return false;

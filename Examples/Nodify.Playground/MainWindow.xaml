@@ -14,6 +14,7 @@
     <Window.Resources>
         <shared:DebugConverter x:Key="DebugConverter" />
         <shared:ToStringConverter x:Key="ToStringConverter" />
+        <shared:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     </Window.Resources>
 
     <Window.DataContext>
@@ -219,6 +220,22 @@
                             <Run Text="{Binding GraphViewModel.Connections.Count, Mode=OneWay}" />
                         </TextBlock.Inlines>
                     </TextBlock>
+
+                    <Border Visibility="{Binding GraphViewModel.KeyboardNavigationLayer, Converter={StaticResource StringToVisibilityConverter}}"
+                            ToolTip="The active keyboard navigation layer."
+                            Padding="14 0 0 0"
+                            Height="16"
+                            CornerRadius="3"
+                            Background="{DynamicResource PanelBackgroundBrush}"
+                            BorderThickness="1"
+                            BorderBrush="{DynamicResource BorderBrush}">
+                        <TextBlock>
+                            <Run Text="Navigating: " />
+                            <Run Foreground="{DynamicResource ForegroundBrush}"
+                                 Text="{Binding GraphViewModel.KeyboardNavigationLayer, Mode=OneWay}" />
+                        </TextBlock>
+                    </Border>
+
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"

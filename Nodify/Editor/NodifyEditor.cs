@@ -583,9 +583,9 @@ namespace Nodify
 
             InputProcessor.AddSharedHandlers(this);
 
-            Unloaded += OnEditorUnloaded;
-
-            KeyboardNavigationLayerGroup.RegisterLayer(this);
+            Unloaded += OnEditorUnloaded; 
+            
+            _focusNavigator = new StatefulFocusNavigator<ItemContainer>(target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
         }
 
         /// <inheritdoc />
@@ -597,6 +597,9 @@ namespace Nodify
             ConnectionsHost = GetTemplateChild(ElementConnectionsHost) as UIElement ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+
+            // It's safe to call RegisterLayer multiple times. It only registers once for the same id.
+            KeyboardNavigationLayerGroup.RegisterLayer(KeyboardNavigationLayer);
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)

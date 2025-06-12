@@ -73,7 +73,6 @@ namespace Nodify
         Rect IKeyboardFocusTarget<ConnectionContainer>.Bounds => ConnectionFocusTarget.Bounds;
         ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
 
-        // TODO:
         private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
             ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
 
