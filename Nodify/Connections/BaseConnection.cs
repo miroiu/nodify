@@ -135,7 +135,7 @@ namespace Nodify
         public static readonly DependencyProperty OutlineThicknessProperty = DependencyProperty.Register(nameof(OutlineThickness), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double5, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnOutlinePenChanged)));
         public static readonly DependencyProperty OutlineBrushProperty = DependencyProperty.Register(nameof(OutlineBrush), typeof(Brush), typeof(BaseConnection), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnOutlinePenChanged)));
         public static readonly DependencyProperty FocusVisualPenProperty = DependencyProperty.Register(nameof(FocusVisualPen), typeof(Pen), typeof(BaseConnection), new FrameworkPropertyMetadata(DefaultFocusVisualPen, FrameworkPropertyMetadataOptions.AffectsRender));
-        public static readonly DependencyProperty FocusVisualPaddingProperty = DependencyProperty.Register(nameof(FocusVisualPadding), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty FocusVisualPaddingProperty = DependencyProperty.Register(nameof(FocusVisualPadding), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ForegroundProperty = TextBlock.ForegroundProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty FontSizeProperty = TextElement.FontSizeProperty.AddOwner(typeof(BaseConnection));
@@ -524,6 +524,12 @@ namespace Nodify
 
         private Pen? _outlinePen;
         private static Pen? _defaultFocusVisualPen;
+        private FocusVisualAdorner? _focusVisualAdorner;
+        private AdornerLayer? _adornerLayer;
+
+        private AdornerLayer AdornerLayer => _adornerLayer ??= AdornerLayer.GetAdornerLayer(this);
+
+        private FocusVisualAdorner FocusVisualPenAdorner => _focusVisualAdorner ??= new FocusVisualAdorner(this);
 
         private static Pen DefaultFocusVisualPen
         {
@@ -958,17 +964,6 @@ namespace Nodify
                 drawingContext.DrawGeometry(OutlineBrush, GetOutlinePen(), DefiningGeometry);
             }
 
-            if (Container is { IsKeyboardFocused: true })
-            {
-                // TODO: May want to cache the result of FindResource somewhere
-                var drawPen = (FocusVisualPen == DefaultFocusVisualPen
-                    ? TryFindResource(FocusVisualPenKey) as Pen
-                    : FocusVisualPen) ?? DefaultFocusVisualPen;
-
-                var widenPen = new Pen(null, StrokeThickness + drawPen.Thickness + FocusVisualPadding * 2d);
-                drawingContext.DrawGeometry(null, drawPen, DefiningGeometry.GetWidenedPathGeometry(widenPen));
-            }
-
             base.OnRender(drawingContext);
 
             if (!string.IsNullOrEmpty(Text))
@@ -979,6 +974,49 @@ namespace Nodify
 
                 (Vector sourceOffset, Vector targetOffset) = GetOffset();
                 drawingContext.DrawText(text, GetTextPosition(text, Source + sourceOffset, Target + targetOffset));
+            }
+        }
+
+        internal void UpdateFocusVisual()
+        {
+            if (AdornerLayer != null)
+            {
+                if (Container is { IsKeyboardFocused: true })
+                {
+                    AdornerLayer.Add(FocusVisualPenAdorner);
+                }
+                else
+                {
+                    AdornerLayer.Remove(FocusVisualPenAdorner);
+                }
+            }
+        }
+
+        private class FocusVisualAdorner : Adorner
+        {
+            private readonly BaseConnection _baseConnection;
+            private Pen? _cachedPenResource;
+            private Pen? CachedPenResource => _cachedPenResource ??= TryFindResource(FocusVisualPenKey) as Pen;
+
+            public FocusVisualAdorner(BaseConnection baseConnection) : base(baseConnection)
+            {
+                IsHitTestVisible = false;
+                IsEnabled = false;
+                IsClipEnabled = true;
+                _baseConnection = baseConnection;
+            }
+
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                var drawPen = _baseConnection.FocusVisualPen == DefaultFocusVisualPen
+                    ? CachedPenResource
+                    : _baseConnection.FocusVisualPen;
+
+                if (drawPen != null)
+                {
+                    var widenPen = new Pen(null, _baseConnection.StrokeThickness + drawPen.Thickness + _baseConnection.FocusVisualPadding * 2d);
+                    drawingContext.DrawGeometry(null, drawPen, _baseConnection.DefiningGeometry.GetWidenedPathGeometry(widenPen));
+                }
             }
         }
     }

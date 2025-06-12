@@ -67,6 +67,9 @@ namespace Nodify
 
         #endregion
 
+        private FrameworkElement? _connection;
+        private SelectionType? _selectionType;
+
         Rect IKeyboardFocusTarget<ConnectionContainer>.Bounds => ConnectionFocusTarget.Bounds;
         ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
 
@@ -74,19 +77,15 @@ namespace Nodify
         private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
             ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
 
-        public ConnectionsMultiSelector Selector { get; }
-
-        private FrameworkElement? _connection;
         public FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
             ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<FrameworkElement>()
             : this.GetChildOfType<FrameworkElement>();
 
-        private SelectionType? _selectionType;
+        public ConnectionsMultiSelector Selector { get; }
 
         static ConnectionContainer()
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
-
             FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(new Style()));
         }
 
@@ -97,7 +96,14 @@ namespace Nodify
 
         protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)
         {
-            Connection?.InvalidateVisual();
+            if (Connection is BaseConnection baseConnection)
+            {
+                baseConnection.UpdateFocusVisual();
+            }
+            else
+            {
+                Connection?.InvalidateVisual();
+            }
         }
 
         /// <summary>
