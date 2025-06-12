@@ -28,7 +28,7 @@ namespace Nodify
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
-            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => BringIntoView(target.Element, ItemContainer.BringIntoViewEdgeOffset));
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus, target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
         }
 
         private bool TryFindContainerToFocus(TraversalRequest request, out ItemContainer? containerToFocus)

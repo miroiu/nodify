@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Nodify.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
                 <ResourceDictionary>
+                    
                     <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
                         <Setter Property="Control.Template">
                             <Setter.Value>

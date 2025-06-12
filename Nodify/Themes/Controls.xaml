@@ -4,6 +4,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Brushes.xaml" />
+        <ResourceDictionary Source="FocusVisual.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--NODIFY EDITOR-->

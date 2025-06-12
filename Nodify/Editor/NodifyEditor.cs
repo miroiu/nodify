@@ -503,6 +503,11 @@ namespace Nodify
         public static double FitToScreenExtentMargin { get; set; } = 30;
 
         /// <summary>
+        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
+        /// </summary>
+        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
+
+        /// <summary>
         /// Gets or sets the maximum distance, in pixels, that the mouse can move before suppressing certain mouse actions. 
         /// This is useful for suppressing actions like showing a <see cref="ContextMenu"/> if the mouse has moved significantly.
         /// </summary>
@@ -700,43 +705,42 @@ namespace Nodify
         /// </summary>
         /// <param name="container">The item container to bring into view.</param>
         /// <param name="offsetFromEdge">The padding to apply around the container</param>
-        public void BringIntoView(ItemContainer container, double offsetFromEdge = 32d)
+        public void BringIntoView(Rect area, double offsetFromEdge = 32d)
         {
             var viewport = new Rect(ViewportLocation, ViewportSize);
-            var containerBounds = new Rect(container.Location, container.RenderSize);
 
-            containerBounds.Inflate(offsetFromEdge, offsetFromEdge);
+            area.Inflate(offsetFromEdge, offsetFromEdge);
 
-            if (!viewport.Contains(containerBounds))
+            if (!viewport.Contains(area))
             {
-                if (viewport.IntersectsWith(containerBounds))
+                if (viewport.IntersectsWith(area))
                 {
                     double newX = viewport.X;
                     double newY = viewport.Y;
 
-                    if (containerBounds.Left < viewport.Left)
+                    if (area.Left < viewport.Left)
                     {
-                        newX = containerBounds.Left;
+                        newX = area.Left;
                     }
-                    else if (containerBounds.Right > viewport.Right)
+                    else if (area.Right > viewport.Right)
                     {
-                        newX = containerBounds.Right - viewport.Width;
+                        newX = area.Right - viewport.Width;
                     }
 
-                    if (containerBounds.Top < viewport.Top)
+                    if (area.Top < viewport.Top)
                     {
-                        newY = containerBounds.Top;
+                        newY = area.Top;
                     }
-                    else if (containerBounds.Bottom > viewport.Bottom)
+                    else if (area.Bottom > viewport.Bottom)
                     {
-                        newY = containerBounds.Bottom - viewport.Height;
+                        newY = area.Bottom - viewport.Height;
                     }
 
                     BringIntoView(new Point(newX, newY) + new Vector(viewport.Width / 2, viewport.Height / 2));
                 }
                 else
                 {
-                    BringIntoView(containerBounds);
+                    BringIntoView(area);
                 }
             }
         }

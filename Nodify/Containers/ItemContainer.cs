@@ -234,11 +234,6 @@ namespace Nodify
         public static bool PreserveSelectionOnRightClick { get; set; }
 
         /// <summary>
-        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
-        /// </summary>
-        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
-
-        /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public NodifyEditor Editor { get; }
