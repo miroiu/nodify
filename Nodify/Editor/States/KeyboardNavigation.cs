@@ -13,7 +13,6 @@ namespace Nodify.Interactivity
             {
             }
 
-            // TODO: If focus is within, do not allow escaping focus trap unless the escape gesture is performed. (some keys like Space or System Keys could try to escape)
             protected override void OnKeyDown(KeyEventArgs e)
             {
                 double cellSize = Element.GridCellSize;
@@ -71,6 +70,7 @@ namespace Nodify.Interactivity
                         e.Handled = true;
                     }
                     // TODO: How to get the selected connections count without a hard reference to the connections multi selector?
+                    // This currently assumes we have a binding to the SelectedConnectionsProperty dependency property
                     else if (Element.SelectedConnections?.Count > 0 && ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Connections)
                     {
                         Element.UnselectAllConnections();
@@ -94,7 +94,6 @@ namespace Nodify.Interactivity
                 return ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes && Element.SelectedContainersCount > 0;
             }
 
-            // TODO: Allow for extensibility because connections can be custom
             private static bool IsEditorControl(object originalSource)
             {
                 return originalSource is NodifyEditor || originalSource is ItemContainer || originalSource is Connector || originalSource is ConnectionContainer;

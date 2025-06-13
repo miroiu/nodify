@@ -32,8 +32,10 @@ namespace Nodify.Interactivity
     public interface IKeyboardNavigationLayer
     {
         KeyboardNavigationLayerId Id { get; }
+        object? LastFocusedElement { get; }
 
         bool TryMoveFocus(TraversalRequest request);
+        bool TryRestoreFocus();
 
         void OnActivate();
         void OnDeactivate();

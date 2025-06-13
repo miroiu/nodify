@@ -11,6 +11,16 @@ namespace Nodify
 {
     public partial class NodifyEditor : IKeyboardNavigationLayer, IKeyboardNavigationLayerGroup
     {
+        /// <summary>
+        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
+        /// </summary>
+        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
+
+        /// <summary>
+        /// Automatically focus first container on navigation layer change or editor focus.
+        /// </summary>
+        public static bool AutoFocusFirstElement { get; set; } = true;
+
         private readonly List<IKeyboardNavigationLayer> _navigationLayers = new List<IKeyboardNavigationLayer>();
         private IKeyboardNavigationLayer? _activeKeyboardNavigationLayer;
         private IKeyboardNavigationLayer KeyboardNavigationLayer => this;
@@ -19,6 +29,7 @@ namespace Nodify
         IKeyboardNavigationLayer? IKeyboardNavigationLayerGroup.ActiveLayer => _activeKeyboardNavigationLayer;
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id => KeyboardNavigationLayerId.Nodes;
+        object? IKeyboardNavigationLayer.LastFocusedElement => _focusNavigator.LastFocusedElement;
 
         int IReadOnlyCollection<IKeyboardNavigationLayer>.Count => _navigationLayers.Count;
 
@@ -31,6 +42,11 @@ namespace Nodify
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
             return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
+        }
+
+        bool IKeyboardNavigationLayer.TryRestoreFocus()
+        {
+            return _focusNavigator.TryRestoreFocus();
         }
 
         private bool TryFindContainerToFocus(TraversalRequest request, out ItemContainer? containerToFocus)
@@ -79,9 +95,37 @@ namespace Nodify
         {
         }
 
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            bool isKeyboardInitiated = InputManager.Current.MostRecentInputDevice is KeyboardDevice;
+            var activeKbdLayer = KeyboardNavigationLayerGroup.ActiveLayer;
+
+            if (isKeyboardInitiated && activeKbdLayer != null)
+            {
+                bool isFocusComingFromOutside = e.OldFocus is null || e.OldFocus is DependencyObject dpo && !IsAncestorOf(dpo);
+
+                if (isFocusComingFromOutside && activeKbdLayer.TryRestoreFocus())
+                {
+                    e.Handled = true;
+                }
+                else if (activeKbdLayer.LastFocusedElement is null && e.NewFocus == this && AutoFocusFirstElement)
+                {
+                    e.Handled = activeKbdLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
+        }
+
         #endregion
 
         #region Layer Management
+
+        protected virtual void OnKeyboardNavigationLayerActivated(KeyboardNavigationLayerId layerId)
+        {
+            if (AutoFocusFirstElement && !KeyboardNavigationLayerGroup.ActiveLayer!.TryRestoreFocus())
+            {
+                KeyboardNavigationLayerGroup.ActiveLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
 
         bool IKeyboardNavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
         {
@@ -120,6 +164,7 @@ namespace Nodify
                 _activeKeyboardNavigationLayer?.OnDeactivate();
                 _activeKeyboardNavigationLayer = layer;
                 _activeKeyboardNavigationLayer.OnActivate();
+                OnKeyboardNavigationLayerActivated(layer.Id);
                 Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer.GetType().Name} as a keyboard navigation layer in {GetType().Name}");
                 ActiveLayerChanged?.Invoke(layerId);
                 return true;

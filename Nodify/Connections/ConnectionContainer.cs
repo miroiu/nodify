@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Nodify
 {
@@ -88,9 +89,23 @@ namespace Nodify
             FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(new Style()));
         }
 
-        internal ConnectionContainer(ConnectionsMultiSelector selector)
+        public ConnectionContainer(ConnectionsMultiSelector selector)
         {
             Selector = selector;
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            if (VisualTreeHelper.GetParent(this) == null && IsKeyboardFocusWithin)
+            {
+                base.OnVisualParentChanged(oldParent);
+
+                Selector.Editor?.Focus();
+            }
+            else
+            {
+                base.OnVisualParentChanged(oldParent);
+            }
         }
 
         protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)

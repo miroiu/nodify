@@ -276,6 +276,8 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(typeof(ItemContainer)));
             FocusableProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
 
+            KeyboardNavigation.IsTabStopProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
+            //KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Contained));
             //KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Local));
             //KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Contained));
             //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.True));
@@ -291,6 +293,20 @@ namespace Nodify
             Editor = editor;
 
             InputProcessor.AddSharedHandlers(this);
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            if (VisualTreeHelper.GetParent(this) == null && IsKeyboardFocusWithin)
+            {
+                base.OnVisualParentChanged(oldParent);
+
+                Editor.Focus();
+            }
+            else
+            {
+                base.OnVisualParentChanged(oldParent);
+            }
         }
 
         /// <inheritdoc />

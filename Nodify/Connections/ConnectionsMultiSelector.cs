@@ -84,7 +84,7 @@ namespace Nodify
 
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True));
+            //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True));
         }
 
         public ConnectionsMultiSelector()
@@ -95,12 +95,18 @@ namespace Nodify
         #region Keyboard Navigation
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
+        object? IKeyboardNavigationLayer.LastFocusedElement => _focusNavigator.LastFocusedElement;
 
         private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator;
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
             return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
+        }
+
+        bool IKeyboardNavigationLayer.TryRestoreFocus()
+        {
+            return _focusNavigator.TryRestoreFocus();
         }
 
         private bool TryFindContainerToFocus(TraversalRequest request, out ConnectionContainer? containerToFocus)

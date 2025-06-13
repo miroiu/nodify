@@ -64,9 +64,9 @@ namespace Nodify.Interactivity
             return best;
         }
 
-        private static IKeyboardFocusTarget<TElement>[] FindCandidatesLinearly(IKeyboardFocusTarget<TElement> currentContainer, TraversalRequest request)
+        private IKeyboardFocusTarget<TElement>[] FindCandidatesLinearly(IKeyboardFocusTarget<TElement> currentContainer, TraversalRequest request)
         {
-            var nextTarget = new LinearFocusNavigator<TElement>().FindNextFocusTarget(currentContainer, request);
+            var nextTarget = new LinearFocusNavigator<TElement>(_availableTargets).FindNextFocusTarget(currentContainer, request);
             return nextTarget is null ? Array.Empty<IKeyboardFocusTarget<TElement>>() : new[] { nextTarget };
         }
     }

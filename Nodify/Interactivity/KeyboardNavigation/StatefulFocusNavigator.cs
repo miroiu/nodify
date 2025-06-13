@@ -16,6 +16,8 @@ namespace Nodify.Interactivity
 
         private readonly Action<IKeyboardFocusTarget<TElement>> _onFocus;
 
+        public TElement? LastFocusedElement => _lastFocusedContainer.TryGetTarget(out var target) ? target : null;
+
         public StatefulFocusNavigator(Action<IKeyboardFocusTarget<TElement>> onFocus)
         {
             _onFocus = onFocus;
@@ -56,6 +58,7 @@ namespace Nodify.Interactivity
             if (_lastFocusedContainer.TryGetTarget(out var lastTarget) && lastTarget!.Focus())
             {
                 _onFocus.Invoke(lastTarget);
+                return true;
             }
 
             return false;

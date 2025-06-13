@@ -503,11 +503,6 @@ namespace Nodify
         public static double FitToScreenExtentMargin { get; set; } = 30;
 
         /// <summary>
-        /// Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus. 
-        /// </summary>
-        public static double BringIntoViewEdgeOffset { get; set; } = 32d;
-
-        /// <summary>
         /// Gets or sets the maximum distance, in pixels, that the mouse can move before suppressing certain mouse actions. 
         /// This is useful for suppressing actions like showing a <see cref="ContextMenu"/> if the mouse has moved significantly.
         /// </summary>
@@ -557,9 +552,10 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
+            //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
             EditorCommands.RegisterCommandBindings<NodifyEditor>();
         }
@@ -583,8 +579,8 @@ namespace Nodify
 
             InputProcessor.AddSharedHandlers(this);
 
-            Unloaded += OnEditorUnloaded; 
-            
+            Unloaded += OnEditorUnloaded;
+
             _focusNavigator = new StatefulFocusNavigator<ItemContainer>(target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
         }
 
