@@ -26,6 +26,12 @@ namespace Nodify
         /// </summary>
         public static bool PanViewportOnKeyboardDrag { get; set; } = true;
 
+        /// <summary>
+        /// Defines the minimum distance to move or navigate when using directional input (such as arrow keys), scaled by the <see cref="ViewportZoom"/>.
+        /// If the <see cref="GridCellSize"/> is smaller than this value, the movement step is increased to the nearest greater multiple of the <see cref="GridCellSize"/>.
+        /// </summary>
+        public static double MinimumNavigationStepSize { get; set; } = 10d;
+
         public IKeyboardNavigationLayer? ActiveNavigationLayer => _activeKeyboardNavigationLayer;
         public IKeyboardNavigationLayer KeyboardNavigationLayer => this;
 

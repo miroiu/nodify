@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Interactivity
@@ -13,27 +14,27 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                double cellSize = Element.GridCellSize;
+                var navigationStepSize = GetNavigationStepSize();
                 var gestures = EditorGestures.Mappings.Editor.Keyboard;
 
                 if (Element.IsKeyboardFocusWithin && Element.IsNavigationTrigger(e.OriginalSource as DependencyObject))
                 {
                     if (gestures.Pan.TryGetNavigationDirection(e, out var panDirection))
                     {
-                        var panning = new Vector(-panDirection.X * cellSize, panDirection.Y * cellSize);
+                        var panning = new Vector(-panDirection.X * navigationStepSize, panDirection.Y * navigationStepSize);
                         Element.UpdatePanning(panning);
                         e.Handled = true;
                     }
                     else if (CanDragSelection() && gestures.DragSelection.TryGetNavigationDirection(e, out var dragDirection))
                     {
-                        var dragging = new Vector(dragDirection.X * cellSize, -dragDirection.Y * cellSize);
+                        var dragging = new Vector(dragDirection.X * navigationStepSize, -dragDirection.Y * navigationStepSize);
                         Element.BeginDragging();
                         Element.UpdateDragging(dragging);
                         Element.EndDragging();
 
                         if (NodifyEditor.PanViewportOnKeyboardDrag)
                         {
-                            var panning = new Vector(-dragDirection.X * cellSize, dragDirection.Y * cellSize);
+                            var panning = new Vector(-dragDirection.X * navigationStepSize, dragDirection.Y * navigationStepSize);
                             Element.UpdatePanning(panning);
                         }
 
@@ -106,6 +107,17 @@ namespace Nodify.Interactivity
             private bool CanDragSelection()
             {
                 return Element.ActiveNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes && Element.SelectedContainersCount > 0;
+            }
+
+            private double GetNavigationStepSize()
+            {
+                double cellSize = Element.GridCellSize;
+
+                if (cellSize >= NodifyEditor.MinimumNavigationStepSize)
+                    return cellSize;
+
+                int factor = (int)Math.Ceiling(NodifyEditor.MinimumNavigationStepSize / cellSize);
+                return factor * cellSize / Element.ViewportZoom;
             }
         }
     }
