@@ -241,6 +241,8 @@ namespace Nodify
         static PendingConnection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PendingConnection), new FrameworkPropertyMetadata(typeof(PendingConnection)));
+            IsHitTestVisibleProperty.OverrideMetadata(typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
+            IsEnabledProperty.OverrideMetadata(typeof(PendingConnection), new FrameworkPropertyMetadata(BoxValue.False));
         }
 
         /// <inheritdoc />

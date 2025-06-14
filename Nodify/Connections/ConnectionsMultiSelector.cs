@@ -82,9 +82,8 @@ namespace Nodify
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.False));
 
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
-            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
         }
 
         public ConnectionsMultiSelector()
@@ -94,17 +93,17 @@ namespace Nodify
 
         #region Keyboard Navigation
 
-        KeyboardNavigationLayerId IKeyboardNavigationLayer.Id { get; } = KeyboardNavigationLayerId.Connections;
-        object? IKeyboardNavigationLayer.LastFocusedElement => _focusNavigator.LastFocusedElement;
+        public KeyboardNavigationLayerId Id { get; } = KeyboardNavigationLayerId.Connections;
+        public IKeyboardFocusTarget<UIElement>? LastFocusedElement => _focusNavigator.LastFocusedElement;
 
         private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator;
 
-        bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
+        public bool TryMoveFocus(TraversalRequest request)
         {
             return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
         }
 
-        bool IKeyboardNavigationLayer.TryRestoreFocus()
+        public bool TryRestoreFocus()
         {
             return _focusNavigator.TryRestoreFocus();
         }
@@ -142,12 +141,12 @@ namespace Nodify
             return result?.Element;
         }
 
-        void IKeyboardNavigationLayer.OnActivate()
+        void IKeyboardNavigationLayer.OnActivated()
         {
-            _focusNavigator.TryRestoreFocus();
+            TryRestoreFocus();
         }
 
-        void IKeyboardNavigationLayer.OnDeactivate()
+        void IKeyboardNavigationLayer.OnDeactivated()
         {
         }
 
@@ -185,9 +184,9 @@ namespace Nodify
 
             Editor = this.GetParentOfType<NodifyEditor>();
 
-            if (Editor is IKeyboardNavigationLayerGroup group && group.RegisterLayer(this))
+            if (Editor != null && Editor.RegisterNavigationLayer(this))
             {
-                Debug.WriteLine($"Registered {GetType().Name} as a keyboard navigation layer in {group.GetType().Name}");
+                Debug.WriteLine($"Registered {GetType().Name} as a keyboard navigation layer in {Editor.GetType().Name}");
             }
         }
 

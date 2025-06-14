@@ -537,7 +537,8 @@
                         </nodify:Node.ContentTemplate>
                         <nodify:Node.HeaderTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              Focusable="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeInput Orientation="Vertical" />
@@ -554,7 +555,8 @@
                         </nodify:Node.HeaderTemplate>
                         <nodify:Node.FooterTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              Focusable="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeOutput Orientation="Vertical" />

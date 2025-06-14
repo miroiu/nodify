@@ -170,10 +170,7 @@ namespace Nodify
         static Node()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(typeof(Node)));
-            FocusableProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.True));
-
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            //FocusManager.IsFocusScopeProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.True));
+            FocusableProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.False));
         }
 
         public Node()

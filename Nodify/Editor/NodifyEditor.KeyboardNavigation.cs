@@ -17,27 +17,31 @@ namespace Nodify
         public static double BringIntoViewEdgeOffset { get; set; } = 32d;
 
         /// <summary>
-        /// Automatically focus first container on navigation layer change or editor focus.
+        /// Automatically focus the first container when the navigation layer changes or the editor gets focused.
         /// </summary>
         public static bool AutoFocusFirstElement { get; set; } = true;
 
-        private readonly List<IKeyboardNavigationLayer> _navigationLayers = new List<IKeyboardNavigationLayer>();
-        private IKeyboardNavigationLayer? _activeKeyboardNavigationLayer;
-        private IKeyboardNavigationLayer KeyboardNavigationLayer => this;
-        private IKeyboardNavigationLayerGroup KeyboardNavigationLayerGroup => this;
+        /// <summary>
+        /// Indicates whether the viewport should automatically pan to follow elements moved via keyboard dragging.
+        /// </summary>
+        public static bool PanViewportOnKeyboardDrag { get; set; } = true;
 
-        IKeyboardNavigationLayer? IKeyboardNavigationLayerGroup.ActiveLayer => _activeKeyboardNavigationLayer;
+        public IKeyboardNavigationLayer? ActiveNavigationLayer => _activeKeyboardNavigationLayer;
+        public IKeyboardNavigationLayer KeyboardNavigationLayer => this;
 
         KeyboardNavigationLayerId IKeyboardNavigationLayer.Id => KeyboardNavigationLayerId.Nodes;
-        object? IKeyboardNavigationLayer.LastFocusedElement => _focusNavigator.LastFocusedElement;
+        IKeyboardFocusTarget<UIElement>? IKeyboardNavigationLayer.LastFocusedElement => _focusNavigator.LastFocusedElement;
 
         int IReadOnlyCollection<IKeyboardNavigationLayer>.Count => _navigationLayers.Count;
+
+        private readonly List<IKeyboardNavigationLayer> _navigationLayers = new List<IKeyboardNavigationLayer>();
+        private IKeyboardNavigationLayer? _activeKeyboardNavigationLayer;
 
         #region Focus Handling
 
         private readonly StatefulFocusNavigator<ItemContainer> _focusNavigator;
 
-        public event Action<KeyboardNavigationLayerId>? ActiveLayerChanged;
+        public event Action<KeyboardNavigationLayerId>? ActiveNavigationLayerChanged;
 
         bool IKeyboardNavigationLayer.TryMoveFocus(TraversalRequest request)
         {
@@ -84,50 +88,74 @@ namespace Nodify
             => MoveFocus(new TraversalRequest(direction));
 
         public new bool MoveFocus(TraversalRequest request)
-            => KeyboardNavigationLayerGroup.ActiveLayer?.TryMoveFocus(request) ?? false;
+            => ActiveNavigationLayer?.TryMoveFocus(request) ?? false;
 
-        void IKeyboardNavigationLayer.OnActivate()
+        void IKeyboardNavigationLayer.OnActivated()
         {
-            _focusNavigator.TryRestoreFocus();
+            KeyboardNavigationLayer.TryRestoreFocus();
         }
 
-        void IKeyboardNavigationLayer.OnDeactivate()
+        void IKeyboardNavigationLayer.OnDeactivated()
         {
+        }
+
+        protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            bool isKeyboardInitiated = InputManager.Current.MostRecentInputDevice is KeyboardDevice;
+
+            // When any focusable elements inside the editor - that are most likely inside containers (textbox, checkbox etc) - lose focus,
+            // and the focus goes outside the editor, we must focus its container first, otherwise focus the editor (don't allow focus to escape)
+            if (isKeyboardInitiated && e.OldFocus is DependencyObject oldFocus && !IsNavigationTrigger(oldFocus) && IsAncestorOf(oldFocus) && (e.NewFocus is DependencyObject newFocus && !IsAncestorOf(newFocus)))
+            {
+                var container = oldFocus.GetParent(IsNavigationTrigger);
+                if (container is UIElement elem && elem.Focus())
+                {
+                    e.Handled = true;
+                }
+                else
+                {
+                    e.Handled = Focus();
+                }
+            }
         }
 
         protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
             bool isKeyboardInitiated = InputManager.Current.MostRecentInputDevice is KeyboardDevice;
-            var activeKbdLayer = KeyboardNavigationLayerGroup.ActiveLayer;
 
-            if (isKeyboardInitiated && activeKbdLayer != null)
+            if (isKeyboardInitiated && ActiveNavigationLayer != null)
             {
                 bool isFocusComingFromOutside = e.OldFocus is null || e.OldFocus is DependencyObject dpo && !IsAncestorOf(dpo);
 
-                if (isFocusComingFromOutside && activeKbdLayer.TryRestoreFocus())
+                if (isFocusComingFromOutside && ActiveNavigationLayer.TryRestoreFocus())
                 {
                     e.Handled = true;
                 }
-                else if (activeKbdLayer.LastFocusedElement is null && e.NewFocus == this && AutoFocusFirstElement)
+                else if (ActiveNavigationLayer.LastFocusedElement is null && e.NewFocus == this && AutoFocusFirstElement)
                 {
-                    e.Handled = activeKbdLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    e.Handled = ActiveNavigationLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 }
             }
+        }
+
+        protected internal virtual bool IsNavigationTrigger(DependencyObject? dp)
+        {
+            return dp is NodifyEditor || dp is ItemContainer || dp is ConnectionContainer || dp is DecoratorContainer;
         }
 
         #endregion
 
         #region Layer Management
 
-        protected virtual void OnKeyboardNavigationLayerActivated(KeyboardNavigationLayerId layerId)
+        protected virtual void OnKeyboardNavigationLayerActivated(IKeyboardNavigationLayer activeLayer)
         {
-            if (AutoFocusFirstElement && !KeyboardNavigationLayerGroup.ActiveLayer!.TryRestoreFocus())
+            if (AutoFocusFirstElement && !activeLayer!.TryRestoreFocus())
             {
-                KeyboardNavigationLayerGroup.ActiveLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                activeLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
         }
 
-        bool IKeyboardNavigationLayerGroup.RegisterLayer(IKeyboardNavigationLayer layer)
+        public bool RegisterNavigationLayer(IKeyboardNavigationLayer layer)
         {
             if (_navigationLayers.Any(l => l.Id == layer.Id))
             {
@@ -135,20 +163,20 @@ namespace Nodify
             }
 
             _navigationLayers.Add(layer);
-            if (KeyboardNavigationLayerGroup.ActiveLayer is null)
+            if (ActiveNavigationLayer is null)
             {
-                KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
+                ActivateNavigationLayer(layer.Id);
             }
 
             return true;
         }
 
-        bool IKeyboardNavigationLayerGroup.RemoveLayer(KeyboardNavigationLayerId layerId)
+        public bool RemoveNavigationLayer(KeyboardNavigationLayerId layerId)
         {
             var layerToRemove = _navigationLayers.FirstOrDefault(layer => layer.Id == layerId);
             if (layerToRemove != null && _navigationLayers.Remove(layerToRemove))
             {
-                KeyboardNavigationLayerGroup.MoveToPrevLayer();
+                ActivatePreviousNavigationLayer();
 
                 return true;
             }
@@ -156,49 +184,50 @@ namespace Nodify
             return false;
         }
 
-        bool IKeyboardNavigationLayerGroup.ActivateLayer(KeyboardNavigationLayerId layerId)
+        public bool ActivateNavigationLayer(KeyboardNavigationLayerId layerId)
         {
-            var layer = _navigationLayers.FirstOrDefault(x => x.Id == layerId);
-            if (layer != null)
+            var newLayer = _navigationLayers.FirstOrDefault(x => x.Id == layerId);
+            if (newLayer != null)
             {
-                _activeKeyboardNavigationLayer?.OnDeactivate();
-                _activeKeyboardNavigationLayer = layer;
-                _activeKeyboardNavigationLayer.OnActivate();
-                OnKeyboardNavigationLayerActivated(layer.Id);
+                var prevLayer = _activeKeyboardNavigationLayer;
+                _activeKeyboardNavigationLayer = newLayer;
+                prevLayer?.OnDeactivated();
+                newLayer.OnActivated();
+                OnKeyboardNavigationLayerActivated(newLayer);
                 Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer.GetType().Name} as a keyboard navigation layer in {GetType().Name}");
-                ActiveLayerChanged?.Invoke(layerId);
+                ActiveNavigationLayerChanged?.Invoke(layerId);
                 return true;
             }
 
             return false;
         }
 
-        bool IKeyboardNavigationLayerGroup.MoveToNextLayer()
+        public bool ActivateNextNavigationLayer()
         {
             if (_navigationLayers.Count > 0)
             {
-                Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+                Debug.Assert(ActiveNavigationLayer != null);
 
-                int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+                int currentIndex = _navigationLayers.IndexOf(ActiveNavigationLayer!);
                 int nextIndex = (currentIndex + 1) % _navigationLayers.Count;
 
                 var layer = _navigationLayers[nextIndex];
-                return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
+                return ActivateNavigationLayer(layer.Id);
             }
 
             return false;
         }
 
-        bool IKeyboardNavigationLayerGroup.MoveToPrevLayer()
+        public bool ActivatePreviousNavigationLayer()
         {
             if (_navigationLayers.Count > 0)
             {
-                Debug.Assert(KeyboardNavigationLayerGroup.ActiveLayer != null);
+                Debug.Assert(ActiveNavigationLayer != null);
 
-                int currentIndex = _navigationLayers.IndexOf(KeyboardNavigationLayerGroup.ActiveLayer!);
+                int currentIndex = _navigationLayers.IndexOf(ActiveNavigationLayer!);
                 int prevIndex = (currentIndex - 1 + _navigationLayers.Count) % _navigationLayers.Count;
                 var layer = _navigationLayers[prevIndex];
-                return KeyboardNavigationLayerGroup.ActivateLayer(layer.Id);
+                return ActivateNavigationLayer(layer.Id);
             }
 
             return false;

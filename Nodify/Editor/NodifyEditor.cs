@@ -594,8 +594,8 @@ namespace Nodify
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
 
-            // It's safe to call RegisterLayer multiple times. It only registers once for the same id.
-            KeyboardNavigationLayerGroup.RegisterLayer(KeyboardNavigationLayer);
+            // It's safe to call RegisterNavigationLayer multiple times. It only registers once for the same id.
+            RegisterNavigationLayer(this);
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)

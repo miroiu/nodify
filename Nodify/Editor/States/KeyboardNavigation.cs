@@ -7,8 +7,6 @@ namespace Nodify.Interactivity
     {
         public class KeyboardNavigation : InputElementState<NodifyEditor>
         {
-            private IKeyboardNavigationLayer? ActiveKeyboardNavigationLayer => ((IKeyboardNavigationLayerGroup)Element).ActiveLayer;
-
             public KeyboardNavigation(NodifyEditor element) : base(element)
             {
             }
@@ -18,7 +16,7 @@ namespace Nodify.Interactivity
                 double cellSize = Element.GridCellSize;
                 var gestures = EditorGestures.Mappings.Editor.Keyboard;
 
-                if (Element.IsKeyboardFocusWithin && IsEditorControl(e.OriginalSource))
+                if (Element.IsKeyboardFocusWithin && Element.IsNavigationTrigger(e.OriginalSource as DependencyObject))
                 {
                     if (gestures.Pan.TryGetNavigationDirection(e, out var panDirection))
                     {
@@ -33,7 +31,11 @@ namespace Nodify.Interactivity
                         Element.UpdateDragging(dragging);
                         Element.EndDragging();
 
-                        // TODO: Find a way to keep the selection in view
+                        if (NodifyEditor.PanViewportOnKeyboardDrag)
+                        {
+                            var panning = new Vector(-dragDirection.X * cellSize, dragDirection.Y * cellSize);
+                            Element.UpdatePanning(panning);
+                        }
 
                         e.Handled = true;
                     }
@@ -64,14 +66,14 @@ namespace Nodify.Interactivity
                 }
                 else if (gestures.DeselectAll.Matches(e.Source, e))
                 {
-                    if (Element.SelectedContainersCount > 0 && ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes)
+                    if (Element.SelectedContainersCount > 0 && Element.ActiveNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes)
                     {
                         Element.UnselectAll();
                         e.Handled = true;
                     }
                     // TODO: How to get the selected connections count without a hard reference to the connections multi selector?
                     // This currently assumes we have a binding to the SelectedConnectionsProperty dependency property
-                    else if (Element.SelectedConnections?.Count > 0 && ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Connections)
+                    else if (Element.SelectedConnections?.Count > 0 && Element.ActiveNavigationLayer?.Id == KeyboardNavigationLayerId.Connections)
                     {
                         Element.UnselectAllConnections();
                         e.Handled = true;
@@ -79,24 +81,29 @@ namespace Nodify.Interactivity
                 }
                 else if (gestures.NextNavigationLayer.Matches(e.Source, e))
                 {
-                    ((IKeyboardNavigationLayerGroup)Element).MoveToNextLayer();
+                    Element.ActivateNextNavigationLayer();
                     e.Handled = true;
                 }
                 else if (gestures.PrevNavigationLayer.Matches(e.Source, e))
                 {
-                    ((IKeyboardNavigationLayerGroup)Element).MoveToPrevLayer();
+                    Element.ActivatePreviousNavigationLayer();
                     e.Handled = true;
+                }
+                else if (Keyboard.FocusedElement is ItemContainer { IsSelected: true } container
+                    && EditorGestures.Mappings.GroupingNode.ToggleContentSelection.Matches(e.Source, e))
+                {
+                    var groupingNode = container.GetChildOfType<GroupingNode>();
+                    if (groupingNode != null)
+                    {
+                        groupingNode.ToggleContentSelection();
+                        e.Handled = true;
+                    }
                 }
             }
 
             private bool CanDragSelection()
             {
-                return ActiveKeyboardNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes && Element.SelectedContainersCount > 0;
-            }
-
-            private static bool IsEditorControl(object originalSource)
-            {
-                return originalSource is NodifyEditor || originalSource is ItemContainer || originalSource is Connector || originalSource is ConnectionContainer;
+                return Element.ActiveNavigationLayer?.Id == KeyboardNavigationLayerId.Nodes && Element.SelectedContainersCount > 0;
             }
         }
     }

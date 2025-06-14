@@ -9,14 +9,13 @@ namespace Nodify.Interactivity
     {
         public delegate bool FindNextFocusTargetDelegate(TraversalRequest request, out TElement? elementToFocus);
 
-        // TODO: When do we clear these?
-        private readonly WeakReference<TElement?> _previousFocusedContainer = new WeakReference<TElement?>(null);
-        private readonly WeakReference<TElement?> _lastFocusedContainer = new WeakReference<TElement?>(null);
+        private readonly WeakReference<TElement?> _previousFocusedElement = new WeakReference<TElement?>(null);
+        private readonly WeakReference<TElement?> _lastFocusedElement = new WeakReference<TElement?>(null);
         private FocusNavigationDirection? _previousFocusNavigationDirection;
 
         private readonly Action<IKeyboardFocusTarget<TElement>> _onFocus;
 
-        public TElement? LastFocusedElement => _lastFocusedContainer.TryGetTarget(out var target) ? target : null;
+        public TElement? LastFocusedElement => _lastFocusedElement.TryGetTarget(out var target) ? target : null;
 
         public StatefulFocusNavigator(Action<IKeyboardFocusTarget<TElement>> onFocus)
         {
@@ -28,14 +27,14 @@ namespace Nodify.Interactivity
             var currentTarget = Keyboard.FocusedElement as TElement;
 
             // If the request is in the opposite direction of the last focus navigation, try to restore the previous focused container
-            if (_previousFocusedContainer.TryGetTarget(out var prevTarget)
+            if (_previousFocusedElement.TryGetTarget(out var prevTarget)
                 && _previousFocusNavigationDirection.HasValue
                 && request.FocusNavigationDirection.IsOppositeOf(_previousFocusNavigationDirection.Value)
                 && prevTarget!.Focus())
             {
                 _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                _previousFocusedContainer.SetTarget(currentTarget);
-                _lastFocusedContainer.SetTarget(prevTarget);
+                _previousFocusedElement.SetTarget(currentTarget);
+                _lastFocusedElement.SetTarget(prevTarget);
 
                 _onFocus(prevTarget);
                 return true;
@@ -43,8 +42,8 @@ namespace Nodify.Interactivity
             else if (findNext(request, out var nextTarget) && nextTarget!.Element.Focus())
             {
                 _previousFocusNavigationDirection = request.FocusNavigationDirection;
-                _previousFocusedContainer.SetTarget(currentTarget);
-                _lastFocusedContainer.SetTarget(nextTarget);
+                _previousFocusedElement.SetTarget(currentTarget);
+                _lastFocusedElement.SetTarget(nextTarget);
 
                 _onFocus(nextTarget);
                 return true;
@@ -55,10 +54,18 @@ namespace Nodify.Interactivity
 
         public bool TryRestoreFocus()
         {
-            if (_lastFocusedContainer.TryGetTarget(out var lastTarget) && lastTarget!.Focus())
+            if (_lastFocusedElement.TryGetTarget(out var lastTarget))
             {
-                _onFocus.Invoke(lastTarget);
-                return true;
+                if (lastTarget!.IsKeyboardFocused)
+                {
+                    return true;
+                }
+
+                if (lastTarget.Focus())
+                {
+                    _onFocus.Invoke(lastTarget);
+                    return true;
+                }
             }
 
             return false;

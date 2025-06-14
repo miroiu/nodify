@@ -99,9 +99,7 @@
                                                   ItemsSource="{TemplateBinding Input}"
                                                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                                   ItemTemplate="{TemplateBinding InputConnectorTemplate}"
-                                                  Focusable="False"
-                                                  FocusManager.IsFocusScope="True"
-                                                  KeyboardNavigation.DirectionalNavigation="Contained" />
+                                                  Focusable="False" />
 
                                     <!--Content-->
                                     <Border Grid.Column="1"
@@ -118,9 +116,7 @@
                                                   VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                                   HorizontalContentAlignment="Right"
                                                   Grid.Column="2"
-                                                  Focusable="False"
-                                                  FocusManager.IsFocusScope="True"
-                                                  KeyboardNavigation.DirectionalNavigation="Contained" />
+                                                  Focusable="False" />
                                 </Grid>
                             </Border>
 

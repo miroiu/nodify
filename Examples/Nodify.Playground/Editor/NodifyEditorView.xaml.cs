@@ -12,7 +12,7 @@ namespace Nodify.Playground
         {
             InitializeComponent();
 
-            EditorInstance.ActiveLayerChanged += DisplayActiveLayer;
+            EditorInstance.ActiveNavigationLayerChanged += DisplayActiveNavigationLayer;
         }
 
         static NodifyEditorView()
@@ -26,7 +26,7 @@ namespace Nodify.Playground
             EditorInstance.ZoomAtPosition(e.Zoom, e.Location);
         }
 
-        private void DisplayActiveLayer(KeyboardNavigationLayerId layerId)
+        private void DisplayActiveNavigationLayer(KeyboardNavigationLayerId layerId)
         {
             var editorVm = (NodifyEditorViewModel)EditorInstance.DataContext;
 

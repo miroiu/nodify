@@ -14,34 +14,34 @@ namespace Nodify.Interactivity
 
     public interface IKeyboardNavigationLayerGroup : IReadOnlyCollection<IKeyboardNavigationLayer>
     {
-        IKeyboardNavigationLayer? ActiveLayer { get; }
+        IKeyboardNavigationLayer? ActiveNavigationLayer { get; }
 
-        event Action<KeyboardNavigationLayerId>? ActiveLayerChanged;
+        event Action<KeyboardNavigationLayerId>? ActiveNavigationLayerChanged;
 
-        bool MoveToNextLayer();
+        bool ActivateNextNavigationLayer();
 
-        bool MoveToPrevLayer();
+        bool ActivatePreviousNavigationLayer();
 
-        bool RegisterLayer(IKeyboardNavigationLayer layer);
+        bool RegisterNavigationLayer(IKeyboardNavigationLayer layer);
 
-        bool RemoveLayer(KeyboardNavigationLayerId layerId);
+        bool RemoveNavigationLayer(KeyboardNavigationLayerId layerId);
 
-        bool ActivateLayer(KeyboardNavigationLayerId layerId);
+        bool ActivateNavigationLayer(KeyboardNavigationLayerId layerId);
     }
 
     public interface IKeyboardNavigationLayer
     {
         KeyboardNavigationLayerId Id { get; }
-        object? LastFocusedElement { get; }
+        IKeyboardFocusTarget<UIElement>? LastFocusedElement { get; }
 
         bool TryMoveFocus(TraversalRequest request);
         bool TryRestoreFocus();
 
-        void OnActivate();
-        void OnDeactivate();
+        void OnActivated();
+        void OnDeactivated();
     }
 
-    public interface IKeyboardFocusTarget<TElement>
+    public interface IKeyboardFocusTarget<out TElement>
         where TElement : UIElement
     {
         Rect Bounds { get; }

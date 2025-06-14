@@ -22,10 +22,10 @@ namespace Nodify.Interactivity
 
             IEnumerable<IKeyboardFocusTarget<TElement>> candidates = request.FocusNavigationDirection switch
             {
-                FocusNavigationDirection.Left => _availableTargets.Where(c => c.Bounds.Right < currentContainerBounds.Left),
-                FocusNavigationDirection.Right => _availableTargets.Where(c => c.Bounds.Left > currentContainerBounds.Right),
-                FocusNavigationDirection.Up => _availableTargets.Where(c => c.Bounds.Bottom < currentContainerBounds.Top),
-                FocusNavigationDirection.Down => _availableTargets.Where(c => c.Bounds.Top > currentContainerBounds.Bottom),
+                FocusNavigationDirection.Left => _availableTargets.Where(c => c.Bounds.Left < currentContainerBounds.Left),
+                FocusNavigationDirection.Right => _availableTargets.Where(c => c.Bounds.Left > currentContainerBounds.Left),
+                FocusNavigationDirection.Up => _availableTargets.Where(c => c.Bounds.Top < currentContainerBounds.Top),
+                FocusNavigationDirection.Down => _availableTargets.Where(c => c.Bounds.Top > currentContainerBounds.Top),
                 FocusNavigationDirection.Previous => FindCandidatesLinearly(currentContainer, request),
                 FocusNavigationDirection.Next => FindCandidatesLinearly(currentContainer, request),
                 FocusNavigationDirection.First => FindCandidatesLinearly(currentContainer, request),

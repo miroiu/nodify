@@ -245,10 +245,6 @@ namespace Nodify.Interactivity
                     PrevNavigationLayer.Unbind();
                 }
             }
-            // TODO:
-            // Navigate connections = Arrow keys
-            // Navigate connectors inside panel = Arrow keys
-            // Move nodes:  - Shift + CTRL + Arrow Keys – nudge by 10 units
 
             public NodifyEditorGestures()
             {
@@ -444,17 +440,28 @@ namespace Nodify.Interactivity
         /// <summary>Gestures for the <see cref="GroupingNode"/>.</summary>
         public class GroupingNodeGestures
         {
+            public GroupingNodeGestures()
+            {
+                SwitchMovementMode = ModifierKeys.Shift;
+                ToggleContentSelection = new AnyGesture(new KeyGesture(Key.Space, ModifierKeys.Control), new KeyGesture(Key.Enter, ModifierKeys.Control));
+            }
+
             /// <summary>The key modifier that will toggle between <see cref="GroupingMovementMode"/>s.</summary>
             /// <remarks>The modifier must be allowed by the <see cref="ItemContainer.Drag"/> gesture.
             /// <br /> Defaults to <see cref="ModifierKeys.Shift"/>.
             /// </remarks>
-            public ModifierKeys SwitchMovementMode { get; set; } = ModifierKeys.Shift;
+            public ModifierKeys SwitchMovementMode { get; set; }
+
+            /// <summary>Gesture to toggle the content selection of the <see cref="GroupingNode"/> when it is selected.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="Key.Space"/>.</remarks>
+            public InputGestureRef ToggleContentSelection { get; }
 
             /// <summary>Copies from the specified gestures.</summary>
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(GroupingNodeGestures gestures)
             {
                 SwitchMovementMode = gestures.SwitchMovementMode;
+                ToggleContentSelection.Value = gestures.ToggleContentSelection.Value;
             }
         }
 
