@@ -9,22 +9,31 @@ namespace Nodify
 {
     internal static class DependencyObjectExtensions
     {
-        public static T? GetParentOfType<T>(this DependencyObject child)
+        public static T? GetParentOfType<T>(this DependencyObject current)
             where T : DependencyObject
         {
-            DependencyObject? current = child;
-
-            do
+            while ((current = VisualTreeHelper.GetParent(current)) != null)
             {
-                current = VisualTreeHelper.GetParent(current);
-                if (current == default)
+                if (current is T match)
                 {
-                    return default;
+                    return match;
                 }
+            }
 
-            } while (!(current is T));
+            return null;
+        }
 
-            return (T)current;
+        public static DependencyObject? GetParent(this DependencyObject current, Func<DependencyObject, bool> condition)
+        {
+            while ((current = VisualTreeHelper.GetParent(current)) != null)
+            {
+                if (condition(current))
+                {
+                    return current;
+                }
+            }
+
+            return null;
         }
 
         public static T? GetChildOfType<T>(this DependencyObject? depObj) where T : DependencyObject

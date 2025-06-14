@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Interactivity
@@ -16,6 +17,7 @@ namespace Nodify.Interactivity
         protected TElement Element { get; }
 
         public bool RequiresInputCapture { get; protected set; }
+        public bool ProcessHandledEvents { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputElementState{TElement}"/> class.

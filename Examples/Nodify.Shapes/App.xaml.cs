@@ -15,6 +15,7 @@ namespace Nodify.Shapes
             NodifyEditor.EnableCuttingLinePreview = true;
 
             EditorGestures.Mappings.Connection.Disconnect.Value = new AnyGesture(new Interactivity.MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new Interactivity.MouseGesture(MouseAction.RightClick));
+            EditorGestures.Mappings.Editor.Pan.Value = new AnyGesture(EditorGestures.Mappings.Editor.Pan.Value, new Interactivity.MouseGesture(MouseAction.LeftClick, Key.Space));
         }
     }
 }

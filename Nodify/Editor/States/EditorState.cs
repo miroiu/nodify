@@ -65,6 +65,7 @@
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new Zooming(elem));
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new PushingItems(elem));
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new Cutting(elem));
+            InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(elem => new KeyboardNavigation(elem));
         }
     }
 }

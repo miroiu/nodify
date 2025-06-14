@@ -1,11 +1,13 @@
 ﻿using Nodify.Interactivity;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Nodify
 {
-    internal sealed class ConnectionContainer : ContentPresenter
+    public class ConnectionContainer : ContentPresenter, IKeyboardFocusTarget<ConnectionContainer>
     {
         #region Dependency properties
 
@@ -66,23 +68,59 @@ namespace Nodify
 
         #endregion
 
-        private ConnectionsMultiSelector Selector { get; }
-
         private FrameworkElement? _connection;
-        private FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
+        private SelectionType? _selectionType;
+
+        public Rect Bounds => ConnectionFocusTarget.Bounds;
+        ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
+
+        private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
+            ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
+
+        public FrameworkElement? Connection => _connection ??= BaseConnection.PrioritizeBaseConnectionForSelection
             ? this.GetChildOfType<BaseConnection>() ?? this.GetChildOfType<FrameworkElement>()
             : this.GetChildOfType<FrameworkElement>();
 
-        private SelectionType? _selectionType;
+        public ConnectionsMultiSelector Selector { get; }
 
         static ConnectionContainer()
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
+            FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(new Style()));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
         }
 
-        internal ConnectionContainer(ConnectionsMultiSelector selector)
+        public ConnectionContainer(ConnectionsMultiSelector selector)
         {
             Selector = selector;
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            if (VisualTreeHelper.GetParent(this) == null && IsKeyboardFocusWithin)
+            {
+                base.OnVisualParentChanged(oldParent);
+
+                Selector.Editor?.Focus();
+            }
+            else
+            {
+                base.OnVisualParentChanged(oldParent);
+            }
+        }
+
+        protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (Connection is BaseConnection baseConnection)
+            {
+                baseConnection.UpdateFocusVisual();
+            }
+            else
+            {
+                Connection?.InvalidateVisual();
+            }
         }
 
         /// <summary>
@@ -140,7 +178,7 @@ namespace Nodify
         /// Modifies the selection state of the current item based on the specified selection type.
         /// </summary>
         /// <param name="type">The type of selection to perform.</param>
-        private void Select(SelectionType type)
+        public void Select(SelectionType type)
         {
             switch (type)
             {

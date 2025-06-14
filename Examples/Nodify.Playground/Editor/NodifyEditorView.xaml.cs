@@ -11,6 +11,8 @@ namespace Nodify.Playground
         public NodifyEditorView()
         {
             InitializeComponent();
+
+            EditorInstance.ActiveNavigationLayerChanged += DisplayActiveNavigationLayer;
         }
 
         static NodifyEditorView()
@@ -22,6 +24,28 @@ namespace Nodify.Playground
         private void Minimap_Zoom(object sender, ZoomEventArgs e)
         {
             EditorInstance.ZoomAtPosition(e.Zoom, e.Location);
+        }
+
+        private void DisplayActiveNavigationLayer(KeyboardNavigationLayerId layerId)
+        {
+            var editorVm = (NodifyEditorViewModel)EditorInstance.DataContext;
+
+            if (layerId == KeyboardNavigationLayerId.Nodes)
+            {
+                editorVm.KeyboardNavigationLayer = nameof(KeyboardNavigationLayerId.Nodes);
+            }
+            else if (layerId == KeyboardNavigationLayerId.Connections)
+            {
+                editorVm.KeyboardNavigationLayer = nameof(KeyboardNavigationLayerId.Connections);
+            }
+            else if (layerId == KeyboardNavigationLayerId.Decorators)
+            {
+                editorVm.KeyboardNavigationLayer = nameof(KeyboardNavigationLayerId.Decorators);
+            }
+            else
+            {
+                editorVm.KeyboardNavigationLayer = "Custom";
+            }
         }
     }
 }

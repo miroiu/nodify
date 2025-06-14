@@ -552,6 +552,10 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+
             EditorCommands.RegisterCommandBindings<NodifyEditor>();
         }
 
@@ -574,7 +578,10 @@ namespace Nodify
 
             InputProcessor.AddSharedHandlers(this);
 
+            Loaded += OnEditorLoaded;
             Unloaded += OnEditorUnloaded;
+
+            _focusNavigator = new StatefulFocusNavigator<ItemContainer>(target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
         }
 
         /// <inheritdoc />
@@ -586,6 +593,18 @@ namespace Nodify
             ConnectionsHost = GetTemplateChild(ElementConnectionsHost) as UIElement ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+        }
+
+        private void OnEditorLoaded(object sender, RoutedEventArgs e)
+        {
+            // It's safe to call RegisterNavigationLayer multiple times. It only registers once for the same id.
+            RegisterNavigationLayer(this);
+
+            var parentEditor = this.GetParentOfType<NodifyEditor>();
+            if (parentEditor == null)
+            {
+                ActivateNavigationLayer(KeyboardNavigationLayer.Id);
+            }
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)
@@ -688,6 +707,51 @@ namespace Nodify
         /// <param name="area">The location in graph space coordinates.</param>
         public new void BringIntoView(Rect area)
             => BringIntoView(new Point(area.X + area.Width / 2, area.Y + area.Height / 2));
+
+        /// <summary>
+        /// Ensures the specified item container is fully visible within the viewport, optionally with padding around the edges.
+        /// </summary>
+        /// <param name="container">The item container to bring into view.</param>
+        /// <param name="offsetFromEdge">The padding to apply around the container</param>
+        public void BringIntoView(Rect area, double offsetFromEdge = 32d)
+        {
+            var viewport = new Rect(ViewportLocation, ViewportSize);
+
+            area.Inflate(offsetFromEdge, offsetFromEdge);
+
+            if (!viewport.Contains(area))
+            {
+                if (viewport.IntersectsWith(area))
+                {
+                    double newX = viewport.X;
+                    double newY = viewport.Y;
+
+                    if (area.Left < viewport.Left)
+                    {
+                        newX = area.Left;
+                    }
+                    else if (area.Right > viewport.Right)
+                    {
+                        newX = area.Right - viewport.Width;
+                    }
+
+                    if (area.Top < viewport.Top)
+                    {
+                        newY = area.Top;
+                    }
+                    else if (area.Bottom > viewport.Bottom)
+                    {
+                        newY = area.Bottom - viewport.Height;
+                    }
+
+                    BringIntoView(new Point(newX, newY) + new Vector(viewport.Width / 2, viewport.Height / 2));
+                }
+                else
+                {
+                    BringIntoView(area);
+                }
+            }
+        }
 
         /// <summary>
         /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.
@@ -876,6 +940,12 @@ namespace Nodify
 
         /// <inheritdoc />
         protected override void OnKeyDown(KeyEventArgs e)
+            => InputProcessor.ProcessEvent(e);
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+            => InputProcessor.ProcessEvent(e);
+
+        protected override void OnPreviewKeyUp(KeyEventArgs e)
             => InputProcessor.ProcessEvent(e);
 
         #endregion

@@ -17,6 +17,8 @@ namespace Nodify.Interactivity
         {
             private static readonly List<KeyValuePair<Type, Func<TElement, IInputHandler>>> _handlerFactories = new List<KeyValuePair<Type, Func<TElement, IInputHandler>>>();
 
+            bool IInputHandler.ProcessHandledEvents { get; }
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Shared{TElement}"/> class for the specified UI element.
             /// </summary>
@@ -119,10 +121,7 @@ namespace Nodify.Interactivity
         public static void AddSharedHandlers<TElement>(this InputProcessor inputProcessor, TElement instance)
             where TElement : FrameworkElement
         {
-            inputProcessor.AddHandler(new InputProcessor.Shared<TElement>(instance)
-            {
-                ProcessHandledEvents = inputProcessor.ProcessHandledEvents
-            });
+            inputProcessor.AddHandler(new InputProcessor.Shared<TElement>(instance));
         }
     }
 }

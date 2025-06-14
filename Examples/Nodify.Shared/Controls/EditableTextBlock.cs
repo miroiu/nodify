@@ -99,6 +99,13 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
+            if (TextBox != null)
+            {
+                TextBox.LostFocus -= OnLostFocus;
+                TextBox.LostKeyboardFocus -= OnLostFocus;
+                TextBox.IsVisibleChanged -= OnTextBoxVisiblityChanged;
+            }
+
             TextBox = GetTemplateChild(ElementTextBox) as TextBox;
 
             if (TextBox != null)
@@ -163,7 +170,7 @@ namespace Nodify
                 IsEditing = false;
             }
 
-            if(e.Key == Key.Enter && IsFocused && !IsEditing)
+            if (e.Key == Key.Enter && IsFocused && !IsEditing)
             {
                 IsEditing = true;
             }

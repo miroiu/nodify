@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Nodify.Playground
@@ -54,6 +56,16 @@ namespace Nodify.Playground
             InitializeComponent();
 
             CompositionTargetEx.Rendering += OnRendering;
+
+            EventManager.RegisterClassHandler(
+                    typeof(UIElement),
+                    Keyboard.PreviewGotKeyboardFocusEvent,
+                    (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+        }
+
+        private void OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            Title = e.NewFocus.ToString();
         }
 
         private void OnRendering(double fps)

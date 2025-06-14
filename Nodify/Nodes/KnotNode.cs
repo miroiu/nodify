@@ -11,6 +11,7 @@ namespace Nodify
         static KnotNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KnotNode), new FrameworkPropertyMetadata(typeof(KnotNode)));
+            FocusableProperty.OverrideMetadata(typeof(KnotNode), new FrameworkPropertyMetadata(BoxValue.False));
         }
     }
 }
