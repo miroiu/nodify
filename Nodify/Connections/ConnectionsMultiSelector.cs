@@ -82,8 +82,9 @@ namespace Nodify
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.False));
 
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
-            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
         }
 
         public ConnectionsMultiSelector()
@@ -184,10 +185,7 @@ namespace Nodify
 
             Editor = this.GetParentOfType<NodifyEditor>();
 
-            if (Editor != null && Editor.RegisterNavigationLayer(this))
-            {
-                Debug.WriteLine($"Registered {GetType().Name} as a keyboard navigation layer in {Editor.GetType().Name}");
-            }
+            Editor?.RegisterNavigationLayer(this);
         }
 
         #region Selection Handlers

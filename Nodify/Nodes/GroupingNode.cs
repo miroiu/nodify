@@ -175,6 +175,7 @@ namespace Nodify
         static GroupingNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(typeof(GroupingNode)));
+            FocusableProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.False));
             Panel.ZIndexProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(-1, OnZIndexPropertyChanged));
         }
 

@@ -163,10 +163,8 @@ namespace Nodify
             }
 
             _navigationLayers.Add(layer);
-            if (ActiveNavigationLayer is null)
-            {
-                ActivateNavigationLayer(layer.Id);
-            }
+
+            Debug.WriteLine($"Registered {layer} as a keyboard navigation layer in {this}");
 
             return true;
         }
@@ -194,7 +192,7 @@ namespace Nodify
                 prevLayer?.OnDeactivated();
                 newLayer.OnActivated();
                 OnKeyboardNavigationLayerActivated(newLayer);
-                Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer.GetType().Name} as a keyboard navigation layer in {GetType().Name}");
+                Debug.WriteLine($"Activated {_activeKeyboardNavigationLayer} as a keyboard navigation layer in {this}");
                 ActiveNavigationLayerChanged?.Invoke(layerId);
                 return true;
             }

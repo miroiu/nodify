@@ -66,6 +66,7 @@ namespace Nodify
         static StateNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(StateNode), new FrameworkPropertyMetadata(typeof(StateNode)));
+            FocusableProperty.OverrideMetadata(typeof(StateNode), new FrameworkPropertyMetadata(BoxValue.False));
         }
 
         /// <inheritdoc />

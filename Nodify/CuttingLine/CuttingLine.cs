@@ -61,6 +61,7 @@ namespace Nodify
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CuttingLine), new FrameworkPropertyMetadata(typeof(CuttingLine)));
             IsHitTestVisibleProperty.OverrideMetadata(typeof(CuttingLine), new FrameworkPropertyMetadata(BoxValue.False));
+            IsEnabledProperty.OverrideMetadata(typeof(CuttingLine), new FrameworkPropertyMetadata(BoxValue.False));
         }
 
         protected override void OnRender(DrawingContext drawingContext)

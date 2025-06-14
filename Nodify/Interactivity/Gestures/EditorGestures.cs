@@ -364,7 +364,7 @@ namespace Nodify.Interactivity
         {
             public ConnectorGestures()
             {
-                Disconnect = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt);
+                Disconnect = new AnyGesture(new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new KeyGesture(Key.Delete));
                 Connect = new MouseGesture(MouseAction.LeftClick);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
             }
@@ -462,6 +462,12 @@ namespace Nodify.Interactivity
             {
                 SwitchMovementMode = gestures.SwitchMovementMode;
                 ToggleContentSelection.Value = gestures.ToggleContentSelection.Value;
+            }
+
+            // TODO: Comment
+            public void Unbind()
+            {
+                ToggleContentSelection.Unbind();
             }
         }
 

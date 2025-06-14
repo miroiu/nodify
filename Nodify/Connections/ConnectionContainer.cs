@@ -71,7 +71,7 @@ namespace Nodify
         private FrameworkElement? _connection;
         private SelectionType? _selectionType;
 
-        Rect IKeyboardFocusTarget<ConnectionContainer>.Bounds => ConnectionFocusTarget.Bounds;
+        public Rect Bounds => ConnectionFocusTarget.Bounds;
         ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
 
         private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
@@ -87,6 +87,9 @@ namespace Nodify
         {
             FocusableProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(BoxValue.True));
             FocusVisualStyleProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(new Style()));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
         }
 
         public ConnectionContainer(ConnectionsMultiSelector selector)
