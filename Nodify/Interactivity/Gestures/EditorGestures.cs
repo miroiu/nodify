@@ -143,7 +143,9 @@ namespace Nodify.Interactivity
                 CancelAction.Value = gestures.CancelAction.Value;
             }
 
-            // TODO: Comment
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 Selection.Unbind();
@@ -152,7 +154,9 @@ namespace Nodify.Interactivity
             }
         }
 
-        // TODO: Comments
+        /// <summary>
+        /// Keyboard gestures used for navigating the editor and moving selected items.
+        /// </summary>
         public class DirectionalNavigationGestures
         {
             public DirectionalNavigationGestures(ModifierKeys modifierKeys = ModifierKeys.None)
@@ -171,9 +175,24 @@ namespace Nodify.Interactivity
                 Right = new KeyComboGesture(triggerKey, Key.Right, modifierKeys) { AllowRepeatingComboKey = repeated };
             }
 
+            /// <summary>
+            /// Gesture used for navigating or moving upward.
+            /// </summary>
             public InputGestureRef Up { get; }
+
+            /// <summary>
+            /// Gesture used for navigating or moving left.
+            /// </summary>
             public InputGestureRef Left { get; }
+
+            /// <summary>
+            /// Gesture used for navigating or moving downward.
+            /// </summary>
             public InputGestureRef Down { get; }
+
+            /// <summary>
+            /// Gesture used for navigating or moving right.
+            /// </summary>
             public InputGestureRef Right { get; }
 
             /// <summary>Copies from the specified gestures.</summary>
@@ -186,6 +205,9 @@ namespace Nodify.Interactivity
                 Right.Value = gestures.Right.Value;
             }
 
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 Up.Unbind();
@@ -198,10 +220,12 @@ namespace Nodify.Interactivity
         /// <summary>Gestures for the editor.</summary>
         public class NodifyEditorGestures
         {
-            // TODO: Comments
-            public class KeyboardNavigation
+            /// <summary>
+            /// Keyboard gestures used for navigation, selection, and manipulation in the editor.
+            /// </summary>
+            public class KeyboardGestures
             {
-                public KeyboardNavigation()
+                public KeyboardGestures()
                 {
                     Pan = new DirectionalNavigationGestures(Key.Space, repeated: true);
                     DragSelection = new DirectionalNavigationGestures(ModifierKeys.Control);
@@ -212,18 +236,51 @@ namespace Nodify.Interactivity
                     PrevNavigationLayer = new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control);
                 }
 
-                // TODO: Pan large step gesture?
+                /// <summary>
+                /// Directional gestures used for panning the viewport.
+                /// </summary>
+                /// <remarks>Defaults to <see cref="Key.Space"/>+arrow keys.</remarks>
                 public DirectionalNavigationGestures Pan { get; }
+
+                /// <summary>
+                /// Directional gestures used for dragging the selected items.
+                /// </summary>
+                /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+arrow keys.</remarks>
                 public DirectionalNavigationGestures DragSelection { get; }
+
+                /// <summary>
+                /// Directional gestures used to navigate the selection focus (e.g., between nodes).
+                /// </summary>
+                /// <remarks>Defaults to arrow keys.</remarks>
                 public DirectionalNavigationGestures NavigateSelection { get; }
 
+                /// <summary>
+                /// Gesture used to toggle the selected state of the currently focused item.
+                /// </summary>
+                /// <remarks>Defaults to <see cref="Key.Space"/></remarks>
                 public InputGestureRef ToggleSelected { get; }
+
+                /// <summary>
+                /// Gesture used to clear the current selection.
+                /// </summary>
+                /// <remarks>Defaults to <see cref="Key.Escape"/>.</remarks>
                 public InputGestureRef DeselectAll { get; }
 
+                /// <summary>
+                /// Gesture used to activate the previous keyboard navigation layer.
+                /// </summary>
+                /// <remarks><see cref="ModifierKeys.Control"/>+<see cref="Key.OemCloseBrackets"/>.</remarks>
                 public InputGestureRef NextNavigationLayer { get; }
+
+                /// <summary>
+                /// Gesture used to activate the next keyboard navigation layer.
+                /// </summary>
+                /// <remarks><see cref="ModifierKeys.Control"/>+<see cref="Key.OemOpenBrackets"/>.</remarks>
                 public InputGestureRef PrevNavigationLayer { get; }
 
-                public void Apply(KeyboardNavigation gestures)
+                /// <summary>Copies from the specified gestures.</summary>
+                /// <param name="gestures">The gestures to copy.</param>
+                public void Apply(KeyboardGestures gestures)
                 {
                     Pan.Apply(gestures.Pan);
                     DragSelection.Apply(gestures.DragSelection);
@@ -234,6 +291,9 @@ namespace Nodify.Interactivity
                     PrevNavigationLayer.Value = gestures.PrevNavigationLayer.Value;
                 }
 
+                /// <summary>
+                /// Unbinds all the gestures.
+                /// </summary>
                 public void Unbind()
                 {
                     Pan.Unbind();
@@ -248,7 +308,7 @@ namespace Nodify.Interactivity
 
             public NodifyEditorGestures()
             {
-                Keyboard = new KeyboardNavigation();
+                Keyboard = new KeyboardGestures();
                 Selection = new SelectionGestures();
                 SelectAll = ApplicationCommands.SelectAll.InputGestures[0].AsRef();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
@@ -265,8 +325,7 @@ namespace Nodify.Interactivity
                 PanVerticalModifierKey = ModifierKeys.None;
             }
 
-            // TODO: Comment and rename to Navigation?
-            public KeyboardNavigation Keyboard { get; }
+            public KeyboardGestures Keyboard { get; }
 
             /// <summary>Gesture used to start selecting using a <see cref="SelectionGestures"/> strategy.</summary>
             public SelectionGestures Selection { get; }
@@ -342,7 +401,9 @@ namespace Nodify.Interactivity
                 PanVerticalModifierKey = gestures.PanVerticalModifierKey;
             }
 
-            // TODO: Comment
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 Keyboard.Unbind();
@@ -370,7 +431,7 @@ namespace Nodify.Interactivity
             }
 
             /// <summary>Gesture to call the <see cref="Connector.DisconnectCommand"/>.</summary>
-            /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="MouseAction.LeftClick"/>.</remarks>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Alt"/>+<see cref="MouseAction.LeftClick"/> or <see cref="Key.Delete"/>.</remarks>
             public InputGestureRef Disconnect { get; }
 
             /// <summary>Gesture to start and complete a pending connection.</summary>
@@ -390,7 +451,9 @@ namespace Nodify.Interactivity
                 CancelAction.Value = gestures.CancelAction.Value;
             }
 
-            // TODO: Comment
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 Disconnect.Unbind();
@@ -429,6 +492,9 @@ namespace Nodify.Interactivity
                 Selection.Apply(gestures.Selection);
             }
 
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 Split.Unbind();
@@ -464,7 +530,9 @@ namespace Nodify.Interactivity
                 ToggleContentSelection.Value = gestures.ToggleContentSelection.Value;
             }
 
-            // TODO: Comment
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 ToggleContentSelection.Unbind();
@@ -501,7 +569,9 @@ namespace Nodify.Interactivity
                 ZoomModifierKey = gestures.ZoomModifierKey;
             }
 
-            // TODO: Comment
+            /// <summary>
+            /// Unbinds all the gestures.
+            /// </summary>
             public void Unbind()
             {
                 DragViewport.Unbind();
@@ -539,7 +609,9 @@ namespace Nodify.Interactivity
             Minimap.Apply(gestures.Minimap);
         }
 
-        // TODO: Comment
+        /// <summary>
+        /// Unbinds all the gestures used by the editor and its controls.
+        /// </summary>
         public void Unbind()
         {
             Editor.Unbind();
