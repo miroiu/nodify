@@ -59,15 +59,16 @@ namespace Nodify
             return _focusNavigator.TryRestoreFocus();
         }
 
-        private bool TryFindContainerToFocus(TraversalRequest request, out ItemContainer? containerToFocus)
+        private bool TryFindContainerToFocus(ItemContainer? currentElement, TraversalRequest request, out ItemContainer? containerToFocus)
         {
             containerToFocus = null;
 
-            if (Keyboard.FocusedElement is ItemContainer focusedContainer)
+            if (currentElement is ItemContainer focusedContainer)
             {
                 containerToFocus = FindNextFocusTarget(focusedContainer, request);
             }
-            else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ItemContainer>() is ItemContainer parentContainer)
+            // The current element is not a nested editor, but a focusable element inside an ItemContainer
+            else if (currentElement is UIElement elem && elem != this && elem.GetParentOfType<ItemContainer>() is ItemContainer parentContainer)
             {
                 containerToFocus = parentContainer;
             }
@@ -155,9 +156,15 @@ namespace Nodify
 
         protected virtual void OnKeyboardNavigationLayerActivated(IKeyboardNavigationLayer activeLayer)
         {
-            if (AutoFocusFirstElement && !activeLayer!.TryRestoreFocus())
+            if (AutoFocusFirstElement && !activeLayer!.TryRestoreFocus() && HandleNestedEditor())
             {
                 activeLayer.TryMoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+
+            bool HandleNestedEditor()
+            {
+                var parentEditor = this.GetParentOfType<NodifyEditor>();
+                return parentEditor is null || parentEditor.IsKeyboardFocusWithin;
             }
         }
 

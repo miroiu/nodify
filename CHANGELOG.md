@@ -4,6 +4,7 @@
 
 > - Breaking Changes:
 >	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
+> - Features:
 >	- Introduced a new BringIntoView method overload in NodifyEditor that accepts an offset from the viewport edges
 >	- Added BringIntoViewEdgeOffset to NodifyEditor to control the viewport edge offset when bringing the focused element into view
 >	- Improved tab and directional navigation, ensuring that focused elements are automatically brought into view
@@ -11,7 +12,6 @@
 >	- Added new gestures for keyboard navigation available in EditorGestures.Keyboard
 >	- Added NodifyEditor.AutoFocusFirstElement to control whether to automatically focus the first element when the navigation layer changes or the editor gets focused
 >	- Added ToggleContentSelection to GroupingNode to toggle the selection of nodes inside the group
-> - Features:
 > - Bugfixes:
 
 #### **Version 7.0.4**

@@ -1,6 +1,7 @@
 ﻿<Application x:Class="Nodify.Calculator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:nodify="https://miroiu.github.io/nodify"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -8,6 +9,29 @@
                 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Dark.xaml" />
+                <ResourceDictionary>
+
+                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle StrokeThickness="1"
+                                               StrokeDashArray="2"
+                                               Margin="-3"
+                                               RadiusX="3"
+                                               RadiusY="3"
+                                               Stroke="{DynamicResource ItemContainer.SelectedBrush}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Pen x:Key="{x:Static nodify:BaseConnection.FocusVisualPenKey}"
+                         Thickness="1"
+                         Brush="{DynamicResource ItemContainer.SelectedBrush}"
+                         DashStyle="{x:Static DashStyles.Dash}" />
+
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

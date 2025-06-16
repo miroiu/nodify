@@ -7,7 +7,7 @@ namespace Nodify.Interactivity
     internal class StatefulFocusNavigator<TElement>
         where TElement : UIElement, IKeyboardFocusTarget<TElement>
     {
-        public delegate bool FindNextFocusTargetDelegate(TraversalRequest request, out TElement? elementToFocus);
+        public delegate bool FindNextFocusTargetDelegate(TElement? currentElement, TraversalRequest request, out TElement? elementToFocus);
 
         private readonly WeakReference<TElement?> _previousFocusedElement = new WeakReference<TElement?>(null);
         private readonly WeakReference<TElement?> _lastFocusedElement = new WeakReference<TElement?>(null);
@@ -39,7 +39,7 @@ namespace Nodify.Interactivity
                 _onFocus(prevTarget);
                 return true;
             }
-            else if (findNext(request, out var nextTarget) && nextTarget!.Element.Focus())
+            else if (findNext(currentTarget, request, out var nextTarget) && nextTarget!.Element.Focus())
             {
                 _previousFocusNavigationDirection = request.FocusNavigationDirection;
                 _previousFocusedElement.SetTarget(currentTarget);

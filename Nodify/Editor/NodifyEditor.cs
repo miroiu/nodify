@@ -599,12 +599,7 @@ namespace Nodify
         {
             // It's safe to call RegisterNavigationLayer multiple times. It only registers once for the same id.
             RegisterNavigationLayer(this);
-
-            var parentEditor = this.GetParentOfType<NodifyEditor>();
-            if (parentEditor == null)
-            {
-                ActivateNavigationLayer(KeyboardNavigationLayer.Id);
-            }
+            ActivateNavigationLayer(KeyboardNavigationLayer.Id);
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)

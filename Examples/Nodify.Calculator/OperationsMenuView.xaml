@@ -9,7 +9,8 @@
              MinWidth="250"
              d:DesignHeight="400"
              d:DesignWidth="250"
-             d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}">
+             d:DataContext="{d:DesignInstance local:OperationsMenuViewModel}"
+             Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}"
                BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -22,8 +23,7 @@
             CornerRadius="3"
             Background="{DynamicResource Node.BackgroundBrush}"
             BorderBrush="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}"
-            BorderThickness="2"
-            Visibility="{Binding IsVisible, Converter={shared:BooleanToVisibilityConverter}}">
+            BorderThickness="2">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -31,6 +31,9 @@
             </Grid.RowDefinitions>
 
             <ItemsControl Grid.Row="1"
+                          x:Name="OperationsList"
+                          Focusable="True"
+                          KeyboardNavigation.TabNavigation="Cycle"
                           ItemsSource="{Binding AvailableOperations}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:OperationInfoViewModel}">

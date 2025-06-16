@@ -109,17 +109,15 @@ namespace Nodify
             return _focusNavigator.TryRestoreFocus();
         }
 
-        private bool TryFindContainerToFocus(TraversalRequest request, out ConnectionContainer? containerToFocus)
+        private bool TryFindContainerToFocus(ConnectionContainer? currentElement, TraversalRequest request, out ConnectionContainer? containerToFocus)
         {
             containerToFocus = null;
 
-            Debug.Assert(Editor != null, "ConnectionsMultiSelector should not be used outside the NodifyEditor.");
-
-            if (Keyboard.FocusedElement is ConnectionContainer focusedContainer)
+            if (currentElement is ConnectionContainer focusedContainer)
             {
                 containerToFocus = FindNextFocusTarget(focusedContainer, request);
             }
-            else if (Keyboard.FocusedElement is UIElement elem && elem.GetParentOfType<ConnectionContainer>() is ConnectionContainer parentContainer)
+            else if (currentElement is UIElement elem && elem.GetParentOfType<ConnectionContainer>() is ConnectionContainer parentContainer)
             {
                 containerToFocus = parentContainer;
             }

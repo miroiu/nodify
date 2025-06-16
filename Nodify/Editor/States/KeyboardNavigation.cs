@@ -14,10 +14,20 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                var navigationStepSize = GetNavigationStepSize();
+                double navigationStepSize = GetNavigationStepSize();
                 var gestures = EditorGestures.Mappings.Editor.Keyboard;
 
-                if (Element.IsKeyboardFocusWithin && Element.IsNavigationTrigger(e.OriginalSource as DependencyObject))
+                if (!Element.IsKeyboardFocusWithin || !(e.OriginalSource is DependencyObject originalSource))
+                {
+                    return;
+                }
+
+                if (e.Key == Key.Tab && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                {
+                    var parentContainer = originalSource.GetParent(Element.IsNavigationTrigger) as UIElement;
+                    e.Handled = parentContainer?.Focus() is true;
+                }
+                else if (Element.IsNavigationTrigger(originalSource))
                 {
                     if (gestures.Pan.TryGetNavigationDirection(e, out var panDirection))
                     {
