@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -92,6 +91,21 @@ namespace Nodify
             _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>(target => Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset));
         }
 
+        protected override DependencyObject GetContainerForItemOverride()
+            => new ConnectionContainer(this);
+
+        protected override bool IsItemItsOwnContainerOverride(object item)
+            => item is ConnectionContainer;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            Editor = this.GetParentOfType<NodifyEditor>();
+
+            Editor?.RegisterNavigationLayer(this);
+        }
+
         #region Keyboard Navigation
 
         public KeyboardNavigationLayerId Id { get; } = KeyboardNavigationLayerId.Connections;
@@ -151,12 +165,6 @@ namespace Nodify
 
         #endregion
 
-        protected override DependencyObject GetContainerForItemOverride()
-            => new ConnectionContainer(this);
-
-        protected override bool IsItemItsOwnContainerOverride(object item)
-            => item is ConnectionContainer;
-
         public void Select(ConnectionContainer container)
         {
             BeginUpdateSelectedItems();
@@ -175,15 +183,6 @@ namespace Nodify
             EndUpdateSelectedItems();
 
             Editor?.UnselectAll();
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            Editor = this.GetParentOfType<NodifyEditor>();
-
-            Editor?.RegisterNavigationLayer(this);
         }
 
         #region Selection Handlers

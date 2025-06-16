@@ -22,6 +22,11 @@ namespace Nodify
         public static bool AutoFocusFirstElement { get; set; } = true;
 
         /// <summary>
+        /// Automatically registers the decorators layer for keyboard navigation.
+        /// </summary>
+        public static bool AutoRegisterDecoratorsLayer { get; set; }
+
+        /// <summary>
         /// Indicates whether the viewport should automatically pan to follow elements moved via keyboard dragging.
         /// </summary>
         public static bool PanViewportOnKeyboardDrag { get; set; } = true;

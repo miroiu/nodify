@@ -1,12 +1,15 @@
-﻿using System.Windows;
+﻿using Nodify.Interactivity;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Nodify
 {
     /// <summary>
     /// The container for all the items generated from the <see cref="NodifyEditor.Decorators"/> collection.
     /// </summary>
-    public class DecoratorContainer : ContentControl, INodifyCanvasItem
+    public class DecoratorContainer : ContentControl, INodifyCanvasItem, IKeyboardFocusTarget<DecoratorContainer>
     {
         #region Dependency Properties
 
@@ -62,15 +65,48 @@ namespace Nodify
 
         #endregion
 
+        public Rect Bounds => new Rect(Location, ActualSize);
+        DecoratorContainer IKeyboardFocusTarget<DecoratorContainer>.Element => this;
+
+        private DecoratorsControl? _owner;
+        public DecoratorsControl? Owner => _owner ??= this.GetParentOfType<DecoratorsControl>();
+
         static DecoratorContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(typeof(DecoratorContainer)));
+            FocusableProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(BoxValue.True));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DecoratorContainer), new FrameworkPropertyMetadata(KeyboardNavigationMode.Cycle));
+        }
+
+        public DecoratorContainer(DecoratorsControl parent)
+        {
+            _owner = parent;
+        }
+
+        public DecoratorContainer()
+        {
         }
 
         /// <inheritdoc />
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            ActualSize = sizeInfo.NewSize;
+            SetCurrentValue(ActualSizeProperty, sizeInfo.NewSize);
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            if (VisualTreeHelper.GetParent(this) == null && IsKeyboardFocusWithin)
+            {
+                base.OnVisualParentChanged(oldParent);
+
+                Owner?.Editor?.Focus();
+            }
+            else
+            {
+                base.OnVisualParentChanged(oldParent);
+            }
         }
     }
 }
