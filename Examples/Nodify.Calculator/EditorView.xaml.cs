@@ -14,11 +14,12 @@ namespace Nodify.Calculator
 
         public OperationsMenuHandler(NodifyEditor element) : base(element)
         {
+            ProcessHandledEvents = true;
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (OpenGesture.Matches(e.Source, e))
+            if (!e.Handled && OpenGesture.Matches(e.Source, e))
             {
                 ViewModel.OpenAt(Element.MouseLocation);
             }
@@ -43,10 +44,6 @@ namespace Nodify.Calculator
         static EditorView()
         {
             InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(editor => new OperationsMenuHandler(editor));
-
-            // Ensure the selecting handler is executed after the OperationsMenuHandler, otherwise left click events will not be received.
-            InputProcessor.Shared<NodifyEditor>.RemoveHandlerFactory<EditorState.Selecting>();
-            InputProcessor.Shared<NodifyEditor>.RegisterHandlerFactory(editor => new EditorState.Selecting(editor));
         }
 
         private void OnDropNode(object sender, DragEventArgs e)

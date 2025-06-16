@@ -3,6 +3,7 @@
 #### **In development**
 
 > - Breaking Changes:
+>	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
 > - Features:
 > - Bugfixes:
 
