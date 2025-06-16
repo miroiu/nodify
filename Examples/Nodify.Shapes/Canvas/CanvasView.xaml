@@ -70,6 +70,7 @@
             <nodify:NodifyEditor.Resources>
                 <DataTemplate DataType="{x:Type local:EllipseViewModel}">
                     <Ellipse Stretch="Fill"
+                             Focusable="False"
                              Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                              Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                              StrokeThickness="2"
@@ -78,6 +79,7 @@
 
                 <DataTemplate DataType="{x:Type local:RectangleViewModel}">
                     <Rectangle Stretch="Fill"
+                               Focusable="False"
                                Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                                Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                                StrokeThickness="2"
@@ -86,6 +88,7 @@
 
                 <DataTemplate DataType="{x:Type local:TriangleViewModel}">
                     <Polygon Points="0,100 50,0 100,100"
+                             Focusable="False"
                              Stretch="Fill"
                              Fill="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}"
                              Stroke="{Binding BorderColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
@@ -149,6 +152,7 @@
                                            Cursor="Hand"
                                            IsSelectable="True"
                                            Fill="Transparent"
+                                           FocusVisualPadding="2"
                                            StrokeThickness="3">
                         <nodify:StepConnection.Stroke>
                             <SolidColorBrush Color="White"
@@ -260,7 +264,8 @@
                                 <controls:ResizableContainer Height="{Binding Height, Mode=TwoWay}"
                                                              Width="{Binding Width, Mode=TwoWay}"
                                                              Directions="Corners"
-                                                             GridCellSize="5">
+                                                             GridCellSize="5"
+                                                             Focusable="False">
                                     <Grid>
                                         <ContentPresenter Cursor="Hand" />
 
@@ -414,6 +419,7 @@
                 <nodify:Minimap ItemsSource="{Binding ItemsSource, ElementName=Editor}"
                                 ViewportLocation="{Binding ViewportLocation, ElementName=Editor}"
                                 ViewportSize="{Binding ViewportSize, ElementName=Editor}"
+                                Focusable="False"
                                 ResizeToViewport="True"
                                 Zoom="Minimap_Zoom">
                     <nodify:Minimap.Resources>
@@ -482,8 +488,9 @@
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.Resources>
+            <ItemsControl Focusable="True"
+                          KeyboardNavigation.TabNavigation="Cycle">
+                <ItemsControl.Resources>
                     <Style TargetType="Button"
                            BasedOn="{StaticResource IconButton}">
                         <Setter Property="Margin"
@@ -492,13 +499,16 @@
                                 Value="32" />
                         <Setter Property="Height"
                                 Value="32" />
+                        <Setter Property="Focusable"
+                                Value="False" />
                     </Style>
-                </StackPanel.Resources>
+                </ItemsControl.Resources>
 
                 <ListBox BorderThickness="0"
                          Background="Transparent"
                          ItemsSource="{x:Static local:CanvasToolbarViewModel.AvailableTools}"
-                         SelectedValue="{Binding CanvasToolbar.SelectedTool}">
+                         SelectedValue="{Binding CanvasToolbar.SelectedTool}"
+                         KeyboardNavigation.ControlTabNavigation="None">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Margin"
@@ -541,7 +551,8 @@
 
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <ContentControl Content="{Binding}">
+                            <ContentControl Content="{Binding}"
+                                            Focusable="False">
                                 <ContentControl.Style>
                                     <Style TargetType="ContentControl">
                                         <Setter Property="ContentTemplate"
@@ -589,7 +600,13 @@
                         ToolTip="CTRL+SHIFT+z"
                         Padding="1" />
 
-            </StackPanel>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+            </ItemsControl>
         </Border>
 
         <Border VerticalAlignment="Bottom"
@@ -601,8 +618,11 @@
                 <DropShadowEffect ShadowDepth="1" />
             </Border.Effect>
 
-            <StackPanel>
-                <StackPanel.Resources>
+            <ItemsControl Focusable="True"
+                          KeyboardNavigation.TabNavigation="Cycle"
+                          KeyboardNavigation.DirectionalNavigation="Cycle"
+                          KeyboardNavigation.ControlTabNavigation="None">
+                <ItemsControl.Resources>
                     <Style TargetType="Button"
                            BasedOn="{StaticResource IconButton}">
                         <Setter Property="Margin"
@@ -612,7 +632,7 @@
                         <Setter Property="Height"
                                 Value="32" />
                     </Style>
-                </StackPanel.Resources>
+                </ItemsControl.Resources>
 
                 <Button Command="{x:Static nodify:EditorCommands.ZoomIn}"
                         CommandTarget="{Binding ElementName=Editor}"
@@ -643,7 +663,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-            </StackPanel>
+            </ItemsControl>
         </Border>
 
         <Border VerticalAlignment="Bottom"
@@ -652,7 +672,10 @@
                 Height="38"
                 CornerRadius="3">
 
-            <ItemsControl ItemsSource="{Binding Cursors}">
+            <ItemsControl ItemsSource="{Binding Cursors}"
+                          Focusable="True"
+                          KeyboardNavigation.TabNavigation="Cycle"
+                          KeyboardNavigation.ControlTabNavigation="None">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
