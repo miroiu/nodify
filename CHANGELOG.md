@@ -12,7 +12,7 @@
 >	- Improved tab and directional navigation, ensuring that focused elements are automatically brought into view
 >	- Added keyboard navigation layers for nodes, connections and decorators; restricting keyboard navigation to the active layer
 >	- Implemented IKeyboardNavigationLayerGroup in NodifyEditor for keyboard layers management
->	- Added AutoRegisterConnectionsLayer, AutoRegisterDecoratorsLayer, AutoFocusFirstElement, PanViewportOnKeyboardDrag and MinimumNavigationStepSize to NodifyEditor
+>	- Added AutoRegisterConnectionsLayer, AutoRegisterDecoratorsLayer, AutoFocusFirstElement, AutoPanOnNodeFocus, PanViewportOnKeyboardDrag and MinimumNavigationStepSize to NodifyEditor
 >	- Added new gestures for keyboard navigation available in EditorGestures.Editor.Keyboard
 >	- Added ToggleContentSelection to GroupingNode to toggle the selection of nodes inside the group
 >	- Added ZoomIn, ZoomOut and ResetViewport methods to the Minimap control and the corresponding gestures to EditorGestures.Minimap

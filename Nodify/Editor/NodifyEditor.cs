@@ -581,7 +581,7 @@ namespace Nodify
             Loaded += OnEditorLoaded;
             Unloaded += OnEditorUnloaded;
 
-            _focusNavigator = new StatefulFocusNavigator<ItemContainer>(target => BringIntoView(target.Element.Bounds, BringIntoViewEdgeOffset));
+            _focusNavigator = new StatefulFocusNavigator<ItemContainer>(OnElementFocused);
         }
 
         /// <inheritdoc />

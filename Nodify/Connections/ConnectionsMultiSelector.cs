@@ -88,7 +88,7 @@ namespace Nodify
 
         public ConnectionsMultiSelector()
         {
-            _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>(target => Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset));
+            _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>(OnElementFocused);
         }
 
         protected override DependencyObject GetContainerForItemOverride()
@@ -155,6 +155,14 @@ namespace Nodify
             var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
             return result?.Element;
+        }
+
+        protected virtual void OnElementFocused(IKeyboardFocusTarget<ConnectionContainer> target)
+        {
+            if (NodifyEditor.AutoPanOnNodeFocus)
+            {
+                Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+            }
         }
 
         void IKeyboardNavigationLayer.OnActivated()

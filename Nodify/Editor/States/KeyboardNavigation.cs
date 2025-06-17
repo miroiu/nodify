@@ -67,12 +67,18 @@ namespace Nodify.Interactivity
                     if (Keyboard.FocusedElement is ItemContainer itemContainer)
                     {
                         itemContainer.Select(SelectionType.Invert);
-                        Element.BringIntoView(itemContainer.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+                        if (NodifyEditor.AutoPanOnNodeFocus)
+                        {
+                            Element.BringIntoView(itemContainer.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+                        }
                     }
                     else if (Keyboard.FocusedElement is ConnectionContainer connectionContainer)
                     {
                         connectionContainer.Select(SelectionType.Invert);
-                        Element.BringIntoView(connectionContainer.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+                        if (NodifyEditor.AutoPanOnNodeFocus)
+                        {
+                            Element.BringIntoView(connectionContainer.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+                        }
                     }
 
                     e.Handled = true;

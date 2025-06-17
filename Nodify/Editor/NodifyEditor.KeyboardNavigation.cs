@@ -22,6 +22,11 @@ namespace Nodify
         public static bool AutoFocusFirstElement { get; set; } = true;
 
         /// <summary>
+        /// Automatically pan the viewport when a node is focused via keyboard navigation.
+        /// </summary>
+        public static bool AutoPanOnNodeFocus { get; set; } = true;
+
+        /// <summary>
         /// Automatically registers the decorators layer for keyboard navigation.
         /// </summary>
         public static bool AutoRegisterDecoratorsLayer { get; set; }
@@ -99,6 +104,14 @@ namespace Nodify
             var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
             return result?.Element;
+        }
+
+        protected virtual void OnElementFocused(IKeyboardFocusTarget<ItemContainer> target)
+        {
+            if (AutoPanOnNodeFocus)
+            {
+                BringIntoView(target.Bounds, BringIntoViewEdgeOffset);
+            }
         }
 
         public bool MoveFocus(FocusNavigationDirection direction)

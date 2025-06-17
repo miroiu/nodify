@@ -48,7 +48,7 @@ namespace Nodify
 
         public DecoratorsControl()
         {
-            _focusNavigator = new StatefulFocusNavigator<DecoratorContainer>(target => Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset));
+            _focusNavigator = new StatefulFocusNavigator<DecoratorContainer>(OnElementFocused);
         }
 
         /// <inheritdoc />
@@ -117,6 +117,14 @@ namespace Nodify
             var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
 
             return result?.Element;
+        }
+
+        protected virtual void OnElementFocused(IKeyboardFocusTarget<DecoratorContainer> target)
+        {
+            if (NodifyEditor.AutoPanOnNodeFocus)
+            {
+                Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+            }
         }
 
         void IKeyboardNavigationLayer.OnActivated()
