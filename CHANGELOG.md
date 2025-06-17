@@ -4,14 +4,19 @@
 
 > - Breaking Changes:
 >	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
+>	- Renamed EditorGestures.Editor.ResetViewportLocation to EditorGestures.Editor.ResetViewport
 > - Features:
 >	- Introduced a new BringIntoView method overload in NodifyEditor that accepts an offset from the viewport edges
 >	- Added BringIntoViewEdgeOffset to NodifyEditor to control the viewport edge offset when bringing the focused element into view
+>	- Added ResetViewport to NodifyEditor to reset the viewport's location and zoom
 >	- Improved tab and directional navigation, ensuring that focused elements are automatically brought into view
 >	- Added keyboard navigation layers for nodes, connections and decorators; restricting keyboard navigation to the active layer
->	- Added new gestures for keyboard navigation available in EditorGestures.Keyboard
->	- Added NodifyEditor.AutoFocusFirstElement to control whether to automatically focus the first element when the navigation layer changes or the editor gets focused
+>	- Implemented IKeyboardNavigationLayerGroup in NodifyEditor for keyboard layers management
+>	- Added AutoRegisterConnectionsLayer, AutoRegisterDecoratorsLayer, AutoFocusFirstElement, PanViewportOnKeyboardDrag and MinimumNavigationStepSize to NodifyEditor
+>	- Added new gestures for keyboard navigation available in EditorGestures.Editor.Keyboard
 >	- Added ToggleContentSelection to GroupingNode to toggle the selection of nodes inside the group
+>	- Added ZoomIn, ZoomOut and ResetViewport methods to the Minimap control and the corresponding gestures to EditorGestures.Minimap
+>	- Added NavigationStepSize static property to Minimap
 > - Bugfixes:
 
 #### **Version 7.0.4**

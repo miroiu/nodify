@@ -14,13 +14,13 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                double navigationStepSize = GetNavigationStepSize();
-                var gestures = EditorGestures.Mappings.Editor.Keyboard;
-
                 if (!Element.IsKeyboardFocusWithin || !(e.OriginalSource is DependencyObject originalSource))
                 {
                     return;
                 }
+
+                double navigationStepSize = GetNavigationStepSize();
+                var gestures = EditorGestures.Mappings.Editor.Keyboard;
 
                 if (e.Key == Key.Tab && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
                 {

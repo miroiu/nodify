@@ -11,6 +11,7 @@
         {
             InputProcessor.Shared<Minimap>.RegisterHandlerFactory(elem => new Panning(elem));
             InputProcessor.Shared<Minimap>.RegisterHandlerFactory(elem => new Zooming(elem));
+            InputProcessor.Shared<Minimap>.RegisterHandlerFactory(elem => new KeyboardNavigation(elem));
         }
     }
 }

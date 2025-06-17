@@ -317,7 +317,7 @@ namespace Nodify.Interactivity
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new AnyGesture(new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
                 ZoomOut = new AnyGesture(new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
-                ResetViewportLocation = new KeyGesture(Key.Home);
+                ResetViewport = new KeyGesture(Key.Home);
                 FitToScreen = new KeyGesture(Key.Home, ModifierKeys.Shift);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
                 PanWithMouseWheel = false;
@@ -368,9 +368,9 @@ namespace Nodify.Interactivity
             /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="Key.OemMinus"/>.</remarks>
             public InputGestureRef ZoomOut { get; }
 
-            /// <summary>Gesture used to move the editor's viewport location to (0, 0).</summary>
+            /// <summary>Gesture used to move the editor's viewport location to (0, 0) and set the zoom to 1.</summary>
             /// <remarks>Defaults to <see cref="Key.Home"/>.</remarks>
-            public InputGestureRef ResetViewportLocation { get; }
+            public InputGestureRef ResetViewport { get; }
 
             /// <summary>Gesture used to fit as many containers as possible into the viewport.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.Shift"/>+<see cref="Key.Home"/>.</remarks>
@@ -393,7 +393,7 @@ namespace Nodify.Interactivity
                 ZoomModifierKey = gestures.ZoomModifierKey;
                 ZoomIn.Value = gestures.ZoomIn.Value;
                 ZoomOut.Value = gestures.ZoomOut.Value;
-                ResetViewportLocation.Value = gestures.ResetViewportLocation.Value;
+                ResetViewport.Value = gestures.ResetViewport.Value;
                 FitToScreen.Value = gestures.FitToScreen.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
                 PanWithMouseWheel = gestures.PanWithMouseWheel;
@@ -414,7 +414,7 @@ namespace Nodify.Interactivity
                 PushItems.Unbind();
                 ZoomIn.Unbind();
                 ZoomOut.Unbind();
-                ResetViewportLocation.Unbind();
+                ResetViewport.Unbind();
                 FitToScreen.Unbind();
                 CancelAction.Unbind();
             }
@@ -544,17 +544,38 @@ namespace Nodify.Interactivity
         {
             public MinimapGestures()
             {
+                Pan = new DirectionalNavigationGestures();
                 DragViewport = new MouseGesture(MouseAction.LeftClick);
+                ResetViewport = new KeyGesture(Key.Home);
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
+                ZoomIn = new AnyGesture(new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
+                ZoomOut = new AnyGesture(new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
                 ZoomModifierKey = ModifierKeys.None;
             }
+
+            /// <summary>
+            /// Directional gestures used for panning the viewport.
+            /// </summary>
+            /// <remarks>Defaults to <see cref="Key.Space"/>+arrow keys.</remarks>
+            public DirectionalNavigationGestures Pan { get; }
 
             /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
             public InputGestureRef DragViewport { get; }
 
+            /// <summary>Gesture to move the viewport inside the <see cref="Minimap" />.</summary>
+            public InputGestureRef ResetViewport { get; }
+
             /// <summary>Gesture to cancel the panning operation.</summary>
             /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="Key.Escape"/>.</remarks>
             public InputGestureRef CancelAction { get; }
+
+            /// <summary>Gesture used to zoom in.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="Key.OemPlus"/>.</remarks>
+            public InputGestureRef ZoomIn { get; }
+
+            /// <summary>Gesture used to zoom out.</summary>
+            /// <remarks>Defaults to <see cref="ModifierKeys.Control"/>+<see cref="Key.OemMinus"/>.</remarks>
+            public InputGestureRef ZoomOut { get; }
 
             /// <summary>The key modifier required to start zooming by mouse wheel.</summary>
             /// <remarks>Defaults to <see cref="ModifierKeys.None"/>.</remarks>
@@ -564,6 +585,10 @@ namespace Nodify.Interactivity
             /// <param name="gestures">The gestures to copy.</param>
             public void Apply(MinimapGestures gestures)
             {
+                Pan.Apply(gestures.Pan);
+                ZoomIn.Value = gestures.ZoomIn.Value;
+                ZoomOut.Value = gestures.ZoomOut.Value;
+                ResetViewport.Value = gestures.ResetViewport.Value;
                 DragViewport.Value = gestures.DragViewport.Value;
                 CancelAction.Value = gestures.CancelAction.Value;
                 ZoomModifierKey = gestures.ZoomModifierKey;
@@ -574,6 +599,10 @@ namespace Nodify.Interactivity
             /// </summary>
             public void Unbind()
             {
+                Pan.Unbind();
+                ZoomIn.Unbind();
+                ZoomOut.Unbind();
+                ResetViewport.Unbind();
                 DragViewport.Unbind();
                 CancelAction.Unbind();
             }

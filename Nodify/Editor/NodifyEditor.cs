@@ -623,12 +623,12 @@ namespace Nodify
         #region Methods
 
         /// <summary>
-        /// Zoom in at the viewports center
+        /// Zoom in at the viewport's center.
         /// </summary>
         public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
         /// <summary>
-        /// Zoom out at the viewports center
+        /// Zoom out at the viewport's center.
         /// </summary>
         public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
@@ -673,8 +673,8 @@ namespace Nodify
             if (animated && newLocation != ViewportLocation)
             {
                 BeginPanning();
-                DisablePanning = true;
-                DisableZooming = true;
+                SetCurrentValue(DisablePanningProperty, true);
+                SetCurrentValue(DisableZoomingProperty, true);
 
                 double distance = (newLocation - ViewportLocation).Length;
                 double duration = distance / (BringIntoViewSpeed + (distance / 10)) * ViewportZoom;
@@ -683,15 +683,15 @@ namespace Nodify
                 this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
                     EndPanning();
-                    DisablePanning = false;
-                    DisableZooming = false;
+                    SetCurrentValue(DisablePanningProperty, false);
+                    SetCurrentValue(DisableZoomingProperty, false);
 
                     onFinish?.Invoke();
                 });
             }
             else
             {
-                ViewportLocation = newLocation;
+                SetCurrentValue(ViewportLocationProperty, newLocation);
                 onFinish?.Invoke();
             }
         }
@@ -746,6 +746,30 @@ namespace Nodify
                     BringIntoView(area);
                 }
             }
+        }
+
+        /// <summary>
+        /// Reset the viewport location to (0, 0) and the viewport zoom to 1.
+        /// </summary>
+        /// <param name="animated">Whether the viewport transition is animated.</param>
+        /// <param name="onFinish">The callback invoked when the viewport transition is finished.</param>
+        public void ResetViewport(bool animated = true, Action? onFinish = null)
+        {
+            BringIntoView(new Point(ViewportSize.Width / 2, ViewportSize.Height / 2), animated, () =>
+            {
+                if (animated)
+                {
+                    this.StartAnimation(ViewportZoomProperty, 1d, BringIntoViewMaxDuration, (s, e) =>
+                    {
+                        onFinish?.Invoke();
+                    });
+                }
+                else
+                {
+                    SetCurrentValue(ViewportZoomProperty, BoxValue.Double1);
+                    onFinish?.Invoke();
+                }
+            });
         }
 
         /// <summary>

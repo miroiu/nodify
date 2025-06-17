@@ -28,6 +28,25 @@ namespace Nodify.Interactivity
                     e.Handled = true;
                 }
             }
+
+            protected override void OnKeyDown(KeyEventArgs e)
+            {
+                var gestures = EditorGestures.Mappings.Minimap;
+
+                if (!Element.IsReadOnly)
+                {
+                    if (gestures.ZoomIn.Matches(e.Source, e))
+                    {
+                        Element.ZoomIn();
+                        e.Handled = true;
+                    }
+                    else if (gestures.ZoomOut.Matches(e.Source, e))
+                    {
+                        Element.ZoomOut();
+                        e.Handled = true;
+                    }
+                }
+            }
         }
     }
 }

@@ -27,6 +27,11 @@ namespace Nodify
         public static bool AutoRegisterDecoratorsLayer { get; set; }
 
         /// <summary>
+        /// Automatically registers the connectors layer for keyboard navigation.
+        /// </summary>
+        public static bool AutoRegisterConnectionsLayer { get; set; } = true;
+
+        /// <summary>
         /// Indicates whether the viewport should automatically pan to follow elements moved via keyboard dragging.
         /// </summary>
         public static bool PanViewportOnKeyboardDrag { get; set; } = true;

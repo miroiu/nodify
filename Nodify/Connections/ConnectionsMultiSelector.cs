@@ -103,7 +103,10 @@ namespace Nodify
 
             Editor = this.GetParentOfType<NodifyEditor>();
 
-            Editor?.RegisterNavigationLayer(this);
+            if (NodifyEditor.AutoRegisterConnectionsLayer)
+            {
+                Editor?.RegisterNavigationLayer(this);
+            }
         }
 
         #region Keyboard Navigation
