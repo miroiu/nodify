@@ -6,8 +6,15 @@ namespace Nodify.Interactivity
 {
     public static partial class EditorState
     {
+        /// <summary>
+        /// Represents the keyboard navigation state of the <see cref="NodifyEditor"/>, allowing users to navigate and interact with nodes and connections using the keyboard.
+        /// </summary>
         public class KeyboardNavigation : InputElementState<NodifyEditor>
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="KeyboardNavigation"/> class.
+            /// </summary>
+            /// <param name="element">The <see cref="NodifyEditor"/> associated with this state.</param>
             public KeyboardNavigation(NodifyEditor element) : base(element)
             {
             }

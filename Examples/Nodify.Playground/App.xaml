@@ -29,6 +29,8 @@
                         </Setter>
                     </Style>
 
+                    <Color x:Key="NodifyEditor.FocusVisualColor">DodgerBlue</Color>
+
                 </ResourceDictionary>
 
             </ResourceDictionary.MergedDictionaries>

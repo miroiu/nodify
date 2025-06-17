@@ -7,7 +7,7 @@ namespace Nodify.Interactivity
     /// Represents a keyboard gesture that requires a trigger key to be held down
     /// before pressing a combo key. For example, press and hold Space, then press Left arrow.
     /// </summary>
-    internal class KeyComboGesture : KeyGesture
+    public class KeyComboGesture : KeyGesture
     {
         private static readonly WeakReferenceCollection<KeyComboGesture> _allCombos = new WeakReferenceCollection<KeyComboGesture>(16);
 

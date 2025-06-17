@@ -7,6 +7,29 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
+
+                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle StrokeThickness="1"
+                                               StrokeDashArray="2"
+                                               Margin="-2"
+                                               RadiusX="3"
+                                               RadiusY="3"
+                                               Stroke="DodgerBlue" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Pen x:Key="{x:Static nodify:BaseConnection.FocusVisualPenKey}"
+                         Thickness="1"
+                         Brush="DodgerBlue"
+                         DashStyle="{x:Static DashStyles.Dash}" />
+
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <Style x:Key="IconButton"
                            TargetType="Button"
                            BasedOn="{StaticResource {x:Type Button}}">
@@ -240,30 +263,6 @@
                         </Viewbox>
                     </DataTemplate>
                 </ResourceDictionary>
-                <ResourceDictionary>
-
-                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
-                        <Setter Property="Control.Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <Rectangle StrokeThickness="1"
-                                               StrokeDashArray="2"
-                                               Margin="-3"
-                                               RadiusX="3"
-                                               RadiusY="3"
-                                               Stroke="DodgerBlue" />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Pen x:Key="{x:Static nodify:BaseConnection.FocusVisualPenKey}"
-                         Thickness="1"
-                         Brush="DodgerBlue"
-                         DashStyle="{x:Static DashStyles.Dash}" />
-
-                </ResourceDictionary>
-
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

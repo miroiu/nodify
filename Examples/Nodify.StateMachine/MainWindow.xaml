@@ -698,7 +698,8 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Auto"
                                       Grid.Row="2">
-                            <ItemsControl ItemsSource="{Binding Blackboard.Keys}" Focusable="False">
+                            <ItemsControl ItemsSource="{Binding Blackboard.Keys}"
+                                          Focusable="False">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
                                         <Grid Margin="0 0 0 2">

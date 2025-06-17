@@ -961,12 +961,6 @@ namespace Nodify
         protected override void OnKeyDown(KeyEventArgs e)
             => InputProcessor.ProcessEvent(e);
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
-            => InputProcessor.ProcessEvent(e);
-
-        protected override void OnPreviewKeyUp(KeyEventArgs e)
-            => InputProcessor.ProcessEvent(e);
-
         #endregion
 
         /// <inheritdoc />

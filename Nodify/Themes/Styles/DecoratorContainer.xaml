@@ -5,8 +5,6 @@
     <local:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
 
     <Style TargetType="{x:Type local:DecoratorContainer}">
-        <Setter Property="KeyboardNavigation.IsTabStop"
-                Value="False" />
         <Setter Property="RenderTransform"
                 Value="{Binding ViewportTransform, RelativeSource={RelativeSource AncestorType=local:NodifyEditor}, Converter={StaticResource UnscaleTransformConverter}}" />
         <Setter Property="Template">
