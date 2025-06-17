@@ -222,7 +222,7 @@
                     </TextBlock>
 
                     <Border Visibility="{Binding GraphViewModel.KeyboardNavigationLayer, Converter={StaticResource StringToVisibilityConverter}}"
-                            ToolTip="The active keyboard navigation layer."
+                            ToolTip="Press CTRL+[ or CTRL+] in the editor to change the keyboard navigation layer."
                             Padding="14 0 0 0"
                             Height="16"
                             CornerRadius="3"

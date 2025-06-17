@@ -45,8 +45,6 @@
     </Style>
 
     <Style TargetType="{x:Type local:NodifyEditor}">
-        <Setter Property="ClipToBounds"
-                Value="True" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="Background"
@@ -68,7 +66,8 @@
                 <ControlTemplate TargetType="{x:Type local:NodifyEditor}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            ClipToBounds="True">
                         <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True"
