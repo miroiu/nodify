@@ -15,6 +15,8 @@
                 Value="1" />
         <Setter Property="IsThreeState"
                 Value="False" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -91,6 +93,8 @@
                 Value="4 2" />
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
     </Style>
 
     <Style TargetType="{x:Type ToggleButton}"
@@ -103,6 +107,8 @@
                 Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness"
                 Value="1" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -156,6 +162,8 @@
                 Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness"
                 Value="1" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -242,6 +250,8 @@
                 Value="{DynamicResource BackgroundBrush}" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource HighlightedBackgroundBrush}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -433,6 +443,8 @@
                 Value="{DynamicResource HighlightedBackgroundBrush}" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -484,6 +496,8 @@
                 Value="{DynamicResource HighlightedBackgroundBrush}" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -538,6 +552,8 @@
                 Value="Hand" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -769,6 +785,7 @@
                                       Background="{TemplateBinding Background}"
                                       BorderThickness="{TemplateBinding BorderThickness}"
                                       BorderBrush="{TemplateBinding BorderBrush}"
+                                      FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                                       Cursor="Hand"
                                       x:Name="PART_Header">
                                 <CheckBox.Template>

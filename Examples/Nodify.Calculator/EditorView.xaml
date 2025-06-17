@@ -284,9 +284,11 @@
                                 <StackPanel>
                                     <Button Style="{StaticResource IconButton}"
                                             Content="{StaticResource PlusIcon}"
+                                            FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                                             Command="{Binding AddInputCommand}" />
                                     <Button Style="{StaticResource IconButton}"
                                             Content="{StaticResource RemoveKeyIcon}"
+                                            FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                                             Command="{Binding RemoveInputCommand}" />
                                 </StackPanel>
                             </DataTemplate>

@@ -49,6 +49,8 @@
                                 HorizontalContentAlignment="Left">
                             <Button.Style>
                                 <Style TargetType="{x:Type Button}">
+                                    <Setter Property="FocusVisualStyle"
+                                            Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type Button}">
