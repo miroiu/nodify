@@ -1,6 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:local="clr-namespace:Nodify">
+
+    <!--DEFAULT CONNECTION FOCUS VISUAL-->
+
+    <Pen x:Key="{x:Static local:BaseConnection.FocusVisualPenKey}"
+         o:Freeze="True"
+         Thickness="1"
+         Brush="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
+        <Pen.DashStyle>
+            <DashStyle Dashes="0.5,3" />
+        </Pen.DashStyle>
+    </Pen>
 
     <!--NODIFY EDITOR-->
 

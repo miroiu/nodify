@@ -7,30 +7,19 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/FocusVisual.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Dark.xaml" />
+
                 <ResourceDictionary>
+                    <!--WPF is wonderful-->
+                    <Style x:Key="OriginalNodeInputStyle"
+                           TargetType="{x:Type nodify:NodeInput}"
+                           BasedOn="{StaticResource {x:Type nodify:NodeInput}}" />
 
-                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
-                        <Setter Property="Control.Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <Rectangle StrokeThickness="1"
-                                               StrokeDashArray="2"
-                                               Margin="-3"
-                                               RadiusX="3"
-                                               RadiusY="3"
-                                               Stroke="{DynamicResource ItemContainer.SelectedBrush}" />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Pen x:Key="{x:Static nodify:BaseConnection.FocusVisualPenKey}"
-                         Thickness="1"
-                         Brush="{DynamicResource ItemContainer.SelectedBrush}"
-                         DashStyle="{x:Static DashStyles.Dash}" />
-
+                    <Style x:Key="OriginalNodeOutputStyle"
+                           TargetType="{x:Type nodify:NodeOutput}"
+                           BasedOn="{StaticResource {x:Type nodify:NodeOutput}}" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

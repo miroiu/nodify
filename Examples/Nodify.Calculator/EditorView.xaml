@@ -142,7 +142,7 @@
                              x:Name="Editor">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:NodeInput}"
-                       BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
+                       BasedOn="{StaticResource OriginalNodeInputStyle}">
                     <Setter Property="Header"
                             Value="{Binding}" />
                     <Setter Property="IsConnected"
@@ -166,7 +166,7 @@
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
-                       BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
+                       BasedOn="{StaticResource OriginalNodeOutputStyle}">
                     <Setter Property="Header"
                             Value="{Binding}" />
                     <Setter Property="IsConnected"

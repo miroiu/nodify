@@ -7,32 +7,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/FocusVisual.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Nodify.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
-                <ResourceDictionary>
-                    
-                    <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
-                        <Setter Property="Control.Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <Rectangle StrokeThickness="1"
-                                               StrokeDashArray="2"
-                                               Margin="-3"
-                                               RadiusX="3"
-                                               RadiusY="3"
-                                               Stroke="{DynamicResource ItemContainer.SelectedBrush}" />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <Pen x:Key="{x:Static nodify:BaseConnection.FocusVisualPenKey}"
-                         Thickness="1"
-                         Brush="{DynamicResource ItemContainer.SelectedBrush}"
-                         DashStyle="{x:Static DashStyles.Dash}" />
-
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
