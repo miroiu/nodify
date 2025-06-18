@@ -36,6 +36,16 @@ protected TElement Element { get; set; }
   
 [TElement](Nodify_Interactivity_InputElementState_TElement__TElement)  
   
+### ProcessHandledEvents  
+  
+```csharp  
+public virtual bool ProcessHandledEvents { get; protected set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### RequiresInputCapture  
   
 ```csharp  

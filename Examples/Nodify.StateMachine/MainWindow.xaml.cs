@@ -17,6 +17,16 @@ namespace Nodify.StateMachine
             EditorGestures.Mappings.Connection.Disconnect.Unbind();
             EditorGestures.Mappings.Editor.ZoomModifierKey = ModifierKeys.Control;
             EditorGestures.Mappings.Editor.PanWithMouseWheel = true;
+
+            EventManager.RegisterClassHandler(
+                    typeof(UIElement),
+                    Keyboard.PreviewGotKeyboardFocusEvent,
+                    (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+        }
+
+        private void OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            Title = e.NewFocus.ToString();
         }
 
         private void ScrollViewer_PreviewKeyDown(object sender, KeyEventArgs e)

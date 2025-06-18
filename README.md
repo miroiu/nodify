@@ -52,8 +52,10 @@ Install-Package Nodify
  - Built-in dark and light **themes**
  - **Selecting**, **zooming**, **panning** with **auto panning** when close to edge
  - **Select**, **move** and **connect** nodes
- - Lots of **configurable** dependency properties
  - Ready for undo/redo
+ - Configurable input gestures for each action
+ - Built-in keyboard navigation system
+ - Lots of **configurable** dependency properties
  - Example applications: 🎨 [**Playground**](Examples/Nodify.Playground), 🌓 [**State machine**](Examples/Nodify.StateMachine), 💻 [**Calculator**](Examples/Nodify.Calculator), 🔶 [**Canvas**](Examples/Nodify.Shapes)
  
 ## 📝 Documentation

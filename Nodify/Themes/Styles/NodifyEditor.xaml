@@ -12,7 +12,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="PendingConnectionTemplate">
-        <local:PendingConnection IsTabStop="False" />
+        <local:PendingConnection IsTabStop="False"
+                                 IsHitTestVisible="False" />
     </DataTemplate>
 
     <Style x:Key="SelectionRectangleStyle"
@@ -44,14 +45,10 @@
     </Style>
 
     <Style TargetType="{x:Type local:NodifyEditor}">
-        <Setter Property="ClipToBounds"
-                Value="True" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="Background"
                 Value="#1E1E1E" />
-        <Setter Property="IsTabStop"
-                Value="False" />
         <Setter Property="EnableRealtimeSelection"
                 Value="True" />
         <Setter Property="DisplayConnectionsOnTop"
@@ -69,7 +66,8 @@
                 <ControlTemplate TargetType="{x:Type local:NodifyEditor}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            ClipToBounds="True">
                         <Canvas RenderTransform="{TemplateBinding ViewportTransform}">
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True"
@@ -128,10 +126,10 @@
                             </Rectangle>
 
                             <Rectangle Style="{TemplateBinding PushedAreaStyle}"
-                                    RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
-                                    Canvas.Top="{Binding PushedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Canvas.Left="{Binding PushedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Visibility="{TemplateBinding IsPushingItems, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                       RenderTransform="{Binding ViewportTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
+                                       Canvas.Top="{Binding PushedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Canvas.Left="{Binding PushedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Visibility="{TemplateBinding IsPushingItems, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Rectangle.Width>
                                     <MultiBinding Converter="{StaticResource ScaleDoubleConverter}">
                                         <Binding Path="PushedArea.Width"

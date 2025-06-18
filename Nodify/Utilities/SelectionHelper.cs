@@ -1,9 +1,7 @@
-﻿using Nodify.Interactivity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Nodify
 {
@@ -191,28 +189,5 @@ namespace Nodify
         }
 
         #endregion
-    }
-
-    internal static class SelectionGesturesExtensions
-    {
-        public static SelectionType GetSelectionType(this EditorGestures.SelectionGestures gestures, InputEventArgs e)
-        {
-            if (gestures.Append.Matches(e.Source, e))
-            {
-                return SelectionType.Append;
-            }
-
-            if (gestures.Invert.Matches(e.Source, e))
-            {
-                return SelectionType.Invert;
-            }
-
-            if (gestures.Remove.Matches(e.Source, e))
-            {
-                return SelectionType.Remove;
-            }
-
-            return SelectionType.Replace;
-        }
     }
 }

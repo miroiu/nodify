@@ -3,8 +3,7 @@
                     xmlns:local="clr-namespace:Nodify">
 
     <DataTemplate x:Key="DefaultConnectorTemplate">
-        <local:Connector Focusable="False"
-                         Cursor="Arrow" />
+        <local:Connector Cursor="Arrow" />
     </DataTemplate>
 
     <Style TargetType="{x:Type local:KnotNode}">

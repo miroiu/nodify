@@ -210,6 +210,16 @@ public ICommand ResizeStartedCommand { get; set; }
 public override void OnApplyTemplate();  
 ```  
   
+### ToggleContentSelection()  
+  
+Toggles the selection of nodes inside this group.
+            If any contained nodes are selected, all will be unselected.
+            If none are selected, all will be selected.  
+  
+```csharp  
+public void ToggleContentSelection();  
+```  
+  
 ## Events  
   
 ### ResizeCompleted  

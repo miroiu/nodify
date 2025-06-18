@@ -175,6 +175,12 @@
                     Value="{Binding SelectableConnections, Source={x:Static local:EditorSettings.Instance}}" />
             <Setter Property="IsSelected"
                     Value="{Binding IsSelected}" />
+            <Setter Property="StrokeThickness"
+                    Value="{Binding ConnectionStrokeThickness, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="OutlineThickness"
+                    Value="{Binding ConnectionOutlineThickness, Source={x:Static local:EditorSettings.Instance}}" />
+            <Setter Property="FocusVisualPadding"
+                    Value="{Binding ConnectionFocusVisualPadding, Source={x:Static local:EditorSettings.Instance}}" />
         </Style>
 
         <DataTemplate x:Key="CircuitConnectionTemplate">
@@ -531,7 +537,8 @@
                         </nodify:Node.ContentTemplate>
                         <nodify:Node.HeaderTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              Focusable="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeInput Orientation="Vertical" />
@@ -548,7 +555,8 @@
                         </nodify:Node.HeaderTemplate>
                         <nodify:Node.FooterTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl ItemsSource="{Binding}"
+                                              Focusable="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type local:ConnectorViewModel}">
                                             <nodify:NodeOutput Orientation="Vertical" />

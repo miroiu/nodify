@@ -6,7 +6,7 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorGestures.GroupingNodeGestures](Nodify_Interactivity_EditorGestures_GroupingNodeGestures)  
   
-**References:** [EditorGestures](Nodify_Interactivity_EditorGestures)  
+**References:** [EditorGestures](Nodify_Interactivity_EditorGestures), [InputGestureRef](Nodify_Interactivity_InputGestureRef)  
   
 ```csharp  
 public class GroupingNodeGestures  
@@ -32,6 +32,16 @@ public ModifierKeys SwitchMovementMode { get; set; }
   
 [ModifierKeys](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ModifierKeys)  
   
+### ToggleContentSelection  
+  
+```csharp  
+public InputGestureRef ToggleContentSelection { get; set; }  
+```  
+  
+**Property Value**  
+  
+[InputGestureRef](Nodify_Interactivity_InputGestureRef)  
+  
 ## Methods  
   
 ### Apply(EditorGestures.GroupingNodeGestures)  
@@ -43,4 +53,10 @@ public void Apply(EditorGestures.GroupingNodeGestures gestures);
 **Parameters**  
   
 `gestures` [EditorGestures.GroupingNodeGestures](Nodify_Interactivity_EditorGestures_GroupingNodeGestures)  
+  
+### Unbind()  
+  
+```csharp  
+public void Unbind();  
+```  
   

@@ -6,17 +6,27 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) → [DecoratorContainer](Nodify_DecoratorContainer)  
   
-**Implements:** [INodifyCanvasItem](Nodify_INodifyCanvasItem)  
+**Implements:** [INodifyCanvasItem](Nodify_INodifyCanvasItem), [IKeyboardFocusTarget\<DecoratorContainer\>](Nodify_Interactivity_IKeyboardFocusTarget_TElement_)  
   
-**References:** [NodifyEditor](Nodify_NodifyEditor)  
+**References:** [DecoratorsControl](Nodify_DecoratorsControl), [NodifyEditor](Nodify_NodifyEditor)  
   
 The container for all the items generated from the [NodifyEditor.Decorators](Nodify_NodifyEditor#decorators) collection.  
   
 ```csharp  
-public class DecoratorContainer : ContentControl, INodifyCanvasItem  
+public class DecoratorContainer : ContentControl, INodifyCanvasItem, IKeyboardFocusTarget<DecoratorContainer>  
 ```  
   
 ## Constructors  
+  
+### DecoratorContainer(DecoratorsControl)  
+  
+```csharp  
+public DecoratorContainer(DecoratorsControl parent);  
+```  
+  
+**Parameters**  
+  
+`parent` [DecoratorsControl](Nodify_DecoratorsControl)  
   
 ### DecoratorContainer()  
   
@@ -38,6 +48,16 @@ public Size ActualSize { get; set; }
   
 [Size](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Size)  
   
+### Bounds  
+  
+```csharp  
+public virtual Rect Bounds { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)  
+  
 ### Location  
   
 Gets or sets the location of this [DecoratorContainer](Nodify_DecoratorContainer) inside the NodifyEditor.DecoratorsHost.  
@@ -49,6 +69,16 @@ public virtual Point Location { get; set; }
 **Property Value**  
   
 [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)  
+  
+### Owner  
+  
+```csharp  
+public DecoratorsControl Owner { get; set; }  
+```  
+  
+**Property Value**  
+  
+[DecoratorsControl](Nodify_DecoratorsControl)  
   
 ## Methods  
   
@@ -69,6 +99,16 @@ protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo);
 **Parameters**  
   
 `sizeInfo` [SizeChangedInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.SizeChangedInfo)  
+  
+### OnVisualParentChanged(DependencyObject)  
+  
+```csharp  
+protected override void OnVisualParentChanged(DependencyObject oldParent);  
+```  
+  
+**Parameters**  
+  
+`oldParent` [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject)  
   
 ## Events  
   

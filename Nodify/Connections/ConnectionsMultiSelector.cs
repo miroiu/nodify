@@ -1,13 +1,19 @@
-﻿using System.Collections;
+﻿using Nodify.Interactivity;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace Nodify
 {
-    internal sealed class ConnectionsMultiSelector : MultiSelector
+    public class ConnectionsMultiSelector : MultiSelector, IKeyboardNavigationLayer
     {
+        #region Dependency Properties
+
         public static readonly DependencyProperty SelectedItemsProperty = NodifyEditor.SelectedItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty CanSelectMultipleItemsProperty = NodifyEditor.CanSelectMultipleItemsProperty.AddOwner(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.True, OnCanSelectMultipleItemsChanged, CoerceCanSelectMultipleItems));
 
@@ -44,16 +50,131 @@ namespace Nodify
             set => base.CanSelectMultipleItems = value;
         }
 
+        #endregion
+
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="ConnectionsMultiSelector"/>.
         /// </summary>
         public NodifyEditor? Editor { get; private set; }
+
+        /// <summary>
+        /// Gets a list of all <see cref="ConnectionContainer"/>s.
+        /// </summary>
+        /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
+        protected internal IReadOnlyCollection<ConnectionContainer> ConnectionContainers
+        {
+            get
+            {
+                ItemCollection items = Items;
+                var containers = new List<ConnectionContainer>(items.Count);
+
+                for (var i = 0; i < items.Count; i++)
+                {
+                    containers.Add((ConnectionContainer)ItemContainerGenerator.ContainerFromIndex(i));
+                }
+
+                return containers;
+            }
+        }
+
+        static ConnectionsMultiSelector()
+        {
+            FocusableProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(BoxValue.False));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ConnectionsMultiSelector), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+        }
+
+        public ConnectionsMultiSelector()
+        {
+            _focusNavigator = new StatefulFocusNavigator<ConnectionContainer>(OnElementFocused);
+        }
 
         protected override DependencyObject GetContainerForItemOverride()
             => new ConnectionContainer(this);
 
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ConnectionContainer;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            Editor = this.GetParentOfType<NodifyEditor>();
+
+            if (NodifyEditor.AutoRegisterConnectionsLayer)
+            {
+                Editor?.RegisterNavigationLayer(this);
+            }
+        }
+
+        #region Keyboard Navigation
+
+        public KeyboardNavigationLayerId Id { get; } = KeyboardNavigationLayerId.Connections;
+        public IKeyboardFocusTarget<UIElement>? LastFocusedElement => _focusNavigator.LastFocusedElement;
+
+        private readonly StatefulFocusNavigator<ConnectionContainer> _focusNavigator;
+
+        public bool TryMoveFocus(TraversalRequest request)
+        {
+            return _focusNavigator.TryMoveFocus(request, TryFindContainerToFocus);
+        }
+
+        public bool TryRestoreFocus()
+        {
+            return _focusNavigator.TryRestoreFocus();
+        }
+
+        private bool TryFindContainerToFocus(ConnectionContainer? currentElement, TraversalRequest request, out ConnectionContainer? containerToFocus)
+        {
+            containerToFocus = null;
+
+            if (currentElement is ConnectionContainer focusedContainer)
+            {
+                containerToFocus = FindNextFocusTarget(focusedContainer, request);
+            }
+            else if (currentElement is UIElement elem && elem.GetParentOfType<ConnectionContainer>() is ConnectionContainer parentContainer)
+            {
+                containerToFocus = parentContainer;
+            }
+            else if (Items.Count > 0 && Editor != null)
+            {
+                var viewport = new Rect(Editor.ViewportLocation, Editor.ViewportSize);
+                var containers = ConnectionContainers;
+                containerToFocus = containers.FirstOrDefault(container => viewport.IntersectsWith(((IKeyboardFocusTarget<ConnectionContainer>)container).Bounds))
+                    ?? containers.First();
+            }
+
+            return containerToFocus != null;
+        }
+
+        protected virtual ConnectionContainer? FindNextFocusTarget(ConnectionContainer currentContainer, TraversalRequest request)
+        {
+            var focusNavigator = new DirectionalFocusNavigator<ConnectionContainer>(ConnectionContainers);
+            var result = focusNavigator.FindNextFocusTarget(currentContainer, request);
+
+            return result?.Element;
+        }
+
+        protected virtual void OnElementFocused(IKeyboardFocusTarget<ConnectionContainer> target)
+        {
+            if (NodifyEditor.AutoPanOnNodeFocus)
+            {
+                Editor?.BringIntoView(target.Bounds, NodifyEditor.BringIntoViewEdgeOffset);
+            }
+        }
+
+        void IKeyboardNavigationLayer.OnActivated()
+        {
+            TryRestoreFocus();
+        }
+
+        void IKeyboardNavigationLayer.OnDeactivated()
+        {
+        }
+
+        #endregion
 
         public void Select(ConnectionContainer container)
         {
@@ -73,13 +194,6 @@ namespace Nodify
             EndUpdateSelectedItems();
 
             Editor?.UnselectAll();
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            Editor = this.GetParentOfType<NodifyEditor>();
         }
 
         #region Selection Handlers

@@ -16,6 +16,18 @@ public interface IInputHandler
   
 ## Properties  
   
+### ProcessHandledEvents  
+  
+Gets or sets a value indicating whether events that have been handled should be processed too.  
+  
+```csharp  
+public virtual bool ProcessHandledEvents { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### RequiresInputCapture  
   
 Gets a value indicating whether the handler requires input capture to remain active.  

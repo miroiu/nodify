@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace Nodify.Shapes
 {
@@ -10,6 +11,16 @@ namespace Nodify.Shapes
         public MainWindow()
         {
             InitializeComponent();
+
+            EventManager.RegisterClassHandler(
+                    typeof(UIElement),
+                    Keyboard.PreviewGotKeyboardFocusEvent,
+                    (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+        }
+
+        private void OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            Title = e.NewFocus.ToString();
         }
     }
 }

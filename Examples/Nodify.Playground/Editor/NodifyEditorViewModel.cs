@@ -102,6 +102,13 @@ namespace Nodify.Playground
 
         public GraphSchema Schema { get; }
 
+        private string? _keyboardNavigationLayer;
+        public string? KeyboardNavigationLayer
+        {
+            get => _keyboardNavigationLayer; 
+            set => SetProperty(ref _keyboardNavigationLayer, value);
+        }
+
         public ICommand DeleteSelectionCommand { get; }
         public ICommand DisconnectConnectorCommand { get; }
         public ICommand CreateConnectionCommand { get; }

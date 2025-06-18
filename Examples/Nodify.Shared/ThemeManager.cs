@@ -115,7 +115,7 @@ namespace Nodify
             {
                 foreach (var res in resources)
                 {
-                    Application.Current.Resources.MergedDictionaries.Add(res);
+                    Application.Current.Resources.MergedDictionaries.Insert(0, res);
                 }
 
                 // Unload current theme

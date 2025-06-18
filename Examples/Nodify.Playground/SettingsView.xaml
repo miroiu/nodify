@@ -9,57 +9,76 @@
              d:Foreground="{DynamicResource ForegroundBrush}"
              d:Background="{DynamicResource PanelBackgroundBrush}"
              mc:Ignorable="d">
-    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}">
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  Focusable="False">
         <ItemsControl.Resources>
-            <DataTemplate x:Key="TextEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
-                <TextBox Text="{Binding Value}" TextWrapping="Wrap" AcceptsReturn="True" />
+            <DataTemplate x:Key="TextEditorTemplate"
+                          DataType="{x:Type local:ISettingViewModel}">
+                <TextBox Text="{Binding Value}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True" />
             </DataTemplate>
-            <DataTemplate x:Key="NumberEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+            <DataTemplate x:Key="NumberEditorTemplate"
+                          DataType="{x:Type local:ISettingViewModel}">
                 <TextBox Text="{Binding Value}" />
             </DataTemplate>
-            <DataTemplate x:Key="BooleanEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+            <DataTemplate x:Key="BooleanEditorTemplate"
+                          DataType="{x:Type local:ISettingViewModel}">
                 <CheckBox IsChecked="{Binding Value}" />
             </DataTemplate>
-            <DataTemplate x:Key="PointEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
+            <DataTemplate x:Key="PointEditorTemplate"
+                          DataType="{x:Type local:ISettingViewModel}">
                 <local:PointEditorView DataContext="{Binding Value, Mode=TwoWay}" />
             </DataTemplate>
-            <DataTemplate x:Key="OptionEditorTemplate" DataType="{x:Type local:ISettingViewModel}">
-                <ComboBox
-                    DisplayMemberPath="Name"
-                    SelectedValuePath="Value"
-                    SelectedValue="{Binding Value, Mode=TwoWay}"
-                    ItemsSource="{Binding Value, Converter={nodify:EnumValuesConverter}}" />
+            <DataTemplate x:Key="OptionEditorTemplate"
+                          DataType="{x:Type local:ISettingViewModel}">
+                <ComboBox DisplayMemberPath="Name"
+                          SelectedValuePath="Value"
+                          SelectedValue="{Binding Value, Mode=TwoWay}"
+                          ItemsSource="{Binding Value, Converter={nodify:EnumValuesConverter}}" />
             </DataTemplate>
         </ItemsControl.Resources>
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type local:ISettingViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="PropertyName" />
+                        <ColumnDefinition Width="Auto"
+                                          SharedSizeGroup="PropertyName" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Margin="0 5 5 0" Grid.Column="0" />
-                    <ContentControl Content="{Binding}" Margin="5 5 5 0" Grid.Column="1">
+                    <TextBlock Text="{Binding Name}"
+                               ToolTip="{Binding Description}"
+                               Margin="0 5 5 0"
+                               Grid.Column="0" />
+                    <ContentControl Content="{Binding}"
+                                    Margin="5 5 5 0"
+                                    Grid.Column="1"
+                                    Focusable="False">
                         <ContentControl.Style>
                             <Style TargetType="{x:Type ContentControl}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Type}" Value="Boolean">
+                                    <DataTrigger Binding="{Binding Type}"
+                                                 Value="Boolean">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=BooleanEditorTemplate}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="Number">
+                                    <DataTrigger Binding="{Binding Type}"
+                                                 Value="Number">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=NumberEditorTemplate}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="Point">
+                                    <DataTrigger Binding="{Binding Type}"
+                                                 Value="Point">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=PointEditorTemplate}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="Option">
+                                    <DataTrigger Binding="{Binding Type}"
+                                                 Value="Option">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=OptionEditorTemplate}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="Text">
+                                    <DataTrigger Binding="{Binding Type}"
+                                                 Value="Text">
                                         <Setter Property="ContentTemplate"
                                                 Value="{StaticResource ResourceKey=TextEditorTemplate}" />
                                     </DataTrigger>

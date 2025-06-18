@@ -1,6 +1,7 @@
 ﻿using Nodify.Events;
 using Nodify.Interactivity;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -174,6 +175,7 @@ namespace Nodify
         static GroupingNode()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(typeof(GroupingNode)));
+            FocusableProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.False));
             Panel.ZIndexProperty.OverrideMetadata(typeof(GroupingNode), new FrameworkPropertyMetadata(-1, OnZIndexPropertyChanged));
         }
 
@@ -230,41 +232,66 @@ namespace Nodify
                     MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
 
+                var groupBounds = new Rect(Container.Location, RenderSize);
+
                 // Select the content and move with it
                 if (gestures.Selection.Append.Matches(e.Source, e))
                 {
-                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                    Editor.SelectArea(groupBounds, append: true, fit: true);
                 }
                 else if (gestures.Selection.Remove.Matches(e.Source, e))
                 {
-                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                    Editor.UnselectArea(groupBounds, fit: true);
                 }
                 else if (gestures.Selection.Invert.Matches(e.Source, e))
                 {
                     if (Container.IsSelected)
                     {
-                        Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                        Editor.UnselectArea(groupBounds, fit: true);
                         Container.IsSelected = true;
                     }
                     else
                     {
-                        Editor.SelectArea(new Rect(Container.Location, RenderSize), append: true, fit: true);
+                        Editor.SelectArea(groupBounds, append: true, fit: true);
                     }
                 }
                 else if (gestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.Mappings.ItemContainer.Drag.Matches(e.Source, e))
                 {
-                    Editor.SelectArea(new Rect(Container.Location, RenderSize), append: Container.IsSelected, fit: true);
+                    Editor.SelectArea(groupBounds, append: Container.IsSelected, fit: true);
                 }
 
                 // Deselect content
                 if (MovementMode == GroupingMovementMode.Self)
                 {
-                    Editor.UnselectArea(new Rect(Container.Location, RenderSize), fit: true);
+                    Editor.UnselectArea(groupBounds, fit: true);
                     Container.IsSelected = true;
                 }
 
                 // Switch the default movement mode back
                 MovementMode = prevMovementMode;
+            }
+        }
+
+        /// <summary>
+        /// Toggles the selection of nodes inside this group.
+        /// If any contained nodes are selected, all will be unselected.
+        /// If none are selected, all will be selected.
+        /// </summary>
+        public void ToggleContentSelection()
+        {
+            if (Editor != null && Container != null)
+            {
+                var groupBounds = new Rect(Container.Location, RenderSize);
+                bool hasSelection = Editor.SelectedContainers.Any(x => x != Container && groupBounds.Contains(x.Bounds));
+                if (hasSelection)
+                {
+                    Editor.UnselectArea(groupBounds, fit: true);
+                    Container.IsSelected = true;
+                }
+                else
+                {
+                    Editor.SelectArea(groupBounds, append: true, fit: true);
+                }
             }
         }
 

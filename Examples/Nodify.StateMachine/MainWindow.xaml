@@ -380,7 +380,8 @@
                                        Grid.Row="1" />
 
                             <ItemsControl ItemsSource="{Binding Transitions}"
-                                          Grid.Row="2">
+                                          Grid.Row="2"
+                                          Focusable="False">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:TransitionViewModel}">
                                         <Expander BorderThickness="0 0 0 1"
@@ -697,7 +698,8 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Auto"
                                       Grid.Row="2">
-                            <ItemsControl ItemsSource="{Binding Blackboard.Keys}">
+                            <ItemsControl ItemsSource="{Binding Blackboard.Keys}"
+                                          Focusable="False">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:BlackboardKeyViewModel}">
                                         <Grid Margin="0 0 0 2">

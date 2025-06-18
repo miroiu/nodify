@@ -552,6 +552,10 @@ namespace Nodify
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+
             EditorCommands.RegisterCommandBindings<NodifyEditor>();
         }
 
@@ -574,7 +578,10 @@ namespace Nodify
 
             InputProcessor.AddSharedHandlers(this);
 
+            Loaded += OnEditorLoaded;
             Unloaded += OnEditorUnloaded;
+
+            _focusNavigator = new StatefulFocusNavigator<ItemContainer>(OnElementFocused);
         }
 
         /// <inheritdoc />
@@ -586,6 +593,13 @@ namespace Nodify
             ConnectionsHost = GetTemplateChild(ElementConnectionsHost) as UIElement ?? throw new InvalidOperationException($"{ElementConnectionsHost} is missing or is not of type UIElement.");
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+        }
+
+        private void OnEditorLoaded(object sender, RoutedEventArgs e)
+        {
+            // It's safe to call RegisterNavigationLayer multiple times. It only registers once for the same id.
+            RegisterNavigationLayer(this);
+            ActivateNavigationLayer(KeyboardNavigationLayer.Id);
         }
 
         private void OnEditorUnloaded(object sender, RoutedEventArgs e)
@@ -609,12 +623,12 @@ namespace Nodify
         #region Methods
 
         /// <summary>
-        /// Zoom in at the viewports center
+        /// Zoom in at the viewport's center.
         /// </summary>
         public void ZoomIn() => ZoomAtPosition(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
         /// <summary>
-        /// Zoom out at the viewports center
+        /// Zoom out at the viewport's center.
         /// </summary>
         public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), ViewportLocation + (Vector)ViewportSize / 2);
 
@@ -659,8 +673,8 @@ namespace Nodify
             if (animated && newLocation != ViewportLocation)
             {
                 BeginPanning();
-                DisablePanning = true;
-                DisableZooming = true;
+                SetCurrentValue(DisablePanningProperty, true);
+                SetCurrentValue(DisableZoomingProperty, true);
 
                 double distance = (newLocation - ViewportLocation).Length;
                 double duration = distance / (BringIntoViewSpeed + (distance / 10)) * ViewportZoom;
@@ -669,15 +683,15 @@ namespace Nodify
                 this.StartAnimation(ViewportLocationProperty, newLocation, duration, (s, e) =>
                 {
                     EndPanning();
-                    DisablePanning = false;
-                    DisableZooming = false;
+                    SetCurrentValue(DisablePanningProperty, false);
+                    SetCurrentValue(DisableZoomingProperty, false);
 
                     onFinish?.Invoke();
                 });
             }
             else
             {
-                ViewportLocation = newLocation;
+                SetCurrentValue(ViewportLocationProperty, newLocation);
                 onFinish?.Invoke();
             }
         }
@@ -688,6 +702,75 @@ namespace Nodify
         /// <param name="area">The location in graph space coordinates.</param>
         public new void BringIntoView(Rect area)
             => BringIntoView(new Point(area.X + area.Width / 2, area.Y + area.Height / 2));
+
+        /// <summary>
+        /// Ensures the specified item container is fully visible within the viewport, optionally with padding around the edges.
+        /// </summary>
+        /// <param name="container">The item container to bring into view.</param>
+        /// <param name="offsetFromEdge">The padding to apply around the container</param>
+        public void BringIntoView(Rect area, double offsetFromEdge = 32d)
+        {
+            var viewport = new Rect(ViewportLocation, ViewportSize);
+
+            area.Inflate(offsetFromEdge, offsetFromEdge);
+
+            if (!viewport.Contains(area))
+            {
+                if (viewport.IntersectsWith(area))
+                {
+                    double newX = viewport.X;
+                    double newY = viewport.Y;
+
+                    if (area.Left < viewport.Left)
+                    {
+                        newX = area.Left;
+                    }
+                    else if (area.Right > viewport.Right)
+                    {
+                        newX = area.Right - viewport.Width;
+                    }
+
+                    if (area.Top < viewport.Top)
+                    {
+                        newY = area.Top;
+                    }
+                    else if (area.Bottom > viewport.Bottom)
+                    {
+                        newY = area.Bottom - viewport.Height;
+                    }
+
+                    BringIntoView(new Point(newX, newY) + new Vector(viewport.Width / 2, viewport.Height / 2));
+                }
+                else
+                {
+                    BringIntoView(area);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset the viewport location to (0, 0) and the viewport zoom to 1.
+        /// </summary>
+        /// <param name="animated">Whether the viewport transition is animated.</param>
+        /// <param name="onFinish">The callback invoked when the viewport transition is finished.</param>
+        public void ResetViewport(bool animated = true, Action? onFinish = null)
+        {
+            BringIntoView(new Point(ViewportSize.Width / 2, ViewportSize.Height / 2), animated, () =>
+            {
+                if (animated)
+                {
+                    this.StartAnimation(ViewportZoomProperty, 1d, BringIntoViewMaxDuration, (s, e) =>
+                    {
+                        onFinish?.Invoke();
+                    });
+                }
+                else
+                {
+                    SetCurrentValue(ViewportZoomProperty, BoxValue.Double1);
+                    onFinish?.Invoke();
+                }
+            });
+        }
 
         /// <summary>
         /// Scales the viewport to fit the specified <paramref name="area"/> or all the <see cref="ItemContainer"/>s if that's possible.

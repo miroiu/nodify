@@ -36,6 +36,16 @@ namespace Nodify.Interactivity
                     e.Handled = true;   // prevent opening context menu
                 }
             }
+
+            protected override void OnKeyDown(KeyEventArgs e)
+            {
+                EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+                if (gestures.Disconnect.Matches(e.Source, e))
+                {
+                    Element.RemoveConnections();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }

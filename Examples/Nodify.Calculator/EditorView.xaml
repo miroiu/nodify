@@ -142,7 +142,7 @@
                              x:Name="Editor">
             <nodify:NodifyEditor.Resources>
                 <Style TargetType="{x:Type nodify:NodeInput}"
-                       BasedOn="{StaticResource {x:Type nodify:NodeInput}}">
+                       BasedOn="{StaticResource OriginalNodeInputStyle}">
                     <Setter Property="Header"
                             Value="{Binding}" />
                     <Setter Property="IsConnected"
@@ -166,7 +166,7 @@
                 </Style>
 
                 <Style TargetType="{x:Type nodify:NodeOutput}"
-                       BasedOn="{StaticResource {x:Type nodify:NodeOutput}}">
+                       BasedOn="{StaticResource OriginalNodeOutputStyle}">
                     <Setter Property="Header"
                             Value="{Binding}" />
                     <Setter Property="IsConnected"
@@ -235,6 +235,11 @@
                                                     Command="{Binding GroupSelectionCommand}" />
                                     </nodify:NodifyEditor.InputBindings>
 
+                                    <nodify:NodifyEditor.CommandBindings>
+                                        <CommandBinding Command="{x:Static ApplicationCommands.ContextMenu}"
+                                                        Executed="OpenContextMenu_Executed" />
+                                    </nodify:NodifyEditor.CommandBindings>
+
                                     <CompositeCollection>
                                         <nodify:DecoratorContainer DataContext="{Binding OperationsMenu}"
                                                                    Location="{Binding Location}">
@@ -251,7 +256,8 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <ItemsControl ItemsSource="{Binding Input}">
+                                <ItemsControl ItemsSource="{Binding Input}"
+                                              Focusable="False">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <nodify:NodeInput />
@@ -278,9 +284,11 @@
                                 <StackPanel>
                                     <Button Style="{StaticResource IconButton}"
                                             Content="{StaticResource PlusIcon}"
+                                            FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                                             Command="{Binding AddInputCommand}" />
                                     <Button Style="{StaticResource IconButton}"
                                             Content="{StaticResource RemoveKeyIcon}"
+                                            FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                                             Command="{Binding RemoveInputCommand}" />
                                 </StackPanel>
                             </DataTemplate>
@@ -353,8 +361,13 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
-                    <nodify:GroupingNode Header="{Binding Title}"
-                                         ActualSize="{Binding GroupSize, Mode=TwoWay}" />
+                    <nodify:GroupingNode ActualSize="{Binding GroupSize, Mode=TwoWay}">
+                        <nodify:GroupingNode.Header>
+                            <shared:EditableTextBlock Text="{Binding Title}"
+                                                      FontWeight="SemiBold"
+                                                      IsEditing="True" />
+                        </nodify:GroupingNode.Header>
+                    </nodify:GroupingNode>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationViewModel}">
@@ -370,6 +383,11 @@
                 <KeyBinding Key="C"
                             Command="{Binding GroupSelectionCommand}" />
             </nodify:NodifyEditor.InputBindings>
+
+            <nodify:NodifyEditor.CommandBindings>
+                <CommandBinding Command="{x:Static ApplicationCommands.ContextMenu}"
+                                Executed="OpenContextMenu_Executed" />
+            </nodify:NodifyEditor.CommandBindings>
 
             <nodify:NodifyEditor.Triggers>
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -401,7 +419,8 @@
                                  Opacity="0.7" />
             </Border.Background>
             <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Calculator.OperationsMenu.AvailableOperations}">
+                <ItemsControl ItemsSource="{Binding Calculator.OperationsMenu.AvailableOperations}"
+                              Focusable="False">
                     <ItemsControl.ItemContainerStyle>
                         <Style>
                             <Setter Property="FrameworkElement.Margin"
@@ -420,7 +439,9 @@
                                          Input="{Binding Input}"
                                          BorderBrush="{StaticResource AnimatedBrush}"
                                          BorderThickness="2"
-                                         MouseMove="OnNodeDrag">
+                                         MouseMove="OnNodeDrag"
+                                         Focusable="True"
+                                         KeyboardNavigation.TabNavigation="None">
                                 <nodify:Node.Output>
                                     <CompositeCollection>
                                         <sys:String>Output</sys:String>

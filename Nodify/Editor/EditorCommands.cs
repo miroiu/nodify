@@ -41,7 +41,7 @@ namespace Nodify
         /// </summary>
         public static RoutedUICommand BringIntoView { get; } = new RoutedUICommand("Bring location into view", nameof(BringIntoView), typeof(EditorCommands), new InputGestureCollection
         {
-            EditorGestures.Mappings.Editor.ResetViewportLocation
+            EditorGestures.Mappings.Editor.ResetViewport
         });
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Nodify
                         editor.BringIntoView(Point.Parse(str));
                         break;
                     default:
-                        editor.BringIntoView(new Point());
+                        editor.ResetViewport();
                         break;
                 }
             }

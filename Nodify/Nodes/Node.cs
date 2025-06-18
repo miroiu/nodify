@@ -169,6 +169,7 @@ namespace Nodify
         static Node()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(typeof(Node)));
+            FocusableProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(BoxValue.False));
         }
 
         public Node()

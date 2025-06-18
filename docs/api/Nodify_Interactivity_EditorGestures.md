@@ -122,3 +122,11 @@ public void Apply(EditorGestures gestures);
   
 `gestures` [EditorGestures](Nodify_Interactivity_EditorGestures): The gestures to copy.  
   
+### Unbind()  
+  
+Unbinds all the gestures used by the editor and its controls.  
+  
+```csharp  
+public void Unbind();  
+```  
+  

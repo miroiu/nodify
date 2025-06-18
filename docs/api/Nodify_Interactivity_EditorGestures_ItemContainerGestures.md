@@ -64,3 +64,9 @@ public void Apply(EditorGestures.ItemContainerGestures gestures);
   
 `gestures` [EditorGestures.ItemContainerGestures](Nodify_Interactivity_EditorGestures_ItemContainerGestures)  
   
+### Unbind()  
+  
+```csharp  
+public void Unbind();  
+```  
+  

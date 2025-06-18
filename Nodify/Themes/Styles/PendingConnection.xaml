@@ -5,8 +5,6 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <Style TargetType="{x:Type local:PendingConnection}">
-        <Setter Property="IsHitTestVisible"
-                Value="False" />
         <Setter Property="Background"
                 Value="#121212" />
         <Setter Property="Foreground"

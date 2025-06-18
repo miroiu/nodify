@@ -6,7 +6,7 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Minimap](Nodify_Minimap)  
   
-**References:** [InputProcessor](Nodify_Interactivity_InputProcessor), [MinimapItem](Nodify_MinimapItem), [NodifyEditor](Nodify_NodifyEditor), [MinimapState.Panning](Nodify_Interactivity_MinimapState_Panning), [ZoomEventArgs](Nodify_Events_ZoomEventArgs), [ZoomEventHandler](Nodify_Events_ZoomEventHandler), [MinimapState.Zooming](Nodify_Interactivity_MinimapState_Zooming)  
+**References:** [InputProcessor](Nodify_Interactivity_InputProcessor), [MinimapState.KeyboardNavigation](Nodify_Interactivity_MinimapState_KeyboardNavigation), [MinimapItem](Nodify_MinimapItem), [NodifyEditor](Nodify_NodifyEditor), [MinimapState.Panning](Nodify_Interactivity_MinimapState_Panning), [ZoomEventArgs](Nodify_Events_ZoomEventArgs), [ZoomEventHandler](Nodify_Events_ZoomEventHandler), [MinimapState.Zooming](Nodify_Interactivity_MinimapState_Zooming)  
   
 A minimap control that can position the viewport, and zoom in and out.  
   
@@ -129,6 +129,18 @@ public Point MouseLocation { get; set; }
 **Property Value**  
   
 [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point)  
+  
+### NavigationStepSize  
+  
+Defines the distance to pan when using directional input (such as arrow keys).  
+  
+```csharp  
+public static double NavigationStepSize { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
 ### ResizeToViewport  
   
@@ -327,6 +339,12 @@ protected override void OnMouseWheel(MouseWheelEventArgs e);
   
 `e` [MouseWheelEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.MouseWheelEventArgs)  
   
+### ResetViewport()  
+  
+```csharp  
+public void ResetViewport();  
+```  
+  
 ### SetViewportLocation(Point)  
   
 ```csharp  
@@ -349,6 +367,18 @@ public void UpdatePanning(Point location);
   
 `location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): The location to pan the viewport to.  
   
+### UpdatePanning(Vector)  
+  
+Pans the viewport by the specified amount.  
+  
+```csharp  
+public void UpdatePanning(Vector amount);  
+```  
+  
+**Parameters**  
+  
+`amount` [Vector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Vector): The amount to pan the viewport.  
+  
 ### ZoomAtPosition(Double, Point)  
   
 Zoom at the specified location in graph space coordinates.  
@@ -362,6 +392,22 @@ public void ZoomAtPosition(double zoom, Point location);
 `zoom` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double): The zoom factor.  
   
 `location` [Point](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Point): The location to focus when zooming.  
+  
+### ZoomIn()  
+  
+Zoom in at the viewport's center.  
+  
+```csharp  
+public void ZoomIn();  
+```  
+  
+### ZoomOut()  
+  
+Zoom out at the viewport's center.  
+  
+```csharp  
+public void ZoomOut();  
+```  
   
 ## Events  
   

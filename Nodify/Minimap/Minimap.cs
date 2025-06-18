@@ -116,12 +116,21 @@ namespace Nodify
         /// </summary>
         public static bool AllowPanningCancellation { get; set; } = true;
 
+        /// <summary>
+        /// Defines the distance to pan when using directional input (such as arrow keys).
+        /// </summary>
+        public static double NavigationStepSize { get; set; } = 50d;
+
         private Point _initialViewportLocation;
 
         static Minimap()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(typeof(Minimap)));
-            ClipToBoundsProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.True));
+            FocusableProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(BoxValue.True));
+
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.ControlTabNavigationProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(Minimap), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
         }
 
         public Minimap()
@@ -218,7 +227,7 @@ namespace Nodify
         /// <param name="location">The initial location where panning starts, in graph space coordinates.</param>
         public void BeginPanning(Point location)
         {
-            if (IsPanning)
+            if (IsPanning || IsReadOnly)
             {
                 return;
             }
@@ -236,6 +245,23 @@ namespace Nodify
         {
             Debug.Assert(IsPanning);
             SetViewportLocation(location);
+        }
+
+        /// <summary>
+        /// Pans the viewport by the specified amount.
+        /// </summary>
+        /// <param name="amount">The amount to pan the viewport.</param>
+        /// <remarks>
+        /// This method adjusts the current <see cref="ViewportLocation"/> incrementally based on the provided amount.
+        /// </remarks>
+        public void UpdatePanning(Vector amount)
+        {
+            if (IsReadOnly)
+            {
+                return;
+            }
+
+            ViewportLocation -= amount;
         }
 
         /// <summary>
@@ -273,29 +299,6 @@ namespace Nodify
             }
         }
 
-        #endregion
-
-        /// <summary>
-        /// Zoom at the specified location in graph space coordinates.
-        /// </summary>
-        /// <param name="zoom">The zoom factor.</param>
-        /// <param name="location">The location to focus when zooming.</param>
-        public void ZoomAtPosition(double zoom, Point location)
-        {
-            if (!ResizeToViewport)
-            {
-                SetViewportLocation(location);
-            }
-
-            var viewportLocation = ViewportLocation + (Vector)ViewportSize / 2;
-            var args = new ZoomEventArgs(zoom, viewportLocation)
-            {
-                RoutedEvent = ZoomEvent,
-                Source = this
-            };
-            RaiseEvent(args);
-        }
-
         protected void SetViewportLocation(Point location)
         {
             var position = location - new Vector(ViewportSize.Width / 2, ViewportSize.Height / 2) + (Vector)Extent.Location;
@@ -311,6 +314,70 @@ namespace Nodify
 
             ViewportLocation = position;
         }
+
+        #endregion
+
+        #region Zooming
+
+        /// <summary>
+        /// Zoom at the specified location in graph space coordinates.
+        /// </summary>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="location">The location to focus when zooming.</param>
+        public void ZoomAtPosition(double zoom, Point location)
+        {
+            if (IsReadOnly)
+            {
+                return;
+            }
+
+            if (!ResizeToViewport)
+            {
+                SetViewportLocation(location);
+            }
+
+            var viewportLocation = ViewportLocation + (Vector)ViewportSize / 2;
+            var args = new ZoomEventArgs(zoom, viewportLocation)
+            {
+                RoutedEvent = ZoomEvent,
+                Source = this
+            };
+            RaiseEvent(args);
+        }
+
+        /// <summary>
+        /// Zoom in at the viewport's center.
+        /// </summary>
+        public void ZoomIn() => SetZoom(Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine));
+
+        /// <summary>
+        /// Zoom out at the viewport's center.
+        /// </summary>
+        public void ZoomOut() => SetZoom(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine));
+
+        public void ResetViewport()
+        {
+            SetCurrentValue(ViewportLocationProperty, new Point(0, 0));
+            var args = new ZoomEventArgs(1d, new Point(ViewportSize.Width / 2, ViewportSize.Height / 2))
+            {
+                RoutedEvent = ZoomEvent,
+                Source = this
+            };
+            RaiseEvent(args);
+        }
+
+        private void SetZoom(double zoom)
+        {
+            var viewportLocation = ViewportLocation + (Vector)ViewportSize / 2;
+            var args = new ZoomEventArgs(zoom, viewportLocation)
+            {
+                RoutedEvent = ZoomEvent,
+                Source = this
+            };
+            RaiseEvent(args);
+        }
+
+        #endregion
 
         /// <summary>
         /// Translates the event location to graph space coordinates (relative to the <see cref="ItemsHost" />).

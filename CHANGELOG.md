@@ -4,7 +4,27 @@
 
 > - Breaking Changes:
 >	- Added ProcessHandledEvents to IInputHandler and removed it from InputProcessor
+>	- Renamed EditorGestures.Editor.ResetViewportLocation to EditorGestures.Editor.ResetViewport
 > - Features:
+>	- Introduced a new BringIntoView method overload in NodifyEditor that accepts an offset from the viewport edges
+>	- Added BringIntoViewEdgeOffset to NodifyEditor to control the viewport edge offset when bringing the focused element into view
+>	- Added ResetViewport to NodifyEditor to reset the viewport's location and zoom
+>	- Improved tab and directional navigation, ensuring that focused elements are automatically brought into view
+>	- Added keyboard navigation layers for nodes, connections and decorators; restricting keyboard navigation to the active layer
+>	- Added ActiveNavigationLayer, ActivateNextNavigationLayer, ActivatePreviousNavigationLayer, RegisterNavigationLayer, RemoveNavigationLayer and ActivateNavigationLayer to NodifyEditor for keyboard layers management
+>	- Added KeyboardNavigationLayer property to NodifyEditor that allows navigating through the ItemContainers
+>	- Added AutoRegisterConnectionsLayer, AutoRegisterDecoratorsLayer, AutoFocusFirstElement, AutoPanOnNodeFocus, PanViewportOnKeyboardDrag and MinimumNavigationStepSize to NodifyEditor
+>	- Added EditorGestures.Editor.Keyboard for keyboard navigation gestures
+>	- Added FindNextFocusTarget, OnElementFocused and OnKeyboardNavigationLayerActivated virtual methods to NodifyEditor
+>	- Added new gestures for keyboard navigation available in EditorGestures.Editor.Keyboard
+>	- Added ToggleContentSelection to GroupingNode and its corresponding gesture to toggle the selection of nodes inside the group
+>	- Added ZoomIn, ZoomOut and ResetViewport methods to the Minimap control
+>	- Added ZoomIn, ZoomOut, ResetViewport and Pan gestures to EditorGestures.Minimap
+>	- Added NavigationStepSize static property to Minimap
+>	- Added Unbind to all gestures inside EditorGestures
+>	- Added the KeyComboGesture that requires a trigger key to be held down before pressing a combo key
+>	- Added FocusVisualPen and FocusVisualPadding dependency properties to BaseConnection
+>	- Added default focus visuals for base editor controls that can be included by referencing the FocusVisual.xaml file
 > - Bugfixes:
 
 #### **Version 7.0.4**

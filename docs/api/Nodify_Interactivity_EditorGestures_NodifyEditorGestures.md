@@ -6,7 +6,7 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [EditorGestures.NodifyEditorGestures](Nodify_Interactivity_EditorGestures_NodifyEditorGestures)  
   
-**References:** [EditorGestures](Nodify_Interactivity_EditorGestures), [InputGestureRef](Nodify_Interactivity_InputGestureRef), [EditorGestures.SelectionGestures](Nodify_Interactivity_EditorGestures_SelectionGestures)  
+**References:** [EditorGestures](Nodify_Interactivity_EditorGestures), [InputGestureRef](Nodify_Interactivity_InputGestureRef), [NodifyEditorGestures.KeyboardGestures](Nodify_Interactivity_NodifyEditorGestures_KeyboardGestures), [EditorGestures.SelectionGestures](Nodify_Interactivity_EditorGestures_SelectionGestures)  
   
 ```csharp  
 public class NodifyEditorGestures  
@@ -51,6 +51,16 @@ public InputGestureRef FitToScreen { get; set; }
 **Property Value**  
   
 [InputGestureRef](Nodify_Interactivity_InputGestureRef)  
+  
+### Keyboard  
+  
+```csharp  
+public KeyboardGestures Keyboard { get; set; }  
+```  
+  
+**Property Value**  
+  
+[NodifyEditorGestures.KeyboardGestures](Nodify_Interactivity_NodifyEditorGestures_KeyboardGestures)  
   
 ### Pan  
   
@@ -102,10 +112,20 @@ public InputGestureRef PushItems { get; set; }
   
 [InputGestureRef](Nodify_Interactivity_InputGestureRef)  
   
-### ResetViewportLocation  
+### ResetViewport  
   
 ```csharp  
-public InputGestureRef ResetViewportLocation { get; set; }  
+public InputGestureRef ResetViewport { get; set; }  
+```  
+  
+**Property Value**  
+  
+[InputGestureRef](Nodify_Interactivity_InputGestureRef)  
+  
+### SelectAll  
+  
+```csharp  
+public InputGestureRef SelectAll { get; set; }  
 ```  
   
 **Property Value**  
@@ -163,4 +183,10 @@ public void Apply(EditorGestures.NodifyEditorGestures gestures);
 **Parameters**  
   
 `gestures` [EditorGestures.NodifyEditorGestures](Nodify_Interactivity_EditorGestures_NodifyEditorGestures)  
+  
+### Unbind()  
+  
+```csharp  
+public void Unbind();  
+```  
   
