@@ -4,7 +4,7 @@
   
 **Assembly:** Nodify  
   
-**References:** [ItemContainer](Nodify_ItemContainer), [NodifyEditor](Nodify_NodifyEditor)  
+**References:** [ConnectionContainer](Nodify_ConnectionContainer), [ItemContainer](Nodify_ItemContainer), [NodifyEditor](Nodify_NodifyEditor)  
   
 Available selection logic.  
   

@@ -26,6 +26,16 @@ public Zooming(Minimap minimap);
   
 ## Methods  
   
+### OnKeyDown(KeyEventArgs)  
+  
+```csharp  
+protected override void OnKeyDown(KeyEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)  
+  
 ### OnMouseWheel(MouseWheelEventArgs)  
   
 ```csharp  

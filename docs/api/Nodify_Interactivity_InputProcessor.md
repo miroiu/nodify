@@ -26,18 +26,6 @@ public InputProcessor();
   
 ## Properties  
   
-### ProcessHandledEvents  
-  
-Gets or sets a value indicating whether events that have been handled should be processed.  
-  
-```csharp  
-public bool ProcessHandledEvents { get; set; }  
-```  
-  
-**Property Value**  
-  
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
-  
 ### RequiresInputCapture  
   
 Gets a value indicating whether the processor has ongoing interactions that require input capture to remain active.  

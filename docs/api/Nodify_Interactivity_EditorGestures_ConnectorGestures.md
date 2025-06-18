@@ -64,3 +64,9 @@ public void Apply(EditorGestures.ConnectorGestures gestures);
   
 `gestures` [EditorGestures.ConnectorGestures](Nodify_Interactivity_EditorGestures_ConnectorGestures)  
   
+### Unbind()  
+  
+```csharp  
+public void Unbind();  
+```  
+  

@@ -6,6 +6,8 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Shape](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Shapes.Shape) → [BaseConnection](Nodify_BaseConnection)  
   
+**Implements:** [IKeyboardFocusTarget\<FrameworkElement\>](Nodify_Interactivity_IKeyboardFocusTarget_TElement_)  
+  
 **Derived:** [LineConnection](Nodify_LineConnection), [Connection](Nodify_Connection)  
   
 **References:** [ArrowHeadEnds](Nodify_ArrowHeadEnds), [ArrowHeadShape](Nodify_ArrowHeadShape), [ConnectionDirection](Nodify_ConnectionDirection), [ConnectionEventArgs](Nodify_Events_ConnectionEventArgs), [ConnectionEventHandler](Nodify_Events_ConnectionEventHandler), [ConnectionOffsetMode](Nodify_ConnectionOffsetMode), [CuttingLine](Nodify_CuttingLine), [ConnectionState.Disconnect](Nodify_Interactivity_ConnectionState_Disconnect), [NodifyEditor](Nodify_NodifyEditor), [ConnectionState.Split](Nodify_Interactivity_ConnectionState_Split)  
@@ -13,7 +15,7 @@
 Represents the base class for shapes that are drawn from a [BaseConnection.Source](Nodify_BaseConnection#source) point to a [BaseConnection.Target](Nodify_BaseConnection#target) point.  
   
 ```csharp  
-public abstract class BaseConnection : Shape  
+public abstract class BaseConnection : Shape, IKeyboardFocusTarget<FrameworkElement>  
 ```  
   
 ## Constructors  
@@ -146,6 +148,42 @@ public ICommand DisconnectCommand { get; set; }
 **Property Value**  
   
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)  
+  
+### FocusVisualPadding  
+  
+The space between the focus visual and the connection geometry.  
+  
+```csharp  
+public double FocusVisualPadding { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
+### FocusVisualPen  
+  
+The pen used to render the focus visual.  
+  
+```csharp  
+public Pen FocusVisualPen { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Pen](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Pen)  
+  
+### FocusVisualPenKey  
+  
+The key used to retrieve the [BaseConnection.FocusVisualPen](Nodify_BaseConnection#focusvisualpen) resource.  
+  
+```csharp  
+public static ResourceKey FocusVisualPenKey { get; set; }  
+```  
+  
+**Property Value**  
+  
+[ResourceKey](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.ResourceKey)  
   
 ### FontFamily  
   

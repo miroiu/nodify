@@ -6,14 +6,14 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ItemsControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ItemsControl) → [Selector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.Selector) → [MultiSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.MultiSelector) → [NodifyEditor](Nodify_NodifyEditor)  
   
-**Implements:** [IScrollInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.IScrollInfo)  
+**Implements:** [IKeyboardNavigationLayer](Nodify_Interactivity_IKeyboardNavigationLayer), [IKeyboardNavigationLayerGroup](Nodify_Interactivity_IKeyboardNavigationLayerGroup), [IScrollInfo](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Primitives.IScrollInfo)  
   
-**References:** [Alignment](Nodify_Alignment), [BaseConnection](Nodify_BaseConnection), [Connection](Nodify_Connection), [Connector](Nodify_Connector), [EditorState.Cutting](Nodify_Interactivity_EditorState_Cutting), [CuttingLine](Nodify_CuttingLine), [DecoratorContainer](Nodify_DecoratorContainer), [EditorCommands](Nodify_EditorCommands), [EditorGestures](Nodify_Interactivity_EditorGestures), [GroupingNode](Nodify_GroupingNode), [InputProcessor](Nodify_Interactivity_InputProcessor), [ItemContainer](Nodify_ItemContainer), [ItemsMovedEventArgs](Nodify_Events_ItemsMovedEventArgs), [ItemsMovedEventHandler](Nodify_Events_ItemsMovedEventHandler), [Minimap](Nodify_Minimap), [EditorState.Panning](Nodify_Interactivity_EditorState_Panning), [EditorState.PanningWithMouseWheel](Nodify_Interactivity_EditorState_PanningWithMouseWheel), [PendingConnection](Nodify_PendingConnection), [EditorState.PushingItems](Nodify_Interactivity_EditorState_PushingItems), [EditorState.Selecting](Nodify_Interactivity_EditorState_Selecting), [SelectionType](Nodify_SelectionType), [EditorState.Zooming](Nodify_Interactivity_EditorState_Zooming)  
+**References:** [Alignment](Nodify_Alignment), [BaseConnection](Nodify_BaseConnection), [Connection](Nodify_Connection), [ConnectionsMultiSelector](Nodify_ConnectionsMultiSelector), [Connector](Nodify_Connector), [EditorState.Cutting](Nodify_Interactivity_EditorState_Cutting), [CuttingLine](Nodify_CuttingLine), [DecoratorContainer](Nodify_DecoratorContainer), [DecoratorsControl](Nodify_DecoratorsControl), [EditorCommands](Nodify_EditorCommands), [EditorGestures](Nodify_Interactivity_EditorGestures), [GroupingNode](Nodify_GroupingNode), [IKeyboardFocusTarget\<ItemContainer\>](Nodify_Interactivity_IKeyboardFocusTarget_TElement_), [InputProcessor](Nodify_Interactivity_InputProcessor), [ItemContainer](Nodify_ItemContainer), [ItemsMovedEventArgs](Nodify_Events_ItemsMovedEventArgs), [ItemsMovedEventHandler](Nodify_Events_ItemsMovedEventHandler), [EditorState.KeyboardNavigation](Nodify_Interactivity_EditorState_KeyboardNavigation), [KeyboardNavigationLayerId](Nodify_Interactivity_KeyboardNavigationLayerId), [Minimap](Nodify_Minimap), [EditorState.Panning](Nodify_Interactivity_EditorState_Panning), [EditorState.PanningWithMouseWheel](Nodify_Interactivity_EditorState_PanningWithMouseWheel), [PendingConnection](Nodify_PendingConnection), [EditorState.PushingItems](Nodify_Interactivity_EditorState_PushingItems), [EditorState.Selecting](Nodify_Interactivity_EditorState_Selecting), [SelectionType](Nodify_SelectionType), [EditorState.Zooming](Nodify_Interactivity_EditorState_Zooming)  
   
 Groups [ItemContainer](Nodify_ItemContainer)s and [Connection](Nodify_Connection)s in an area that you can drag, zoom and select.  
   
 ```csharp  
-public class NodifyEditor : MultiSelector, IScrollInfo  
+public class NodifyEditor : MultiSelector, IKeyboardNavigationLayer, IKeyboardNavigationLayerGroup, IScrollInfo  
 ```  
   
 ## Constructors  
@@ -196,6 +196,16 @@ protected static DependencyPropertyKey ViewportTransformPropertyKey;
   
 ## Properties  
   
+### ActiveNavigationLayer  
+  
+```csharp  
+public virtual IKeyboardNavigationLayer ActiveNavigationLayer { get; set; }  
+```  
+  
+**Property Value**  
+  
+[IKeyboardNavigationLayer](Nodify_Interactivity_IKeyboardNavigationLayer)  
+  
 ### AllowCuttingCancellation  
   
 Gets or sets whether cancelling a cutting operation is allowed (see Nodify.Interactivity.EditorGestures.NodifyEditorGestures.CancelAction).  
@@ -256,6 +266,18 @@ public static bool AllowSelectionCancellation { get; set; }
   
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
+### AutoFocusFirstElement  
+  
+Automatically focus the first container when the navigation layer changes or the editor gets focused.  
+  
+```csharp  
+public static bool AutoFocusFirstElement { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### AutoPanEdgeDistance  
   
 Gets or sets the maximum distance in pixels from the edge of the editor that will trigger auto-panning.  
@@ -280,12 +302,60 @@ public static double AutoPanningTickRate { get; set; }
   
 [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
+### AutoPanOnNodeFocus  
+  
+Automatically pan the viewport when a node is focused via keyboard navigation.  
+  
+```csharp  
+public static bool AutoPanOnNodeFocus { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### AutoPanSpeed  
   
 Gets or sets the speed used when auto-panning scaled by [NodifyEditor.AutoPanningTickRate](Nodify_NodifyEditor#autopanningtickrate)  
   
 ```csharp  
 public double AutoPanSpeed { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
+### AutoRegisterConnectionsLayer  
+  
+Automatically registers the connectors layer for keyboard navigation.  
+  
+```csharp  
+public static bool AutoRegisterConnectionsLayer { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### AutoRegisterDecoratorsLayer  
+  
+Automatically registers the decorators layer for keyboard navigation.  
+  
+```csharp  
+public static bool AutoRegisterDecoratorsLayer { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### BringIntoViewEdgeOffset  
+  
+Gets or sets the default viewport edge offset applied when bringing an item into view as a result of keyboard focus.  
+  
+```csharp  
+public static double BringIntoViewEdgeOffset { get; set; }  
 ```  
   
 **Property Value**  
@@ -813,12 +883,35 @@ public ICommand ItemsSelectStartedCommand { get; set; }
   
 [ICommand](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.ICommand)  
   
+### KeyboardNavigationLayer  
+  
+```csharp  
+public IKeyboardNavigationLayer KeyboardNavigationLayer { get; set; }  
+```  
+  
+**Property Value**  
+  
+[IKeyboardNavigationLayer](Nodify_Interactivity_IKeyboardNavigationLayer)  
+  
 ### MaxViewportZoom  
   
 Gets or sets the maximum zoom factor of the viewport  
   
 ```csharp  
 public double MaxViewportZoom { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
+### MinimumNavigationStepSize  
+  
+Defines the minimum distance to move or navigate when using directional input (such as arrow keys), scaled by the [NodifyEditor.ViewportZoom](Nodify_NodifyEditor#viewportzoom).
+            If the [NodifyEditor.GridCellSize](Nodify_NodifyEditor#gridcellsize) is smaller than this value, the movement step is increased to the nearest greater multiple of the [NodifyEditor.GridCellSize](Nodify_NodifyEditor#gridcellsize).  
+  
+```csharp  
+public static double MinimumNavigationStepSize { get; set; }  
 ```  
   
 **Property Value**  
@@ -886,6 +979,18 @@ public static double OptimizeRenderingZoomOutPercent { get; set; }
 **Property Value**  
   
 [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
+### PanViewportOnKeyboardDrag  
+  
+Indicates whether the viewport should automatically pan to follow elements moved via keyboard dragging.  
+  
+```csharp  
+public static bool PanViewportOnKeyboardDrag { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
 ### PendingConnection  
   
@@ -1095,6 +1200,40 @@ public double ViewportZoom { get; set; }
   
 ## Methods  
   
+### ActivateNavigationLayer(KeyboardNavigationLayerId)  
+  
+```csharp  
+public virtual bool ActivateNavigationLayer(KeyboardNavigationLayerId layerId);  
+```  
+  
+**Parameters**  
+  
+`layerId` [KeyboardNavigationLayerId](Nodify_Interactivity_KeyboardNavigationLayerId)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### ActivateNextNavigationLayer()  
+  
+```csharp  
+public virtual bool ActivateNextNavigationLayer();  
+```  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### ActivatePreviousNavigationLayer()  
+  
+```csharp  
+public virtual bool ActivatePreviousNavigationLayer();  
+```  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### AlignContainers(IEnumerable\<ItemContainer\>, Alignment, ItemContainer)  
   
 Aligns a collection of containers based on the specified alignment.  
@@ -1237,7 +1376,7 @@ public void BringIntoView(Point point, bool animated = true, Action onFinish = n
   
 ### BringIntoView(Rect)  
   
-Moves the viewport center at the center of the specified area.  
+Ensures the specified item container is fully visible within the viewport, optionally with padding around the edges.  
   
 ```csharp  
 public void BringIntoView(Rect area);  
@@ -1246,6 +1385,18 @@ public void BringIntoView(Rect area);
 **Parameters**  
   
 `area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect): The location in graph space coordinates.  
+  
+### BringIntoView(Rect, Double)  
+  
+```csharp  
+public void BringIntoView(Rect area, double offsetFromEdge = 32d);  
+```  
+  
+**Parameters**  
+  
+`area` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)  
+  
+`offsetFromEdge` [Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
   
 ### CancelCutting()  
   
@@ -1332,6 +1483,22 @@ Completes the selection operation and applies any pending changes.
 public void EndSelecting();  
 ```  
   
+### FindNextFocusTarget(ItemContainer, TraversalRequest)  
+  
+```csharp  
+protected virtual ItemContainer FindNextFocusTarget(ItemContainer currentContainer, TraversalRequest request);  
+```  
+  
+**Parameters**  
+  
+`currentContainer` [ItemContainer](Nodify_ItemContainer)  
+  
+`request` [TraversalRequest](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.TraversalRequest)  
+  
+**Returns**  
+  
+[ItemContainer](Nodify_ItemContainer)  
+  
 ### FitToScreen(Rect?)  
   
 Scales the viewport to fit the specified area or all the [ItemContainer](Nodify_ItemContainer)s if that's possible.  
@@ -1353,6 +1520,16 @@ protected override DependencyObject GetContainerForItemOverride();
 **Returns**  
   
 [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject)  
+  
+### GetEnumerator()  
+  
+```csharp  
+public virtual IEnumerator<IKeyboardNavigationLayer> GetEnumerator();  
+```  
+  
+**Returns**  
+  
+[IEnumerator\<IKeyboardNavigationLayer\>](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerator-1)  
   
 ### GetLocationInsideEditor(Point, UIElement)  
   
@@ -1440,11 +1617,69 @@ Locks the position of the [NodifyEditor.SelectedContainers](Nodify_NodifyEditor#
 public void LockSelection();  
 ```  
   
+### MoveFocus(FocusNavigationDirection)  
+  
+```csharp  
+public bool MoveFocus(FocusNavigationDirection direction);  
+```  
+  
+**Parameters**  
+  
+`direction` [FocusNavigationDirection](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.FocusNavigationDirection)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### MoveFocus(TraversalRequest)  
+  
+```csharp  
+public bool MoveFocus(TraversalRequest request);  
+```  
+  
+**Parameters**  
+  
+`request` [TraversalRequest](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.TraversalRequest)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
 ### OnApplyTemplate()  
   
 ```csharp  
 public override void OnApplyTemplate();  
 ```  
+  
+### OnElementFocused(IKeyboardFocusTarget\<ItemContainer\>)  
+  
+```csharp  
+protected virtual void OnElementFocused(IKeyboardFocusTarget<ItemContainer> target);  
+```  
+  
+**Parameters**  
+  
+`target` [IKeyboardFocusTarget\<ItemContainer\>](Nodify_Interactivity_IKeyboardFocusTarget_TElement_)  
+  
+### OnGotKeyboardFocus(KeyboardFocusChangedEventArgs)  
+  
+```csharp  
+protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [KeyboardFocusChangedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyboardFocusChangedEventArgs)  
+  
+### OnKeyboardNavigationLayerActivated(IKeyboardNavigationLayer)  
+  
+```csharp  
+protected virtual void OnKeyboardNavigationLayerActivated(IKeyboardNavigationLayer activeLayer);  
+```  
+  
+**Parameters**  
+  
+`activeLayer` [IKeyboardNavigationLayer](Nodify_Interactivity_IKeyboardNavigationLayer)  
   
 ### OnKeyDown(KeyEventArgs)  
   
@@ -1465,6 +1700,16 @@ protected override void OnKeyUp(KeyEventArgs e);
 **Parameters**  
   
 `e` [KeyEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyEventArgs)  
+  
+### OnLostKeyboardFocus(KeyboardFocusChangedEventArgs)  
+  
+```csharp  
+protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e);  
+```  
+  
+**Parameters**  
+  
+`e` [KeyboardFocusChangedEventArgs](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Input.KeyboardFocusChangedEventArgs)  
   
 ### OnLostMouseCapture(MouseEventArgs)  
   
@@ -1554,6 +1799,48 @@ Updates the [NodifyEditor.ViewportSize](Nodify_NodifyEditor#viewportsize) and ra
 ```csharp  
 protected void OnViewportUpdated();  
 ```  
+  
+### RegisterNavigationLayer(IKeyboardNavigationLayer)  
+  
+```csharp  
+public virtual bool RegisterNavigationLayer(IKeyboardNavigationLayer layer);  
+```  
+  
+**Parameters**  
+  
+`layer` [IKeyboardNavigationLayer](Nodify_Interactivity_IKeyboardNavigationLayer)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### RemoveNavigationLayer(KeyboardNavigationLayerId)  
+  
+```csharp  
+public virtual bool RemoveNavigationLayer(KeyboardNavigationLayerId layerId);  
+```  
+  
+**Parameters**  
+  
+`layerId` [KeyboardNavigationLayerId](Nodify_Interactivity_KeyboardNavigationLayerId)  
+  
+**Returns**  
+  
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### ResetViewport(Boolean, Action)  
+  
+Reset the viewport location to (0, 0) and the viewport zoom to 1.  
+  
+```csharp  
+public void ResetViewport(bool animated = true, Action onFinish = null);  
+```  
+  
+**Parameters**  
+  
+`animated` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean): Whether the viewport transition is animated.  
+  
+`onFinish` [Action](https://docs.microsoft.com/en-us/dotnet/api/System.Action): The callback invoked when the viewport transition is finished.  
   
 ### Select(ItemContainer)  
   
@@ -1737,7 +2024,7 @@ public void ZoomAtPosition(double zoom, Point location);
   
 ### ZoomIn()  
   
-Zoom in at the viewports center  
+Zoom in at the viewport's center.  
   
 ```csharp  
 public void ZoomIn();  
@@ -1745,13 +2032,23 @@ public void ZoomIn();
   
 ### ZoomOut()  
   
-Zoom out at the viewports center  
+Zoom out at the viewport's center.  
   
 ```csharp  
 public void ZoomOut();  
 ```  
   
 ## Events  
+  
+### ActiveNavigationLayerChanged  
+  
+```csharp  
+public virtual event Action<KeyboardNavigationLayerId> ActiveNavigationLayerChanged;  
+```  
+  
+**Event Type**  
+  
+[Action\<KeyboardNavigationLayerId\>](https://docs.microsoft.com/en-us/dotnet/api/System.Action-1)  
   
 ### ItemsMoved  
   
