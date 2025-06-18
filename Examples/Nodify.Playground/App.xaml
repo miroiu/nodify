@@ -6,14 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/FocusVisual.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Nodify.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
-
                 <ResourceDictionary>
-
                     <Style x:Key="{x:Static SystemParameters.FocusVisualStyleKey}">
                         <Setter Property="Control.Template">
                             <Setter.Value>
@@ -28,11 +21,15 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
-
-                    <Color x:Key="NodifyEditor.FocusVisualColor">DodgerBlue</Color>
-
                 </ResourceDictionary>
-
+                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/Nodify.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify;component/Themes/FocusVisual.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify.Shared;component/Themes/Nodify.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
+                <ResourceDictionary>
+                    <Color x:Key="NodifyEditor.FocusVisualColor">DodgerBlue</Color>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
