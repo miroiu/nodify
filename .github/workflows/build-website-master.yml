@@ -1,11 +1,10 @@
-name: build-website
+name: build-website-master
 
 on:
-  pull_request:
-    branches: [docs]
   push:
-    branches: [docs]
-  workflow_dispatch:
+    branches: [master]
+    paths:
+      - 'docs/**'
 
 jobs:
   gh-release:
