@@ -5,12 +5,13 @@ import type { MiddlewareHandler } from 'astro';
  */
 export const onRequest: MiddlewareHandler = async ({ request }, next) => {
   const url = new URL(request.url);
+
   if (url.pathname.includes('/wiki')) {
     const normalizedPath = url.pathname.toLowerCase().replace(/\/$/, '');
 
     if (url.pathname !== normalizedPath) {
-      url.pathname = normalizedPath;
-      return Response.redirect(url.toString(), 301);
+      const redirectUrl = `${url.origin}${normalizedPath}${url.search}`;
+      return Response.redirect(redirectUrl, 301);
     }
   }
 
