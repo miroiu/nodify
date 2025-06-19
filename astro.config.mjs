@@ -19,6 +19,14 @@ export default defineConfig({
       logo: {
         src: './src/assets/logo.svg',
       },
+      head: [
+        {
+          tag: 'script',
+          attrs: {
+            src: '/nodify/public/redirect.js',
+          },
+        },
+      ],
       credits: true,
       pagination: false,
       plugins: [starlightThemeObsidian({ graph: false, backlinks: false })],
