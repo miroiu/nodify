@@ -23,7 +23,7 @@ export default defineConfig({
         {
           tag: 'script',
           attrs: {
-            src: '/nodify/public/redirect.js',
+            src: '/nodify/redirect.js',
           },
         },
       ],
