@@ -5,17 +5,20 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "generate-docs": "node ./scripts/downloadFiles.js",
+    "build": "npm run generate-docs && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "astro": "^5.9.4",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
-    "@astrojs/check": "^0.5.10",
-    "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.5.9",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "@astrojs/starlight": "^0.34.4",
+    "@tailwindcss/vite": "^4.1.10",
+    "starlight-theme-obsidian": "^0.3.2",
+    "tailwindcss": "^4.1.10"
   }
 }
