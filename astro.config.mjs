@@ -9,10 +9,10 @@ export default defineConfig({
   output: 'static',
   site: 'https://miroiu.github.io',
   base: '/nodify',
-  // build: {
-  //   format: 'file',
-  // },
-  // trailingSlash: 'never',
+  build: {
+    format: 'file',
+  },
+  trailingSlash: 'never',
   integrations: [
     starlight({
       title: 'Nodify',
@@ -27,6 +27,7 @@ export default defineConfig({
       },
       components: {
         EditLink: './src/components/EditLink.astro',
+        SiteTitle: './src/components/SiteTitle.astro',
       },
       social: [
         {
@@ -38,7 +39,6 @@ export default defineConfig({
       customCss: ['./src/styles/starlight.css'],
     }),
   ],
-
   vite: {
     plugins: [tailwindcss()],
   },
