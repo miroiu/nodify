@@ -10,8 +10,13 @@ export const onRequest: MiddlewareHandler = async ({ request }, next) => {
     const normalizedPath = url.pathname.toLowerCase().replace(/\/$/, '');
 
     if (url.pathname !== normalizedPath) {
-      const redirectUrl = `${url.origin}${normalizedPath}${url.search}`;
-      return Response.redirect(redirectUrl, 301);
+      const redirectUrl = `${normalizedPath}${url.search}`;
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: redirectUrl,
+        },
+      });
     }
   }
 
