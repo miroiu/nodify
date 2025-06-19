@@ -8,7 +8,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
   if (url.pathname.includes('wiki/') && !url.pathname.includes('.html')) {
     const redirectUrl = `${url.pathname.toLocaleLowerCase()}.html`;
-    return context.rewrite(new Request(new URL(redirectUrl, url.origin)));
+    return next(redirectUrl);
   }
 
   return next();
