@@ -25,6 +25,8 @@
 >	- Added the KeyComboGesture that requires a trigger key to be held down before pressing a combo key
 >	- Added FocusVisualPen and FocusVisualPadding dependency properties to BaseConnection
 >	- Added default focus visuals for base editor controls that can be included by referencing the FocusVisual.xaml file
+>	- Added MaxHotKeys and HotKeysDisplayMode static configuration field to PendingConnection
+>	- Added HotKeyControl with its corresponding theme resources to display the hotkeys for a pending connection
 > - Bugfixes:
 
 #### **Version 7.0.4**

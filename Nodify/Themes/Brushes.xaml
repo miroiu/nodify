@@ -266,4 +266,18 @@
                      Color="{DynamicResource MinimapItem.BackgroundColor}"
                      Opacity="0.8" />
 
+    <!--HOT KEYS-->
+
+    <SolidColorBrush x:Key="HotKey.BackgroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource HotKey.BackgroundColor}" />
+
+    <SolidColorBrush x:Key="HotKey.ForegroundBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource HotKey.ForegroundColor}" />
+
+    <SolidColorBrush x:Key="HotKey.BorderBrush"
+                     o:Freeze="True"
+                     Color="{DynamicResource HotKey.BorderColor}" />
+
 </ResourceDictionary>

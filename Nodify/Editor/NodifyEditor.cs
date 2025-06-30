@@ -1011,6 +1011,45 @@ namespace Nodify
             return (int)value / GridCellSize * GridCellSize;
         }
 
+        /// <summary>
+        /// Returns all visual elements of type <typeparamref name="T"/> that intersect with the current viewport.
+        /// The bounds of each element are determined by the provided <paramref name="getBounds"/> function.
+        /// </summary>
+        /// <typeparam name="T">The type of visual elements to search for.</typeparam>
+        /// <param name="getBounds">
+        /// A function that takes an element of type <typeparamref name="T"/> and returns its bounding rectangle (in the same coordinate space as the viewport).
+        /// </param>
+        internal IEnumerable<Connector> GetConnectorsInViewport()
+        {
+            var viewport = new Rect(ViewportLocation, ViewportSize);
+
+            var stack = new Stack<DependencyObject>();
+            stack.Push(this);
+
+            while (stack.Count > 0)
+            {
+                DependencyObject current = stack.Pop();
+                int childrenCount = VisualTreeHelper.GetChildrenCount(current);
+
+                for (int i = 0; i < childrenCount; i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+                    if (child is Connector connector && connector.Container != null && connector.Container.IsSelectableInArea(viewport, isContained: false))
+                    {
+                        connector.UpdateAnchor();
+                        if (viewport.Contains(connector.Anchor))
+                        {
+                            yield return connector;
+                            continue;
+                        }
+                    }
+
+                    stack.Push(child);
+                }
+            }
+        }
+
         #endregion
     }
 }

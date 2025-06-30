@@ -254,4 +254,18 @@
                 Value="{StaticResource MinimapItem.BackgroundBrush}" />
     </Style>
 
+    <!--HOT KEYS-->
+
+    <Style TargetType="{x:Type local:HotKeyControl}"
+           BasedOn="{StaticResource {x:Type local:HotKeyControl}}">
+        <Setter Property="Background"
+                Value="{StaticResource HotKey.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource HotKey.ForegroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource HotKey.BorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+    </Style>
+
 </ResourceDictionary>

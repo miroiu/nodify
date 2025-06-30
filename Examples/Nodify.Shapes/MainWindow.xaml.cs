@@ -12,6 +12,8 @@ namespace Nodify.Shapes
         {
             InitializeComponent();
 
+            PendingConnection.HotKeysDisplayMode = HotKeysDisplayMode.All;
+
             EventManager.RegisterClassHandler(
                     typeof(UIElement),
                     Keyboard.PreviewGotKeyboardFocusEvent,

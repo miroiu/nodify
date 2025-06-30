@@ -118,6 +118,36 @@ namespace Nodify
             return result;
         }
 
+        public static IEnumerable<T> GetIntersectingElements<T>(this UIElement container, Rect area, Func<T, Rect> getBounds)
+            where T : Visual
+        {
+            var stack = new Stack<DependencyObject>();
+            stack.Push(container);
+
+            while (stack.Count > 0)
+            {
+                DependencyObject current = stack.Pop();
+                int childrenCount = VisualTreeHelper.GetChildrenCount(current);
+
+                for (int i = 0; i < childrenCount; i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+                    if (child is T tChild)
+                    {
+                        var bounds = getBounds(tChild);
+                        if (bounds.IntersectsWith(area))
+                        {
+                            yield return tChild;
+                            continue;
+                        }
+                    }
+
+                    stack.Push(child);
+                }
+            }
+        }
+
         #region Animation
 
         public static void StartAnimation(this UIElement animatableElement, DependencyProperty dependencyProperty, Point toValue, double animationDurationSeconds, EventHandler? completedEvent = null)

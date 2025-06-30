@@ -83,4 +83,9 @@
     <Color x:Key="Minimap.ViewportBackgroundColor">#9b44dd</Color>
     <Color x:Key="MinimapItem.BackgroundColor">#FD5618</Color>
 
+    <!--HOT KEYS-->
+    <Color x:Key="HotKey.BackgroundColor">White</Color>
+    <Color x:Key="HotKey.ForegroundColor">Black</Color>
+    <Color x:Key="HotKey.BorderColor">#FD5618</Color>
+
 </ResourceDictionary>

@@ -67,6 +67,7 @@
                                      Focusable="False"
                                      Margin="5 0 0 0"
                                      VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
                                      Background="Transparent"
                                      BorderBrush="{TemplateBinding BorderBrush}"
                                      Template="{TemplateBinding ConnectorTemplate}" />
