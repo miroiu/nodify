@@ -29,6 +29,23 @@
                 <ResourceDictionary Source="pack://application:,,,/Nodify.Playground;component/Themes/Nodify.xaml" />
                 <ResourceDictionary>
                     <Color x:Key="NodifyEditor.FocusVisualColor">DodgerBlue</Color>
+
+                    <Style TargetType="{x:Type nodify:HotKeyControl}"
+                           BasedOn="{StaticResource {x:Type nodify:HotKeyControl}}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type nodify:HotKeyControl}">
+                                    <Border CornerRadius="3"
+                                            Background="OrangeRed">
+                                        <TextBlock Text="{Binding Number, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="White" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

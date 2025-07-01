@@ -228,11 +228,21 @@ namespace Nodify.Playground
 
             _advancedSettings = new List<ISettingViewModel>()
             {
+                new ProxySettingViewModel<uint>(
+                    () => Instance.MaxHotKeys,
+                    val => Instance.MaxHotKeys = val,
+                    "Max hot keys: ",
+                    "The maximum number of generated hot keys"),
+                new ProxySettingViewModel<HotKeysDisplayMode>(
+                    () => Instance.HotKeysDisplayMode,
+                    val => Instance.HotKeysDisplayMode = val,
+                    "Hot keys display mode: ",
+                    "Specifies how hotkeys are displayed for a pending connection."),
                 new ProxySettingViewModel<double>(
                     () => Instance.MouseActionSuppressionThreshold,
                     val => Instance.MouseActionSuppressionThreshold = val,
                     "Context menu suppression threshold: ",
-                    "Disable context menu after mouse moved this far"),
+                    "Disable context menu after mouse moved this far."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.PreserveSelectionOnRightClick,
                     val => Instance.PreserveSelectionOnRightClick = val,
@@ -247,7 +257,7 @@ namespace Nodify.Playground
                     () => Instance.EnableSnappingCorrection,
                     val => Instance.EnableSnappingCorrection = val,
                     "Enable snapping correction: ",
-                    "Correct the final position when moving a selection"),
+                    "Correct the final position when moving a selection."),
                 new ProxySettingViewModel<bool>(
                     () => Instance.EnableCuttingLinePreview,
                     val => Instance.EnableCuttingLinePreview = val,
@@ -713,6 +723,18 @@ namespace Nodify.Playground
         #endregion
 
         #region Advanced settings
+
+        public uint MaxHotKeys
+        {
+            get => PendingConnection.MaxHotKeys;
+            set => PendingConnection.MaxHotKeys = value;
+        }
+
+        public HotKeysDisplayMode HotKeysDisplayMode
+        {
+            get => PendingConnection.HotKeysDisplayMode;
+            set => PendingConnection.HotKeysDisplayMode = value;
+        }
 
         public bool PreserveSelectionOnRightClick
         {

@@ -426,7 +426,7 @@ namespace Nodify.Interactivity
             public ConnectorGestures()
             {
                 Disconnect = new AnyGesture(new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt), new KeyGesture(Key.Delete));
-                Connect = new MouseGesture(MouseAction.LeftClick);
+                Connect = new AnyGesture(new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Space));
                 CancelAction = new AnyGesture(new MouseGesture(MouseAction.RightClick), new KeyGesture(Key.Escape));
             }
 

@@ -1,12 +1,37 @@
 ﻿using Nodify.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace Nodify
 {
+    /// <summary>
+    /// Specifies how hotkeys are displayed for a pending connection.
+    /// </summary>
+    public enum HotKeysDisplayMode
+    {
+        /// <summary>
+        /// No hotkeys will be displayed for the pending connection.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Display hotkeys for keyboard only.
+        /// </summary>
+        Keyboard,
+
+        /// <summary>
+        /// Display hotkeys for both mouse and keyboard.
+        /// </summary>
+        All
+    }
+
     /// <summary>
     /// Represents a pending connection usually started by a <see cref="Connector"/> which invokes the <see cref="CompletedCommand"/> when completed.
     /// </summary>
@@ -230,11 +255,27 @@ namespace Nodify
         public static bool EnableHitTesting { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the maximum number of hotkeys that can be displayed for a pending connection.
+        /// </summary>
+        /// <remarks>The maximum value can be 9.</remarks>
+        public static uint MaxHotKeys { get; set; } = 9;
+
+        /// <summary>
+        /// Gets or sets whether hotkeys are enabled for pending connections.
+        /// </summary>
+        public static HotKeysDisplayMode HotKeysDisplayMode { get; set; } = HotKeysDisplayMode.Keyboard;
+
+        /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="PendingConnection"/>.
         /// </summary>
         protected NodifyEditor? Editor { get; private set; }
 
         private FrameworkElement? _connectionTarget;
+        private Connector? _hotKeysSource;
+        private readonly List<HotKeyAdorner> _hotKeysAdorners = new List<HotKeyAdorner>();
+        private AdornerLayer? _adornerLayer;
+
+        private AdornerLayer AdornerLayer => _adornerLayer ??= AdornerLayer.GetAdornerLayer(this);
 
         #endregion
 
@@ -250,11 +291,12 @@ namespace Nodify
         {
             base.OnApplyTemplate();
 
-            if(Editor != null)
+            if (Editor != null)
             {
                 Editor.RemoveHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
                 Editor.RemoveHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
                 Editor.RemoveHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
+                Editor.RemoveHandler(PreviewKeyUpEvent, new KeyEventHandler(OnKeyUp));
             }
 
             Editor = this.GetParentOfType<NodifyEditor>();
@@ -264,6 +306,8 @@ namespace Nodify
                 Editor.AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
                 Editor.AddHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
                 Editor.AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted));
+                Editor.AddHandler(PreviewKeyUpEvent, new KeyEventHandler(OnKeyUp), true);
+
                 SetAllowOnlyConnectorsAttached(Editor, AllowOnlyConnectors);
             }
         }
@@ -286,6 +330,11 @@ namespace Nodify
                 if (!e.Canceled)
                 {
                     StartedCommand?.Execute(Source);
+
+                    if (e.OriginalSource is Connector connector)
+                    {
+                        ShowHotKeys(connector);
+                    }
                 }
 
                 if (EnablePreview)
@@ -335,6 +384,7 @@ namespace Nodify
                 IsVisible = false;
 
                 SetConnectionTarget(null);
+                HideHotKeys();
 
                 if (!e.Canceled)
                 {
@@ -392,6 +442,93 @@ namespace Nodify
 
         #endregion
 
+        #region Hot Keys
+
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (_hotKeysSource is { IsPendingConnection: true })
+            {
+                int hotKey = GetHotKey(e.Key);
+
+                if (hotKey <= _hotKeysAdorners.Count)
+                {
+                    var adorner = _hotKeysAdorners.Find(x => x.Number == hotKey);
+                    if (adorner != null)
+                    {
+                        var tempConnector = _hotKeysSource;
+                        _hotKeysSource.EndConnecting(adorner.Connector);
+                        tempConnector.ReleaseMouseCapture();
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        private static int GetHotKey(Key key)
+        {
+            if (key >= Key.D1 && key <= Key.D9)
+            {
+                return key - Key.D0;
+            }
+
+            if (key >= Key.NumPad1 && key <= Key.NumPad9)
+            {
+                return key - Key.NumPad0;
+            }
+
+            return -1;
+        }
+
+        private void ShowHotKeys(Connector sourceConnector)
+        {
+            if (Editor == null
+                || AdornerLayer == null
+                || HotKeysDisplayMode == HotKeysDisplayMode.None
+                || HotKeysDisplayMode == HotKeysDisplayMode.Keyboard && !(InputManager.Current.MostRecentInputDevice is KeyboardDevice))
+            {
+                return;
+            }
+
+            _hotKeysSource = sourceConnector;
+
+            var connectCommand = Editor.ConnectionCompletedCommand ?? CompletedCommand;
+            if (connectCommand != null)
+            {
+                bool isEditorConnect = connectCommand == Editor.ConnectionCompletedCommand;
+                var connectorsInViewport = Editor.GetConnectorsInViewport();
+
+                var possibleTargets = connectorsInViewport
+                    .Where(x => isEditorConnect ? connectCommand.CanExecute((sourceConnector.DataContext, x.DataContext)) : connectCommand.CanExecute(x.DataContext))
+                    .OrderBy(x => (sourceConnector.Anchor - x.Anchor).LengthSquared)
+                    .Take((int)Math.Min(MaxHotKeys, 9));
+
+                var adorners = possibleTargets.Select((x, i) => new HotKeyAdorner(x, i + 1));
+
+                foreach (var adorner in adorners)
+                {
+                    _hotKeysAdorners.Add(adorner);
+                    AdornerLayer.Add(adorner);
+                }
+            }
+        }
+
+        private void HideHotKeys()
+        {
+            _hotKeysSource = null;
+
+            if (AdornerLayer != null)
+            {
+                foreach (var hotKeyAdorner in _hotKeysAdorners)
+                {
+                    AdornerLayer.Remove(hotKeyAdorner);
+                }
+
+                _hotKeysAdorners.Clear();
+            }
+        }
+
+        #endregion
+
         #region Helpers
 
         /// <summary>
@@ -438,5 +575,47 @@ namespace Nodify
             => GetPotentialConnector(editor, position, GetAllowOnlyConnectorsAttached(editor));
 
         #endregion
+
+        private class HotKeyAdorner : Adorner
+        {
+            private readonly HotKeyControl _hotKeyControl;
+            public Connector Connector { get; }
+            public int Number { get; }
+            private Point _offset;
+
+            public HotKeyAdorner(Connector connector, int number) : base(connector)
+            {
+                IsHitTestVisible = false;
+                Connector = connector;
+                Number = number;
+
+                _hotKeyControl = new HotKeyControl
+                {
+                    Number = number,
+                    DataContext = connector.DataContext
+                };
+
+                AddVisualChild(_hotKeyControl);
+                AddLogicalChild(_hotKeyControl);
+
+                _offset = connector.Thumb.TranslatePoint(new Point(0, 0), connector);
+            }
+
+            protected override int VisualChildrenCount => 1;
+
+            protected override Visual GetVisualChild(int index) => _hotKeyControl;
+
+            protected override Size MeasureOverride(Size constraint)
+            {
+                _hotKeyControl.Measure(constraint);
+                return _hotKeyControl.DesiredSize;
+            }
+
+            protected override Size ArrangeOverride(Size finalSize)
+            {
+                _hotKeyControl.Arrange(new Rect(_offset, finalSize));
+                return finalSize;
+            }
+        }
     }
 }
