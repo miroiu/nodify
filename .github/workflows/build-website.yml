@@ -1,11 +1,11 @@
 name: build-website
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [docs]
   push:
     branches: [docs]
-  workflow_dispatch:
 
 jobs:
   gh-release:
