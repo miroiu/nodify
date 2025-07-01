@@ -21,6 +21,8 @@
 - [EditorCommands Class](Nodify_EditorCommands)  
 - [GroupingMovementMode Enum](Nodify_GroupingMovementMode)  
 - [GroupingNode Class](Nodify_GroupingNode)  
+- [HotKeyControl Class](Nodify_HotKeyControl)  
+- [HotKeysDisplayMode Enum](Nodify_HotKeysDisplayMode)  
 - [INodifyCanvasItem Interface](Nodify_INodifyCanvasItem)  
 - [ItemContainer Class](Nodify_ItemContainer)  
 - [KnotNode Class](Nodify_KnotNode)  
