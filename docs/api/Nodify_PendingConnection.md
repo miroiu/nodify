@@ -6,7 +6,7 @@
   
 **Inheritance:** [Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object) → [DispatcherObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Threading.DispatcherObject) → [DependencyObject](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DependencyObject) → [Visual](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Visual) → [UIElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.UIElement) → [FrameworkElement](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.FrameworkElement) → [Control](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Control) → [ContentControl](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.ContentControl) → [PendingConnection](Nodify_PendingConnection)  
   
-**References:** [ConnectionDirection](Nodify_ConnectionDirection), [Connector](Nodify_Connector), [ItemContainer](Nodify_ItemContainer), [NodifyEditor](Nodify_NodifyEditor), [PendingConnectionEventArgs](Nodify_Events_PendingConnectionEventArgs), [PendingConnectionEventHandler](Nodify_Events_PendingConnectionEventHandler), [StateNode](Nodify_StateNode)  
+**References:** [ConnectionDirection](Nodify_ConnectionDirection), [Connector](Nodify_Connector), [HotKeysDisplayMode](Nodify_HotKeysDisplayMode), [ItemContainer](Nodify_ItemContainer), [NodifyEditor](Nodify_NodifyEditor), [PendingConnectionEventArgs](Nodify_Events_PendingConnectionEventArgs), [PendingConnectionEventHandler](Nodify_Events_PendingConnectionEventHandler), [StateNode](Nodify_StateNode)  
   
 Represents a pending connection usually started by a [Connector](Nodify_Connector) which invokes the [PendingConnection.CompletedCommand](Nodify_PendingConnection#completedcommand) when completed.  
   
@@ -110,6 +110,18 @@ public bool EnableSnapping { get; set; }
   
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
   
+### HotKeysDisplayMode  
+  
+Gets or sets whether hotkeys are enabled for pending connections.  
+  
+```csharp  
+public static HotKeysDisplayMode HotKeysDisplayMode { get; set; }  
+```  
+  
+**Property Value**  
+  
+[HotKeysDisplayMode](Nodify_HotKeysDisplayMode)  
+  
 ### IsVisible  
   
 Gets or sets the visibility of the connection.  
@@ -121,6 +133,18 @@ public bool IsVisible { get; set; }
 **Property Value**  
   
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean)  
+  
+### MaxHotKeys  
+  
+Gets or sets the maximum number of hotkeys that can be displayed for a pending connection.  
+  
+```csharp  
+public static uint MaxHotKeys { get; set; }  
+```  
+  
+**Property Value**  
+  
+[UInt32](https://docs.microsoft.com/en-us/dotnet/api/System.UInt32)  
   
 ### PreviewTarget  
   
