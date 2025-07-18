@@ -61,6 +61,12 @@ A: https://github.com/miroiu/nodify/issues/121
 
 ***
 
+#### Q: How can I create a custom node?
+
+A: https://github.com/miroiu/nodify/discussions/234
+
+***
+
 #### Q: How can I make the editor read-only?
 
 A: https://github.com/miroiu/nodify/issues/206
