@@ -91,6 +91,20 @@ namespace Nodify.Calculator
         public PendingConnectionViewModel PendingConnection { get; set; } = new PendingConnectionViewModel();
         public OperationsMenuViewModel OperationsMenu { get; set; }
 
+        private double _zoom = 1.0f;
+        public double Zoom
+        {
+            get => _zoom;
+            set => SetProperty(ref _zoom, value);
+        }
+
+        private Point _location;
+        public Point Location
+        {
+            get => _location;
+            set => SetProperty(ref _location, value);
+        }
+
         public INodifyCommand StartConnectionCommand { get; }
         public INodifyCommand CreateConnectionCommand { get; }
         public INodifyCommand DisconnectConnectorCommand { get; }
