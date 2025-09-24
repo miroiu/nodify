@@ -91,8 +91,15 @@ namespace Nodify
             {
                 var viewport = new Rect(ViewportLocation, ViewportSize);
                 var containers = ItemContainers;
-                containerToFocus = containers.FirstOrDefault(container => container.IsSelectableInArea(viewport, isContained: false))
-                    ?? containers.First();
+                
+                foreach (var container in containers)
+                {
+                    if (container != null && container.IsSelectableInArea(viewport, isContained: false))
+                    {
+                        containerToFocus = container;
+                        break;
+                    }
+                }
             }
 
             return containerToFocus != null;
