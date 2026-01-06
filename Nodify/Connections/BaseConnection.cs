@@ -975,6 +975,11 @@ namespace Nodify
                 (Vector sourceOffset, Vector targetOffset) = GetOffset();
                 drawingContext.DrawText(text, GetTextPosition(text, Source + sourceOffset, Target + targetOffset));
             }
+
+            if (AdornerLayer != null && Container is { IsKeyboardFocused: true })
+            {
+                AdornerLayer.Update(this);
+            }
         }
 
         internal void UpdateFocusVisual()
