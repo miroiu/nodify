@@ -7,6 +7,7 @@ namespace Nodify.Playground
     public enum ConnectionStyle
     {
         Default,
+        Oriented,
         Line,
         Circuit,
         Step
@@ -197,6 +198,16 @@ namespace Nodify.Playground
                     () => Instance.ConnectionStrokeThickness,
                     val => Instance.ConnectionStrokeThickness = val,
                     "Connection stroke thickness: "),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionSourceAngle,
+                    val => Instance.ConnectionSourceAngle = val,
+                    "Connection source angle: ",
+                    "The angle of the source connector."),
+                new ProxySettingViewModel<double>(
+                    () => Instance.ConnectionTargetAngle,
+                    val => Instance.ConnectionTargetAngle = val,
+                    "Connection target angle: ",
+                    "The angle of the source connector."),
                 new ProxySettingViewModel<double>(
                     () => Instance.ConnectionOutlineThickness,
                     val => Instance.ConnectionOutlineThickness = val,
@@ -634,6 +645,20 @@ namespace Nodify.Playground
         {
             get => _connectionTargetOffset;
             set => SetProperty(ref _connectionTargetOffset, value);
+        }
+
+        private double _connectionSourceAngle = 30;
+        public double ConnectionSourceAngle
+        {
+            get => _connectionSourceAngle;
+            set => SetProperty(ref _connectionSourceAngle, value);
+        }
+
+        private double _connectionTargetAngle = 120;
+        public double ConnectionTargetAngle
+        {
+            get => _connectionTargetAngle;
+            set => SetProperty(ref _connectionTargetAngle, value);
         }
 
         private double _connectionStrokeThickness = 3;
