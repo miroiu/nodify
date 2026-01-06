@@ -13,7 +13,7 @@ namespace Nodify
         Right
     }
 
-    public class StepConnection : LineConnection
+    public class StepConnection : LineConnection, ILinePoints<Point4>
     {
         public static readonly DependencyProperty SourcePositionProperty = DependencyProperty.Register(nameof(SourcePosition), typeof(ConnectorPosition), typeof(StepConnection), new FrameworkPropertyMetadata(ConnectorPosition.Right, FrameworkPropertyMetadataOptions.AffectsRender, OnConnectorPositionChanged));
         public static readonly DependencyProperty TargetPositionProperty = DependencyProperty.Register(nameof(TargetPosition), typeof(ConnectorPosition), typeof(StepConnection), new FrameworkPropertyMetadata(ConnectorPosition.Left, FrameworkPropertyMetadataOptions.AffectsRender, OnConnectorPositionChanged));
@@ -26,12 +26,19 @@ namespace Nodify
             connection.CoerceValue(TargetOrientationProperty);
         }
 
+        private readonly ILinePoints<Point4> AsLinePoints;
+
         static StepConnection()
         {
             SourceOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceSourceOrientation));
             TargetOrientationProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(Orientation.Horizontal, null, CoerceTargetOrientation));
             DirectionProperty.OverrideMetadata(typeof(StepConnection), new FrameworkPropertyMetadata(ConnectionDirection.Forward, null, CoerceConnectionDirection));
             NodifyEditor.CuttingConnectionTypes.Add(typeof(StepConnection));
+        }
+
+        public StepConnection()
+        {
+            AsLinePoints = this;
         }
 
         private static object CoerceSourceOrientation(DependencyObject d, object baseValue)
@@ -78,7 +85,7 @@ namespace Nodify
 
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1, p2, p3) = GetLinePoints(source, target);
+            var (p0, p1, p2, p3) = AsLinePoints.GetLinePoints(source, target);
 
             if (CornerRadius > 0)
             {
@@ -129,7 +136,7 @@ namespace Nodify
 
         protected override Point GetTextPosition(FormattedText text, Point source, Point target)
         {
-            var (p0, p1, p2, p3) = GetLinePoints(source, target);
+            var (p0, p1, p2, p3) = AsLinePoints.GetLinePoints(source, target);
 
             Vector delta1 = p1 - p0;
             Vector delta2 = p2 - p1;
@@ -154,7 +161,7 @@ namespace Nodify
 
         protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1, p2, p3) = GetLinePoints(source, target);
+            var (p0, p1, p2, p3) = AsLinePoints.GetLinePoints(source, target);
 
             double spacing = 1d / (DirectionalArrowsCount + 1);
             for (int i = 1; i <= DirectionalArrowsCount; i++)
@@ -167,7 +174,7 @@ namespace Nodify
             }
         }
 
-        private (Point P0, Point P1, Point P2, Point P3) GetLinePoints(Point source, Point target)
+        Point4 ILinePoints<Point4>.GetLinePoints(in Point source, in Point target)
         {
             var sourceDir = GetConnectorDirection(SourcePosition);
             var targetDir = GetConnectorDirection(TargetPosition);
