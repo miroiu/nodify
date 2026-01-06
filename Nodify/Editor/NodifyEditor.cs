@@ -259,8 +259,11 @@ namespace Nodify
         public static readonly DependencyProperty BringIntoViewMaxDurationProperty = DependencyProperty.Register(nameof(BringIntoViewMaxDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double1));
         public static readonly DependencyProperty DisplayConnectionsOnTopProperty = DependencyProperty.Register(nameof(DisplayConnectionsOnTop), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty ConnectionTemplateSelectorProperty = DependencyProperty.Register(nameof(ConnectionTemplateSelector), typeof(DataTemplateSelector), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorTemplateProperty = DependencyProperty.Register(nameof(DecoratorTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty DecoratorTemplateSelectorProperty = DependencyProperty.Register(nameof(DecoratorTemplateSelector), typeof(DataTemplateSelector), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+        public static readonly DependencyProperty PendingConnectionTemplateSelectorProperty = DependencyProperty.Register(nameof(PendingConnectionTemplateSelector), typeof(DataTemplateSelector), typeof(NodifyEditor));
         public static readonly DependencyProperty DecoratorContainerStyleProperty = DependencyProperty.Register(nameof(DecoratorContainerStyle), typeof(Style), typeof(NodifyEditor));
 
         /// <summary>
@@ -301,6 +304,15 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets the custom logic for choosing a template for <see cref="BaseConnection"/>.
+        /// </summary>
+        public DataTemplateSelector ConnectionTemplateSelector
+        {
+            get => (DataTemplateSelector)GetValue(ConnectionTemplateSelectorProperty);
+            set => SetValue(ConnectionTemplateSelectorProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="DecoratorContainer"/>.
         /// </summary>
         public DataTemplate DecoratorTemplate
@@ -310,12 +322,30 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets the custom logic for choosing a template for <see cref="DecoratorContainer"/>.
+        /// </summary>
+        public DataTemplateSelector DecoratorTemplateSelector
+        {
+            get => (DataTemplateSelector)GetValue(DecoratorTemplateSelectorProperty);
+            set => SetValue(DecoratorTemplateSelectorProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the <see cref="DataTemplate"/> to use for the <see cref="PendingConnection"/>.
         /// </summary>
         public DataTemplate PendingConnectionTemplate
         {
             get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
             set => SetValue(PendingConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the custom logic for choosing a template for <see cref="PendingConnection"/>.
+        /// </summary>
+        public DataTemplateSelector PendingConnectionTemplateSelector
+        {
+            get => (DataTemplateSelector)GetValue(PendingConnectionTemplateSelectorProperty);
+            set => SetValue(PendingConnectionTemplateSelectorProperty, value);
         }
 
         /// <summary>

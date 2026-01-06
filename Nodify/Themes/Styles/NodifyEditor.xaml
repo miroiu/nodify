@@ -79,6 +79,7 @@
                                                              SelectedItems="{TemplateBinding SelectedConnections}"
                                                              CanSelectMultipleItems="{TemplateBinding CanSelectMultipleConnections}"
                                                              ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                                             ItemTemplateSelector="{TemplateBinding ConnectionTemplateSelector}"
                                                              IsTabStop="False">
                                 <local:ConnectionsMultiSelector.Style>
                                     <Style TargetType="local:ConnectionsMultiSelector">
@@ -172,6 +173,7 @@
                             <local:DecoratorsControl ItemsSource="{TemplateBinding Decorators}"
                                                      ItemContainerStyle="{TemplateBinding DecoratorContainerStyle}"
                                                      ItemTemplate="{TemplateBinding DecoratorTemplate}"
+                                                     ItemTemplateSelector="{TemplateBinding DecoratorTemplateSelector}"
                                                      IsTabStop="False">
                                 <local:DecoratorsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
