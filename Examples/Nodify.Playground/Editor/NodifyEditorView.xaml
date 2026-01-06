@@ -201,6 +201,12 @@
                                    CornerRadius="{Binding ConnectionCornerRadius, Source={x:Static local:EditorSettings.Instance}}" />
         </DataTemplate>
 
+        <DataTemplate x:Key="OrientedConnectionTemplate">
+            <nodify:OrientedConnection Style="{StaticResource ConnectionStyle}"
+                                       SourceAngle="{Binding ConnectionSourceAngle, Source={x:Static local:EditorSettings.Instance}}"
+                                       TargetAngle="{Binding ConnectionTargetAngle, Source={x:Static local:EditorSettings.Instance}}"/>
+        </DataTemplate>
+
         <DataTemplate x:Key="ConnectionTemplate">
             <nodify:Connection Style="{StaticResource ConnectionStyle}" />
         </DataTemplate>
@@ -304,6 +310,11 @@
                                      Value="True">
                             <Setter Property="Background"
                                     Value="{StaticResource SmallGridLinesDrawingBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
+                                     Value="Oriented">
+                            <Setter Property="ConnectionTemplate"
+                                    Value="{StaticResource OrientedConnectionTemplate}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ConnectionStyle, Mode=TwoWay, Source={x:Static local:EditorSettings.Instance}}"
                                      Value="Line">

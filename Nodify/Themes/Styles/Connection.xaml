@@ -29,6 +29,22 @@
                 Value="20" />
     </Style>
 
+    <Style TargetType="{x:Type local:OrientedConnection}"
+           BasedOn="{StaticResource {x:Type local:BaseConnection}}">
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="Stroke"
+                Value="DodgerBlue" />
+        <Setter Property="Fill"
+                Value="DodgerBlue" />
+        <Setter Property="Spacing"
+                Value="20" />
+        <Setter Property="SourceAngle"
+                Value="0" />
+        <Setter Property="TargetAngle"
+                Value="180" />
+    </Style>
+
     <Style TargetType="{x:Type local:LineConnection}"
            BasedOn="{StaticResource {x:Type local:BaseConnection}}">
         <Setter Property="StrokeThickness"
