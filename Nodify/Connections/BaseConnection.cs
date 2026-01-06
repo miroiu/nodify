@@ -1020,7 +1020,9 @@ namespace Nodify
                 if (drawPen != null)
                 {
                     var widenPen = new Pen(null, _baseConnection.StrokeThickness + drawPen.Thickness + _baseConnection.FocusVisualPadding * 2d);
-                    drawingContext.DrawGeometry(null, drawPen, _baseConnection.DefiningGeometry.GetWidenedPathGeometry(widenPen));
+                    var geometry = _baseConnection.DefiningGeometry;
+                    var expandedGeometry = Geometry.Combine(geometry, geometry.GetWidenedPathGeometry(widenPen), GeometryCombineMode.Union, Transform.Identity);
+                    drawingContext.DrawGeometry(null, drawPen, expandedGeometry.GetOutlinedPathGeometry());
                 }
             }
         }
