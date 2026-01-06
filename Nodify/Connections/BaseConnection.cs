@@ -609,15 +609,22 @@ namespace Nodify
 
         protected virtual void DrawDirectionalArrowheadGeometry(StreamGeometryContext context, Vector direction, Point location)
         {
-            double headWidth = ArrowSize.Width;
-            double headHeight = ArrowSize.Height / 2;
+            var x = direction;
+            x.Normalize();
+            // If Normalization failed (e.g. because the vector is too small), just don't draw anything.
+#if !NETFRAMEWORK
+            if (!double.IsFinite(x.X)) return;
+#else
+            if (double.IsNaN(x.X) || double.IsInfinity(x.X)) return;
+#endif
+            var y = new Vector(x.Y, -x.X);
 
-            double angle = Math.Atan2(direction.Y, direction.X);
-            double sinT = Math.Sin(angle);
-            double cosT = Math.Cos(angle);
+            var headWidth = ArrowSize.Width * x;
+            var headHeight = ArrowSize.Height / 2 * y;
+            var headMiddle = location + headWidth;
 
-            var from = new Point(location.X + (headWidth * cosT - headHeight * sinT), location.Y + (headWidth * sinT + headHeight * cosT));
-            var to = new Point(location.X + (headWidth * cosT + headHeight * sinT), location.Y - (headHeight * cosT - headWidth * sinT));
+            var from = headMiddle + headHeight;
+            var to = headMiddle - headHeight;
 
             context.BeginFigure(location, true, true);
             context.LineTo(from, true, true);
