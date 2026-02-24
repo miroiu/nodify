@@ -462,6 +462,18 @@ public DataTemplate ConnectionTemplate { get; set; }
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
   
+### ConnectionTemplateSelector  
+  
+Gets or sets the custom logic for choosing a template for [BaseConnection](Nodify_BaseConnection).  
+  
+```csharp  
+public DataTemplateSelector ConnectionTemplateSelector { get; set; }  
+```  
+  
+**Property Value**  
+  
+[DataTemplateSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.DataTemplateSelector)  
+  
 ### CuttingCompletedCommand  
   
 Invoked when a cutting operation is completed.  
@@ -569,6 +581,18 @@ public DataTemplate DecoratorTemplate { get; set; }
 **Property Value**  
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
+  
+### DecoratorTemplateSelector  
+  
+Gets or sets the custom logic for choosing a template for [DecoratorContainer](Nodify_DecoratorContainer).  
+  
+```csharp  
+public DataTemplateSelector DecoratorTemplateSelector { get; set; }  
+```  
+  
+**Property Value**  
+  
+[DataTemplateSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.DataTemplateSelector)  
   
 ### DisableAutoPanning  
   
@@ -1015,6 +1039,18 @@ public DataTemplate PendingConnectionTemplate { get; set; }
 **Property Value**  
   
 [DataTemplate](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.DataTemplate)  
+  
+### PendingConnectionTemplateSelector  
+  
+Gets or sets the custom logic for choosing a template for [NodifyEditor.PendingConnection](Nodify_NodifyEditor#pendingconnection).  
+  
+```csharp  
+public DataTemplateSelector PendingConnectionTemplateSelector { get; set; }  
+```  
+  
+**Property Value**  
+  
+[DataTemplateSelector](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.DataTemplateSelector)  
   
 ### PushedArea  
   

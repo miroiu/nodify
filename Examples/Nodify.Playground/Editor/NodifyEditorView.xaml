@@ -77,6 +77,8 @@
                             Value="{StaticResource SquareConnectorColor}" />
                     <Setter Property="OutlineBrush"
                             Value="{StaticResource SquareConnectorOutline}" />
+                    <Setter Property="TextBackground"
+                            Value="{StaticResource SquareConnectorColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Input.Shape}"
                              Value="{x:Static local:ConnectorShape.Triangle}">
@@ -86,6 +88,8 @@
                             Value="{StaticResource TriangleConnectorColor}" />
                     <Setter Property="OutlineBrush"
                             Value="{StaticResource TriangleConnectorOutline}" />
+                    <Setter Property="TextBackground"
+                            Value="{StaticResource TriangleConnectorColor}" />
                 </DataTrigger>
                 <Trigger Property="IsMouseDirectlyOver"
                          Value="True">
@@ -129,6 +133,12 @@
                                      Opacity="0.15" />
                 </Setter.Value>
             </Setter>
+            <Setter Property="TextBackground"
+                    Value="{StaticResource Connection.StrokeBrush}" />
+            <Setter Property="TextPadding"
+                    Value="4 2" />
+            <Setter Property="TextCornerRadius"
+                    Value="3" />
             <Setter Property="ToolTip"
                     Value="Double click to split" />
             <Setter Property="Source"

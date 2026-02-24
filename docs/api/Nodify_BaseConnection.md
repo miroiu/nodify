@@ -453,6 +453,42 @@ public string Text { get; set; }
   
 [String](https://docs.microsoft.com/en-us/dotnet/api/System.String)  
   
+### TextBackground  
+  
+Gets or sets the background brush of the text. If null, no background is drawn.  
+  
+```csharp  
+public Brush TextBackground { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Brush](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.Brush)  
+  
+### TextCornerRadius  
+  
+Gets or sets the corner radius of the text background. Only applied if [BaseConnection.TextBackground](Nodify_BaseConnection#textbackground) is not null.  
+  
+```csharp  
+public double TextCornerRadius { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Double](https://docs.microsoft.com/en-us/dotnet/api/System.Double)  
+  
+### TextPadding  
+  
+Gets or sets the padding around the text of the connection. Only applied if [BaseConnection.TextBackground](Nodify_BaseConnection#textbackground) is not null.  
+  
+```csharp  
+public Thickness TextPadding { get; set; }  
+```  
+  
+**Property Value**  
+  
+[Thickness](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Thickness)  
+  
 ## Methods  
   
 ### DrawArrowGeometry(StreamGeometryContext, Point, Point, ConnectionDirection, ArrowHeadShape, Orientation)  
@@ -574,6 +610,18 @@ protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Poi
 `arrowDirection` [ConnectionDirection](Nodify_ConnectionDirection)  
   
 `orientation` [Orientation](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Controls.Orientation)  
+  
+### DrawTextBackground(DrawingContext, Rect)  
+  
+```csharp  
+protected virtual void DrawTextBackground(DrawingContext drawingContext, Rect bounds);  
+```  
+  
+**Parameters**  
+  
+`drawingContext` [DrawingContext](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Media.DrawingContext)  
+  
+`bounds` [Rect](https://docs.microsoft.com/en-us/dotnet/api/System.Windows.Rect)  
   
 ### GetIsSelectable(UIElement)  
   
