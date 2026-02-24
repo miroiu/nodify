@@ -2,6 +2,12 @@
 
 #### **In development**
 
+> - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 7.2.0**
+
 > - Features:
 >	- Added ConnectionTemplateSelector, DecoratorTemplateSelector and PendingConnectionTemplateSelector to NodifyEditor to allow selecting the data template based on custom rules
 >	- Added TextBackground, TextPadding and TextCornerRadius dependency properties to BaseConnection to allow styling the background of the connection text
