@@ -138,6 +138,9 @@ namespace Nodify
         public static readonly DependencyProperty FocusVisualPaddingProperty = DependencyProperty.Register(nameof(FocusVisualPadding), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double1, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty ForegroundProperty = TextBlock.ForegroundProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty TextProperty = TextBlock.TextProperty.AddOwner(typeof(BaseConnection), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty TextBackgroundProperty = DependencyProperty.Register(nameof(TextBackground), typeof(Brush), typeof(BaseConnection), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty TextPaddingProperty = DependencyProperty.Register(nameof(TextPadding), typeof(Thickness), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Thickness2, FrameworkPropertyMetadataOptions.AffectsRender));
+        public static readonly DependencyProperty TextCornerRadiusProperty = DependencyProperty.Register(nameof(TextCornerRadius), typeof(double), typeof(BaseConnection), new FrameworkPropertyMetadata(BoxValue.Double0, FrameworkPropertyMetadataOptions.AffectsRender));
         public static readonly DependencyProperty FontSizeProperty = TextElement.FontSizeProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(typeof(BaseConnection));
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(BaseConnection));
@@ -421,6 +424,36 @@ namespace Nodify
         {
             get => (string?)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the padding around the text of the connection. Only applied if <see cref="TextBackground"/> is not null.
+        /// </summary>
+        public Thickness TextPadding
+        {
+            get => (Thickness)GetValue(TextPaddingProperty);
+            set => SetValue(TextPaddingProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the corner radius of the text background. Only applied if <see cref="TextBackground"/> is not null.
+        /// </summary>
+        public double TextCornerRadius
+        {
+            get => (double)GetValue(TextCornerRadiusProperty);
+            set => SetValue(TextCornerRadiusProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the background brush of the text. If null, no background is drawn.
+        /// </summary>
+        /// <remarks>
+        /// Customize the appearance of the text background by setting the <see cref="TextPadding"/> and <see cref="TextCornerRadius"/> properties.
+        /// </remarks>
+        public Brush? TextBackground
+        {
+            get => (Brush?)GetValue(TextBackgroundProperty);
+            set => SetValue(TextBackgroundProperty, value);
         }
 
         /// <inheritdoc cref="TextElement.FontSize" />
@@ -980,13 +1013,40 @@ namespace Nodify
                 var text = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection, typeface, FontSize, Foreground ?? Stroke, dpi);
 
                 (Vector sourceOffset, Vector targetOffset) = GetOffset();
-                drawingContext.DrawText(text, GetTextPosition(text, Source + sourceOffset, Target + targetOffset));
+
+                var textPosition = GetTextPosition(text, Source + sourceOffset, Target + targetOffset);
+
+                if (TextBackground != null)
+                {
+                    var textSize = new Size(text.Width, text.Height);
+                    DrawTextBackground(drawingContext, new Rect(textPosition, textSize));
+                }
+
+                drawingContext.DrawText(text, textPosition);
             }
 
             if (AdornerLayer != null && Container is { IsKeyboardFocused: true })
             {
                 AdornerLayer.Update(this);
             }
+        }
+
+        protected virtual void DrawTextBackground(DrawingContext drawingContext, Rect bounds)
+        {
+            var padding = TextPadding;
+            double radius = TextCornerRadius;
+
+            var rectSize = new Size(bounds.Width + padding.Left + padding.Right, bounds.Height + padding.Bottom + padding.Top);
+            var rect = new Rect(bounds.Location - new Vector(padding.Left, padding.Top), rectSize);
+
+            if (OutlineBrush != null)
+            {
+                var outlineRect = rect;
+                outlineRect.Inflate(OutlineThickness, OutlineThickness);
+                drawingContext.DrawRoundedRectangle(OutlineBrush, null, outlineRect, radius, radius);
+            }
+
+            drawingContext.DrawRoundedRectangle(Stroke, null, rect, radius, radius);
         }
 
         internal void UpdateFocusVisual()

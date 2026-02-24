@@ -2,9 +2,14 @@
 
 #### **In development**
 
-> - Breaking Changes:
 > - Features:
+>	- Added ConnectionTemplateSelector, DecoratorTemplateSelector and PendingConnectionTemplateSelector to NodifyEditor to allow selecting the data template based on custom rules
+>	- Added TextBackground, TextPadding and TextCornerRadius dependency properties to BaseConnection to allow styling the background of the connection text
+>	- Added DrawTextBackground to BaseConnection to allow customizing the drawing of the text background
 > - Bugfixes:
+>	- Fixed focus navigation exception when the editor is collapsed
+>	- Fixed connection focus outline drawing inner overlapping lines
+>	- Fixed connection focus outline not updating on directional arrow animation
 
 #### **Version 7.1.0**
 
