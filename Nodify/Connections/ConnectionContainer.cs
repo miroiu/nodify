@@ -74,6 +74,11 @@ namespace Nodify
         public Rect Bounds => ConnectionFocusTarget.Bounds;
         ConnectionContainer IKeyboardFocusTarget<ConnectionContainer>.Element => this;
 
+        /// <summary>
+        /// Gets the gestures used by this element, which are determined by the <see cref="Editor"/> if available, or default to <see cref="EditorGestures.Mappings"/> if not.
+        /// </summary>
+        public EditorGestures ActualGestures => Selector.Editor?.ActualGestures ?? EditorGestures.Mappings;
+
         private IKeyboardFocusTarget<FrameworkElement> ConnectionFocusTarget => Connection as IKeyboardFocusTarget<FrameworkElement>
             ?? throw new NotSupportedException($"Custom connections must implement {nameof(IKeyboardFocusTarget<FrameworkElement>)} for keyboard navigation. Or disable keyboard navigation for the connections layer.");
 
@@ -137,7 +142,7 @@ namespace Nodify
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
+            EditorGestures.ConnectionGestures gestures = ActualGestures.Connection;
             if (IsSelectable && gestures.Selection.Select.Matches(e.Source, e))
             {
                 _selectionType = gestures.Selection.GetSelectionType(e);

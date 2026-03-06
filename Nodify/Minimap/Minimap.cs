@@ -28,6 +28,7 @@ namespace Nodify
         public static readonly DependencyProperty MaxViewportOffsetProperty = DependencyProperty.Register(nameof(MaxViewportOffset), typeof(Size), typeof(Minimap), new FrameworkPropertyMetadata(new Size(2000, 2000)));
         public static readonly DependencyProperty ResizeToViewportProperty = DependencyProperty.Register(nameof(ResizeToViewport), typeof(bool), typeof(Minimap));
         public static readonly DependencyProperty IsReadOnlyProperty = TextBoxBase.IsReadOnlyProperty.AddOwner(typeof(Minimap));
+        public static readonly DependencyProperty InputGesturesProperty = DependencyProperty.Register(nameof(InputGestures), typeof(EditorGestures.MinimapGestures), typeof(Minimap));
 
         public static readonly RoutedEvent ZoomEvent = EventManager.RegisterRoutedEvent(nameof(Zoom), RoutingStrategy.Bubble, typeof(ZoomEventHandler), typeof(Minimap));
 
@@ -97,6 +98,15 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Gets or sets the custom <see cref="EditorGestures.MinimapGestures"/> used by the minimap.
+        /// </summary>
+        public EditorGestures.MinimapGestures? InputGestures
+        {
+            get => (EditorGestures.MinimapGestures?)GetValue(InputGesturesProperty);
+            set => SetValue(InputGesturesProperty, value);
+        }
+
+        /// <summary>
         /// Gets the panel that holds all the <see cref="MinimapItem"/>s.
         /// </summary>
         protected Panel ItemsHost { get; private set; } = default!;
@@ -120,6 +130,14 @@ namespace Nodify
         /// Defines the distance to pan when using directional input (such as arrow keys).
         /// </summary>
         public static double NavigationStepSize { get; set; } = 50d;
+
+        /// <summary>
+        /// Gets the <see cref="EditorGestures.MinimapGestures"/> currently used by the minimap.
+        /// </summary>
+        /// <returns>
+        /// Returns the value of <see cref="InputGestures"/> if set, otherwise returns the default gestures from <see cref="EditorGestures.Mappings"/>
+        /// </returns>
+        public EditorGestures.MinimapGestures ActualGestures => InputGestures ?? EditorGestures.Mappings.Minimap;
 
         private Point _initialViewportLocation;
 

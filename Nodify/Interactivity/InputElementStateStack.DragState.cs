@@ -24,22 +24,7 @@ namespace Nodify.Interactivity
             /// Initializes a new instance of the <see cref="DragState"/> class.
             /// </summary>
             /// <param name="stack">The state stack managing this state.</param>
-            /// <param name="exitGesture">The gesture used to exit the drag state.</param>
-            /// <param name="cancelGesture">The gesture used to cancel the drag state.</param>
-            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture, InputGesture cancelGesture)
-                : base(stack.Element, exitGesture, cancelGesture)
-            {
-                PositionElement = stack.Element;
-                Stack = stack;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="DragState"/> class with an optional cancel gesture.
-            /// </summary>
-            /// <param name="stack">The state stack managing this state.</param>
-            /// <param name="exitGesture">The gesture used to exit the drag state.</param>
-            public DragState(InputElementStateStack<TElement> stack, InputGesture exitGesture)
-                : base(stack.Element, exitGesture)
+            public DragState(InputElementStateStack<TElement> stack) : base(stack.Element)
             {
                 PositionElement = stack.Element;
                 Stack = stack;

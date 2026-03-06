@@ -254,6 +254,11 @@ namespace Nodify
 
         ItemContainer IKeyboardFocusTarget<ItemContainer>.Element => this;
 
+        /// <summary>
+        /// Gets the gestures used by this element, which are determined by the <see cref="Editor"/> if available, or default to <see cref="EditorGestures.Mappings"/> if not.
+        /// </summary>
+        public EditorGestures ActualGestures => Editor.ActualGestures ?? EditorGestures.Mappings;
+
         #endregion
 
         /// <summary>

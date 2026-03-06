@@ -17,14 +17,16 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => NodifyEditor.AllowPushItemsCancellation;
             protected override bool IsToggle => EnableToggledPushingItemsMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.Editor.PushItems;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.Editor.CancelAction;
+
             private Point _prevPosition;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="PushingItems"/> class.
             /// </summary>
             /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
-            public PushingItems(NodifyEditor editor)
-                : base(editor, EditorGestures.Mappings.Editor.PushItems, EditorGestures.Mappings.Editor.CancelAction)
+            public PushingItems(NodifyEditor editor) : base(editor)
             {
             }
 

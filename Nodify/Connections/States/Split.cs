@@ -19,7 +19,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseDown(MouseButtonEventArgs e)
             {
-                EditorGestures.ConnectionGestures gestures = EditorGestures.Mappings.Connection;
+                EditorGestures.ConnectionGestures gestures = Element.ActualGestures.Connection;
                 if (gestures.Split.Matches(e.Source, e))
                 {
                     Element.Focus();

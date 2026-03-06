@@ -13,12 +13,14 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => Minimap.AllowPanningCancellation;
             protected override bool IsToggle => EnableToggledPanningMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.DragViewport;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.CancelAction;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Panning"/> class.
             /// </summary>
             /// <param name="minimap">The <see cref="Minimap"/> associated with this state.</param>
-            public Panning(Minimap minimap)
-                : base(minimap, EditorGestures.Mappings.Minimap.DragViewport, EditorGestures.Mappings.Minimap.CancelAction)
+            public Panning(Minimap minimap) : base(minimap)
             {
             }
 

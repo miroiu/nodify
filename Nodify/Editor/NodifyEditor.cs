@@ -383,6 +383,7 @@ namespace Nodify
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty HasCustomContextMenuProperty = DependencyProperty.Register(nameof(HasCustomContextMenu), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DecoratorsProperty = DependencyProperty.Register(nameof(Decorators), typeof(IEnumerable), typeof(NodifyEditor));
+        public static readonly DependencyProperty InputGesturesProperty = DependencyProperty.Register(nameof(InputGestures), typeof(EditorGestures), typeof(NodifyEditor));
 
         private static object OnCoerceGridCellSize(DependencyObject d, object value)
             => (uint)value > 0u ? value : BoxValue.UInt1;
@@ -448,6 +449,15 @@ namespace Nodify
         /// Gets a value indicating whether the editor has a context menu.
         /// </summary>
         public bool HasContextMenu => ContextMenu != null || HasCustomContextMenu;
+
+        /// <summary>
+        /// Gets or sets the custom <see cref="EditorGestures"/> used by the editor.
+        /// </summary>
+        public EditorGestures? InputGestures
+        {
+            get => (EditorGestures?)GetValue(InputGesturesProperty);
+            set => SetValue(InputGesturesProperty, value);
+        }
 
         #endregion
 
@@ -572,6 +582,14 @@ namespace Nodify
                 return containers;
             }
         }
+
+        /// <summary>
+        /// Gets the <see cref="EditorGestures"/> currently used by the editor.
+        /// </summary>
+        /// <returns>
+        /// Returns the value of <see cref="InputGestures"/> if set, otherwise returns the default gestures from <see cref="EditorGestures.Mappings"/>
+        /// </returns>
+        public EditorGestures ActualGestures => InputGestures ?? EditorGestures.Mappings;
 
         #endregion
 
