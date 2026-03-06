@@ -551,6 +551,11 @@ namespace Nodify
         FrameworkElement IKeyboardFocusTarget<FrameworkElement>.Element => this;
 
         /// <summary>
+        /// Gets the gestures used by this element, which are determined by the <see cref="Editor"/> if available, or default to <see cref="EditorGestures.Mappings"/> if not.
+        /// </summary>
+        public EditorGestures ActualGestures => Container?.ActualGestures ?? EditorGestures.Mappings;
+
+        /// <summary>
         /// The key used to retrieve the <see cref="FocusVisualPen"/> resource.
         /// </summary>
         public static ResourceKey FocusVisualPenKey { get; } = new ComponentResourceKey(typeof(BaseConnection), nameof(FocusVisualPen));

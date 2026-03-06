@@ -35,11 +35,14 @@ namespace Nodify.Playground
         protected override bool CanBegin => ViewModel.IsConnected && ViewModel.Flow == ConnectorFlow.Input;
         protected override bool IsToggle => EditorSettings.Instance.EnableStickyConnectors;
 
+        protected override InputGesture DragGesture => Reconnect;
+        protected override InputGesture? CancelGesture => Element.ActualGestures.Connector.CancelAction;
+
         private ConnectorViewModel ViewModel => (ConnectorViewModel)Element.DataContext;
         private Vector _connectorOffset;
         private Connector? _targetConnector;
 
-        public RetargetConnections(Connector element) : base(element, Reconnect, EditorGestures.Mappings.Connector.CancelAction)
+        public RetargetConnections(Connector element) : base(element)
         {
             PositionElement = Element.Editor ?? (IInputElement)Element;
         }

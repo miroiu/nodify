@@ -16,6 +16,8 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => NodifyEditor.AllowPanningCancellation;
             protected override bool IsToggle => EnableToggledPanningMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.Editor.Pan;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.Editor.CancelAction;
 
             private Point _prevPosition;
 
@@ -23,8 +25,7 @@ namespace Nodify.Interactivity
             /// Initializes a new instance of the <see cref="Panning"/> class.
             /// </summary>
             /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
-            public Panning(NodifyEditor editor)
-                : base(editor, EditorGestures.Mappings.Editor.Pan, EditorGestures.Mappings.Editor.CancelAction)
+            public Panning(NodifyEditor editor) : base(editor)
             {
             }
 
@@ -72,7 +73,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseWheel(MouseWheelEventArgs e)
             {
-                EditorGestures.NodifyEditorGestures gestures = EditorGestures.Mappings.Editor;
+                EditorGestures.NodifyEditorGestures gestures = Element.ActualGestures.Editor;
                 if (gestures.PanWithMouseWheel && Keyboard.Modifiers == gestures.PanHorizontalModifierKey)
                 {
                     double offset = Math.Sign(e.Delta) * Mouse.MouseWheelDeltaForOneLine / 2 / Element.ViewportZoom;

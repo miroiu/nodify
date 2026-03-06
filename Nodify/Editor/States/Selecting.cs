@@ -15,18 +15,20 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => NodifyEditor.AllowSelectionCancellation;
             protected override bool IsToggle => EnableToggledSelectingMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.Editor.Selection.Select;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.Editor.Selection.Cancel;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Selecting"/> class.
             /// </summary>
             /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
-            public Selecting(NodifyEditor editor)
-                : base(editor, EditorGestures.Mappings.Editor.Selection.Select, EditorGestures.Mappings.Editor.Selection.Cancel)
+            public Selecting(NodifyEditor editor) : base(editor)
             {
             }
 
             protected override void OnBegin(InputEventArgs e)
             {
-                var selectionType = EditorGestures.Mappings.Editor.Selection.GetSelectionType(e);
+                var selectionType = Element.ActualGestures.Editor.Selection.GetSelectionType(e);
                 Element.BeginSelecting(selectionType);
             }
 

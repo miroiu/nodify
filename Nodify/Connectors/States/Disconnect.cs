@@ -19,7 +19,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseDown(MouseButtonEventArgs e)
             {
-                EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+                EditorGestures.ConnectorGestures gestures = Element.ActualGestures.Connector;
                 if (gestures.Disconnect.Matches(e.Source, e))
                 {
                     Element.Focus();
@@ -29,7 +29,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseUp(MouseButtonEventArgs e)
             {
-                EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+                EditorGestures.ConnectorGestures gestures = Element.ActualGestures.Connector;
                 if (gestures.Disconnect.Matches(e.Source, e))
                 {
                     Element.RemoveConnections();
@@ -39,7 +39,7 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                EditorGestures.ConnectorGestures gestures = EditorGestures.Mappings.Connector;
+                EditorGestures.ConnectorGestures gestures = Element.ActualGestures.Connector;
                 if (gestures.Disconnect.Matches(e.Source, e))
                 {
                     Element.RemoveConnections();

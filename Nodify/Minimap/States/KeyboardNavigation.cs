@@ -15,7 +15,7 @@ namespace Nodify.Interactivity
             {
                 if (Element.IsKeyboardFocused)
                 {
-                    var gestures = EditorGestures.Mappings.Minimap;
+                    var gestures = Element.ActualGestures;
 
                     if (gestures.Pan.TryGetNavigationDirection(e, out var panDirection))
                     {

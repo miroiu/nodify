@@ -15,12 +15,14 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => Connector.AllowPendingConnectionCancellation;
             protected override bool IsToggle => EnableToggledConnectingMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.Connector.Connect;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.Connector.CancelAction;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Connecting"/> class.
             /// </summary>
             /// <param name="connector">The connector associated with this state.</param>
-            public Connecting(Connector connector)
-                : base(connector, EditorGestures.Mappings.Connector.Connect, EditorGestures.Mappings.Connector.CancelAction)
+            public Connecting(Connector connector) : base(connector)
             {
                 PositionElement = Element.Editor ?? (IInputElement)Element;
             }

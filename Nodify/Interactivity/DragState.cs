@@ -32,12 +32,12 @@ namespace Nodify.Interactivity
         /// <summary>
         /// Gets the gesture used to cancel the drag interaction, if defined.
         /// </summary>
-        protected InputGesture? CancelGesture { get; }
+        protected virtual InputGesture? CancelGesture { get; }
 
         /// <summary>
-        /// Gets the gesture used to begin the drag interaction.
+        /// Gets the gesture used to begin and complete the drag interaction.
         /// </summary>
-        protected InputGesture BeginGesture { get; }
+        protected abstract InputGesture DragGesture { get; }
 
         /// <summary>
         /// Indicates whether the element has a context menu associated with it.
@@ -72,23 +72,9 @@ namespace Nodify.Interactivity
         /// Initializes a new instance of the <see cref="DragState{TElement}"/> class with a begin gesture.
         /// </summary>
         /// <param name="element">The element associated with this state.</param>
-        /// <param name="beginGesture">The gesture used to start the drag interaction.</param>
-        public DragState(TElement element, InputGesture beginGesture) : base(element)
+        public DragState(TElement element) : base(element)
         {
-            BeginGesture = beginGesture;
             PositionElement = element;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DragState{TElement}"/> class with begin and cancel gestures.
-        /// </summary>
-        /// <param name="element">The element associated with this state.</param>
-        /// <param name="beginGesture">The gesture used to start the drag interaction.</param>
-        /// <param name="cancelGesture">The gesture used to cancel the drag interaction.</param>
-        public DragState(TElement element, InputGesture beginGesture, InputGesture cancelGesture)
-            : this(element, beginGesture)
-        {
-            CancelGesture = cancelGesture;
         }
 
         void IInputHandler.HandleEvent(InputEventArgs e)
@@ -119,7 +105,7 @@ namespace Nodify.Interactivity
         // Begin the interaction on gesture press
         private bool TryBeginDragging(InputEventArgs e)
         {
-            if (IsInputEventPressed(e) && CanBegin && BeginGesture.Matches(e.Source, e))
+            if (IsInputEventPressed(e) && CanBegin && DragGesture.Matches(e.Source, e))
             {
                 BeginDrag(e);
                 return true;
@@ -147,7 +133,7 @@ namespace Nodify.Interactivity
         // Delay ending toggle interaction until the gesture is released
         private bool TryDeferToggleInteractionEnd(InputEventArgs e)
         {
-            if (IsInputEventPressed(e) && BeginGesture.Matches(e.Source, e))
+            if (IsInputEventPressed(e) && DragGesture.Matches(e.Source, e))
             {
                 _interactionState = InteractionState.Ending;
                 HandleEvent(e);
@@ -160,7 +146,7 @@ namespace Nodify.Interactivity
         // End the interaction on gesture release
         private bool TryEndInteraction(InputEventArgs e)
         {
-            if (IsInputEventReleased(e) && BeginGesture.Matches(e.Source, e))
+            if (IsInputEventReleased(e) && DragGesture.Matches(e.Source, e))
             {
                 EndDrag(e);
                 return true;
