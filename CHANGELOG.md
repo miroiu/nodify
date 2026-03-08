@@ -3,7 +3,11 @@
 #### **In development**
 
 > - Breaking Changes:
+>	- Renamed BeginGesture to DragGesture in DragState
+>	- DragState uses virtual properties to retrieve the required gestures instead constructor arguments
 > - Features:
+>	- Added InputGestures dependency property to NodifyEditor and Minimap to specify which gestures mappings to use
+>	- Added ActualGestures to Minimap, NodifyEditor and its elements
 > - Bugfixes:
 
 #### **Version 7.2.0**
