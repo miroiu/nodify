@@ -23,7 +23,7 @@ internal sealed class ApplicationViewModel
 
     public CommandViewModel RunWorkflowCommand { get; }
     public CommandViewModel SaveChangesCommand { get; }
-    public CommandViewModel ToggleZenModeCommand { get; }
+    public ToggleCommandViewModel ToggleZenModeCommand { get; }
     public CommandViewModel OpenSettingsCommand { get; }
 
     public ApplicationViewModel()
@@ -52,10 +52,12 @@ internal sealed class ApplicationViewModel
         ToggleZenModeCommand = new(new ReactiveCommand())
         {
             Label = { Value = "Zen" },
-            Icon = { Value = Icon.ArrowMaximize }
+            ToolTip = { Value = "Toggle zen mode" },
+            Icon = { Value = Icon.ArrowMaximize },
+            IconChecked = { Value = Icon.ArrowMinimize }
         };
 
-        ToggleZenModeCommand.Command.Subscribe(_ => IsZenMode.Value = !IsZenMode.Value);
+        ToggleZenModeCommand.IsChecked.Subscribe(value => IsZenMode.Value = value);
 
         OpenSettingsCommand = new(new ReactiveCommand())
         {

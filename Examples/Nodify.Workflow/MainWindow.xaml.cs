@@ -18,6 +18,8 @@ public partial class MainWindow
     private bool _isZenMode;
     private bool _hasSelectedWorkflow;
 
+    private readonly Dictionary<ColumnDefinition, AnimatableDouble> _animations = [];
+
     static MainWindow()
     {
         NodifyEditor.AutoRegisterConnectionsLayer = false;
@@ -97,7 +99,7 @@ public partial class MainWindow
             : Visibility.Collapsed;
     }
 
-    private static void AnimateColumnWidth(ColumnDefinition column, double from, double to)
+    private void AnimateColumnWidth(ColumnDefinition column, double from, double to)
     {
         var animation = new DoubleAnimation
         {
@@ -107,9 +109,19 @@ public partial class MainWindow
             EasingFunction = new CubicEase { EasingMode = to == 0 ? EasingMode.EaseIn : EasingMode.EaseOut }
         };
 
-        var animatable = new AnimatableDouble();
-        animatable.ValueChanged += (_, value) => column.Width = new GridLength(value);
-        animatable.BeginAnimation(AnimatableDouble.ValueProperty, animation);
+        if (!_animations.TryGetValue(column, out var animatable))
+        {
+
+            animatable = new AnimatableDouble();
+            animatable.ValueChanged += (_, value) => column.Width = new GridLength(value);
+            animatable.BeginAnimation(AnimatableDouble.ValueProperty, animation);
+
+            _animations[column] = animatable;
+        }
+        else
+        {
+            animatable.BeginAnimation(AnimatableDouble.ValueProperty, animation);
+        }
     }
 
     private void UpdateMainWindowVisuals(object? sender, EventArgs args)
