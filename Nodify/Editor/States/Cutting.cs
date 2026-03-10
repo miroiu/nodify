@@ -14,12 +14,14 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => NodifyEditor.AllowCuttingCancellation;
             protected override bool IsToggle => EnableToggledCuttingMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.Editor.Cutting;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.Editor.CancelAction;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Cutting"/> class.
             /// </summary>
             /// <param name="editor">The <see cref="NodifyEditor"/> associated with this state.</param>
-            public Cutting(NodifyEditor editor)
-                : base(editor, EditorGestures.Mappings.Editor.Cutting, EditorGestures.Mappings.Editor.CancelAction)
+            public Cutting(NodifyEditor editor) : base(editor)
             {
             }
 

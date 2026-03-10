@@ -167,6 +167,11 @@ namespace Nodify
         /// </summary>
         protected FrameworkElement? ContentControl;
 
+        /// <summary>
+        /// Gets the gestures used by this element, which are determined by the <see cref="Editor"/> if available, or default to <see cref="EditorGestures.Mappings"/> if not.
+        /// </summary>
+        public EditorGestures ActualGestures => Container?.ActualGestures ?? EditorGestures.Mappings;
+
         private double _minHeight = 30;
         private double _minWidth = 30;
 
@@ -222,12 +227,12 @@ namespace Nodify
 
         private void OnHeaderMouseDown(object sender, MouseButtonEventArgs e)
         {
-            EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+            EditorGestures.ItemContainerGestures gestures = ActualGestures.ItemContainer;
             if (Container != null && Editor != null && gestures.Drag.Matches(e.Source, e))
             {
                 // Switch the default movement mode if necessary
                 var prevMovementMode = MovementMode;
-                if (Keyboard.Modifiers == EditorGestures.Mappings.GroupingNode.SwitchMovementMode)
+                if (Keyboard.Modifiers == ActualGestures.GroupingNode.SwitchMovementMode)
                 {
                     MovementMode = MovementMode == GroupingMovementMode.Group ? GroupingMovementMode.Self : GroupingMovementMode.Group;
                 }
@@ -255,7 +260,7 @@ namespace Nodify
                         Editor.SelectArea(groupBounds, append: true, fit: true);
                     }
                 }
-                else if (gestures.Selection.Replace.Matches(e.Source, e) || EditorGestures.Mappings.ItemContainer.Drag.Matches(e.Source, e))
+                else if (gestures.Selection.Replace.Matches(e.Source, e) || ActualGestures.ItemContainer.Drag.Matches(e.Source, e))
                 {
                     Editor.SelectArea(groupBounds, append: Container.IsSelected, fit: true);
                 }

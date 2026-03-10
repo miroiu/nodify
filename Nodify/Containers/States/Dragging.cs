@@ -11,12 +11,14 @@ namespace Nodify.Interactivity
             protected override bool CanCancel => NodifyEditor.AllowDraggingCancellation;
             protected override bool IsToggle => EnableToggledDraggingMode;
 
+            protected override InputGesture DragGesture => Element.ActualGestures.ItemContainer.Drag;
+            protected override InputGesture? CancelGesture => Element.ActualGestures.ItemContainer.CancelAction;
+
             private Point _previousMousePosition;
 
             /// <summary>Constructs an instance of the <see cref="Dragging"/> state.</summary>
-            /// <param name="container">The owner of the state.</param>
-            public Dragging(InputElementStateStack<ItemContainer> stack)
-                : base(stack, EditorGestures.Mappings.ItemContainer.Drag, EditorGestures.Mappings.ItemContainer.CancelAction)
+            /// <param name="stack">The owner of the state.</param>
+            public Dragging(InputElementStateStack<ItemContainer> stack) : base(stack)
             {
                 PositionElement = Element.Editor;
             }

@@ -21,7 +21,7 @@ namespace Nodify.Interactivity
 
             protected override void OnMouseWheel(MouseWheelEventArgs e)
             {
-                if (!Element.IsReadOnly && EditorGestures.Mappings.Minimap.ZoomModifierKey == Keyboard.Modifiers)
+                if (!Element.IsReadOnly && Element.ActualGestures.ZoomModifierKey == Keyboard.Modifiers)
                 {
                     double zoom = Math.Pow(2.0, e.Delta / 3.0 / Mouse.MouseWheelDeltaForOneLine);
                     Element.ZoomAtPosition(zoom, Element.MouseLocation);
@@ -31,7 +31,7 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                var gestures = EditorGestures.Mappings.Minimap;
+                var gestures = Element.ActualGestures;
 
                 if (!Element.IsReadOnly)
                 {

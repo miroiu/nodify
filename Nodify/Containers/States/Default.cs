@@ -42,7 +42,7 @@ namespace Nodify.Interactivity
                         return;
                     }
 
-                    EditorGestures.ItemContainerGestures gestures = EditorGestures.Mappings.ItemContainer;
+                    EditorGestures.ItemContainerGestures gestures = Element.ActualGestures.ItemContainer;
                     if (gestures.Drag.Matches(e.Source, e))
                     {
                         // Dragging requires mouse capture

@@ -27,7 +27,7 @@ namespace Nodify.Interactivity
                 }
 
                 double navigationStepSize = GetNavigationStepSize();
-                var gestures = EditorGestures.Mappings.Editor.Keyboard;
+                var gestures = Element.ActualGestures.Editor.Keyboard;
 
                 if (e.Key == Key.Tab && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
                 {
@@ -67,7 +67,7 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyUp(KeyEventArgs e)
             {
-                var gestures = EditorGestures.Mappings.Editor.Keyboard;
+                var gestures = Element.ActualGestures.Editor.Keyboard;
 
                 if (gestures.ToggleSelected.Matches(e.Source, e))
                 {
@@ -116,7 +116,7 @@ namespace Nodify.Interactivity
                     e.Handled = true;
                 }
                 else if (Keyboard.FocusedElement is ItemContainer { IsSelected: true } container
-                    && EditorGestures.Mappings.GroupingNode.ToggleContentSelection.Matches(e.Source, e))
+                    && Element.ActualGestures.GroupingNode.ToggleContentSelection.Matches(e.Source, e))
                 {
                     var groupingNode = container.GetChildOfType<GroupingNode>();
                     if (groupingNode != null)
