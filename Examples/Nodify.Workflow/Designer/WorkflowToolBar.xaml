@@ -12,7 +12,9 @@
 
     <Border Padding="8"
             CornerRadius="{DynamicResource OverlayCornerRadius}"
-            Background="{DynamicResource LayerOnAcrylicFillColorDefaultBrush}">
+            Background="{DynamicResource LayerOnAcrylicFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource AccentControlElevationBorderBrush}"
+            BorderThickness="1">
         <StackPanel Orientation="Horizontal">
             <ContentControl Content="{Binding ZoomInCommand}"
                             Focusable="False" />

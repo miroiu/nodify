@@ -33,7 +33,7 @@
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Top"
+          VerticalAlignment="Stretch"
           Height="32"
           Background="Transparent"
           d:Background="White">
@@ -50,7 +50,7 @@
             <ic:FluentIcon Icon="Flow"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource AccentFillColorSecondaryBrush}"
-                           Margin="8 0" />
+                           Margin="10 0 8 0" />
 
             <TextBlock VerticalAlignment="Center"
                        Style="{DynamicResource BodyStrongTextBlockStyle}"
@@ -58,25 +58,26 @@
                        d:Text="Workflow Designer" />
 
             <Border Style="{StaticResource SeparatorStyle.Default}"
-                    Margin="8 0" />
+                    VerticalAlignment="Center"
+                    Margin="12 2 4 0" />
 
             <Button Style="{StaticResource BreadcrumbStyle}">
-                <TextBlock Style="{DynamicResource BodyTextBlockStyle}"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           VerticalAlignment="Center"
-                           Text="{Binding MainWorkflow.Value.Name.Value}"
-                           d:Text="Workflow Name" />
-            </Button>
-
-
-            <Button Style="{StaticResource BreadcrumbStyle}"
-                    Visibility="{Binding SelectedWorkflow.Value, Converter={shared:NullToVisibilityConverter}}">
-                <ic:FluentIcon Icon="ChevronRight"
-                               IconSize="Size12"
-                               FontSize="12"
-                               IsHitTestVisible="False"
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{DynamicResource BodyTextBlockStyle}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                               Text="{Binding MainWorkflow.Value.Name.Value}"
+                               d:Text="Workflow Name" />
+
+                    <ic:FluentIcon Icon="ChevronRight"
+                                   IconSize="Size12"
+                                   FontSize="12"
+                                   IsHitTestVisible="False"
+                                   VerticalAlignment="Center"
+                                   Margin="8 4 0 2"
+                                   Visibility="{Binding SelectedWorkflow.Value, Converter={shared:NullToVisibilityConverter}}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
             </Button>
 
             <Button Style="{StaticResource BreadcrumbStyle}"

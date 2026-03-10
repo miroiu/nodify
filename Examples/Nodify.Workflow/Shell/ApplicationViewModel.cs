@@ -37,6 +37,7 @@ internal sealed class ApplicationViewModel
         RunWorkflowCommand = new(new ReactiveCommand())
         {
             Label = { Value = "Run" },
+            ToolTip = { Value = "Run the main workflow" },
             Icon = { Value = Icon.Play },
             IconVariant = { Value = IconVariant.Filled },
             IconColor = { Value = Colors.LawnGreen }
@@ -45,6 +46,7 @@ internal sealed class ApplicationViewModel
         SaveChangesCommand = new(new ReactiveCommand())
         {
             Label = { Value = "Save" },
+            ToolTip = { Value = "Save all changes" },
             Icon = { Value = Icon.Save },
             IconColor = { Value = Colors.LightSkyBlue }
         };
@@ -59,11 +61,23 @@ internal sealed class ApplicationViewModel
 
         ToggleZenModeCommand.IsChecked.Subscribe(value => IsZenMode.Value = value);
 
-        OpenSettingsCommand = new(new ReactiveCommand())
+        OpenSettingsCommand = new(new ReactiveCommand(OpenAppSettingsDialog))
         {
             Icon = { Value = Icon.Settings },
             IconVariant = { Value = IconVariant.Filled },
+            ToolTip = { Value = "Open application settings" },
         };
+    }
+
+    private void OpenAppSettingsDialog(Unit unit)
+    {
+        var window = new ApplicationSettingsWindow
+        {
+            DataContext = ApplicationSettings,
+            Owner = Application.Current.MainWindow
+        };
+
+        window.ShowDialog();
     }
 
     private void CreateDefaultWorkflows(ApplicationSettingsViewModel settings)

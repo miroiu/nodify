@@ -11,9 +11,13 @@
         <Setter Property="BorderThickness"
                 Value="0" />
         <Setter Property="SelectedBorderThickness"
-                Value="0" />
+                Value="1" />
         <Setter Property="Background"
                 Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ControlElevationBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">
