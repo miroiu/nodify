@@ -35,6 +35,7 @@
     <Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Height="32"
+          Margin="0 0 140 0"
           Background="Transparent"
           d:Background="White">
 
@@ -116,8 +117,6 @@
                             VerticalAlignment="Center" />
 
             <Border Style="{StaticResource SeparatorStyle.Default}" />
-
-            <local:TitleBarButtons />
         </StackPanel>
 
     </Grid>
