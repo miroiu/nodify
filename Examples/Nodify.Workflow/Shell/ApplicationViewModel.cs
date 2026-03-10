@@ -15,12 +15,9 @@ internal sealed class ApplicationViewModel
 
     public ObservableList<SubWorkflowDesignerViewModel> Workflows { get; } = [];
 
-    public BindableReactiveProperty<WorkflowDesignerViewModel> MainWorkflow { get; }
+    public BindableReactiveProperty<MainWorkflowDesignerViewModel> MainWorkflow { get; }
     public BindableReactiveProperty<SubWorkflowDesignerViewModel?> SelectedWorkflow { get; }
     public BindableReactiveProperty<bool> IsZenMode { get; } = new(false);
-
-    public BindableReactiveProperty<bool> IsWorkflowsPanelOpen { get; } = new(true);
-    public BindableReactiveProperty<bool> IsPropertiesPanelOpen { get; } = new(false);
 
     public ApplicationSettingsViewModel ApplicationSettings { get; } = new();
 
@@ -31,8 +28,9 @@ internal sealed class ApplicationViewModel
 
     public ApplicationViewModel()
     {
-        Workflows.AddRange(CreateDefaultWorkflows(ApplicationSettings));
-        MainWorkflow = new(CreateMainWorkflow(ApplicationSettings));
+        MainWorkflow = new(new MainWorkflowDesignerViewModel(ApplicationSettings));
+
+        CreateDefaultWorkflows(ApplicationSettings);
 
         SelectedWorkflow = new(Workflows[0]);
 
@@ -58,22 +56,56 @@ internal sealed class ApplicationViewModel
         };
 
         ToggleZenModeCommand.Command.Subscribe(_ => IsZenMode.Value = !IsZenMode.Value);
-        IsZenMode.Subscribe(isZen => IsWorkflowsPanelOpen.Value = !isZen);
 
         OpenSettingsCommand = new(new ReactiveCommand())
         {
             Icon = { Value = Icon.Settings },
             IconVariant = { Value = IconVariant.Filled },
         };
-
-        SelectedWorkflow
-            .SelectMany(workflow => workflow?.SelectedStep ?? Observable.Return<WorkflowStepViewModel?>(null))
-            .Subscribe(selectedStep => IsPropertiesPanelOpen.Value = selectedStep != null);
     }
 
-    private static IReadOnlyList<SubWorkflowDesignerViewModel> CreateDefaultWorkflows(ApplicationSettingsViewModel settings)
+    private void CreateDefaultWorkflows(ApplicationSettingsViewModel settings)
     {
-        return [CreateRunTestsWorkflow(settings), CreateBuildLibraryWorkflow(settings), CreatePublishToNugetWorkflow(settings)];
+        var runTestsWorkflow = CreateRunTestsWorkflow(settings);
+        var buildLibraryWorkflow = CreateBuildLibraryWorkflow(settings);
+        var publishToNugetWorkflow = CreatePublishToNugetWorkflow(settings);
+
+        Workflows.Add(runTestsWorkflow);
+        Workflows.Add(buildLibraryWorkflow);
+        Workflows.Add(publishToNugetWorkflow);
+
+        foreach (var workflow in Workflows)
+        {
+            workflow.OnPostInitialize();
+        }
+
+        var runTestsWorkflowStep = new WorkflowStepViewModel(runTestsWorkflow.Name.Value)
+        {
+            IconColor = { Value = Colors.LimeGreen },
+            Position = { Value = new Point(130, 150) }
+        };
+
+        var buildLibraryWorkflowStep = new WorkflowStepViewModel(buildLibraryWorkflow.Name.Value)
+        {
+            IconColor = { Value = Colors.SteelBlue },
+            Position = { Value = new Point(120, 300) }
+        };
+
+        var publishToNugetWorkflowStep = new WorkflowStepViewModel(publishToNugetWorkflow.Name.Value)
+        {
+            IconColor = { Value = Colors.Tomato },
+            Position = { Value = new Point(85, 450) }
+        };
+
+        MainWorkflow.Value.Steps.Add(runTestsWorkflowStep);
+        MainWorkflow.Value.Steps.Add(buildLibraryWorkflowStep);
+        MainWorkflow.Value.Steps.Add(publishToNugetWorkflowStep);
+
+        MainWorkflow.Value.Connections.Add(new WorkflowStepConnectionViewModel(runTestsWorkflowStep, buildLibraryWorkflowStep));
+        MainWorkflow.Value.Connections.Add(new WorkflowStepConnectionViewModel(buildLibraryWorkflowStep, publishToNugetWorkflowStep));
+        MainWorkflow.Value.Name.Value = "Release pipeline";
+
+        MainWorkflow.Value.OnPostInitialize();
     }
 
     private static SubWorkflowDesignerViewModel CreateRunTestsWorkflow(ApplicationSettingsViewModel settings)
@@ -233,16 +265,6 @@ internal sealed class ApplicationViewModel
         workflow.Connections.Add(new WorkflowStepConnectionViewModel(packNuGet, publishToNuGet));
 
         return workflow;
-    }
-
-    private static WorkflowDesignerViewModel CreateMainWorkflow(ApplicationSettingsViewModel settings)
-    {
-        var mainWorkflow = new WorkflowDesignerViewModel(settings)
-        {
-            Name = { Value = "Release pipeline" }
-        };
-
-        return mainWorkflow;
     }
 }
 

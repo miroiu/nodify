@@ -14,20 +14,6 @@
              d:DesignWidth="1200">
 
     <UserControl.Resources>
-        <Style x:Key="SeparatorBorderStyle"
-               TargetType="Border">
-            <Setter Property="Width"
-                    Value="2" />
-            <Setter Property="Height"
-                    Value="20" />
-            <Setter Property="Margin"
-                    Value="4 0" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Background"
-                    Value="{DynamicResource ControlFillColorDefaultBrush}" />
-        </Style>
-
         <Style x:Key="BreadcrumbStyle"
                BasedOn="{StaticResource ButtonStyle.Borderless}"
                TargetType="Button">
@@ -71,7 +57,7 @@
                        Text="{Binding Title}"
                        d:Text="Workflow Designer" />
 
-            <Border Style="{StaticResource SeparatorBorderStyle}"
+            <Border Style="{StaticResource SeparatorStyle.Default}"
                     Margin="8 0" />
 
             <Button Style="{StaticResource BreadcrumbStyle}">
@@ -121,14 +107,14 @@
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             VerticalAlignment="Center" />
 
-            <Border Style="{StaticResource SeparatorBorderStyle}" />
+            <Border Style="{StaticResource SeparatorStyle.Default}" />
 
             <ContentControl Content="{Binding OpenSettingsCommand}"
                             Focusable="False"
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             VerticalAlignment="Center" />
 
-            <Border Style="{StaticResource SeparatorBorderStyle}" />
+            <Border Style="{StaticResource SeparatorStyle.Default}" />
 
             <local:TitleBarButtons />
         </StackPanel>

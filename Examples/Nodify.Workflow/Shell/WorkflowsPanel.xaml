@@ -11,58 +11,9 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
 
-    <UserControl.LayoutTransform>
-        <ScaleTransform ScaleX="0" />
-    </UserControl.LayoutTransform>
-    <UserControl.Style>
-        <Style TargetType="UserControl">
-            <Setter Property="Opacity"
-                    Value="0" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsWorkflowsPanelOpen.Value}"
-                             Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.(ScaleTransform.ScaleX)"
-                                                 To="1"
-                                                 Duration="0:0:0.3">
-                                    <DoubleAnimation.EasingFunction>
-                                        <CubicEase EasingMode="EaseOut" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                 To="1"
-                                                 Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.(ScaleTransform.ScaleX)"
-                                                 To="0"
-                                                 Duration="0:0:0.25">
-                                    <DoubleAnimation.EasingFunction>
-                                        <CubicEase EasingMode="EaseIn" />
-                                    </DoubleAnimation.EasingFunction>
-                                </DoubleAnimation>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                 To="0"
-                                                 Duration="0:0:0.15" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Style>
-
-    <Border Grid.Row="1"
-            HorizontalAlignment="Left"
+    <Border HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            d:Background="White"
-            Width="200">
+            d:Background="White">
         <Border.Child>
             <Grid>
                 <Grid.RowDefinitions>
@@ -71,18 +22,20 @@
                 </Grid.RowDefinitions>
 
                 <ListView ItemsSource="{Binding Workflows}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           HorizontalAlignment="Stretch"
                           SelectedValue="{Binding SelectedWorkflow.Value, Mode=TwoWay}"
                           SelectionMode="Single">
                     <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type wf:WorkflowDesignerViewModel}">
+                        <DataTemplate DataType="{x:Type wf:SubWorkflowDesignerViewModel}">
                             <TextBlock Margin="8,4"
                                        Text="{Binding Name.Value, Mode=OneWay}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Button Grid.Row="1" HorizontalAlignment="Stretch">
+                <Button Grid.Row="1"
+                        HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal">
                         <ic:FluentIcon Icon="Add" />
                         <TextBlock Text="New Workflow"
