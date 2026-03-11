@@ -61,7 +61,7 @@
 
         <ListView Grid.Row="1"
                   ItemsSource="{Binding Categories}"
-                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedCategory.Value, Mode=TwoWay}"
                   SelectionMode="Single"
                   Margin="0 12 16 12">
             <ListView.ItemTemplate>
@@ -78,6 +78,6 @@
 
         <ContentControl Grid.Row="1"
                         Grid.Column="1"
-                        Content="{Binding SelectedCategory}" />
+                        Content="{Binding SelectedCategory.Value}" />
     </Grid>
 </Window>

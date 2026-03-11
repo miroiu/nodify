@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using Nodify.Workflow.Common;
 using Nodify.Workflow.Shell;
 using R3;
 
@@ -17,8 +18,6 @@ public partial class MainWindow
     private double _lastMainWorkflowWidth = _defaultMainWorkflowWidth;
     private bool _isZenMode;
     private bool _hasSelectedWorkflow;
-
-    private readonly Dictionary<ColumnDefinition, AnimatableDouble> _animations = [];
 
     static MainWindow()
     {
@@ -54,18 +53,18 @@ public partial class MainWindow
 
             if (_hasSelectedWorkflow)
             {
-                AnimateColumnWidth(MainWorkflowColumn, MainWorkflowColumn.Width.Value, 0);
+                AnimateColumnWidth(MainWorkflowColumn, 0);
             }
-            AnimateColumnWidth(WorkflowsPanelColumn, WorkflowsPanelColumn.Width.Value, 0);
+            AnimateColumnWidth(WorkflowsPanelColumn, 0);
         }
         else
         {
             // Restore to saved width
             if (_hasSelectedWorkflow)
             {
-                AnimateColumnWidth(MainWorkflowColumn, 0, _lastMainWorkflowWidth);
+                AnimateColumnWidth(MainWorkflowColumn, _lastMainWorkflowWidth);
             }
-            AnimateColumnWidth(WorkflowsPanelColumn, 0, _defaultWorkflowsPanelWidth);
+            AnimateColumnWidth(WorkflowsPanelColumn, _defaultWorkflowsPanelWidth);
         }
     }
 
@@ -99,55 +98,13 @@ public partial class MainWindow
             : Visibility.Collapsed;
     }
 
-    private void AnimateColumnWidth(ColumnDefinition column, double from, double to)
+    private static void AnimateColumnWidth(ColumnDefinition column, double to)
     {
-        var animation = new DoubleAnimation
-        {
-            From = from,
-            To = to,
-            Duration = TimeSpan.FromSeconds(0.25),
-            EasingFunction = new CubicEase { EasingMode = to == 0 ? EasingMode.EaseIn : EasingMode.EaseOut }
-        };
-
-        if (!_animations.TryGetValue(column, out var animatable))
-        {
-
-            animatable = new AnimatableDouble();
-            animatable.ValueChanged += (_, value) => column.Width = new GridLength(value);
-            animatable.BeginAnimation(AnimatableDouble.ValueProperty, animation);
-
-            _animations[column] = animatable;
-        }
-        else
-        {
-            animatable.BeginAnimation(AnimatableDouble.ValueProperty, animation);
-        }
+        column.Animate(ColumnDefinition.WidthProperty, new GridLength(to), 250, new CubicEase { EasingMode = to == 0 ? EasingMode.EaseIn : EasingMode.EaseOut });
     }
 
     private void UpdateMainWindowVisuals(object? sender, EventArgs args)
     {
         BorderThickness = WindowState is WindowState.Maximized ? new Thickness(8) : new Thickness(0);
-    }
-
-    private class AnimatableDouble : Animatable
-    {
-        public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register(nameof(Value), typeof(double), typeof(AnimatableDouble),
-                new PropertyMetadata(0.0, OnValueChanged));
-
-        public double Value
-        {
-            get => (double)GetValue(ValueProperty);
-            set => SetValue(ValueProperty, value);
-        }
-
-        public event EventHandler<double>? ValueChanged;
-
-        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((AnimatableDouble)d).ValueChanged?.Invoke(d, (double)e.NewValue);
-        }
-
-        protected override Freezable CreateInstanceCore() => new AnimatableDouble();
     }
 }
