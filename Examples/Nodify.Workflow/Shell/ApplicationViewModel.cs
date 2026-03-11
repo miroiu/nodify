@@ -1,5 +1,4 @@
 ﻿using FluentIcons.Common;
-using Nodify.Interactivity;
 using Nodify.Workflow.Common;
 using Nodify.Workflow.Designer;
 using ObservableCollections;
@@ -282,9 +281,4 @@ internal sealed class ApplicationViewModel
 
         return workflow;
     }
-}
-
-internal sealed class ApplicationSettingsViewModel
-{
-    public EditorGestures EditorGestures { get; } = new EditorGestures();
 }

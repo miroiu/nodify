@@ -12,7 +12,7 @@
         BorderThickness="8"
         WindowStartupLocation="CenterScreen"
         Height="600"
-        Width="800">
+        Width="960">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="32"
@@ -60,60 +60,24 @@
         </Border>
 
         <ListView Grid.Row="1"
+                  ItemsSource="{Binding Categories}"
+                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                   SelectionMode="Single"
                   Margin="0 12 16 12">
-            <ListViewItem>
-                <StackPanel Orientation="Horizontal">
-                    <ic:FluentIcon Icon="Settings"
-                                   VerticalAlignment="Center" />
-                    <TextBlock Margin="16 4"
-                               Text="General" />
-                </StackPanel>
-            </ListViewItem>
-            <ListViewItem IsSelected="True">
-                <StackPanel Orientation="Horizontal">
-                    <ic:FluentIcon Icon="Keyboard"
-                                   VerticalAlignment="Center" />
-                    <TextBlock Margin="16 4"
-                               Text="Keybindings" />
-                </StackPanel>
-            </ListViewItem>
-            <ListViewItem>
-                <StackPanel Orientation="Horizontal">
-                    <ic:FluentIcon Icon="Color"
-                                   VerticalAlignment="Center" />
-                    <TextBlock Margin="16 4"
-                               Text="Appearance" />
-                </StackPanel>
-            </ListViewItem>
-            <ListViewItem>
-                <StackPanel Orientation="Horizontal">
-                    <ic:FluentIcon Icon="Info"
-                                   VerticalAlignment="Center" />
-                    <TextBlock Margin="16 4"
-                               Text="About" />
-                </StackPanel>
-            </ListViewItem>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:SettingsCategoryViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <ic:FluentIcon Icon="{Binding Icon.Value}"
+                                       VerticalAlignment="Center" />
+                        <TextBlock Margin="16 4"
+                                   Text="{Binding Name.Value}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
-        <StackPanel Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="0 12 16 12">
-            <TextBlock Text="Keybindings"
-                       Style="{DynamicResource TitleTextBlockStyle}"
-                       Margin="0 0 0 36" />
-
-            <TextBlock Text="Editor"
-                       Style="{DynamicResource SubtitleTextBlockStyle}" />
-
-            <Border>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </Border>
-        </StackPanel>
+        <ContentControl Grid.Row="1"
+                        Grid.Column="1"
+                        Content="{Binding SelectedCategory}" />
     </Grid>
 </Window>
