@@ -1,6 +1,7 @@
 ﻿using FluentIcons.Common;
 using Nodify.Workflow.Common;
 using Nodify.Workflow.Designer;
+using Nodify.Workflow.Settings;
 using ObservableCollections;
 using R3;
 using System.Windows;

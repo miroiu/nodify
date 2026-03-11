@@ -3,7 +3,7 @@ using Nodify.Interactivity;
 using ObservableCollections;
 using R3;
 
-namespace Nodify.Workflow.Shell;
+namespace Nodify.Workflow.Settings;
 
 internal sealed class ApplicationSettingsViewModel
 {

@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Nodify.Workflow.Designer
+namespace Nodify.Workflow.Designer;
+
+/// <summary>
+/// Interaction logic for WorkflowToolBar.xaml
+/// </summary>
+public partial class WorkflowToolBar : UserControl
 {
-    /// <summary>
-    /// Interaction logic for WorkflowToolBar.xaml
-    /// </summary>
-    public partial class WorkflowToolBar : UserControl
+    public WorkflowToolBar()
     {
-        public WorkflowToolBar()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
