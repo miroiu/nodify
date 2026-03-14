@@ -2,10 +2,11 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Nodify
 {
-    public class ToStringConverter : IValueConverter
+    public class ToStringConverter : MarkupExtension, IValueConverter
     {
         public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,7 +20,7 @@ namespace Nodify
                 return $"{s.Width:0.0}, {s.Height:0.0}";
             }
 
-            if(value is double d)
+            if (value is double d)
             {
                 return d.ToString("0.00");
             }
@@ -31,5 +32,7 @@ namespace Nodify
         {
             throw new NotImplementedException();
         }
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
 }

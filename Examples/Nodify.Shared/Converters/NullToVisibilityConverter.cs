@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace Nodify
 {
-    public class InverseBooleanConverter : MarkupExtension, IValueConverter
+    public class NullToVisibilityConverter : MarkupExtension, IValueConverter
     {
+        public bool Invert { get; set; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(bool))
-                throw new InvalidOperationException("The value must be of type bool.");
+            bool isNull = value == null;
+            if (Invert)
+            {
+                isNull = !isNull;
+            }
 
-            return !(bool)value;
+            return isNull ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType != typeof(bool))
-                throw new InvalidOperationException("The value must be of type bool.");
-
-            return !(bool)value;
-        }
+            => Binding.DoNothing;
 
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }

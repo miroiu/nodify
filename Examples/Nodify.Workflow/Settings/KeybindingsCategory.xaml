@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Nodify.Workflow.Settings.KeybindingsCategory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nodify.Workflow.Shell"
+             xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+             x:Name="Root"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    
+    <Button Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            Command="{Binding ElementName=Root, Path=Command}"
+            Padding="16">
+        <Border>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ic:FluentIcon Grid.Column="0"
+                               Margin="0 0 12 0"
+                               IconSize="Size20"
+                               FontSize="24"
+                               Icon="{Binding ElementName=Root, Path=Icon}"
+                               VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{Binding ElementName=Root, Path=Label}"
+                               Style="{DynamicResource BodyTextBlockStyle}" />
+                    <TextBlock Text="{Binding ElementName=Root, Path=Description}"
+                               Style="{DynamicResource CaptionTextBlockStyle}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                <ic:FluentIcon Grid.Column="2"
+                               Icon="ChevronRight"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </Grid>
+        </Border>
+    </Button>
+    
+</UserControl>
