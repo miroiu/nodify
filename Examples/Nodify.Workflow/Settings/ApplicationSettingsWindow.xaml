@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nodify.Workflow.Settings"
+        xmlns:nav="clr-namespace:Nodify.Workflow.Navigation"
         xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
         d:DataContext="{d:DesignInstance local:ApplicationSettingsViewModel, IsDesignTimeCreatable=True}"
         WindowStyle="ToolWindow"
@@ -13,6 +14,10 @@
         WindowStartupLocation="CenterScreen"
         Height="600"
         Width="960">
+
+    <Window.Resources>
+        <ResourceDictionary Source="/Settings/ApplicationSettingsDataTemplates.xaml" />
+    </Window.Resources>
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="32"
@@ -38,10 +43,9 @@
                 VerticalAlignment="Stretch">
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center">
-                <ic:FluentIcon Icon="Flow"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource AccentFillColorSecondaryBrush}"
-                               Margin="16 0 16 0" />
+                <ContentControl Content="{Binding NavigateBackCommand}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Margin="0 0 4 0" />
 
                 <TextBlock VerticalAlignment="Center"
                            Style="{DynamicResource BodyStrongTextBlockStyle}"
@@ -60,12 +64,12 @@
         </Border>
 
         <ListView Grid.Row="1"
-                  ItemsSource="{Binding Categories}"
+                  ItemsSource="{Binding SettingsList}"
                   SelectedItem="{Binding SelectedCategory.Value, Mode=TwoWay}"
                   SelectionMode="Single"
                   Margin="0 12 16 12">
             <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:SettingsCategoryViewModel}">
+                <DataTemplate DataType="{x:Type local:SettingsEntryViewModel}">
                     <StackPanel Orientation="Horizontal">
                         <ic:FluentIcon Icon="{Binding Icon.Value}"
                                        VerticalAlignment="Center" />
@@ -76,8 +80,23 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <ContentControl Grid.Row="1"
-                        Grid.Column="1"
-                        Content="{Binding SelectedCategory.Value}" />
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <ContentControl Content="{Binding Breadcrumbs}"
+                            Grid.Row="0"
+                            MaxWidth="900"
+                            Margin="0 12 16 16" />
+
+            <ScrollViewer Grid.Row="1"
+                          Padding="0 12 16 0">
+                <nav:NavigationOutlet NavigationService="{Binding NavigationService}" />
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>

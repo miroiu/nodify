@@ -27,12 +27,10 @@ internal abstract class WorkflowDesignerViewModel<T>
 
     public EditorGestures EditorGestures { get; } = new EditorGestures();
 
-    public WorkflowDesignerViewModel(ApplicationSettingsViewModel appSettings)
+    public WorkflowDesignerViewModel()
     {
         Name = new BindableReactiveProperty<string>(string.Empty);
         ViewportPosition = new ClampedViewportProperty<T>(Steps);
-
-        EditorGestures.Apply(appSettings.EditorGestures);
 
         ConfigureDefaultGestures();
     }
@@ -49,8 +47,8 @@ internal abstract class WorkflowDesignerViewModel<T>
     }
 }
 
-internal sealed class MainWorkflowDesignerViewModel(ApplicationSettingsViewModel appSettings)
-    : WorkflowDesignerViewModel<MainWorkflowDesignerViewModel>(appSettings), IViewportSizeAware
+internal sealed class MainWorkflowDesignerViewModel
+    : WorkflowDesignerViewModel<MainWorkflowDesignerViewModel>, IViewportSizeAware
 {
     public static BindableReactiveProperty<Size> ViewportSize { get; } = new();
 
@@ -64,6 +62,8 @@ internal sealed class MainWorkflowDesignerViewModel(ApplicationSettingsViewModel
 
 internal sealed class SubWorkflowDesignerViewModel : WorkflowDesignerViewModel<SubWorkflowDesignerViewModel>, IViewportSizeAware
 {
+    private readonly EditorGestures _backupGestures = new();
+
     public static BindableReactiveProperty<Size> ViewportSize { get; } = new();
 
     public BindableReactiveProperty<double> ZoomLevel { get; } = new(1);
@@ -73,7 +73,7 @@ internal sealed class SubWorkflowDesignerViewModel : WorkflowDesignerViewModel<S
     public CommandViewModel ZoomInCommand { get; }
     public CommandViewModel ZoomOutCommand { get; }
 
-    public SubWorkflowDesignerViewModel(ApplicationSettingsViewModel appSettings) : base(appSettings)
+    public SubWorkflowDesignerViewModel()
     {
         FitToViewCommand = new CommandViewModel(new ReactiveCommand())
         {
@@ -104,14 +104,16 @@ internal sealed class SubWorkflowDesignerViewModel : WorkflowDesignerViewModel<S
         {
             if (value)
             {
+                _backupGestures.Apply(EditorGestures);
                 EditorGestures.LockEditing();
             }
             else
             {
-                EditorGestures.Apply(appSettings.EditorGestures);
-                ConfigureDefaultGestures();
+                EditorGestures.Apply(_backupGestures);
             }
         });
+
+        ConfigureDefaultGestures();
     }
 
     public override void OnPostInitialize()
@@ -127,5 +129,7 @@ internal sealed class SubWorkflowDesignerViewModel : WorkflowDesignerViewModel<S
 
         EditorGestures.Editor.PanVerticalModifierKey = ModifierKeys.Shift;
         EditorGestures.Editor.PanHorizontalModifierKey = ModifierKeys.None;
+
+        _backupGestures.Apply(EditorGestures);
     }
 }

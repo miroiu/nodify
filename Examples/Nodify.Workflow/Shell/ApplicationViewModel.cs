@@ -19,8 +19,6 @@ internal sealed class ApplicationViewModel
     public BindableReactiveProperty<SubWorkflowDesignerViewModel?> SelectedWorkflow { get; }
     public BindableReactiveProperty<bool> IsZenMode { get; } = new(false);
 
-    public ApplicationSettingsViewModel ApplicationSettings { get; } = new();
-
     public CommandViewModel RunWorkflowCommand { get; }
     public CommandViewModel SaveChangesCommand { get; }
     public ToggleCommandViewModel ToggleZenModeCommand { get; }
@@ -28,9 +26,9 @@ internal sealed class ApplicationViewModel
 
     public ApplicationViewModel()
     {
-        MainWorkflow = new(new MainWorkflowDesignerViewModel(ApplicationSettings));
+        MainWorkflow = new(new MainWorkflowDesignerViewModel());
 
-        CreateDefaultWorkflows(ApplicationSettings);
+        CreateDefaultWorkflows();
 
         SelectedWorkflow = new(Workflows[0]);
 
@@ -71,20 +69,22 @@ internal sealed class ApplicationViewModel
 
     private void OpenAppSettingsDialog(Unit unit)
     {
+        var applicationSettings = new ApplicationSettingsViewModel(SelectedWorkflow.Value?.EditorGestures);
+
         var window = new ApplicationSettingsWindow
         {
-            DataContext = ApplicationSettings,
+            DataContext = applicationSettings,
             Owner = Application.Current.MainWindow
         };
 
         window.ShowDialog();
     }
 
-    private void CreateDefaultWorkflows(ApplicationSettingsViewModel settings)
+    private void CreateDefaultWorkflows()
     {
-        var runTestsWorkflow = CreateRunTestsWorkflow(settings);
-        var buildLibraryWorkflow = CreateBuildLibraryWorkflow(settings);
-        var publishToNugetWorkflow = CreatePublishToNugetWorkflow(settings);
+        var runTestsWorkflow = CreateRunTestsWorkflow();
+        var buildLibraryWorkflow = CreateBuildLibraryWorkflow();
+        var publishToNugetWorkflow = CreatePublishToNugetWorkflow();
 
         Workflows.Add(runTestsWorkflow);
         Workflows.Add(buildLibraryWorkflow);
@@ -124,9 +124,9 @@ internal sealed class ApplicationViewModel
         MainWorkflow.Value.OnPostInitialize();
     }
 
-    private static SubWorkflowDesignerViewModel CreateRunTestsWorkflow(ApplicationSettingsViewModel settings)
+    private static SubWorkflowDesignerViewModel CreateRunTestsWorkflow()
     {
-        var workflow = new SubWorkflowDesignerViewModel(settings)
+        var workflow = new SubWorkflowDesignerViewModel()
         {
             Name = { Value = "Run tests" },
             ViewportPosition = { Value = new Point(-100, -200) }
@@ -185,9 +185,9 @@ internal sealed class ApplicationViewModel
         return workflow;
     }
 
-    private static SubWorkflowDesignerViewModel CreateBuildLibraryWorkflow(ApplicationSettingsViewModel settings)
+    private static SubWorkflowDesignerViewModel CreateBuildLibraryWorkflow()
     {
-        var workflow = new SubWorkflowDesignerViewModel(settings)
+        var workflow = new SubWorkflowDesignerViewModel()
         {
             Name = { Value = "Build library" },
             ViewportPosition = { Value = new Point(-100, -200) }
@@ -246,9 +246,9 @@ internal sealed class ApplicationViewModel
         return workflow;
     }
 
-    private static SubWorkflowDesignerViewModel CreatePublishToNugetWorkflow(ApplicationSettingsViewModel settings)
+    private static SubWorkflowDesignerViewModel CreatePublishToNugetWorkflow()
     {
-        var workflow = new SubWorkflowDesignerViewModel(settings)
+        var workflow = new SubWorkflowDesignerViewModel()
         {
             Name = { Value = "Publish NuGet package" },
             ViewportPosition = { Value = new Point(-100, -200) }

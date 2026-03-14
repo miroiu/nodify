@@ -26,6 +26,11 @@
                                     <Setter Property="Foreground"
                                             Value="{DynamicResource TextFillColorSecondaryBrush}" />
                                 </DataTrigger>
+                                <Trigger Property="IsEnabled"
+                                         Value="False">
+                                    <Setter Property="Opacity"
+                                            Value="0.5" />
+                                </Trigger>
                             </Style.Triggers>
                         </Style>
                     </ic:FluentIcon.Style>
@@ -46,7 +51,11 @@
                                     <Setter Property="Margin"
                                             Value="0" />
                                 </DataTrigger>
-
+                                <Trigger Property="IsEnabled"
+                                         Value="False">
+                                    <Setter Property="Opacity"
+                                            Value="0.5" />
+                                </Trigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>

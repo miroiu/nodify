@@ -13,6 +13,7 @@
     <Button Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
+            Command="{Binding ElementName=Root, Path=Command}"
             Padding="16">
         <Border>
             <Grid>

@@ -100,7 +100,14 @@ public partial class MainWindow
 
     private static void AnimateColumnWidth(ColumnDefinition column, double to)
     {
-        column.Animate(ColumnDefinition.WidthProperty, new GridLength(to), 250, new CubicEase { EasingMode = to == 0 ? EasingMode.EaseIn : EasingMode.EaseOut });
+        column.Animate(ColumnDefinition.WidthProperty, new GridLength(to), new AnimationOptions<GridLength>
+        {
+            Duration = TimeSpan.FromMilliseconds(250),
+            Easing = new CubicEase
+            {
+                EasingMode = to == 0 ? EasingMode.EaseIn : EasingMode.EaseOut
+            }
+        });
     }
 
     private void UpdateMainWindowVisuals(object? sender, EventArgs args)

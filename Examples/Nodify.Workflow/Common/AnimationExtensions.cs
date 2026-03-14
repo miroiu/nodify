@@ -5,6 +5,19 @@ using System.Windows.Media.Animation;
 
 namespace Nodify.Workflow.Common;
 
+public static class AnimationDefaults
+{
+    public static readonly IEasingFunction DefaultEase = new CubicEase { EasingMode = EasingMode.EaseOut };
+    public static readonly TimeSpan DefaultDuration = TimeSpan.FromMilliseconds(200);
+}
+
+public sealed class AnimationOptions<T> where T : struct
+{
+    public T? From { get; set; }
+    public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(200);
+    public IEasingFunction? Easing { get; set; } = AnimationDefaults.DefaultEase;
+}
+
 public static class AnimationExtensions
 {
     #region Animation Core
@@ -64,7 +77,6 @@ public static class AnimationExtensions
     }
 
     private static readonly ConcurrentDictionary<AnimationKey, RunningAnimation> _runningAnimations = new();
-    private static readonly IEasingFunction _defaultEase = new CubicEase { EasingMode = EasingMode.EaseOut };
 
     public static Task Animate(this DependencyObject target, DependencyProperty property, AnimationTimeline timeline)
     {
@@ -113,72 +125,66 @@ public static class AnimationExtensions
 
     #region Animation Types
 
-    public static Task Animate(this DependencyObject target, DependencyProperty property, double to, int ms = 200, IEasingFunction? easing = null)
+    public static Task Animate(this DependencyObject target, DependencyProperty property, double to, in AnimationOptions<double>? options = null)
     {
-        double from = (double)target.GetValue(property);
-
         var anim = new DoubleAnimation
         {
-            From = from,
+            From = options?.From ?? (double)target.GetValue(property),
             To = to,
-            Duration = TimeSpan.FromMilliseconds(ms),
-            EasingFunction = easing ?? _defaultEase
+            Duration = options?.Duration ?? AnimationDefaults.DefaultDuration,
+            EasingFunction = options?.Easing ?? AnimationDefaults.DefaultEase
         };
 
         return target.Animate(property, anim);
     }
 
-    public static Task Animate(this DependencyObject target, DependencyProperty property, Color to, int ms = 200, IEasingFunction? easing = null)
+    public static Task Animate(this DependencyObject target, DependencyProperty property, Color to, in AnimationOptions<Color>? options = null)
     {
-        var from = (Color)target.GetValue(property);
-
         var anim = new ColorAnimation
         {
-            From = from,
+            From = options?.From ?? (Color)target.GetValue(property),
             To = to,
-            Duration = TimeSpan.FromMilliseconds(ms),
-            EasingFunction = easing ?? _defaultEase
+            Duration = options?.Duration ?? AnimationDefaults.DefaultDuration,
+            EasingFunction = options?.Easing ?? AnimationDefaults.DefaultEase
         };
 
         return target.Animate(property, anim);
     }
 
-    public static Task Animate(this DependencyObject target, DependencyProperty property, Thickness to, int ms = 200, IEasingFunction? easing = null)
+    public static Task Animate(this DependencyObject target, DependencyProperty property, Thickness to, AnimationOptions<Thickness>? options = null)
     {
-        var from = (Thickness)target.GetValue(property);
-
         var anim = new ThicknessAnimation
         {
-            From = from,
+            From = options?.From ?? (Thickness)target.GetValue(property),
             To = to,
-            Duration = TimeSpan.FromMilliseconds(ms),
-            EasingFunction = easing ?? _defaultEase
+            Duration = options?.Duration ?? AnimationDefaults.DefaultDuration,
+            EasingFunction = options?.Easing ?? AnimationDefaults.DefaultEase
         };
 
         return target.Animate(property, anim);
     }
 
-    public static Task Animate(this DependencyObject target, DependencyProperty property, Point to, int ms = 200, IEasingFunction? easing = null)
+    public static Task Animate(this DependencyObject target, DependencyProperty property, Point to, AnimationOptions<Point>? options = null)
     {
-        var from = (Point)target.GetValue(property);
-
         var anim = new PointAnimation
         {
-            From = from,
+            From = options?.From ?? (Point)target.GetValue(property),
             To = to,
-            Duration = TimeSpan.FromMilliseconds(ms),
-            EasingFunction = easing ?? _defaultEase
+            Duration = options?.Duration ?? AnimationDefaults.DefaultDuration,
+            EasingFunction = options?.Easing ?? AnimationDefaults.DefaultEase
         };
 
         return target.Animate(property, anim);
     }
 
-    public static Task Animate(this DependencyObject target, DependencyProperty property, GridLength to, int ms = 200, IEasingFunction? easing = null)
+    public static Task Animate(this DependencyObject target, DependencyProperty property, GridLength to, AnimationOptions<GridLength>? options = null)
     {
         var from = (GridLength)target.GetValue(property);
 
+        var wrapperOptions = options != null ? new AnimationOptions<double> { Duration = options.Duration, From = options.From?.Value, Easing = options.Easing } : null;
+
         var wrapper = new AnimatableDouble(from.Value, newValue => target.SetCurrentValue(property, new GridLength(newValue)));
-        return wrapper.Animate(AnimatableDouble.ValueProperty, to.Value, ms, easing);
+        return wrapper.Animate(AnimatableDouble.ValueProperty, to.Value, wrapperOptions);
     }
 
     private class AnimatableDouble : Animatable
@@ -218,14 +224,14 @@ public static class AnimationExtensions
 
     #region High Level Animations
 
-    public static Task FadeIn(this UIElement el, int ms = 200)
+    public static Task FadeIn(this UIElement el, AnimationOptions<double>? options = null)
     {
-        return el.Animate(UIElement.OpacityProperty, 1, ms);
+        return el.Animate(UIElement.OpacityProperty, 1d, options);
     }
 
-    public static Task FadeOut(this UIElement el, int ms = 200)
+    public static Task FadeOut(this UIElement el, AnimationOptions<double>? options = null)
     {
-        return el.Animate(UIElement.OpacityProperty, 0, ms);
+        return el.Animate(UIElement.OpacityProperty, 0d, options);
     }
 
     private static T GetOrCreateTransform<T>(FrameworkElement el) where T : Transform, new()
@@ -256,28 +262,28 @@ public static class AnimationExtensions
         return newTransform;
     }
 
-    public static Task TranslateX(this FrameworkElement el, double to, int ms = 250)
+    public static Task TranslateX(this FrameworkElement el, double to, AnimationOptions<double>? options = null)
     {
         var t = GetOrCreateTransform<TranslateTransform>(el);
-        return t.Animate(TranslateTransform.XProperty, to, ms);
+        return t.Animate(TranslateTransform.XProperty, to, options);
     }
 
-    public static Task TranslateY(this FrameworkElement el, double to, int ms = 250)
+    public static Task TranslateY(this FrameworkElement el, double to, AnimationOptions<double>? options = null)
     {
         var t = GetOrCreateTransform<TranslateTransform>(el);
-        return t.Animate(TranslateTransform.YProperty, to, ms);
+        return t.Animate(TranslateTransform.YProperty, to, options);
     }
 
-    public static Task ScaleX(this FrameworkElement el, double to, int ms = 200)
+    public static Task ScaleX(this FrameworkElement el, double to, AnimationOptions<double>? options = null)
     {
         var s = GetOrCreateTransform<ScaleTransform>(el);
-        return s.Animate(ScaleTransform.ScaleXProperty, to, ms);
+        return s.Animate(ScaleTransform.ScaleXProperty, to, options);
     }
 
-    public static Task ScaleY(this FrameworkElement el, double to, int ms = 200)
+    public static Task ScaleY(this FrameworkElement el, double to, AnimationOptions<double>? options = null)
     {
         var s = GetOrCreateTransform<ScaleTransform>(el);
-        return s.Animate(ScaleTransform.ScaleYProperty, to, ms);
+        return s.Animate(ScaleTransform.ScaleYProperty, to, options);
     }
 
     #endregion
