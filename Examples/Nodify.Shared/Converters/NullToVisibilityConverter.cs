@@ -8,6 +8,7 @@ namespace Nodify
 {
     public class NullToVisibilityConverter : MarkupExtension, IValueConverter
     {
+        public Visibility FalseVisibility { get; set; } = Visibility.Collapsed;
         public bool Invert { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -18,7 +19,7 @@ namespace Nodify
                 isNull = !isNull;
             }
 
-            return isNull ? Visibility.Collapsed : Visibility.Visible;
+            return isNull ? FalseVisibility : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

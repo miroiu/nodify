@@ -5,65 +5,6 @@
                     xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared"
                     xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf">
 
-    <DataTemplate DataType="{x:Type local:KeybindingsSettingsViewModel}">
-        <ItemsControl ItemsSource="{Binding Categories}"
-                      MaxWidth="900">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:KeybindingCategoryViewModel}">
-                    <local:KeybindingsCategory Icon="{Binding Icon.Value}"
-                                               Label="{Binding Name.Value}"
-                                               Description="{Binding Description.Value}"
-                                               Command="{Binding SelectCommand}"
-                                               Margin="0 0 0 8" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type local:KeybindingsListViewModel}">
-        <ItemsControl ItemsSource="{Binding Keybindings}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:KeybindingViewModel}">
-                    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                            CornerRadius="{DynamicResource ControlCornerRadius}"
-                            HorizontalAlignment="Stretch"
-                            Padding="16"
-                            Margin="0 0 0 8">
-                        <Border>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <ic:FluentIcon Grid.Column="0"
-                                               Margin="0 0 12 0"
-                                               IconSize="Size20"
-                                               FontSize="24"
-                                               Icon="{Binding Icon.Value}"
-                                               VerticalAlignment="Center" />
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding Label.Value}"
-                                               Style="{DynamicResource BodyTextBlockStyle}" />
-                                    <TextBlock Text="{Binding Description.Value}"
-                                               Style="{DynamicResource CaptionTextBlockStyle}"
-                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                </StackPanel>
-
-                                <ContentControl Grid.Column="2"
-                                                VerticalAlignment="Center"
-                                                VerticalContentAlignment="Center"
-                                                Content="{Binding GestureEditor}" />
-                            </Grid>
-                        </Border>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type nav:NavigationBreadcrumbsViewModel}">
         <ItemsControl ItemsSource="{Binding Breadcrumbs}">
             <ItemsControl.ItemTemplate>
@@ -111,13 +52,92 @@
         </ItemsControl>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:KeybindingsSettingsViewModel}">
+        <ItemsControl ItemsSource="{Binding Categories}"
+                      MaxWidth="900">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:KeybindingCategoryViewModel}">
+                    <local:KeybindingsCategory Icon="{Binding Icon.Value}"
+                                               Label="{Binding Name.Value}"
+                                               Description="{Binding Description.Value}"
+                                               Command="{Binding SelectCommand}"
+                                               Margin="0 0 0 8" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:KeybindingsListViewModel}">
+        <ItemsControl ItemsSource="{Binding Keybindings}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:KeybindingsGroupViewModel}">
+                    <Grid Margin="0 0 0 24">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="{Binding Label.Value}"
+                                   Style="{DynamicResource BodyStrongTextBlockStyle}"
+                                   Margin="0 0 0 8" />
+
+                        <ItemsControl Grid.Row="1"
+                                      ItemsSource="{Binding}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:KeybindingViewModel}">
+                                    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                            CornerRadius="{DynamicResource ControlCornerRadius}"
+                                            HorizontalAlignment="Stretch"
+                                            Padding="16"
+                                            Margin="0 0 0 8">
+                                        <Border>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <ic:FluentIcon Grid.Column="0"
+                                                               Margin="0 0 12 0"
+                                                               IconSize="Size20"
+                                                               FontSize="24"
+                                                               Icon="{Binding Icon.Value}"
+                                                               Visibility="{Binding Icon.Value, Converter={shared:NullToVisibilityConverter FalseVisibility=Hidden}}"
+                                                               VerticalAlignment="Center" />
+
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Label.Value}"
+                                                               Style="{DynamicResource BodyTextBlockStyle}" />
+                                                    <TextBlock Text="{Binding Description.Value}"
+                                                               Style="{DynamicResource CaptionTextBlockStyle}"
+                                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                </StackPanel>
+
+                                                <ContentControl Grid.Column="2"
+                                                                VerticalAlignment="Center"
+                                                                VerticalContentAlignment="Center"
+                                                                Content="{Binding GestureEditor}" />
+                                            </Grid>
+                                        </Border>
+                                    </Border>
+                                </DataTemplate>
+
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type local:MouseGestureSelectorViewModel}">
         <ComboBox SelectedValue="{Binding SelectedMouseAction}"
                   ItemsSource="{Binding Source={x:Static local:MouseGestureSelectorViewModel.AvailableOptions}}"
                   SelectedValuePath="Action"
                   DisplayMemberPath="Name"
-                  MinWidth="130">
-        </ComboBox>
+                  MinWidth="130" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:KeyGestureSelectorViewModel}">
@@ -125,6 +145,26 @@
                 Height="Auto"
                 Style="{StaticResource ButtonStyle.Borderless}">
             <StackPanel Orientation="Horizontal">
+                <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                        Padding="6"
+                        Margin="0 0 8 0">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ComboTriggerKey.Value}"
+                                             Value="{x:Static Key.None}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding ComboTriggerKey.Value, Converter={shared:ToStringConverter}}"
+                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                               Style="{StaticResource BodyStrongTextBlockStyle}">
+                    </TextBlock>
+                </Border>
                 <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
                         CornerRadius="{DynamicResource ControlCornerRadius}"
                         Padding="6"

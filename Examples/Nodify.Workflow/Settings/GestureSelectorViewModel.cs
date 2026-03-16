@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Nodify.Interactivity;
 using R3;
+using SystemKey = System.Windows.Input.Key;
 
 namespace Nodify.Workflow.Settings
 {
@@ -13,7 +14,8 @@ namespace Nodify.Workflow.Settings
     internal class KeyGestureSelectorViewModel : GestureSelectorViewModel
     {
         public BindableReactiveProperty<ModifierKeys> Modifier { get; } = new();
-        public BindableReactiveProperty<Key> Key { get; } = new();
+        public BindableReactiveProperty<SystemKey> Key { get; } = new();
+        public BindableReactiveProperty<SystemKey> ComboTriggerKey { get; } = new();
 
         public KeyGestureSelectorViewModel(InputGestureRef gestureRef) : base(gestureRef)
         {
@@ -26,10 +28,23 @@ namespace Nodify.Workflow.Settings
 
             Key.Value = gestureRef.Value switch
             {
-                MultiGesture multiGesture => multiGesture.Gestures.OfType<KeyGesture>().FirstOrDefault()?.Key ?? System.Windows.Input.Key.None,
+                MultiGesture multiGesture => multiGesture.Gestures.OfType<KeyGesture>().FirstOrDefault()?.Key ?? SystemKey.None,
                 KeyGesture keyGesture => keyGesture.Key,
-                _ => System.Windows.Input.Key.None
+                _ => SystemKey.None
             };
+
+            ComboTriggerKey.Value = gestureRef.Value is KeyComboGesture comboGesture ? comboGesture.TriggerKey : SystemKey.None;
+
+            Key.Subscribe(key => gestureRef.Value = ComboTriggerKey.Value is SystemKey.None ? new KeyGesture(key, Modifier.Value) : new KeyComboGesture(key, ComboTriggerKey.Value, Modifier.Value));
+            Modifier.Subscribe(modifier => gestureRef.Value = ComboTriggerKey.Value is SystemKey.None ? new KeyGesture(Key.Value, modifier) : new KeyComboGesture(Key.Value, ComboTriggerKey.Value, modifier));
+
+            ComboTriggerKey.Subscribe(triggerKey =>
+            {
+                if (triggerKey != SystemKey.None)
+                {
+                    gestureRef.Value = new KeyComboGesture(triggerKey, Key.Value, Modifier.Value);
+                }
+            });
         }
     }
 
@@ -69,9 +84,9 @@ namespace Nodify.Workflow.Settings
         {
             SelectedMouseAction = gestureRef.Value switch
             {
-                MultiGesture multiGesture => multiGesture.Gestures.OfType<MouseGesture>().FirstOrDefault()?.MouseAction ?? MouseAction.None,
                 MouseGesture mouseGesture => mouseGesture.MouseAction,
                 System.Windows.Input.MouseGesture sysMouseGesture => sysMouseGesture.MouseAction,
+                MultiGesture multiGesture => multiGesture.Gestures.OfType<MouseGesture>().FirstOrDefault()?.MouseAction ?? MouseAction.None,
                 _ => MouseAction.None
             };
         }
