@@ -133,11 +133,52 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:MouseGestureSelectorViewModel}">
-        <ComboBox SelectedValue="{Binding SelectedMouseAction}"
-                  ItemsSource="{Binding Source={x:Static local:MouseGestureSelectorViewModel.AvailableOptions}}"
-                  SelectedValuePath="Action"
-                  DisplayMemberPath="Name"
-                  MinWidth="130" />
+
+        <StackPanel Orientation="Horizontal">
+            <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}"
+                    Padding="6"
+                    Margin="0 0 8 0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Modifier.Value}"
+                                         Value="{x:Static ModifierKeys.None}">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding Modifier.Value, Converter={shared:ToStringConverter}}"
+                           Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                           Style="{StaticResource BodyStrongTextBlockStyle}">
+                </TextBlock>
+            </Border>
+            <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}"
+                    Padding="6">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Key.Value}"
+                                         Value="{x:Static Key.None}">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding Key.Value, Converter={shared:ToStringConverter}}"
+                           Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+            </Border>
+            <ComboBox SelectedValue="{Binding SelectedMouseAction}"
+                      ItemsSource="{Binding Source={x:Static local:MouseGestureSelectorViewModel.AvailableOptions}}"
+                      SelectedValuePath="Action"
+                      DisplayMemberPath="Name"
+                      MinWidth="130" />
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:KeyGestureSelectorViewModel}">

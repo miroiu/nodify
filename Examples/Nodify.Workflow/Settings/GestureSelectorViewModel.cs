@@ -63,13 +63,17 @@ namespace Nodify.Workflow.Settings
 
     internal class MouseGestureSelectorViewModel : GestureSelectorViewModel
     {
+        public BindableReactiveProperty<ModifierKeys> Modifier { get; } = new();
+
+        public BindableReactiveProperty<SystemKey> Key { get; } = new();
+
         public MouseAction SelectedMouseAction
         {
             get => field;
             set
             {
                 field = value;
-                GestureRef.Value = new MouseGesture(value, ModifierKeys.None);
+                GestureRef.Value = new MouseGesture(value, Modifier.Value, Key.Value);
             }
         }
 
@@ -82,6 +86,21 @@ namespace Nodify.Workflow.Settings
 
         public MouseGestureSelectorViewModel(InputGestureRef gestureRef) : base(gestureRef)
         {
+            Modifier.Value = gestureRef.Value switch
+            {
+                MouseGesture mouseGesture => mouseGesture.Modifiers,
+                System.Windows.Input.MouseGesture sysMouseGesture => sysMouseGesture.Modifiers,
+                MultiGesture multiGesture => multiGesture.Gestures.OfType<MouseGesture>().FirstOrDefault()?.Modifiers ?? ModifierKeys.None,
+                _ => ModifierKeys.None
+            };
+
+            Key.Value = gestureRef.Value switch
+            {
+                MouseGesture mouseGesture => mouseGesture.Key,
+                MultiGesture multiGesture => multiGesture.Gestures.OfType<MouseGesture>().FirstOrDefault()?.Key ?? SystemKey.None,
+                _ => SystemKey.None
+            };
+
             SelectedMouseAction = gestureRef.Value switch
             {
                 MouseGesture mouseGesture => mouseGesture.MouseAction,
