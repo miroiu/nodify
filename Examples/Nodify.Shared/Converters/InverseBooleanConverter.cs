@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Nodify
 {
-    public class InverseBooleanConverter : IValueConverter
+    public class InverseBooleanConverter : MarkupExtension, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -21,5 +22,7 @@ namespace Nodify
 
             return !(bool)value;
         }
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
 }

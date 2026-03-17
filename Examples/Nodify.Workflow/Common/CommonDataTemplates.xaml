@@ -1,0 +1,129 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify.Workflow.Common"
+                    xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+                    xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared">
+
+    <DataTemplate DataType="{x:Type local:CommandViewModel}">
+        <Button Style="{StaticResource ButtonStyle.Borderless}"
+                ToolTip="{Binding ToolTip.Value}"
+                Command="{Binding Command}">
+            <StackPanel Orientation="Horizontal">
+                <ic:FluentIcon IsHitTestVisible="False"
+                               Icon="{Binding Icon.Value}"
+                               IconSize="Size16"
+                               FontSize="14"
+                               IconVariant="{Binding IconVariant.Value}"
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Icon.Value, Converter={shared:NullToVisibilityConverter}}">
+                    <ic:FluentIcon.Style>
+                        <Style TargetType="ic:FluentIcon">
+                            <Setter Property="Foreground"
+                                    Value="{Binding IconColor.Value, Converter={shared:ColorToSolidColorBrushConverter}}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IconColor.Value}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ic:FluentIcon.Style>
+                </ic:FluentIcon>
+
+                <TextBlock Text="{Binding Label.Value}"
+                           FontSize="14"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Visibility="{Binding Label.Value, Converter={shared:NullToVisibilityConverter}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource BodyTextBlockStyle}">
+                            <Setter Property="Margin"
+                                    Value="8 0 0 0" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Icon.Value}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Margin"
+                                            Value="0" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+        </Button>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:ToggleCommandViewModel}">
+        <ToggleButton Style="{StaticResource ToggleButtonStyle.Borderless}"
+                      ToolTip="{Binding ToolTip.Value}"
+                      Command="{Binding Command}"
+                      IsChecked="{Binding IsChecked.Value, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal">
+                <ic:FluentIcon IsHitTestVisible="False"
+                               IconSize="Size16"
+                               FontSize="14"
+                               IconVariant="{Binding IconVariant.Value}"
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Icon.Value, Converter={shared:NullToVisibilityConverter}}">
+                    <ic:FluentIcon.Style>
+                        <Style TargetType="ic:FluentIcon">
+                            <Setter Property="Foreground"
+                                    Value="{Binding IconColor.Value, Converter={shared:ColorToSolidColorBrushConverter}}" />
+                            <Setter Property="Icon"
+                                    Value="{Binding Icon.Value}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IconColor.Value}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecked.Value}"
+                                             Value="True">
+                                    <Setter Property="Icon"
+                                            Value="{Binding IconChecked.Value}" />
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ic:FluentIcon.Style>
+                </ic:FluentIcon>
+
+                <TextBlock Text="{Binding Label.Value}"
+                           FontSize="14"
+                           Visibility="{Binding Label.Value, Converter={shared:NullToVisibilityConverter}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource BodyTextBlockStyle}">
+                            <Setter Property="Margin"
+                                    Value="8 0 0 0" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Icon.Value}"
+                                                   Value="{x:Null}" />
+                                        <Condition Binding="{Binding IconChecked.Value}"
+                                                   Value="{x:Null}" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Margin"
+                                                Value="0" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding IsChecked.Value}"
+                                             Value="True">
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+        </ToggleButton>
+    </DataTemplate>
+
+</ResourceDictionary>

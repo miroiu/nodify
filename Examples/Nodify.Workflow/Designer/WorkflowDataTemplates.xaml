@@ -1,0 +1,285 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Nodify.Workflow.Designer"
+                    xmlns:nodify="https://miroiu.github.io/nodify"
+                    xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:shared="clr-namespace:Nodify;assembly=Nodify.Shared">
+
+    <Style x:Key="ItemContainerStyle"
+           TargetType="{x:Type nodify:ItemContainer}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="SelectedBorderThickness"
+                Value="1" />
+        <Setter Property="Background"
+                Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ControlElevationBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected"
+                               Value="True" />
+                    <Condition Property="IsPreviewingSelection"
+                               Value="{x:Null}" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Background"
+                            Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+            <Trigger Property="IsPreviewingSelection"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CuttingLineStyle"
+           TargetType="{x:Type nodify:CuttingLine}"
+           BasedOn="{StaticResource {x:Type nodify:CuttingLine}}">
+        <Setter Property="StrokeDashArray"
+                Value="1 5" />
+        <Setter Property="StrokeThickness"
+                Value="2" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Fill"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+    </Style>
+    
+    <Style x:Key="PushedAreaStyle"
+           TargetType="Rectangle">
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+        <Setter Property="Fill"
+                Value="{DynamicResource ControlFillColorDefaultBrush}" />
+    </Style>
+
+    <Style x:Key="ConnectionStyle"
+           TargetType="{x:Type nodify:BaseConnection}">
+        <Setter Property="SourceOffset"
+                Value="8 0" />
+        <Setter Property="TargetOffset"
+                Value="8 0" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+        <Setter Property="Fill"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+    </Style>
+
+    <!--Sub workflow-->
+
+    <Style x:Key="SubStepConnectorStyle"
+           TargetType="{x:Type nodify:Connector}">
+        <Setter Property="Height"
+                Value="16" />
+        <Setter Property="Background"
+                Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nodify:Connector}">
+                    <Border Background="Transparent"
+                            Width="12">
+                        <Border x:Name="PART_Connector"
+                                Background="{TemplateBinding Background}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Width="3"
+                                CornerRadius="1" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="SubWorkflowStepTemplate"
+                  DataType="{x:Type local:WorkflowStepViewModel}">
+        <Border CornerRadius="{DynamicResource ControlCornerRadius}">
+            <StackPanel Orientation="Horizontal">
+                <nodify:Connector Anchor="{Binding InAnchorPosition.Value, Mode=OneWayToSource}"
+                                  HorizontalContentAlignment="Left"
+                                  IsConnected="True"
+                                  Style="{StaticResource SubStepConnectorStyle}" />
+
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                            CornerRadius="{DynamicResource OverlayCornerRadius}"
+                            Padding="6"
+                            Margin="0 0 8 0">
+                        <ic:FluentIcon Icon="{Binding Icon.Value}"
+                                       IconSize="Size20"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       Foreground="{Binding IconColor.Value, Converter={shared:ColorToSolidColorBrushConverter}}"
+                                       Visibility="{Binding Icon.Value, Converter={shared:NullToVisibilityConverter}}" />
+                    </Border>
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Name.Value}"
+                               VerticalAlignment="Center"
+                               Margin="0 0 0 4"
+                               Style="{StaticResource BodyStrongTextBlockStyle}" />
+
+                </Grid>
+
+                <nodify:Connector Anchor="{Binding OutAnchorPosition.Value, Mode=OneWayToSource}"
+                                  HorizontalContentAlignment="Right"
+                                  IsConnected="True"
+                                  Style="{StaticResource SubStepConnectorStyle}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:SubWorkflowDesignerViewModel}">
+        <Grid>
+            <ScrollViewer Grid.Row="0"
+                          CanContentScroll="True"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                <nodify:NodifyEditor x:Name="Editor"
+                                     ItemsSource="{Binding Steps}"
+                                     SelectedItem="{Binding SelectedStep.Value, Mode=TwoWay}"
+                                     Connections="{Binding Connections}"
+                                     InputGestures="{Binding EditorGestures}"
+                                     ViewportLocation="{Binding ViewportPosition.Value, Mode=TwoWay}"
+                                     ViewportSize="{Binding Value, Source={x:Static local:SubWorkflowDesignerViewModel.ViewportSize}, Mode=OneWayToSource}"
+                                     ItemTemplate="{StaticResource SubWorkflowStepTemplate}"
+                                     CuttingLineStyle="{StaticResource CuttingLineStyle}"
+                                     PushedAreaStyle="{StaticResource PushedAreaStyle}"
+                                     Background="Transparent">
+                    <nodify:NodifyEditor.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource ItemContainerStyle}"
+                               TargetType="{x:Type nodify:ItemContainer}">
+                            <Setter Property="Location"
+                                    Value="{Binding Position.Value, Mode=TwoWay}" />
+                            <Setter Property="ActualSize"
+                                    Value="{Binding Size.Value, Mode=OneWayToSource}" />
+                        </Style>
+                    </nodify:NodifyEditor.ItemContainerStyle>
+
+                    <nodify:NodifyEditor.ConnectionTemplate>
+                        <DataTemplate DataType="{x:Type local:WorkflowStepConnectionViewModel}">
+                            <nodify:StepConnection Source="{Binding From.OutAnchorPosition.Value}"
+                                                   Target="{Binding To.InAnchorPosition.Value}"
+                                                   Style="{StaticResource ConnectionStyle}" />
+                        </DataTemplate>
+                    </nodify:NodifyEditor.ConnectionTemplate>
+
+                    <nodify:NodifyEditor.Resources>
+                        <Style TargetType="{x:Type nodify:PendingConnection}"
+                               BasedOn="{StaticResource {x:Type nodify:PendingConnection}}">
+                            <Setter Property="Stroke"
+                                    Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+                        </Style>
+                    </nodify:NodifyEditor.Resources>
+                </nodify:NodifyEditor>
+            </ScrollViewer>
+
+            <local:WorkflowToolBar Editor="{Binding ., ElementName=Editor}"
+                                   VerticalAlignment="Bottom"
+                                   HorizontalAlignment="Center"
+                                   Margin="32" />
+        </Grid>
+    </DataTemplate>
+
+    <!--Main workflow-->
+
+    <Style x:Key="MainStepConnectorStyle"
+           TargetType="{x:Type nodify:Connector}">
+        <Setter Property="Width"
+                Value="16" />
+        <Setter Property="Background"
+                Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nodify:Connector}">
+                    <Border Background="Transparent"
+                            Height="12">
+                        <Border x:Name="PART_Connector"
+                                Background="{TemplateBinding Background}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Height="3"
+                                CornerRadius="1" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="MainWorkflowStepTemplate"
+                  DataType="{x:Type local:WorkflowStepViewModel}">
+        <Border CornerRadius="{DynamicResource ControlCornerRadius}">
+            <StackPanel Orientation="Vertical">
+                <nodify:Connector Anchor="{Binding InAnchorPosition.Value, Mode=OneWayToSource}"
+                                  VerticalContentAlignment="Top"
+                                  IsConnected="True"
+                                  Style="{StaticResource MainStepConnectorStyle}" />
+
+                <TextBlock Margin="12 0 12 0"
+                           Text="{Binding Name.Value}"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+
+                <nodify:Connector Anchor="{Binding OutAnchorPosition.Value, Mode=OneWayToSource}"
+                                  VerticalContentAlignment="Bottom"
+                                  IsConnected="True"
+                                  Style="{StaticResource MainStepConnectorStyle}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:MainWorkflowDesignerViewModel}">
+        <ScrollViewer CanContentScroll="True"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <nodify:NodifyEditor ItemsSource="{Binding Steps}"
+                                 SelectedItem="{Binding SelectedStep.Value, Mode=TwoWay}"
+                                 Connections="{Binding Connections}"
+                                 InputGestures="{Binding EditorGestures}"
+                                 ViewportLocation="{Binding ViewportPosition.Value, Mode=TwoWay}"
+                                 ViewportSize="{Binding Value, Source={x:Static local:MainWorkflowDesignerViewModel.ViewportSize}, Mode=OneWayToSource}"
+                                 ItemTemplate="{StaticResource MainWorkflowStepTemplate}"
+                                 Background="Transparent">
+                <nodify:NodifyEditor.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource ItemContainerStyle}"
+                           TargetType="{x:Type nodify:ItemContainer}">
+                        <Setter Property="Location"
+                                Value="{Binding Position.Value, Mode=TwoWay}" />
+                        <Setter Property="ActualSize"
+                                Value="{Binding Size.Value, Mode=OneWayToSource}" />
+                    </Style>
+                </nodify:NodifyEditor.ItemContainerStyle>
+
+                <nodify:NodifyEditor.ConnectionTemplate>
+                    <DataTemplate DataType="{x:Type local:WorkflowStepConnectionViewModel}">
+                        <nodify:LineConnection Source="{Binding From.OutAnchorPosition.Value}"
+                                               Target="{Binding To.InAnchorPosition.Value}"
+                                               SourceOrientation="Vertical"
+                                               TargetOrientation="Vertical"
+                                               Style="{StaticResource ConnectionStyle}" />
+                    </DataTemplate>
+                </nodify:NodifyEditor.ConnectionTemplate>
+            </nodify:NodifyEditor>
+        </ScrollViewer>
+    </DataTemplate>
+</ResourceDictionary>

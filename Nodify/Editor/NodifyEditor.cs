@@ -1017,7 +1017,7 @@ namespace Nodify
             base.OnRenderSizeChanged(sizeInfo);
 
             double zoom = ViewportZoom;
-            ViewportSize = new Size(ActualWidth / zoom, ActualHeight / zoom);
+            SetCurrentValue(ViewportSizeProperty, new Size(ActualWidth / zoom, ActualHeight / zoom));
 
             OnViewportUpdated();
         }

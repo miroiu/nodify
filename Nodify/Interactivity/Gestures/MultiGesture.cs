@@ -19,6 +19,11 @@ namespace Nodify.Interactivity
         private readonly InputGesture[] _gestures;
         private readonly Match _match;
 
+        /// <summary>
+        /// The input gestures that are combined by this <see cref="MultiGesture"/>.
+        /// </summary>
+        public InputGesture[] Gestures => _gestures;
+
         /// <summary>Constructs an instance of a <see cref="MultiGesture"/>.</summary>
         /// <param name="match">The matching strategy.</param>
         /// <param name="gestures">The input gestures.</param>
