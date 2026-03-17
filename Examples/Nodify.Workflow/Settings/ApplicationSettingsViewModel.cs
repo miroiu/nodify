@@ -30,7 +30,7 @@ internal sealed class ApplicationSettingsViewModel
             // TODO: Automatically register view models for routes and use DI to resolve them instead of hardcoding
             if (routeKey == KeybindingsSettingsViewModel.RouteKey)
             {
-                return new KeybindingsSettingsViewModel(EditorGestures!, NavigationService!);
+                return new KeybindingsSettingsViewModel(NavigationService!);
             }
 
             if (routeKey == EditorKeybindingsListViewModel.RouteKey)
@@ -38,14 +38,34 @@ internal sealed class ApplicationSettingsViewModel
                 return new EditorKeybindingsListViewModel(EditorGestures!);
             }
 
-            return routeKey switch
+            if (routeKey == ItemContainerKeybindingsViewModel.RouteKey)
             {
-                "General" => new KeybindingsSettingsViewModel(EditorGestures!, NavigationService!),
-                "Appearance" => new KeybindingsSettingsViewModel(EditorGestures!, NavigationService!),
-                "About" => new KeybindingsSettingsViewModel(EditorGestures!, NavigationService!),
-                _ => throw new NotImplementedException($"No view model registered for route key: {routeKey}")
-            };
+                return new ItemContainerKeybindingsViewModel(EditorGestures!);
+            }
+
+            if (routeKey == ConnectorKeybindingsViewModel.RouteKey)
+            {
+                return new ConnectorKeybindingsViewModel(EditorGestures!);
+            }
+
+            if (routeKey == ConnectionKeybindingsViewModel.RouteKey)
+            {
+                return new ConnectionKeybindingsViewModel(EditorGestures!);
+            }
+
+            if (routeKey == GroupingNodeKeybindingsViewModel.RouteKey)
+            {
+                return new GroupingNodeKeybindingsViewModel(EditorGestures!);
+            }
+
+            if (routeKey == MinimapKeybindingsViewModel.RouteKey)
+            {
+                return new MinimapKeybindingsViewModel(EditorGestures!);
+            }
+
+            return routeKey;
         });
+
         Breadcrumbs = new(NavigationService);
 
         SettingsList.Add(new SettingsEntryViewModel("General", Icon.Settings));

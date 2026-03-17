@@ -6,7 +6,9 @@
                     xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf">
 
     <DataTemplate DataType="{x:Type nav:NavigationBreadcrumbsViewModel}">
-        <ItemsControl ItemsSource="{Binding Breadcrumbs}">
+        <ItemsControl ItemsSource="{Binding Breadcrumbs}"
+                      MaxWidth="900"
+                      Focusable="False">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type nav:NavigationBreadcrumbViewModel}">
                     <StackPanel Orientation="Horizontal"
@@ -54,7 +56,8 @@
 
     <DataTemplate DataType="{x:Type local:KeybindingsSettingsViewModel}">
         <ItemsControl ItemsSource="{Binding Categories}"
-                      MaxWidth="900">
+                      MaxWidth="900"
+                      Focusable="False">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:KeybindingCategoryViewModel}">
                     <local:KeybindingsCategory Icon="{Binding Icon.Value}"
@@ -68,7 +71,9 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:KeybindingsListViewModel}">
-        <ItemsControl ItemsSource="{Binding Keybindings}">
+        <ItemsControl ItemsSource="{Binding Keybindings}"
+                      MaxWidth="900"
+                      Focusable="False">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:KeybindingsGroupViewModel}">
                     <Grid Margin="0 0 0 24">
@@ -83,7 +88,8 @@
                                    Margin="0 0 0 8" />
 
                         <ItemsControl Grid.Row="1"
-                                      ItemsSource="{Binding}">
+                                      ItemsSource="{Binding}"
+                                      Focusable="False">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:KeybindingViewModel}">
                                     <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
@@ -118,6 +124,7 @@
                                                 <ContentControl Grid.Column="2"
                                                                 VerticalAlignment="Center"
                                                                 VerticalContentAlignment="Center"
+                                                                Focusable="False"
                                                                 Content="{Binding GestureEditor}" />
                                             </Grid>
                                         </Border>
@@ -133,7 +140,6 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:MouseGestureSelectorViewModel}">
-
         <StackPanel Orientation="Horizontal">
             <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
                     CornerRadius="{DynamicResource ControlCornerRadius}"
@@ -182,65 +188,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:KeyGestureSelectorViewModel}">
-        <Button Padding="4"
-                Height="Auto"
-                Style="{StaticResource ButtonStyle.Borderless}">
-            <StackPanel Orientation="Horizontal">
-                <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}"
-                        Padding="6"
-                        Margin="0 0 8 0">
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ComboTriggerKey.Value}"
-                                             Value="{x:Static Key.None}">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <TextBlock Text="{Binding ComboTriggerKey.Value, Converter={shared:ToStringConverter}}"
-                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                               Style="{StaticResource BodyStrongTextBlockStyle}">
-                    </TextBlock>
-                </Border>
-                <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}"
-                        Padding="6"
-                        Margin="0 0 8 0">
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Modifier.Value}"
-                                             Value="{x:Static ModifierKeys.None}">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <TextBlock Text="{Binding Modifier.Value, Converter={shared:ToStringConverter}}"
-                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                               Style="{StaticResource BodyStrongTextBlockStyle}">
-                    </TextBlock>
-                </Border>
-                <Border Background="{DynamicResource AccentFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}"
-                        Padding="6">
-                    <TextBlock Text="{Binding Key.Value, Converter={shared:ToStringConverter}}"
-                               Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                               Style="{StaticResource BodyStrongTextBlockStyle}" />
-                </Border>
-                <ic:FluentIcon IconSize="Size16"
-                               FontSize="16"
-                               Margin="8 0 4 0"
-                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                               Icon="Edit"
-                               VerticalAlignment="Center" />
-            </StackPanel>
-        </Button>
+        <local:EditKeybinding Focusable="False" />
     </DataTemplate>
 
 </ResourceDictionary>

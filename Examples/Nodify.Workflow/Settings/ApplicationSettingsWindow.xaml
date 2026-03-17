@@ -89,6 +89,7 @@
             </Grid.RowDefinitions>
 
             <ContentControl Content="{Binding Breadcrumbs}"
+                            Focusable="False"
                             Grid.Row="0"
                             MaxWidth="900"
                             Margin="0 12 16 16" />

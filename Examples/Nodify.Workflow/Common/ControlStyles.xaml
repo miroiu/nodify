@@ -11,6 +11,8 @@
                 Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="BorderThickness"
                 Value="0" />
+        <Setter Property="BorderBrush"
+                Value="{x:Null}" />
         <Setter Property="Padding"
                 Value="10 4" />
         <Setter Property="Border.CornerRadius"
@@ -23,6 +25,8 @@
                     <Border Background="{TemplateBinding Background}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="{TemplateBinding Border.CornerRadius}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             SnapsToDevicePixels="True">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"

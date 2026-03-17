@@ -19,18 +19,18 @@ namespace Nodify.Workflow.Settings
 
         public KeyGestureSelectorViewModel(InputGestureRef gestureRef) : base(gestureRef)
         {
-            Modifier.Value = gestureRef.Value switch
-            {
-                MultiGesture multiGesture => multiGesture.Gestures.OfType<KeyGesture>().FirstOrDefault()?.Modifiers ?? ModifierKeys.None,
-                KeyGesture keyGesture => keyGesture.Modifiers,
-                _ => ModifierKeys.None
-            };
-
             Key.Value = gestureRef.Value switch
             {
                 MultiGesture multiGesture => multiGesture.Gestures.OfType<KeyGesture>().FirstOrDefault()?.Key ?? SystemKey.None,
                 KeyGesture keyGesture => keyGesture.Key,
                 _ => SystemKey.None
+            };
+
+            Modifier.Value = gestureRef.Value switch
+            {
+                MultiGesture multiGesture => multiGesture.Gestures.OfType<KeyGesture>().FirstOrDefault()?.Modifiers ?? ModifierKeys.None,
+                KeyGesture keyGesture => keyGesture.Modifiers,
+                _ => ModifierKeys.None
             };
 
             ComboTriggerKey.Value = gestureRef.Value is KeyComboGesture comboGesture ? comboGesture.TriggerKey : SystemKey.None;
