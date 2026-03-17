@@ -18,7 +18,7 @@
                 <Setter Property="Padding"
                         Value="4" />
                 <Setter Property="BorderThickness"
-                        Value="1" />
+                        Value="2" />
             </Style>
         </Button.Style>
         <StackPanel Orientation="Horizontal">

@@ -1,7 +1,6 @@
 ﻿using FluentIcons.Common;
 using Nodify.Interactivity;
 using Nodify.Workflow.Common;
-using Nodify.Workflow.Settings;
 using ObservableCollections;
 using R3;
 using System.Windows;
@@ -25,7 +24,7 @@ internal abstract class WorkflowDesignerViewModel<T>
 
     public BindableReactiveProperty<WorkflowStepViewModel?> SelectedStep { get; } = new(null);
 
-    public EditorGestures EditorGestures { get; } = new EditorGestures();
+    public EditorGestures EditorGestures { get; } = new();
 
     public WorkflowDesignerViewModel()
     {

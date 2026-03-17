@@ -48,6 +48,29 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="CuttingLineStyle"
+           TargetType="{x:Type nodify:CuttingLine}"
+           BasedOn="{StaticResource {x:Type nodify:CuttingLine}}">
+        <Setter Property="StrokeDashArray"
+                Value="1 5" />
+        <Setter Property="StrokeThickness"
+                Value="2" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Fill"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+    </Style>
+    
+    <Style x:Key="PushedAreaStyle"
+           TargetType="Rectangle">
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Stroke"
+                Value="{DynamicResource AccentFillColorTertiaryBrush}" />
+        <Setter Property="Fill"
+                Value="{DynamicResource ControlFillColorDefaultBrush}" />
+    </Style>
+
     <Style x:Key="ConnectionStyle"
            TargetType="{x:Type nodify:BaseConnection}">
         <Setter Property="SourceOffset"
@@ -141,6 +164,8 @@
                                      ViewportLocation="{Binding ViewportPosition.Value, Mode=TwoWay}"
                                      ViewportSize="{Binding Value, Source={x:Static local:SubWorkflowDesignerViewModel.ViewportSize}, Mode=OneWayToSource}"
                                      ItemTemplate="{StaticResource SubWorkflowStepTemplate}"
+                                     CuttingLineStyle="{StaticResource CuttingLineStyle}"
+                                     PushedAreaStyle="{StaticResource PushedAreaStyle}"
                                      Background="Transparent">
                     <nodify:NodifyEditor.ItemContainerStyle>
                         <Style BasedOn="{StaticResource ItemContainerStyle}"
