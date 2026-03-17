@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ic="clr-namespace:FluentIcons.Wpf;assembly=FluentIcons.Wpf"
              xmlns:local="clr-namespace:Nodify.Workflow.Designer"
+             xmlns:nodify="https://miroiu.github.io/nodify"
              d:DataContext="{d:DesignInstance local:SubWorkflowDesignerViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
+             x:Name="Root"
              d:DesignHeight="450"
              d:DesignWidth="800">
 
@@ -16,18 +18,45 @@
             BorderBrush="{DynamicResource AccentControlElevationBorderBrush}"
             BorderThickness="1">
         <StackPanel Orientation="Horizontal">
-            <ContentControl Content="{Binding ZoomInCommand}"
-                            Focusable="False" />
-            <TextBlock Text="{Binding ZoomLevel.Value, StringFormat={}{0:P0}}"
+            <Button Command="{x:Static nodify:EditorCommands.ZoomIn}"
+                    CommandTarget="{Binding Editor, ElementName=Root}"
+                    ToolTip="Zoom in"
+                    Style="{StaticResource ButtonStyle.Borderless}">
+                <ic:FluentIcon IsHitTestVisible="False"
+                               Icon="ZoomIn"
+                               IconSize="Size16"
+                               FontSize="14"
+                               VerticalAlignment="Center" />
+            </Button>
+            
+            <TextBlock Text="{Binding Editor.ViewportZoom, ElementName=Root, StringFormat={}{0:P0}}"
                        Margin="4 0 4 4"
                        VerticalAlignment="Center" />
-            <ContentControl Content="{Binding ZoomOutCommand}"
-                            Focusable="False" />
+            
+            <Button Command="{x:Static nodify:EditorCommands.ZoomOut}"
+                    CommandTarget="{Binding Editor, ElementName=Root}"
+                    ToolTip="Zoom out"
+                    Style="{StaticResource ButtonStyle.Borderless}">
+                <ic:FluentIcon IsHitTestVisible="False"
+                               Icon="ZoomOut"
+                               IconSize="Size16"
+                               FontSize="14"
+                               VerticalAlignment="Center" />
+            </Button>
 
             <Border Style="{StaticResource SeparatorStyle.Default}" />
 
-            <ContentControl Content="{Binding FitToViewCommand}"
-                            Focusable="False" />
+            <Button Command="{x:Static nodify:EditorCommands.FitToScreen}"
+                    CommandTarget="{Binding Editor, ElementName=Root}"
+                    ToolTip="Fit to view"
+                    Style="{StaticResource ButtonStyle.Borderless}">
+                <ic:FluentIcon IsHitTestVisible="False"
+                               Icon="FullScreenMaximize"
+                               IconSize="Size16"
+                               FontSize="14"
+                               VerticalAlignment="Center" />
+            </Button>
+            
             <ContentControl Content="{Binding LockViewCommand}"
                             Focusable="False" />
 

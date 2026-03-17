@@ -133,7 +133,8 @@
                           CanContentScroll="True"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
-                <nodify:NodifyEditor ItemsSource="{Binding Steps}"
+                <nodify:NodifyEditor x:Name="Editor"
+                                     ItemsSource="{Binding Steps}"
                                      SelectedItem="{Binding SelectedStep.Value, Mode=TwoWay}"
                                      Connections="{Binding Connections}"
                                      InputGestures="{Binding EditorGestures}"
@@ -169,7 +170,8 @@
                 </nodify:NodifyEditor>
             </ScrollViewer>
 
-            <local:WorkflowToolBar VerticalAlignment="Bottom"
+            <local:WorkflowToolBar Editor="{Binding ., ElementName=Editor}"
+                                   VerticalAlignment="Bottom"
                                    HorizontalAlignment="Center"
                                    Margin="32" />
         </Grid>

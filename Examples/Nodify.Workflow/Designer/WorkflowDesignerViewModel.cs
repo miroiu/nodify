@@ -66,49 +66,29 @@ internal sealed class SubWorkflowDesignerViewModel : WorkflowDesignerViewModel<S
 
     public static BindableReactiveProperty<Size> ViewportSize { get; } = new();
 
-    public BindableReactiveProperty<double> ZoomLevel { get; } = new(1);
-
-    public CommandViewModel FitToViewCommand { get; }
     public ToggleCommandViewModel LockViewCommand { get; }
-    public CommandViewModel ZoomInCommand { get; }
-    public CommandViewModel ZoomOutCommand { get; }
 
     public SubWorkflowDesignerViewModel()
     {
-        FitToViewCommand = new CommandViewModel(new ReactiveCommand())
-        {
-            ToolTip = { Value = "Fit to view" },
-            Icon = { Value = Icon.FullScreenMaximize },
-        };
-
         LockViewCommand = new ToggleCommandViewModel(new ReactiveCommand())
         {
-            ToolTip = { Value = "Lock view" },
             Icon = { Value = Icon.LockOpen },
             IconChecked = { Value = Icon.LockClosed },
-        };
-
-        ZoomInCommand = new CommandViewModel(new ReactiveCommand())
-        {
-            ToolTip = { Value = "Zoom in" },
-            Icon = { Value = Icon.ZoomIn },
-        };
-
-        ZoomOutCommand = new CommandViewModel(new ReactiveCommand())
-        {
-            ToolTip = { Value = "Zoom out" },
-            Icon = { Value = Icon.ZoomOut },
         };
 
         LockViewCommand.IsChecked.Subscribe(value =>
         {
             if (value)
             {
+                LockViewCommand.ToolTip.Value = "Unlock editing";
+
                 _backupGestures.Apply(EditorGestures);
                 EditorGestures.LockEditing();
             }
             else
             {
+                LockViewCommand.ToolTip.Value = "Lock editing";
+
                 EditorGestures.Apply(_backupGestures);
             }
         });
