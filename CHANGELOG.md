@@ -9,6 +9,7 @@
 >	- Added InputGestures dependency property to NodifyEditor and Minimap to specify which gestures mappings to use
 >	- Added ActualGestures to Minimap, NodifyEditor and its elements
 > - Bugfixes:
+>	- Fixed StepConnection applying SourceOffset in the wrong direction in some cases
 
 #### **Version 7.2.0**
 

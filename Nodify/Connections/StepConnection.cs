@@ -251,16 +251,6 @@ namespace Nodify
                     : new Point(0, Math.Sign(target.Y - source.Y));
             }
 
-            static Point GetConnectorDirection(ConnectorPosition position)
-                => position switch
-                {
-                    ConnectorPosition.Top => new Point(0, -1),
-                    ConnectorPosition.Left => new Point(-1, 0),
-                    ConnectorPosition.Bottom => new Point(0, 1),
-                    ConnectorPosition.Right => new Point(1, 0),
-                    _ => default,
-                };
-
             static bool IsOppositePosition(ConnectorPosition sourcePosition, ConnectorPosition targetPosition)
             {
                 return sourcePosition == ConnectorPosition.Left && targetPosition == ConnectorPosition.Right
@@ -268,6 +258,31 @@ namespace Nodify
                     || sourcePosition == ConnectorPosition.Top && targetPosition == ConnectorPosition.Bottom
                     || sourcePosition == ConnectorPosition.Bottom && targetPosition == ConnectorPosition.Top;
             }
+        }
+
+        private static Point GetConnectorDirection(ConnectorPosition position)
+            => position switch
+            {
+                ConnectorPosition.Top => new Point(0, -1),
+                ConnectorPosition.Left => new Point(-1, 0),
+                ConnectorPosition.Bottom => new Point(0, 1),
+                ConnectorPosition.Right => new Point(1, 0),
+                _ => default,
+            };
+
+        protected override (Vector SourceOffset, Vector TargetOffset) GetOffset()
+        {
+            var baseOffset = base.GetOffset();
+
+            var sourceDirection = GetConnectorDirection(SourcePosition);
+            var flippedSourceOffset = new Vector(CopySign(baseOffset.SourceOffset.X, sourceDirection.X), CopySign(baseOffset.SourceOffset.Y, sourceDirection.Y));
+
+            return (flippedSourceOffset, baseOffset.TargetOffset);
+        }
+
+        private static double CopySign(double value, double signSource)
+        {
+            return signSource < 0 ? -Math.Abs(value) : Math.Abs(value);
         }
     }
 }
