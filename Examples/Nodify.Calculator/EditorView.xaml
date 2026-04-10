@@ -121,6 +121,46 @@
                     Value="{Binding BorderBrush, Source={StaticResource AnimatedBorderPlaceholder}}" />
             <Setter Property="BorderThickness"
                     Value="2" />
+            <Setter Property="Panel.ZIndex"
+                    Value="1" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected"
+                         Value="True">
+                    <Setter Property="Panel.ZIndex"
+                            Value="2" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="ResizeThumbTemplate"
+                         TargetType="Thumb">
+            <Path Width="14"
+                  Height="14"
+                  Stretch="Fill"
+                  Stroke="#6366f1"
+                  StrokeThickness="2"
+                  Fill="Transparent"
+                  StrokeLineJoin="Round"
+                  VerticalAlignment="Bottom"
+                  HorizontalAlignment="Right"
+                  Margin="2"
+                  Data="M 0,16 L 16,0 L 16,16 Z" />
+        </ControlTemplate>
+
+        <Style x:Key="GroupingNodeStyle"
+               TargetType="nodify:GroupingNode"
+               BasedOn="{StaticResource {x:Type nodify:GroupingNode}}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=nodify:ItemContainer}}"
+                             Value="True">
+                    <Setter Property="Panel.ZIndex"
+                            Value="0" />
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="ResizeThumbTemplate"
+                    Value="{StaticResource ResizeThumbTemplate}" />
+            <Setter Property="IsContentHitTestVisible"
+                    Value="False" />
         </Style>
     </UserControl.Resources>
 
@@ -189,6 +229,7 @@
                     <nodify:GroupingNode Header="{Binding}"
                                          CanResize="{Binding IsExpanded}"
                                          ActualSize="{Binding DesiredSize, Mode=TwoWay}"
+                                         ResizeThumbTemplate="{StaticResource ResizeThumbTemplate}"
                                          MovementMode="Self">
                         <nodify:GroupingNode.HeaderTemplate>
                             <DataTemplate DataType="{x:Type local:OperationGraphViewModel}">
@@ -363,7 +404,8 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type local:OperationGroupViewModel}">
-                    <nodify:GroupingNode ActualSize="{Binding GroupSize, Mode=TwoWay}">
+                    <nodify:GroupingNode ActualSize="{Binding GroupSize, Mode=TwoWay}"
+                                         Style="{StaticResource GroupingNodeStyle}">
                         <nodify:GroupingNode.Header>
                             <shared:EditableTextBlock Text="{Binding Title}"
                                                       FontWeight="SemiBold"

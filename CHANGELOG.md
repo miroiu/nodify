@@ -9,6 +9,8 @@
 >	- Added InputGestures dependency property to NodifyEditor and Minimap to specify which gestures mappings to use
 >	- Added ActualGestures to Minimap, NodifyEditor and its elements
 >	- Added ContentPadding dependency property to Node to allow adjusting the spacing between input and output panels
+>	- Added IsContentHitTestVisible dependency property to GroupingNode to allow selecting nodes and connections behind it when clicking on its content area
+>	- Added ResizeThumbTemplate dependency property to GroupingNode to allow customizing the resize thumb
 > - Bugfixes:
 >	- Fixed StepConnection applying SourceOffset in the wrong direction in some cases
 
