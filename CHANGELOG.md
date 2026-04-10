@@ -8,6 +8,7 @@
 > - Features:
 >	- Added InputGestures dependency property to NodifyEditor and Minimap to specify which gestures mappings to use
 >	- Added ActualGestures to Minimap, NodifyEditor and its elements
+>	- Added ContentPadding dependency property to Node to allow adjusting the spacing between input and output panels
 > - Bugfixes:
 >	- Fixed StepConnection applying SourceOffset in the wrong direction in some cases
 
