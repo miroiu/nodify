@@ -103,7 +103,7 @@
 
                                     <!--Content-->
                                     <Border Grid.Column="1"
-                                            Padding="16 0 16 0"
+                                            Padding="{TemplateBinding ContentPadding}"
                                             Background="{TemplateBinding ContentBrush}">
                                         <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />

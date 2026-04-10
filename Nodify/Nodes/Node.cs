@@ -36,6 +36,7 @@ namespace Nodify
         public static readonly DependencyProperty ContentContainerStyleProperty = DependencyProperty.Register(nameof(ContentContainerStyle), typeof(Style), typeof(Node));
         public static readonly DependencyProperty HeaderContainerStyleProperty = DependencyProperty.Register(nameof(HeaderContainerStyle), typeof(Style), typeof(Node));
         public static readonly DependencyProperty FooterContainerStyleProperty = DependencyProperty.Register(nameof(FooterContainerStyle), typeof(Style), typeof(Node));
+        public static readonly DependencyProperty ContentPaddingProperty = DependencyProperty.Register(nameof(ContentPadding), typeof(Thickness), typeof(Node), new FrameworkPropertyMetadata(new Thickness(16, 0, 16, 0)));
 
         /// <summary>
         /// Gets or sets the brush used for the background of the <see cref="ContentControl.Content"/> of this <see cref="Node"/>.
@@ -143,6 +144,15 @@ namespace Nodify
         {
             get => (Style)GetValue(FooterContainerStyleProperty);
             set => SetValue(FooterContainerStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the padding for the content between the input and output connectors.
+        /// </summary>
+        public Thickness ContentPadding
+        {
+            get => (Thickness)GetValue(ContentPaddingProperty);
+            set => SetValue(ContentPaddingProperty, value);
         }
 
         /// <summary>
