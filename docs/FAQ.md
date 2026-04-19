@@ -77,3 +77,8 @@ A: https://github.com/miroiu/nodify/issues/206
 
 A:  https://github.com/miroiu/nodify/issues/73
 
+***
+
+#### Q: How can I create nodes with connectors of different data types?
+
+A: https://github.com/miroiu/nodify/discussions/273
