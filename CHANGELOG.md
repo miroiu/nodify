@@ -3,6 +3,12 @@
 #### **In development**
 
 > - Breaking Changes:
+> - Features:
+> - Bugfixes:
+
+#### **Version 7.3.0**
+
+> - Breaking Changes:
 >	- Renamed BeginGesture to DragGesture in DragState
 >	- DragState uses virtual properties to retrieve the required gestures instead of constructor arguments
 > - Features:
