@@ -13,6 +13,12 @@
 
 ## 🚀 Examples of node-based applications
 
+🧩 A workflow designer app where you can visualize CI/CD pipelines and their dependencies.
+
+> [Examples/Nodify.Workflow](Examples/Nodify.Workflow)
+
+![Workflow](https://i.imgur.com/aTYMk8F.gif)
+
 🔶 A canvas application where you can draw and connect shapes.
 
 > [Examples/Nodify.Shapes](Examples/Nodify.Shapes)
