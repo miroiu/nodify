@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0-windows;net9-windows;net8-windows;net6-windows;net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
@@ -12,9 +12,9 @@
     <Description>The core controls for a node based editor (designed for MVVM)</Description>
     <Copyright>Miroiu Emanuel</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/miroiu/nodify</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Rocscience/nodify</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/miroiu/nodify</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Rocscience/nodify</RepositoryUrl>
     <PackageTags>wpf mvvm node network node-editor graph controls</PackageTags>
     <Version>7.3.0</Version>
     <PackageReleaseNotes>
@@ -50,6 +50,13 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Rocscience.CSPackageHelper" Version="1.0.1" />
   </ItemGroup>
 
 </Project>
