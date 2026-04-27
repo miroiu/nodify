@@ -4,13 +4,6 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <ControlTemplate x:Key="DefaultResizeThumbTemplate"
-                     TargetType="Thumb">
-        <TextBlock Text="p"
-                   FontFamily="Marlett"
-                   FontSize="18" />
-    </ControlTemplate>
-
     <Style TargetType="{x:Type local:GroupingNode}">
         <Setter Property="Background">
             <Setter.Value>
@@ -34,8 +27,6 @@
                 Value="30" />
         <Setter Property="MinWidth"
                 Value="150" />
-        <Setter Property="ResizeThumbTemplate"
-                Value="{StaticResource DefaultResizeThumbTemplate}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:GroupingNode}">
@@ -58,22 +49,26 @@
                             </Border>
 
                             <Grid Grid.Row="1"
-                                  IsHitTestVisible="{TemplateBinding IsContentHitTestVisible}"
                                   Background="{TemplateBinding Background}">
                                 <ContentPresenter x:Name="PART_Content"
                                                   ContentSource="Content" />
+                                <Thumb x:Name="PART_ResizeThumb"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0 0 2 2"
+                                       MinHeight="20"
+                                       Cursor="SizeNWSE"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Visibility="{TemplateBinding CanResize, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+                                            <TextBlock Text="p"
+                                                       FontFamily="Marlett"
+                                                       FontSize="18" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
                             </Grid>
-
-                            <Thumb Grid.Row="1"
-                                   x:Name="PART_ResizeThumb"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Bottom"
-                                   Margin="0 0 2 2"
-                                   MinHeight="20"
-                                   Cursor="SizeNWSE"
-                                   Foreground="{TemplateBinding Foreground}"
-                                   Visibility="{TemplateBinding CanResize, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Template="{TemplateBinding ResizeThumbTemplate}" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

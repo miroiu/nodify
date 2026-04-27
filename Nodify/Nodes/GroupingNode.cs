@@ -73,8 +73,6 @@ namespace Nodify
         public static readonly DependencyProperty MovementModeProperty = DependencyProperty.Register(nameof(MovementMode), typeof(GroupingMovementMode), typeof(GroupingNode), new FrameworkPropertyMetadata(GroupMovementBoxed));
         public static readonly DependencyProperty ResizeCompletedCommandProperty = DependencyProperty.Register(nameof(ResizeCompletedCommand), typeof(ICommand), typeof(GroupingNode));
         public static readonly DependencyProperty ResizeStartedCommandProperty = DependencyProperty.Register(nameof(ResizeStartedCommand), typeof(ICommand), typeof(GroupingNode));
-        public static readonly DependencyProperty IsContentHitTestVisibleProperty = DependencyProperty.Register(nameof(IsContentHitTestVisible), typeof(bool), typeof(GroupingNode), new FrameworkPropertyMetadata(BoxValue.True));
-        public static readonly DependencyProperty ResizeThumbTemplateProperty = DependencyProperty.Register(nameof(ResizeThumbTemplate), typeof(ControlTemplate), typeof(GroupingNode));
 
         private static void OnActualSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -138,24 +136,6 @@ namespace Nodify
         {
             get => (ICommand?)GetValue(ResizeStartedCommandProperty);
             set => SetValue(ResizeStartedCommandProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the content part of this <see cref="GroupingNode"/> can possibly be returned as a hit test result.
-        /// </summary>
-        public bool IsContentHitTestVisible
-        {
-            get => (bool)GetValue(IsContentHitTestVisibleProperty);
-            set => SetValue(IsContentHitTestVisibleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the template used for the resize thumb of this <see cref="GroupingNode"/>.
-        /// </summary>
-        public ControlTemplate? ResizeThumbTemplate
-        {
-            get => (ControlTemplate?)GetValue(ResizeThumbTemplateProperty);
-            set => SetValue(ResizeThumbTemplateProperty, value);
         }
 
         #endregion

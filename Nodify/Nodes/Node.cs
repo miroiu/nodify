@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -15,7 +15,7 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(ContentContainerStyle), StyleTargetType = typeof(Border))]
     [StyleTypedProperty(Property = nameof(HeaderContainerStyle), StyleTargetType = typeof(Border))]
     [StyleTypedProperty(Property = nameof(FooterContainerStyle), StyleTargetType = typeof(Border))]
-    public class Node : HeaderedContentControl
+    public class NodeRS : Node
     {
         protected const string ElementInputItemsControl = "PART_Input";
         protected const string ElementOutputItemsControl = "PART_Output";
@@ -36,7 +36,12 @@ namespace Nodify
         public static readonly DependencyProperty ContentContainerStyleProperty = DependencyProperty.Register(nameof(ContentContainerStyle), typeof(Style), typeof(Node));
         public static readonly DependencyProperty HeaderContainerStyleProperty = DependencyProperty.Register(nameof(HeaderContainerStyle), typeof(Style), typeof(Node));
         public static readonly DependencyProperty FooterContainerStyleProperty = DependencyProperty.Register(nameof(FooterContainerStyle), typeof(Style), typeof(Node));
-        public static readonly DependencyProperty ContentPaddingProperty = DependencyProperty.Register(nameof(ContentPadding), typeof(Thickness), typeof(Node), new FrameworkPropertyMetadata(new Thickness(16, 0, 16, 0)));
+        public static readonly DependencyProperty InputChromeProperty = DependencyProperty.Register(nameof(InputChrome), typeof(object), typeof(Node));
+        public static readonly DependencyProperty InputChromeTemplateProperty = DependencyProperty.Register(nameof(InputChromeTemplate), typeof(DataTemplate), typeof(Node));
+        public static readonly DependencyProperty OutputChromeProperty = DependencyProperty.Register(nameof(OutputChrome), typeof(object), typeof(Node));
+        public static readonly DependencyProperty OutputChromeTemplateProperty = DependencyProperty.Register(nameof(OutputChromeTemplate), typeof(DataTemplate), typeof(Node));
+        public static readonly DependencyProperty InputItemsPanelProperty = DependencyProperty.Register(nameof(InputItemsPanel), typeof(ItemsPanelTemplate), typeof(Node));
+        public static readonly DependencyProperty OutputItemsPanelProperty = DependencyProperty.Register(nameof(OutputItemsPanel), typeof(ItemsPanelTemplate), typeof(Node));
 
         /// <summary>
         /// Gets or sets the brush used for the background of the <see cref="ContentControl.Content"/> of this <see cref="Node"/>.
@@ -120,6 +125,60 @@ namespace Nodify
         }
 
         /// <summary>
+        /// Optional overlay for the input connector column (e.g. minimal-mode hub).
+        /// </summary>
+        public object InputChrome
+        {
+            get => GetValue(InputChromeProperty);
+            set => SetValue(InputChromeProperty, value);
+        }
+
+        /// <summary>
+        /// Template for <see cref="InputChrome"/>.
+        /// </summary>
+        public DataTemplate InputChromeTemplate
+        {
+            get => (DataTemplate)GetValue(InputChromeTemplateProperty);
+            set => SetValue(InputChromeTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Optional overlay for the output connector column (e.g. minimal-mode hub).
+        /// </summary>
+        public object OutputChrome
+        {
+            get => GetValue(OutputChromeProperty);
+            set => SetValue(OutputChromeProperty, value);
+        }
+
+        /// <summary>
+        /// Template for <see cref="OutputChrome"/>.
+        /// </summary>
+        public DataTemplate OutputChromeTemplate
+        {
+            get => (DataTemplate)GetValue(OutputChromeTemplateProperty);
+            set => SetValue(OutputChromeTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Panel for the input <see cref="ItemsControl"/> (defaults to vertical stack in theme).
+        /// </summary>
+        public ItemsPanelTemplate? InputItemsPanel
+        {
+            get => (ItemsPanelTemplate?)GetValue(InputItemsPanelProperty);
+            set => SetValue(InputItemsPanelProperty, value);
+        }
+
+        /// <summary>
+        /// Panel for the output <see cref="ItemsControl"/> (defaults to vertical stack in theme).
+        /// </summary>
+        public ItemsPanelTemplate? OutputItemsPanel
+        {
+            get => (ItemsPanelTemplate?)GetValue(OutputItemsPanelProperty);
+            set => SetValue(OutputItemsPanelProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the style for the content container.
         /// </summary>
         public Style ContentContainerStyle
@@ -144,15 +203,6 @@ namespace Nodify
         {
             get => (Style)GetValue(FooterContainerStyleProperty);
             set => SetValue(FooterContainerStyleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the padding for the content between the input and output connectors.
-        /// </summary>
-        public Thickness ContentPadding
-        {
-            get => (Thickness)GetValue(ContentPaddingProperty);
-            set => SetValue(ContentPaddingProperty, value);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace Nodify
 {
@@ -23,6 +23,6 @@ namespace Nodify
 
         public static readonly object Thickness2 = new Thickness(2);
         public static readonly object ArrowSize = new Size(8, 8);
-        public static readonly object ConnectionOffset = new Size(14, 0);
+        public static readonly object ConnectionOffset = new Size(7, 0);
     }
 }

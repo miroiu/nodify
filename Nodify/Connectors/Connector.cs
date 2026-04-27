@@ -185,10 +185,19 @@ namespace Nodify
         /// <inheritdoc />
         public override void OnApplyTemplate()
         {
+            // Template parts (e.g. PART_Connector) must be re-resolved after any template change.
+            // NodeInput/NodeOutput swap ControlTemplates at runtime; a stale _thumb breaks TranslatePoint and anchors jump to (0,0).
+            _thumb = null;
+
             base.OnApplyTemplate();
 
             Container = this.GetParentOfType<ItemContainer>();
             Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
+
+            if (IsConnected)
+            {
+                UpdateAnchor();
+            }
         }
 
         #region Update Anchor

@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
 namespace Nodify.Interactivity
 {
@@ -313,7 +313,7 @@ namespace Nodify.Interactivity
                 SelectAll = ApplicationCommands.SelectAll.InputGestures[0].AsRef();
                 Cutting = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Alt | ModifierKeys.Shift, true);
                 PushItems = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control | ModifierKeys.Shift, true);
-                Pan = new AnyGesture(new MouseGesture(MouseAction.RightClick), new MouseGesture(MouseAction.MiddleClick));
+                Pan = new MouseGesture(MouseAction.MiddleClick);
                 ZoomModifierKey = ModifierKeys.None;
                 ZoomIn = new AnyGesture(new KeyGesture(Key.OemPlus, ModifierKeys.Control), new KeyGesture(Key.Add, ModifierKeys.Control));
                 ZoomOut = new AnyGesture(new KeyGesture(Key.OemMinus, ModifierKeys.Control), new KeyGesture(Key.Subtract, ModifierKeys.Control));
@@ -337,7 +337,7 @@ namespace Nodify.Interactivity
             public InputGestureRef Cutting { get; }
 
             /// <summary>Gesture used to start panning.</summary>
-            /// <remarks>Defaults to <see cref="MouseAction.RightClick"/> or <see cref="MouseAction.MiddleClick"/>.</remarks>
+            /// <remarks>Defaults to <see cref="MouseAction.MiddleClick"/> so <see cref="MouseAction.RightClick"/> remains free for context menus.</remarks>
             public InputGestureRef Pan { get; }
 
             /// <summary>Whether panning using mouse wheel is allowed.</summary>
