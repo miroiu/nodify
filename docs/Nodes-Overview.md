@@ -115,3 +115,9 @@ This type of node is a ```Connector``` itself, meaning that it will raise ```Pen
 The `Content` of the node can be customized using the `ContentTemplate`.
 
 ![State Node](https://i.imgur.com/FrI2epL.gif)
+
+---
+
+### Creating Custom Nodes
+
+For a comprehensive, step-by-step guide on how to design and implement your own custom nodes using MVVM, check out the [Creating Custom Nodes](Custom-Nodes) guide.

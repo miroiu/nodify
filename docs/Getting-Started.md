@@ -136,7 +136,7 @@ public class EditorViewModel
 }
 ```
 
-And bind them to the view. (We used the built-in `NodeInput` and `NodeOutput` for the view, but there are [other connectors](Connectors-Overview) too. Or you can create your own, depending on your needs.)
+And bind them to the view. (We used the built-in `NodeInput` and `NodeOutput` for the view, but there are [other connectors](Connectors-Overview) too. Or you can [create your own](Custom-Connectors), depending on your needs.)
 
 ```xml
 <nodify:Node Header="{Binding Title}"

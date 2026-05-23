@@ -35,6 +35,7 @@
 - [The grouping node](Nodes-Overview#2-the-groupingnode-control)
 - [The knot node](Nodes-Overview#3-the-knotnode-control)
 - [The state node](Nodes-Overview#4-the-statenode-control)
+- [Creating custom nodes](Custom-Nodes)
 
 [Connections overview](Connections-Overview)
 
@@ -48,6 +49,7 @@
 [Connectors overview](Connectors-Overview)
 
 - [NodeInput and NodeOutput](Connectors-Overview#nodeinput-and-nodeoutput)
+- [Creating custom connectors](Custom-Connectors)
 
 [CuttingLine overview](CuttingLine-Overview)
 
