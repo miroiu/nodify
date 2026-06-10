@@ -45,6 +45,31 @@
                             CornerRadius="3">
                         <ContentPresenter />
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected"
+                                           Value="True" />
+                                <Condition Property="IsPreviewingSelection"
+                                           Value="{x:Null}" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{Binding SelectedBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsPreviewingSelection"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{Binding SelectedBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                        <Trigger Property="local:PendingConnection.IsOverElement"
+                                 Value="True">
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{Binding HighlightBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
