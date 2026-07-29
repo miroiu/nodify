@@ -1056,7 +1056,7 @@ namespace Nodify
         /// <returns>The largest multiple of the grid cell size less than or equal to the value.</returns>
         public double SnapToGrid(double value)
         {
-            return (int)value / GridCellSize * GridCellSize;
+            return value.SnapToGrid(GridCellSize);
         }
 
         /// <summary>

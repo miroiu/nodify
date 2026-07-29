@@ -51,8 +51,8 @@ namespace Nodify
                 // Correct the final position
                 if (NodifyEditor.EnableSnappingCorrection && (r.X != 0 || r.Y != 0))
                 {
-                    result.X = (int)result.X / _gridCellSize * _gridCellSize;
-                    result.Y = (int)result.Y / _gridCellSize * _gridCellSize;
+                    result.X = result.X.SnapToGrid(_gridCellSize);
+                    result.Y = result.Y.SnapToGrid(_gridCellSize);
                 }
 
                 container.Location = result;

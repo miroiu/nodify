@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed grid snapping rounding towards zero instead of down for negative coordinates, which snapped items near the origin onto the same location
 
 #### **Version 7.3.0**
 
