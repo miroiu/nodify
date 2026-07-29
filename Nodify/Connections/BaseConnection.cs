@@ -991,9 +991,9 @@ namespace Nodify
             RaiseEvent(args);
 
             // Raise DisconnectCommand if DisconnectEvent is not handled
-            if (!args.Handled && (DisconnectCommand?.CanExecute(null) ?? false))
+            if (!args.Handled && (DisconnectCommand?.CanExecute(DataContext) ?? false))
             {
-                DisconnectCommand.Execute(null);
+                DisconnectCommand.Execute(DataContext);
             }
         }
 

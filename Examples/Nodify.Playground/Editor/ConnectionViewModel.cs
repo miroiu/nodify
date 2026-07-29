@@ -1,10 +1,31 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nodify.Playground
 {
     public class ConnectionViewModel : ObservableObject
     {
+        private static class Commands
+        {
+            public sealed class DisconnectCommand : ICommand
+            {
+                public static readonly DisconnectCommand Instance = new DisconnectCommand();
+
+                private DisconnectCommand() { }
+
+                public event EventHandler? CanExecuteChanged
+                {
+                    add { }
+                    remove { }
+                }
+
+                public bool CanExecute(object? parameter) => parameter is ConnectionViewModel;
+
+                public void Execute(object? parameter) => ((ConnectionViewModel)parameter!).Remove();
+            }
+        }
+
         private NodifyEditorViewModel _graph = default!;
         public NodifyEditorViewModel Graph
         {
@@ -34,12 +55,11 @@ namespace Nodify.Playground
         }
 
         public ICommand SplitCommand { get; }
-        public ICommand DisconnectCommand { get; }
+        public ICommand DisconnectCommand => Commands.DisconnectCommand.Instance;
 
         public ConnectionViewModel()
         {
             SplitCommand = new DelegateCommand<Point>(Split);
-            DisconnectCommand = new DelegateCommand(Remove);
         }
 
         public void Split(Point point)
