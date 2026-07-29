@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed Connection to halve the bezier control points of both ends when the source and target orientations are different
 
 #### **Version 7.3.0**
 
