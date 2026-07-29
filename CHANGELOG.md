@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed ConnectionOffsetMode.Rectangle hiding horizontal connections by computing a NaN offset
 
 #### **Version 7.3.0**
 

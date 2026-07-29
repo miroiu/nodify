@@ -862,7 +862,12 @@ namespace Nodify
                 else
                 {
                     result.Y = Math.Sign(delta.Y) * offset.Height;
-                    result.X = 1.0d / Math.Tan(angle) * result.Y;
+
+                    // A horizontal delta has no vertical component to scale the offset along, and 1 / Math.Tan(angle)
+                    // is infinite there, which would make the result NaN, so offset on the X axis instead.
+                    result.X = delta.Y == 0d
+                        ? Math.Sign(delta.X) * offset.Width
+                        : 1.0d / Math.Tan(angle) * result.Y;
                 }
 
                 return result;
