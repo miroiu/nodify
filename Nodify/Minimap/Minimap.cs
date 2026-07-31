@@ -375,6 +375,11 @@ namespace Nodify
 
         public void ResetViewport()
         {
+            if (IsReadOnly)
+            {
+                return;
+            }
+
             SetCurrentValue(ViewportLocationProperty, new Point(0, 0));
             var args = new ZoomEventArgs(1d, new Point(ViewportSize.Width / 2, ViewportSize.Height / 2))
             {

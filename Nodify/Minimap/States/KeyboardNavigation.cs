@@ -13,7 +13,7 @@ namespace Nodify.Interactivity
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                if (Element.IsKeyboardFocused)
+                if (Element.IsKeyboardFocused && !Element.IsReadOnly)
                 {
                     var gestures = Element.ActualGestures;
 

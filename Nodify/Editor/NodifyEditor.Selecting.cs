@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows;
@@ -233,7 +234,7 @@ namespace Nodify
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
 
-                if (container.IsSelectableInArea(area, fit))
+                if (container.IsSelectable && container.IsSelectableInArea(area, fit))
                 {
                     object? item = items[i];
                     if (container.IsSelected)
@@ -271,7 +272,7 @@ namespace Nodify
             for (var i = 0; i < items.Count; i++)
             {
                 var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
-                if (container.IsSelectableInArea(area, fit))
+                if (container.IsSelectable && container.IsSelectableInArea(area, fit))
                 {
                     selected.Add(items[i]);
                 }
@@ -279,6 +280,37 @@ namespace Nodify
 
             EndUpdateSelectedItems();
             IsSelecting = false;
+        }
+
+        /// <summary>
+        /// Selects all the <see cref="ItemContainer"/>s whose <see cref="ItemContainer.IsSelectable"/> is true.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Thrown when <see cref="CanSelectMultipleItems"/> is false.</exception>
+        public new void SelectAll()
+        {
+            if (!CanSelectMultipleItems)
+            {
+                // Keeps the MultiSelector.SelectAll contract of throwing when multi-selection is off.
+                base.SelectAll();
+                return;
+            }
+
+            BeginUpdateSelectedItems();
+
+            IList selected = base.SelectedItems;
+            selected.Clear();
+
+            ItemCollection items = Items;
+            for (var i = 0; i < items.Count; i++)
+            {
+                var container = (ItemContainer)ItemContainerGenerator.ContainerFromIndex(i);
+                if (container.IsSelectable)
+                {
+                    selected.Add(items[i]);
+                }
+            }
+
+            EndUpdateSelectedItems();
         }
 
         /// <summary>

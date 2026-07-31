@@ -46,8 +46,10 @@ namespace Nodify
                 ItemContainer container = _selectedContainers[i];
                 Point result = container.Location;
 
-                // Correct the final position
-                if (NodifyEditor.EnableSnappingCorrection)
+                // Correct the final position, but only if the container was actually moved.
+                // Offset accumulates every delta applied by Update, so it is the equivalent of
+                // the render transform DraggingOptimized checks.
+                if (NodifyEditor.EnableSnappingCorrection && (Offset.X != 0 || Offset.Y != 0))
                 {
                     result.X = (int)result.X / _gridCellSize * _gridCellSize;
                     result.Y = (int)result.Y / _gridCellSize * _gridCellSize;
