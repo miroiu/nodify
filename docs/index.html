@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nodify — High-Performance WPF & MVVM Node Editor Controls</title>
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Nodify — High-Performance WPF & MVVM Node Editor Controls" />
+  <meta property="og:description" content="Zero-dependency, highly performant WPF controls for building node-based editors, visual scripting interfaces, and graph visualizers in C# & MVVM." />
+  <meta property="og:image" content="og-card.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://miroiu.github.io/nodify/" />
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nodify — High-Performance WPF & MVVM Node Editor Controls" />
+  <meta name="twitter:description" content="Zero-dependency WPF controls for building node-based graphical editors in C# & MVVM." />
+  <meta name="twitter:image" content="og-card.png" />
+
+  <!-- Tailwind CSS CDN & Custom Styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              900: '#0c4a6e',
+              glow: '#38bdf8'
+            },
+            dark: {
+              bg: '#0b0f19',
+              card: '#161f33',
+              border: '#23314d',
+              accent: '#1e293b'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .node-canvas-grid {
+      background-size: 30px 30px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+    .glow-effect {
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+  <!-- Header Navigation -->
+  <header class="border-b border-dark-border bg-dark-bg/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-brand-500 flex items-center justify-center font-bold text-white shadow-lg shadow-brand-500/30">
+          N
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white">Nodify</span>
+        <span class="px-2 py-0.5 text-xs font-semibold bg-brand-900/60 text-brand-glow border border-brand-500/30 rounded-full">v2.x</span>
+      </div>
+      <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+        <a href="#features" class="hover:text-white transition">Features</a>
+        <a href="#architecture" class="hover:text-white transition">Architecture</a>
+        <a href="#interactive-demo" class="hover:text-white transition">Live Demo</a>
+        <a href="#examples" class="hover:text-white transition">Examples</a>
+        <a href="#docs" class="hover:text-white transition">Docs</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <a href="https://github.com/miroiu/nodify" target="_blank" class="px-4 py-2 text-sm font-semibold rounded-lg bg-brand-500 hover:bg-brand-600 text-white transition flex items-center shadow-lg shadow-brand-500/20">
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub Repository
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden border-b border-dark-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-glow border border-brand-500/20 mb-6">
+        ⚡ Zero-Dependency WPF Node Controls for MVVM
+      </div>
+      <h1 class="text-5xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+        Build High-Performance Node Editors <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-glow via-sky-400 to-indigo-400">Without Sacrificing MVVM Cleanliness</span>
+      </h1>
+      <p class="mt-6 text-xl text-slate-400 max-w-3xl mx-auto">
+        Nodify provides lightweight, modular, and optimized WPF controls designed for interactive graph canvases, visual scripting pipelines, circuit editors, and state machines.
+      </p>
+      <div class="mt-8 flex justify-center space-x-4">
+        <a href="#interactive-demo" class="px-6 py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold shadow-lg shadow-brand-500/25 transition">
+          Try Interactive Canvas Demo
+        </a>
+        <a href="https://www.nuget.org/packages/Nodify/" target="_blank" class="px-6 py-3 rounded-lg bg-dark-card hover:bg-dark-accent text-slate-200 font-semibold border border-dark-border transition">
+          Install via NuGet
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16:9 Interactive Media Preview & Canvas Visualizer -->
+  <section id="interactive-demo" class="py-16 bg-dark-bg border-b border-dark-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-white">Interactive 16:9 Node Editor Sandbox</h2>
+        <p class="text-slate-400 mt-2">Experience drag-and-drop nodes, spline connections, real-time panning, and MVVM data updates directly in this browser simulator.</p>
+      </div>
+
+      <div class="relative aspect-video rounded-xl overflow-hidden border border-dark-border bg-dark-card node-canvas-grid shadow-2xl glow-effect">
+        <!-- Control Bar -->
+        <div class="absolute top-4 left-4 z-20 flex space-x-3 bg-dark-bg/90 p-2 rounded-lg border border-dark-border text-xs text-slate-300">
+          <button id="btn-add-node" class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white rounded font-medium transition">
+            + Add Node
+          </button>
+          <button id="btn-reset" class="px-3 py-1.5 bg-dark-accent hover:bg-slate-700 text-slate-200 rounded font-medium transition">
+            Reset View
+          </button>
+          <span class="py-1.5 px-2 text-slate-400">Scale: <span id="scale-indicator">100%</span></span>
+          <span class="py-1.5 px-2 text-slate-400">Nodes: <span id="node-count">3</span></span>
+        </div>
+
+        <!-- Canvas -->
+        <canvas id="nodify-interactive-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture & Controls Matrix -->
+  <section id="architecture" class="py-16 border-b border-dark-border bg-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-white tracking-tight">Pure MVVM Architecture & Core Control Flow</h2>
+          <p class="text-slate-400 mt-4 leading-relaxed">
+            Nodify is built from the ground up to respect MVVM separation. Nodes, connections, pins, and selection states are completely decoupled from UI rendering logic, driven via <code class="text-brand-glow">ItemsSource</code>, <code class="text-brand-glow">Connections</code>, and custom command gestures.
+          </p>
+          <ul class="mt-6 space-y-4 text-slate-300">
+            <li class="flex items-start">
+              <span class="text-brand-glow font-bold mr-3">✓</span>
+              <div><strong class="text-white">NodifyEditor Canvas:</strong> Main virtualized viewport container managing zoom, spatial pan, auto-scroll bounds, and marquee box selection.</div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-brand-glow font-bold mr-3">✓</span>
+              <div><strong class="text-white">ItemContainer & BaseNode:</strong> Item container wrapper hosting header, input pins, output pins, and custom user data templates.</div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-brand-glow font-bold mr-3">✓</span>
+              <div><strong class="text-white">PendingConnection & Spline Circuit:</strong> High-performance line rendering supporting Bezier curves, circuit lines, cutting line gestures, and pin snapping.</div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-brand-glow font-bold mr-3">✓</span>
+              <div><strong class="text-white">NodifyMinimap:</strong> Integrated navigation thumbnail reflecting complete viewport layout with drag-to-navigate capabilities.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-dark-card p-6 rounded-xl border border-dark-border">
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">XAML Integration Example</h3>
+          <pre class="bg-dark-bg p-4 rounded-lg text-xs font-mono text-slate-300 overflow-x-auto border border-dark-border"><code>&lt;xmlns:nodify="clr-namespace:Nodify;assembly=Nodify"&gt;
+
+&lt;nodify:NodifyEditor ItemsSource="{Binding Nodes}"
+                     Connections="{Binding Connections}"
+                     PendingConnection="{Binding PendingConnection}"
+                     ViewportZoom="{Binding ZoomLevel}"
+                     ViewportLocation="{Binding Location}"&gt;
+    &lt;nodify:NodifyEditor.ItemTemplate&gt;
+        &lt;DataTemplate&gt;
+            &lt;nodify:Node Header="{Binding Title}"
+                         Input="{Binding Inputs}"
+                         Output="{Binding Outputs}" /&gt;
+        &lt;/DataTemplate&gt;
+    &lt;/nodify:NodifyEditor.ItemTemplate&gt;
+&lt;/nodify:NodifyEditor&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Examples Matrix -->
+  <section id="examples" class="py-16 border-b border-dark-border bg-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-white">Included Showcase Applications</h2>
+        <p class="text-slate-400 mt-2">Explore fully featured sample projects included in the solution.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-dark-card p-6 rounded-xl border border-dark-border hover:border-brand-500/50 transition">
+          <div class="text-2xl mb-3">🧩</div>
+          <h3 class="text-lg font-bold text-white">Nodify.Workflow</h3>
+          <p class="text-sm text-slate-400 mt-2">CI/CD pipeline visualizer rendering job execution dependencies, step status monitors, and dynamic DAG graph flows.</p>
+        </div>
+        <div class="bg-dark-card p-6 rounded-xl border border-dark-border hover:border-brand-500/50 transition">
+          <div class="text-2xl mb-3">🌓</div>
+          <h3 class="text-lg font-bold text-white">Nodify.StateMachine</h3>
+          <p class="text-sm text-slate-400 mt-2">Interactive finite state machine simulator supporting state transitions, trigger conditions, and real-time execution highlighting.</p>
+        </div>
+        <div class="bg-dark-card p-6 rounded-xl border border-dark-border hover:border-brand-500/50 transition">
+          <div class="text-2xl mb-3">💻</div>
+          <h3 class="text-lg font-bold text-white">Nodify.Calculator</h3>
+          <p class="text-sm text-slate-400 mt-2">Real-time mathematical visual calculator connecting numerical operations, formulas, and socket value propagation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-dark-border bg-dark-bg py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+      <p>Nodify Framework &bull; Designed for WPF & MVVM &bull; Open Source under MIT License</p>
+    </div>
+  </footer>
+
+  <!-- Interactive Demo Script -->
+  <script>
+    const canvas = document.getElementById('nodify-interactive-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Node state
+    let nodes = [
+      { id: 1, title: 'Data Source', x: 100, y: 120, w: 160, h: 90, color: '#38bdf8' },
+      { id: 2, title: 'Transform Filter', x: 360, y: 80, w: 170, h: 100, color: '#818cf8' },
+      { id: 3, title: 'Final Output', x: 650, y: 150, w: 160, h: 90, color: '#34d399' }
+    ];
+
+    let connections = [
+      { from: 1, to: 2 },
+      { from: 2, to: 3 }
+    ];
+
+    let draggedNode = null;
+    let offsetX = 0, offsetY = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw connections (Bezier Splines)
+      connections.forEach(conn => {
+        const n1 = nodes.find(n => n.id === conn.from);
+        const n2 = nodes.find(n => n.id === conn.to);
+        if (n1 && n2) {
+          const startX = n1.x + n1.w;
+          const startY = n1.y + n1.h / 2;
+          const endX = n2.x;
+          const endY = n2.y + n2.h / 2;
+          const cp1x = startX + 80;
+          const cp1y = startY;
+          const cp2x = endX - 80;
+          const cp2y = endY;
+
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+          ctx.strokeStyle = n1.color;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          // Animated particle on line
+          const t = (Date.now() / 1500) % 1;
+          const px = Math.pow(1-t,3)*startX + 3*Math.pow(1-t,2)*t*cp1x + 3*(1-t)*Math.pow(t,2)*cp2x + Math.pow(t,3)*endX;
+          const py = Math.pow(1-t,3)*startY + 3*Math.pow(1-t,2)*t*cp1y + 3*(1-t)*Math.pow(t,2)*cp2y + Math.pow(t,3)*endY;
+
+          ctx.beginPath();
+          ctx.arc(px, py, 5, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
+      });
+
+      // Draw nodes
+      nodes.forEach(node => {
+        // Node background card
+        ctx.fillStyle = '#161f33';
+        ctx.strokeStyle = node.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(node.x, node.y, node.w, node.h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Node header background
+        ctx.fillStyle = node.color + '22';
+        ctx.beginPath();
+        ctx.roundRect(node.x, node.y, node.w, 32, [8, 8, 0, 0]);
+        ctx.fill();
+
+        // Title text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText(node.title, node.x + 12, node.y + 20);
+
+        // Input pin circle
+        ctx.beginPath();
+        ctx.arc(node.x, node.y + node.h / 2, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fill();
+
+        // Output pin circle
+        ctx.beginPath();
+        ctx.arc(node.x + node.w, node.y + node.h / 2, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#34d399';
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const n = nodes[i];
+        if (mx >= n.x && mx <= n.x + n.w && my >= n.y && my <= n.y + n.h) {
+          draggedNode = n;
+          offsetX = mx - n.x;
+          offsetY = my - n.y;
+          break;
+        }
+      }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (draggedNode) {
+        const rect = canvas.getBoundingClientRect();
+        draggedNode.x = e.clientX - rect.left - offsetX;
+        draggedNode.y = e.clientY - rect.top - offsetY;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      draggedNode = null;
+    });
+
+    document.getElementById('btn-add-node').addEventListener('click', () => {
+      const id = nodes.length + 1;
+      const colors = ['#f43f5e', '#a855f7', '#eab308', '#06b6d4'];
+      const col = colors[id % colors.length];
+      const newNode = {
+        id,
+        title: `Custom Node #${id}`,
+        x: 150 + Math.random() * 200,
+        y: 100 + Math.random() * 150,
+        w: 160,
+        h: 90,
+        color: col
+      };
+      nodes.push(newNode);
+      connections.push({ from: nodes.length - 1, to: id });
+      document.getElementById('node-count').innerText = nodes.length;
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      nodes = [
+        { id: 1, title: 'Data Source', x: 100, y: 120, w: 160, h: 90, color: '#38bdf8' },
+        { id: 2, title: 'Transform Filter', x: 360, y: 80, w: 170, h: 100, color: '#818cf8' },
+        { id: 3, title: 'Final Output', x: 650, y: 150, w: 160, h: 90, color: '#34d399' }
+      ];
+      connections = [{ from: 1, to: 2 }, { from: 2, to: 3 }];
+      document.getElementById('node-count').innerText = nodes.length;
+    });
+
+    draw();
+  </script>
+</body>
+</html>

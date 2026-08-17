@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgNodify" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="50%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </linearGradient>
+    <linearGradient id="accentNodify" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="cardGradNodify" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27272A" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#18181B" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bgNodify)"/>
+
+  <!-- Node Editor Bezier Connections Background -->
+  <g stroke="url(#accentNodify)" stroke-width="3" fill="none" opacity="0.5">
+    <path d="M 100,200 C 250,200 250,400 400,400"/>
+    <path d="M 400,400 C 550,400 550,250 700,250"/>
+    <path d="M 700,250 C 850,250 850,500 1100,500"/>
+    <circle cx="100" cy="200" r="6" fill="#3B82F6"/>
+    <circle cx="400" cy="400" r="6" fill="#8B5CF6"/>
+    <circle cx="700" cy="250" r="6" fill="#EC4899"/>
+    <circle cx="1100" cy="500" r="6" fill="#3B82F6"/>
+  </g>
+
+  <!-- Main Title Card -->
+  <rect x="150" y="160" width="900" height="355" rx="16" fill="url(#cardGradNodify)" stroke="rgba(139, 92, 246, 0.4)" stroke-width="2"/>
+  <rect x="150" y="160" width="900" height="6" fill="url(#accentNodify)"/>
+
+  <!-- Badge Icon -->
+  <rect x="200" y="210" width="64" height="64" rx="12" fill="url(#accentNodify)"/>
+  <text x="232" y="254" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="34" fill="#FFFFFF" text-anchor="middle">ND</text>
+
+  <text x="285" y="242" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="44" fill="#F8FAFC" letter-spacing="2">NODIFY</text>
+  <text x="285" y="270" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="20" fill="#A7F3D0">High-Performance WPF Node Editor Controls Framework</text>
+
+  <line x1="200" y1="305" x2="1000" y2="305" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- Tech Pill Badges -->
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600">
+    <rect x="200" y="330" width="120" height="36" rx="18" fill="#14532D" stroke="#22C55E" stroke-width="1.5"/>
+    <text x="260" y="353" fill="#DCFCE7" text-anchor="middle">C# 11.0</text>
+
+    <rect x="330" y="330" width="140" height="36" rx="18" fill="#1E1B4B" stroke="#6366F1" stroke-width="1.5"/>
+    <text x="400" y="353" fill="#E0E7FF" text-anchor="middle">WPF / .NET 8</text>
+
+    <rect x="480" y="330" width="130" height="36" rx="18" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="545" y="353" fill="#E0F2FE" text-anchor="middle">MVVM</text>
+
+    <rect x="620" y="330" width="140" height="36" rx="18" fill="#831843" stroke="#F43F5E" stroke-width="1.5"/>
+    <text x="690" y="353" fill="#FFE4E6" text-anchor="middle">NuGet Package</text>
+  </g>
+
+  <text x="200" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#E4E4E7">
+    Performant controls for node-based editors designed for MVVM with zero external dependencies.
+  </text>
+  <text x="200" y="445" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#A1A1AA">
+    Milestones 2 &amp; 3 Verification • Genuine Code Analysis • Complete System Integrity
+  </text>
+
+  <text x="600" y="620" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="14" fill="#71717A" text-anchor="middle">Open Source WPF Framework • Nodify Maintainers</text>
+</svg>
