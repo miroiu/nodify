@@ -854,7 +854,11 @@ namespace Nodify
                 double angle = Math.Atan2(delta.Y, delta.X);
                 var result = new Vector();
 
-                if (offset.Width * 2d * Math.Abs(delta.Y) < offset.Height * 2d * Math.Abs(delta.X))
+                // Use <= so that when both sides are zero (e.g. a perfectly horizontal
+                // connection with an offset whose Height is 0), we prefer the horizontal
+                // face rather than the vertical one — which would produce NaN via
+                // 1/Tan(0)*0 = Infinity*0 = NaN.
+                if (offset.Width * 2d * Math.Abs(delta.Y) <= offset.Height * 2d * Math.Abs(delta.X))
                 {
                     result.X = Math.Sign(delta.X) * offset.Width;
                     result.Y = Math.Tan(angle) * result.X;
@@ -864,6 +868,11 @@ namespace Nodify
                     result.Y = Math.Sign(delta.Y) * offset.Height;
                     result.X = 1.0d / Math.Tan(angle) * result.Y;
                 }
+
+                // Guard against NaN from 0 * Infinity in degenerate cases where delta
+                // is axis-aligned and one offset dimension is zero.
+                if (!double.IsFinite(result.X)) result.X = 0d;
+                if (!double.IsFinite(result.Y)) result.Y = 0d;
 
                 return result;
             }
