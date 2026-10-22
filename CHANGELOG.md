@@ -5,6 +5,8 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed connections disappearing when using ConnectionOffsetMode.Rectangle with a zero width or height offset
+>	- Fixed Rectangle, Circle and Edge offset modes pointing in the wrong direction for vertical connections
 
 #### **Version 7.3.0**
 
