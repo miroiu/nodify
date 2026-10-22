@@ -793,18 +793,11 @@ namespace Nodify
             Vector targetDelta = Source - Target;
             double arrowDirection = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
-            var sourceOffset = GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection);
-            var targetOffset = GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection);
+            var sourceOffsetSize = SourceOrientation == Orientation.Vertical ? new Size(SourceOffset.Height, SourceOffset.Width) : SourceOffset;
+            var targetOffsetSize = TargetOrientation == Orientation.Vertical ? new Size(TargetOffset.Height, TargetOffset.Width) : TargetOffset;
 
-            if (SourceOrientation == Orientation.Vertical)
-            {
-                (sourceOffset.X, sourceOffset.Y) = (sourceOffset.Y, sourceOffset.X);
-            }
-
-            if (TargetOrientation == Orientation.Vertical)
-            {
-                (targetOffset.X, targetOffset.Y) = (targetOffset.Y, targetOffset.X);
-            }
+            var sourceOffset = GetOffset(SourceOffsetMode, sourceDelta, sourceOffsetSize, arrowDirection);
+            var targetOffset = GetOffset(TargetOffsetMode, targetDelta, targetOffsetSize, -arrowDirection);
 
             return (sourceOffset, targetOffset);
 
@@ -846,6 +839,11 @@ namespace Nodify
 
             static Vector GetRectangleModeOffset(Vector delta, Size offset)
             {
+                if (offset.Width == 0d || offset.Height == 0d)
+                {
+                    return GetEdgeModeOffset(delta, offset);
+                }
+
                 if (delta.LengthSquared > 0d)
                 {
                     delta.Normalize();
@@ -854,7 +852,7 @@ namespace Nodify
                 double angle = Math.Atan2(delta.Y, delta.X);
                 var result = new Vector();
 
-                if (offset.Width * 2d * Math.Abs(delta.Y) < offset.Height * 2d * Math.Abs(delta.X))
+                if (offset.Width * Math.Abs(delta.Y) <= offset.Height * Math.Abs(delta.X))
                 {
                     result.X = Math.Sign(delta.X) * offset.Width;
                     result.Y = Math.Tan(angle) * result.X;
