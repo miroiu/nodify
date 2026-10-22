@@ -5,6 +5,7 @@
 > - Breaking Changes:
 > - Features:
 > - Bugfixes:
+>	- Fixed Connection to halve the bezier control points of both ends when the source and target orientations are different
 >	- Fixed connections disappearing when using ConnectionOffsetMode.Rectangle with a zero width or height offset
 >	- Fixed Rectangle, Circle and Edge offset modes pointing in the wrong direction for vertical connections
 

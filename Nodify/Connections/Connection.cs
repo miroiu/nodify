@@ -74,13 +74,14 @@ namespace Nodify
             offset = Math.Min(_baseOffset + Math.Sqrt(width * _offsetGrowthRate), offset);
 
             var controlPoint = new Vector(offset * direction, 0d);
-            var controlPointVertical = new Vector(controlPoint.Y, controlPoint.X);
 
             // Avoid sharp bend if orientation different (when close to each other)
             if (TargetOrientation != SourceOrientation)
             {
                 controlPoint *= 0.5;
             }
+
+            var controlPointVertical = new Vector(controlPoint.Y, controlPoint.X);
 
             Point p0 = startPoint;
             Point p1 = startPoint + (SourceOrientation == Orientation.Vertical ? controlPointVertical : controlPoint);
