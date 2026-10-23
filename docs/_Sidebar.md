@@ -37,6 +37,15 @@
 - [The knot node](Nodes-Overview#3-the-knotnode-control)
 - [The state node](Nodes-Overview#4-the-statenode-control)
 
+[Custom nodes](Custom-Nodes)
+
+- [Approaches](Custom-Nodes#approaches)
+- [Customizing the built-in Node](Custom-Nodes#customizing-the-built-in-node)
+- [DataTemplates for different types](Custom-Nodes#using-datatemplates-for-different-node-types)
+- [Adding typed connectors](Custom-Nodes#adding-typed-connectors)
+- [Connection events](Custom-Nodes#responding-to-connection-events)
+- [Worked example: math nodes](Custom-Nodes#worked-example-math-nodes)
+
 [Connections overview](Connections-Overview)
 
 - [Base connection](Connections-Overview#base-connection)
