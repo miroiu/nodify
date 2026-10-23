@@ -8,3 +8,10 @@ Node input and node output are implementations of `Connector` with a `Header` th
 
 ![image](https://user-images.githubusercontent.com/12727904/192117525-a7e1b309-70d6-4ed7-bcd7-8210dbd680ce.png)
 
+---
+
+### Creating Custom Connectors
+
+For a detailed walkthrough on customizing the appearance, templates, and behaviors of your connectors, check out the [Creating Custom Connectors](Custom-Connectors) guide.
+
+
