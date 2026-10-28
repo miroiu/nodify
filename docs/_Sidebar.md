@@ -37,6 +37,14 @@
 - [The knot node](Nodes-Overview#3-the-knotnode-control)
 - [The state node](Nodes-Overview#4-the-statenode-control)
 
+[Custom nodes](Custom-Nodes)
+
+- [Creating a basic custom node](Custom-Nodes#creating-a-basic-custom-node)
+- [Adding typed connectors](Custom-Nodes#adding-typed-input-and-output-connectors)
+- [Customizing appearance](Custom-Nodes#customizing-appearance-with-styles-and-templates)
+- [Responding to connection events](Custom-Nodes#responding-to-connection-events)
+- [Worked example: math nodes](Custom-Nodes#worked-example-math-nodes)
+
 [Connections overview](Connections-Overview)
 
 - [Base connection](Connections-Overview#base-connection)
