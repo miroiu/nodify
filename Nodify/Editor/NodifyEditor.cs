@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -146,7 +147,20 @@ namespace Nodify
         {
             UpdateScrollbars();
             UpdatePushedArea();
+            InvalidateFocusVisuals();
             RaiseEvent(new RoutedEventArgs(ViewportUpdatedEvent, this));
+        }
+
+        internal void InvalidateFocusVisuals()
+        {
+            // RenderTransform changes do not schedule layout updates for focus adorners.
+            if (IsKeyboardFocusWithin
+                && Keyboard.FocusedElement is UIElement focusedElement
+                && AdornerLayer.GetAdornerLayer(focusedElement) is AdornerLayer layer
+                && VisualTreeHelper.GetChildrenCount(layer) > 0)
+            {
+                layer.InvalidateArrange();
+            }
         }
 
         #endregion

@@ -30,11 +30,9 @@
                 Value="{StaticResource EditorFocusVisualStyle}" />
     </Style>
 
-    <Style TargetType="{x:Type local:ItemContainer}"
-           BasedOn="{StaticResource {x:Type local:ItemContainer}}">
-        <Setter Property="FocusVisualStyle"
-                Value="{StaticResource EditorFocusVisualStyle}" />
-    </Style>
+    <Style x:Key="ItemContainerFocusVisualStyle"
+           TargetType="{x:Type Control}"
+           BasedOn="{StaticResource EditorFocusVisualStyle}" />
 
     <Style TargetType="{x:Type local:DecoratorContainer}"
            BasedOn="{StaticResource {x:Type local:DecoratorContainer}}">
