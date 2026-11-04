@@ -8,11 +8,13 @@ namespace Nodify
     /// <summary>
     /// Represents a line that is controlled by an angle.
     /// </summary>
-    public class CircuitConnection : LineConnection
+    public class CircuitConnection : LineConnection, ILinePoints<Point3>
     {
         protected const double Degrees = Math.PI / 180.0d;
 
         public static readonly DependencyProperty AngleProperty = DependencyProperty.Register(nameof(Angle), typeof(double), typeof(LineConnection), new FrameworkPropertyMetadata(BoxValue.Double45, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        private readonly ILinePoints<Point3> AsLinePoints;
 
         /// <summary>
         /// The angle of the connection in degrees.
@@ -29,9 +31,14 @@ namespace Nodify
             NodifyEditor.CuttingConnectionTypes.Add(typeof(CircuitConnection));
         }
 
+        public CircuitConnection()
+        {
+            AsLinePoints = this;
+        }
+
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1, p2) = GetLinePoints(source, target);
+            var (p0, p1, p2) = AsLinePoints.GetLinePoints(source, target);
 
             context.BeginFigure(source, false, false);
             if (CornerRadius > 0)
@@ -58,7 +65,7 @@ namespace Nodify
 
         protected override Point GetTextPosition(FormattedText text, Point source, Point target)
         {
-            var (p0, p1, p2) = GetLinePoints(source, target);
+            var (p0, p1, p2) = AsLinePoints.GetLinePoints(source, target);
 
             Vector deltaSource = p1 - p0;
             Vector deltaTarget = p2 - p1;
@@ -73,7 +80,7 @@ namespace Nodify
 
         protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1, p2) = GetLinePoints(source, target);
+            var (p0, p1, p2) = AsLinePoints.GetLinePoints(source, target);
 
             double spacing = 1d / (DirectionalArrowsCount + 1);
             for (int i = 1; i <= DirectionalArrowsCount; i++)
@@ -86,7 +93,7 @@ namespace Nodify
             }
         }
 
-        private (Point P0, Point P1, Point P2) GetLinePoints(in Point source, in Point target)
+        Point3 ILinePoints<Point3>.GetLinePoints(in Point source, in Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);

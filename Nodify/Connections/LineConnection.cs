@@ -8,9 +8,11 @@ namespace Nodify
     /// <summary>
     /// Represents a line that has an arrow indicating its <see cref="BaseConnection.Direction"/>.
     /// </summary>
-    public class LineConnection : BaseConnection
+    public class LineConnection : BaseConnection, ILinePoints<Point2>
     {
         public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(double), typeof(LineConnection), new FrameworkPropertyMetadata(BoxValue.Double5, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        private readonly ILinePoints<Point2> AsLinePoints;
 
         /// <summary>
         /// The radius of the corners between the line segments.
@@ -27,9 +29,14 @@ namespace Nodify
             NodifyEditor.CuttingConnectionTypes.Add(typeof(LineConnection));
         }
 
+        public LineConnection()
+        {
+            AsLinePoints = this;
+        }
+
         protected override ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1) = GetLinePoints(source, target);
+            var (p0, p1) = AsLinePoints.GetLinePoints(source, target);
 
             context.BeginFigure(source, false, false);
             if (CornerRadius > 0 && Spacing > 0)
@@ -74,7 +81,7 @@ namespace Nodify
 
         protected override void DrawDirectionalArrowsGeometry(StreamGeometryContext context, Point source, Point target)
         {
-            var (p0, p1) = GetLinePoints(source, target);
+            var (p0, p1) = AsLinePoints.GetLinePoints(source, target);
             var direction = p0 - p1;
 
             double spacing = 1d / (DirectionalArrowsCount + 1);
@@ -87,7 +94,7 @@ namespace Nodify
             }
         }
 
-        private (Point P0, Point P1) GetLinePoints(Point source, Point target)
+        Point2 ILinePoints<Point2>.GetLinePoints(in Point source, in Point target)
         {
             double direction = Direction == ConnectionDirection.Forward ? 1d : -1d;
             var spacing = new Vector(Spacing * direction, 0d);
