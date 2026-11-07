@@ -1028,7 +1028,8 @@ namespace Nodify
                 drawingContext.DrawText(text, textPosition);
             }
 
-            if (AdornerLayer != null && Container is { IsKeyboardFocused: true })
+            // A connection focused before it had an adorner layer has no focus adorner, and Update throws for it
+            if (AdornerLayer != null && Container is { IsKeyboardFocused: true } && AdornerLayer.GetAdorners(this) != null)
             {
                 AdornerLayer.Update(this);
             }

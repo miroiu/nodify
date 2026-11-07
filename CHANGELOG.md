@@ -10,6 +10,7 @@
 >	- Fixed Rectangle, Circle and Edge offset modes pointing in the wrong direction for vertical connections
 >	- Fixed BaseConnection filling the text background with the Stroke brush instead of the TextBackground brush
 >	- Fixed CircuitConnection.AngleProperty being registered with LineConnection as the owner type
+>	- Fixed BaseConnection throwing on render when its container was focused before the connection had an adorner layer
 
 #### **Version 7.3.0**
 
