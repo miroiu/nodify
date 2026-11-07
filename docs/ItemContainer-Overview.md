@@ -4,6 +4,7 @@ The ```ItemContainer``` is the **most important** piece of an editor. It is a co
  - [Selecting](#selecting)
    - [API](#selection-api)
  - [Moving](#moving-and-dragging)
+ - [Keyboard focus](#keyboard-focus)
 
 ## Selecting
 
@@ -51,3 +52,11 @@ Dragging an ```ItemContainer``` fires a sequence of events that are handled by t
 Default values:
 - ```IsDraggable```: true
 - ```AllowDraggingCancellation```: true
+
+## Keyboard focus
+
+The default template draws its focus indicator inside the container, so it follows optimized dragging and viewport transforms and is occluded by nodes drawn above it. WPF still controls when focus cues appear and disappear; mouse selection and keyboard-focus indication remain separate.
+
+The indicator reuses the focus style inherited by `ContentControl`, or the application's `SystemParameters.FocusVisualStyleKey` resource for the standard WPF default. To override the item-specific appearance, provide a `Control` style with the string resource key `ItemContainerFocusVisualStyle`. The optional `Themes/FocusVisual.xaml` dictionary provides this override.
+
+Custom container templates can include a non-focusable, non-hit-testable `Control` named `PART_FocusVisual`, initially collapsed. Templates without this part retain the standard WPF overlay behavior. Explicitly assigning `FocusVisualStyle` also retains WPF's standard adorner rendering rather than the template-local indicator.
