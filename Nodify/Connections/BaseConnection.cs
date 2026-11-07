@@ -1049,7 +1049,7 @@ namespace Nodify
                 drawingContext.DrawRoundedRectangle(OutlineBrush, null, outlineRect, radius, radius);
             }
 
-            drawingContext.DrawRoundedRectangle(Stroke, null, rect, radius, radius);
+            drawingContext.DrawRoundedRectangle(TextBackground, null, rect, radius, radius);
         }
 
         internal void UpdateFocusVisual()
