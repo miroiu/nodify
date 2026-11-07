@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Nodify
@@ -162,7 +163,9 @@ namespace Nodify
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            if (!IsPanning && IsMouseCaptureWithin)
+            // A popup inside a node holds the mouse while it is open and is within the editor as the node's logical child:
+            // only a capture on the editor's own visuals auto-pans it
+            if (!IsPanning && IsMouseCaptureWithin && Mouse.Captured is Visual captured && (captured == this || IsAncestorOf(captured)))
             {
                 Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;

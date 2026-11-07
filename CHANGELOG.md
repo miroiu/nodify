@@ -12,6 +12,7 @@
 >	- Fixed CircuitConnection.AngleProperty being registered with LineConnection as the owner type
 >	- Fixed BaseConnection throwing on render when its container was focused before the connection had an adorner layer
 >	- Fixed NodifyEditor drawing the graph away from its ViewportLocation when ViewportZoom changed without the location changing
+>	- Fixed NodifyEditor auto-panning while a popup inside a node holds the mouse
 
 #### **Version 7.3.0**
 
