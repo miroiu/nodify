@@ -8,6 +8,8 @@
 >	- Fixed Connection to halve the bezier control points of both ends when the source and target orientations are different
 >	- Fixed connections disappearing when using ConnectionOffsetMode.Rectangle with a zero width or height offset
 >	- Fixed Rectangle, Circle and Edge offset modes pointing in the wrong direction for vertical connections
+>	- Fixed BaseConnection filling the text background with the Stroke brush instead of the TextBackground brush
+>	- Fixed CircuitConnection.AngleProperty being registered with LineConnection as the owner type
 
 #### **Version 7.3.0**
 
