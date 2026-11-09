@@ -1,8 +1,8 @@
 ﻿using Nodify.Interactivity;
 using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Nodify
@@ -163,9 +163,7 @@ namespace Nodify
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            // A popup inside a node holds the mouse while it is open and is within the editor as the node's logical child:
-            // only a capture on the editor's own visuals auto-pans it
-            if (!IsPanning && IsMouseCaptureWithin && Mouse.Captured is Visual captured && (captured == this || IsAncestorOf(captured)))
+            if (!IsPanning && CanStartAutoPanning())
             {
                 Point mousePosition = Mouse.GetPosition(this);
                 double edgeDistance = AutoPanEdgeDistance;
@@ -198,6 +196,22 @@ namespace Nodify
                 _autoPanningEventArgs.Source = this;
                 InputProcessor.ProcessEvent(_autoPanningEventArgs);
             }
+        }
+
+        /// <summary>
+        /// Determines whether the editor can auto-pan, which it does only while the mouse is captured by one of its own
+        /// interactions (selecting, dragging items, connecting, resizing a <see cref="GroupingNode"/>).
+        /// </summary>
+        /// <remarks>Override to allow auto-panning for custom interactions that capture the mouse.</remarks>
+        /// <returns>True if the editor can auto-pan.</returns>
+        protected virtual bool CanStartAutoPanning()
+        {
+            var captured = Mouse.Captured;
+            return IsMouseCaptureWithin && (
+                captured == this ||
+                captured is ItemContainer item && item.Editor == this ||
+                captured is Connector connector && connector.Editor == this ||
+                captured is Thumb thumb && thumb.TemplatedParent is GroupingNode node && node.Editor == this);
         }
 
         /// <summary>
