@@ -78,6 +78,9 @@ namespace Nodify
 
             editor.ScaleTransform.ScaleX = zoom;
             editor.ScaleTransform.ScaleY = zoom;
+            // The translation is in screen units, so it follows the zoom (a zoom set apart from the location drew the graph away from it)
+            editor.TranslateTransform.X = -editor.ViewportLocation.X * zoom;
+            editor.TranslateTransform.Y = -editor.ViewportLocation.Y * zoom;
 
             editor.ViewportSize = new Size(editor.ActualWidth / zoom, editor.ActualHeight / zoom);
 

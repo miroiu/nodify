@@ -165,7 +165,7 @@ namespace Nodify
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="GroupingNode"/>.
         /// </summary>
-        protected NodifyEditor? Editor { get; private set; }
+        protected internal NodifyEditor? Editor { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.

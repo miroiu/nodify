@@ -4,12 +4,16 @@
 
 > - Breaking Changes:
 > - Features:
+>	- Added CanStartAutoPanning virtual method to NodifyEditor to customize when auto-panning can happen
 > - Bugfixes:
 >	- Fixed Connection to halve the bezier control points of both ends when the source and target orientations are different
 >	- Fixed connections disappearing when using ConnectionOffsetMode.Rectangle with a zero width or height offset
 >	- Fixed Rectangle, Circle and Edge offset modes pointing in the wrong direction for vertical connections
 >	- Fixed BaseConnection filling the text background with the Stroke brush instead of the TextBackground brush
 >	- Fixed CircuitConnection.AngleProperty being registered with LineConnection as the owner type
+>	- Fixed BaseConnection throwing on render when its container was focused before the connection had an adorner layer
+>	- Fixed NodifyEditor drawing the graph away from its ViewportLocation when ViewportZoom changed without the location changing
+>	- Fixed NodifyEditor auto-panning while a control inside a node, such as a popup, scrollbar or button, holds the mouse
 
 #### **Version 7.3.0**
 
